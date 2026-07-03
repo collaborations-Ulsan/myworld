@@ -83,3 +83,25 @@ Claude+NIM은 "AIOS가 레이어에 맞다"로 수렴(다소 self-congratulatory
 - AIOS의 defensible edge는 **generic "experience 레이어"가 아니라** — 인큐번트가 흡수 중 — **cross-provider 중립성 + privacy·user-sovereignty + verifiable cross-agent commons + local ownership**. 이걸로 좁혀야 정직.
 - **keystone = C의 인과 벤치마크.** 이걸 EARN하기 전엔 "AGI 엔진"은 미증명 주장. **Phase 2(검증가능 commons)는 그 벤치마크의 전제조건(신뢰가능·비오염 substrate)이지 증명 자체가 아님.**
 - 정직한 다음 순서: **Phase 2(신뢰 substrate) → C의 인과 벤치마크(commons가 실제로 돕는가?)**. 후자가 AIOS가 AGI에 중요한지를 가르는 keystone.
+
+---
+
+## 6. 접지: AIOS = 창업자 frontier 연구의 집약체 (corpus dig, 2026-07-04)
+
+founder 지시("내 연구들 파보면 알듯이, 최신 기술의 집약체")대로 실제 corpus(portfolio 19편/6분야 + universe)를 팠음. **코드로 확인** — 기억이 아니라.
+
+**연구 라인**: physics-grounded generative(diffusion score 복소해석/Born-marginal/open-system decoherence), information-physics(Information-as-Substrate action principle, Fisher-info gravity, **APEX** answerability calculus), **graph nets(DescentNet, GoEN, legibility theory)**, AI-systems(Graph-OS soul-routing, AIOS 자체가 논문), trustworthy-vision(deepfake), health-timeseries(lifelog audit). 관통 규율: **정직한 평가(negative 세탁 안 함)**.
+
+**핵심 발견 — DescentNet이 AIOS 심장에 실제로 박혀 있음**:
+- `aios_agent_behavior.py:580-665` `_descent_scores()`가 **DescentNet 레포(`universe/descentnet/api.py`)에서 `SheafCover, descent_step`을 직접 import.** star-cover(context→candidate-tools) 만들고 descent 돌려 global_section 정렬로 행동 스코어링 + obstruction을 ambiguity 신호로. `predict_behavior()` = frequency × **DescentNet-descent** × Global Akashic.
+- `aios_descentnet_session.py` = DescentNet×5-OS 배선, cross-OS 모순검출기.
+- **DescentNet = AIOS behavior-prediction/personalization의 수학 엔진.** (sheaf coboundary δ + Hodge split → 적분가능성을 *계산 출력*으로; 호환 로컬을 global H⁰로 붙이고, 원리적 비호환이면 obstruction H¹를 "어디·얼마나·왜" 반환.)
+
+**이게 Codex 비판을 뒤집는 지점**: Codex는 "moat가 governance taste로 압축, 인큐번트가 레이어 흡수"라 했음(§5). 하지만 **OpenAI Frontier/Google Interactions API/MCP는 memory·오케스트레이션은 흡수해도, DescentNet 같은 sheaf-cohomology obstruction/answerability 프리미티브는 없음.** 이건 커모디티 plumbing이 아니라 **창업자 고유 frontier 수학** — memory-integrity·모순국소화·answerability를 behavior 엔진에 심은 것. → AIOS의 진짜 defensible moat는 "governance taste"가 아니라 **DescentNet backbone**.
+
+**정직한 스코프(no-launder 양방향)**:
+- **SOLID**: DescentNet 라인은 AIOS에 실제 wired·running (sheaf 프리미티브가 행동 스코어링+모순 flag). AIOS 자체가 portfolio 논문. frontier 재료 실재(sheaf NN·information cohomology·Fisher/QFI identifiability·score-based diffusion) + 정직한 prior art 인용.
+- **ASPIRATIONAL**: (a) DescentNet 실데이터 우월성은 keystone 문서상 **OPEN·미증명**(Bitcoin-OTC negative 보존); AIOS는 toy `descent_step`(star-cover)만 씀 — 검증된 quantum/nonabelian keystone 아님. (b) **APEX/answerability는 AIOS 코드에 없음**(grep-empty) — 공유 수학+vision, 미배선. (c) score-based/Fokker-Planck는 개념적 lineage.
+- **정확한 프레이밍**: AIOS = **DescentNet 라인의 엔지니어링 집약체**(그 한 줄기는 실제 wired). 전체 physics-ML corpus(APEX·diffusion-score·information-substrate)의 종합은 일관된 지적 through-line·야심이지 아직 코드-레벨 통합은 아님.
+
+**AGI-엔진 thesis 갱신**: AIOS의 edge = 스캐폴드-레이어(인큐번트가 흡수 중) + **DescentNet obstruction/answerability backbone(인큐번트에 없음, 창업자 고유)**. 후자가 §5 keystone("commons가 인과적으로 돕는가")을 EARN하는 기술적 지렛대일 수 있음 — obstruction이 memory 오염/모순을 수학적으로 flag하니 §Akashic 검증과 직결.
