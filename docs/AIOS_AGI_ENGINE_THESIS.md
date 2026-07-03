@@ -61,3 +61,25 @@ Phase 2 = **검증가능 Akashic 원장**(Merkle proof, 공개 checkpoint, 접�
 ## 소스(solid/primary만; aggregator 수치는 인용 회피)
 METR time-horizons(2026-05-08) · half-life 2505.05115 / Science of Agent Reliability 2602.16666 · Era of Experience(DeepMind) + 2605.20477 · Modular Memory 2603.01761 · 검증 2606.26300 / calibration 2602.06948 · Karpathy cognitive-core · Hassabis/Amodei 발언 · benchmark-gaming 감사 2510.11977.
 *주의: 2026 벤치 수치·특정 모델 스코어는 aggregator라 미검증. "Claude Fable 5 export-control 정지"류는 날조로 판정 — 인용 금지.*
+
+---
+
+## 5. 이종 de-bias — Codex(GPT prior + 라이브 웹) adversarial 비판 (2026-07-04)
+
+Claude+NIM은 "AIOS가 레이어에 맞다"로 수렴(다소 self-congratulatory). **Codex는 다른 prior로 이걸 압박해 결정적 blind spot 2개를 잡음** (agy는 Google OAuth headless 실패로 무응답):
+
+**A. 치명적 실패케이스 — moat 문제 (내가 underweight):** 인큐번트가 **바로 이 레이어를 native로 흡수 중**.
+- OpenAI **Frontier**: 공유 context·memory·eval·permissions·feedback loop을 엔터프라이즈 agent에 이미 제공.
+- Google **Interactions API(GA)**: stateful agent 엔드포인트 — managed agents·background exec·tool timeline·retention.
+- **A2A(>150 org, Linux Foundation) + MCP(Agentic AI Foundation 기증)**: 멀티에이전트 plumbing 표준화 → 오케스트레이션 커모디티화.
+→ **AIOS의 moat가 "core AGI engine"이 아니라 "governance taste + local ownership + privacy"로 압축된다.** 레이어가 틀린 게 아니라 **레이어를 프로바이더가 소유**할 위험.
+
+**B. scaffolding이 지능으로 compound 안 될 수 있음:** frozen LLM은 여전히 경험을 내재화 못 함 → commons가 "noisy·poisonable prompt folklore(ops 메타데이터)"에 그칠 수 있음. reliability 연구: tail failure·predictability를 task success와 **따로** 측정해야 함 → "한 번 통했으니 기억" commons의 전제를 약화.
+
+**C. AIOS가 AGI에 실제로 중요하려면 EARN해야 할 단 하나 (keystone):**
+> **pre-registered adversarial 벤치마크** — privacy 보존 experience commons가 **held-out 장기지평 task success·calibration·recovery를 Frontier/Gemini/Claude-native memory + vanilla RAG 대비 인과적으로 개선**함을 입증. 일화·"ledger vibes" 금지. **누출·오염·stale 증폭 없이 transferable experience** 시연. (Codex는 AIOS ledger가 아직 false production-serving proof를 기록한다고 지적 — 오늘은 아직 아님.)
+
+**재프레이밍 (no-launder 양방향)**:
+- AIOS의 defensible edge는 **generic "experience 레이어"가 아니라** — 인큐번트가 흡수 중 — **cross-provider 중립성 + privacy·user-sovereignty + verifiable cross-agent commons + local ownership**. 이걸로 좁혀야 정직.
+- **keystone = C의 인과 벤치마크.** 이걸 EARN하기 전엔 "AGI 엔진"은 미증명 주장. **Phase 2(검증가능 commons)는 그 벤치마크의 전제조건(신뢰가능·비오염 substrate)이지 증명 자체가 아님.**
+- 정직한 다음 순서: **Phase 2(신뢰 substrate) → C의 인과 벤치마크(commons가 실제로 돕는가?)**. 후자가 AIOS가 AGI에 중요한지를 가르는 keystone.
