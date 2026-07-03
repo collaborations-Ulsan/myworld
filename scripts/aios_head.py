@@ -345,7 +345,7 @@ def make_provider_sampler(provider: str, adapters: dict[str, Callable[[str], str
         f"  {t['name']} — {t.get('description', t['class'])}"
         for t in _tool_list
     )
-    goal_line = (_user_prefs() + f"Goal: {goal[:200]}\n") if goal else ""
+    goal_line = (_freshness_directive(goal) + _user_prefs() + f"Goal: {goal[:200]}\n") if goal else ""
 
     def sampler(history: list[dict]) -> dict:
         tl = _load("aios_turn_loop")
@@ -843,6 +843,27 @@ def _organ_postamble(goal: str, result: dict, root: Path, *, run_id: str | None 
     }
 
 
+import re as _re_fresh
+_FRESHNESS_RE = _re_fresh.compile(
+    r"추천|제일\s*좋|가장\s*좋|best\b|latest|newest|현재|지금|요즘|최신|state of the art|\bsota\b|"
+    r"which .* should i (use|pick)|recommend|benchmark|가격|price|버전|version|202[4-9]|"
+    r"임베딩|embedding|model|모델|라이브러리|library|framework|프레임워크", _re_fresh.I)
+
+def _is_freshness_sensitive(goal: str) -> bool:
+    return bool(_FRESHNESS_RE.search(goal or ""))
+
+def _freshness_directive(goal: str) -> str:
+    """Anti-stale gate (founder directive): for recommendation/latest/model-choice
+    questions, forbid answering from cached training knowledge without evidence."""
+    if not _is_freshness_sensitive(goal):
+        return ""
+    return ("[FRESHNESS GATE] This looks like a recommendation / latest / model-or-tool-choice / "
+            "current-info question. Your training knowledge is likely STALE — the best/current option "
+            "changes over time. If the tool results / memory context below do NOT contain current "
+            "evidence, do NOT recommend a specific model/tool/version from memory. Instead say your "
+            "knowledge may be outdated, name exactly what should be verified against a live source, and "
+            "prefer any evidence that IS present. Never present a cached recommendation as current.\n\n")
+
 def _user_prefs() -> str:
     """Learned+accepted user preferences (personalization), graceful if absent.
 
@@ -940,6 +961,7 @@ def _organ_synthesis(goal: str, result: dict, preamble: dict | None = None,
     _code_hint = any(kw in goal.lower() for kw in (
         "코드", "구현", "작성", "code", "implement", "write", "function", "def ", "class "))
     synthesis_prompt = (
+        f"{_freshness_directive(goal)}"
         f"{_user_prefs()}"
         f"{prior_section}"
         f"Goal: {goal}\n\n"
