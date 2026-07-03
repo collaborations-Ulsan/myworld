@@ -281,7 +281,8 @@ def run_loop(goal: str, sampler: Sampler, registry: Registry, *,
             if not calls:                                   # model finished — structural terminal
                 audit = _completion_audit(trajectory, contract_receipts=contract_receipts)
                 outcome = {"exit": "model_finished", "turns": turn, "trajectory": trajectory,
-                           "completion_audit": audit}
+                           "completion_audit": audit,
+                           "answer": (resp.get("text") or "").strip()}
                 break
 
             stop = None

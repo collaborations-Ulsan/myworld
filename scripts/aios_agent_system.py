@@ -254,8 +254,16 @@ def _openai_compat(base_url: str, model: str, prompt: str,
     """OpenAI-compatible /v1/chat/completions — works with any server that speaks it.
 
     Covers: Ollama (/v1), vLLM, LM Studio, Jan.ai, llama.cpp server,
-    Hugging Face TGI, Codestral, any OpenAI-API-compatible endpoint.
+    Hugging Face TGI, Codestral, NVIDIA NIM, any OpenAI-API-compatible endpoint.
     """
+    # Resolve auth from env by host when no explicit key was passed, so hosted
+    # providers (NVIDIA NIM) work through the same path as keyless local Ollama.
+    if not api_key or api_key == "none":
+        _host = base_url.lower()
+        if "integrate.api.nvidia.com" in _host:
+            api_key = os.environ.get("NVIDIA_API_KEY", "none")
+        elif "openai.com" in _host:
+            api_key = os.environ.get("OPENAI_API_KEY", "none")
     payload = {
         "model":    model,
         "messages": [{"role": "user", "content": prompt}],

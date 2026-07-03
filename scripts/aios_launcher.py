@@ -528,8 +528,16 @@ def main(argv: list[str] | None = None) -> int:
         # Model is left unpinned so the harness routes by task horizon (renewal
         # pillar 2): long/multi-step tasks → reasoning model, short → fast model.
         harness_args = list(args.args)
-        if "--base-url" not in " ".join(harness_args) and "--model" not in " ".join(harness_args):
-            harness_args += ["--base-url", "http://localhost:11434"]
+        _joined = " ".join(harness_args)
+        if not any(f in _joined for f in ("--base-url", "--model", "--provider")):
+            # Real-service default: route to the strong hosted NIM fleet when the
+            # key is present; otherwise fall back to the always-on local Ollama.
+            if os.environ.get("NVIDIA_API_KEY"):
+                harness_args += ["--base-url", "https://integrate.api.nvidia.com",
+                                 "--model", os.environ.get("AIOS_DO_MODEL",
+                                                           "deepseek-ai/deepseek-v4-pro")]
+            else:
+                harness_args += ["--base-url", "http://localhost:11434"]
         cmd = [sys.executable, script_path(root, "aios_harness.py").as_posix(), *harness_args]
         return run_delegate(cmd, cwd=Path.cwd())
 

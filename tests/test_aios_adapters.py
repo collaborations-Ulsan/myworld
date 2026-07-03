@@ -24,6 +24,15 @@ def _load(name: str):
 class AdaptersTest(unittest.TestCase):
     def setUp(self):
         self.a = _load("aios_adapters")
+        import os
+        import unittest.mock as mock
+        # Isolate from ambient cloud-provider keys so REST auto-registration
+        # (nvidia_nim / anthropic_rest / gemini_rest) is deterministic in any env.
+        _env = mock.patch.dict(os.environ, {}, clear=False)
+        _env.start()
+        for _k in ("NVIDIA_API_KEY", "ANTHROPIC_API_KEY", "GEMINI_API_KEY", "GOOGLE_API_KEY"):
+            os.environ.pop(_k, None)
+        self.addCleanup(_env.stop)
 
     def test_build_argv_substitutes_prompt_and_binary(self):
         # ollama uses positional-arg mode — prompt appears in argv

@@ -643,11 +643,11 @@ def make_llm_sampler(goal: str, base_url: str | None = None,
             # parsed is None: a genuine finish (explicit final marker, or work already
             # done, or last substrate) — otherwise turn-0 junk → fall back.
             if _FINAL_RE.search(text) or prior_calls > 0 or is_last:
-                return {"tool_calls": []}
+                return {"tool_calls": [], "text": text}
             last_err = f"{_name}: unparseable turn-0 output → falling back"
         # ponytail: all substrates dead on turn 0 → honest no-op; rare (local ollama
         # almost always answers). Add a louder error exit only if this is ever hit.
-        return {"tool_calls": []}
+        return {"tool_calls": [], "text": ""}
 
     return sampler
 
@@ -714,10 +714,14 @@ def main(argv: list[str] | None = None) -> int:
     api_key = args.api_key or os.environ.get("AIOS_API_KEY") or _load_saved_key()
     allowed = [t.strip() for t in args.tools.split(",")] if args.tools else None
 
-    # Auto-route provider via role_router when --provider not specified
+    # Auto-route provider via role_router when neither --provider nor an explicit
+    # OpenAI-compatible endpoint is given. An explicit --base-url (e.g. the NIM
+    # default from `aios do`) must win over the CLI role-router so the hosted
+    # provider is used deterministically instead of a local CLI that may be absent.
     resolved_provider = args.provider
     routed_role = None
-    if resolved_provider is None:
+    _explicit_endpoint = bool(args.base_url or os.environ.get("OPENAI_COMPAT_URL"))
+    if resolved_provider is None and not _explicit_endpoint:
         try:
             rr = _load("aios_role_router")
             route_result = rr.route(args.task)
@@ -777,6 +781,15 @@ def main(argv: list[str] | None = None) -> int:
     if args.as_json:
         print(json.dumps(outcome, ensure_ascii=False, indent=2))
     else:
+        answer = (outcome.get("answer") or "").strip()
+        if answer:
+            # Service-grade output: show only the final answer, not ReAct scaffolding.
+            _m = list(_FINAL_RE.finditer(answer))
+            if _m:
+                answer = answer[_m[-1].end():].strip()
+            if answer:
+                print(answer)
+                print()
         exit_r = outcome.get("exit", "?")
         turns  = outcome.get("turns", 0)
         calls  = outcome.get("tool_calls", 0)

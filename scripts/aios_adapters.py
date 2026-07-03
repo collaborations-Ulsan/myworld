@@ -96,6 +96,12 @@ _ANTHROPIC_REST_MODEL = "claude-haiku-4-5-20251001"  # fastest + cheapest fronti
 _GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
 _GEMINI_REST_MODEL = "gemini-2.0-flash-lite"  # free tier: 1500 req/day, 30 req/min
 
+# NVIDIA NIM (build.nvidia.com) — OpenAI-compatible; one Bearer key unlocks 100+
+# heterogeneous frontier models (DeepSeek, Qwen, Nemotron, GLM, Kimi, GPT-OSS).
+# Reuses the same /v1/chat/completions path as ollama_rest; auth via NVIDIA_API_KEY.
+_NVIDIA_NIM_BASE = "https://integrate.api.nvidia.com/v1"
+_NVIDIA_NIM_MODEL = "deepseek-ai/deepseek-v4-pro"  # strong default; override per call
+
 
 def _http_post_json(url: str, body: dict, headers: dict, timeout: int) -> dict:
     """Single stdlib HTTP POST + JSON parse, shared by all REST adapters."""
@@ -168,6 +174,47 @@ def _gemini_rest_available() -> bool:
     """Return True if GEMINI_API_KEY or GOOGLE_API_KEY is set (Gemini REST API usable)."""
     import os
     return bool(os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY"))
+
+
+def _nvidia_nim_available() -> bool:
+    """Return True if NVIDIA_API_KEY is set (NVIDIA NIM REST API usable)."""
+    import os
+    return bool(os.environ.get("NVIDIA_API_KEY"))
+
+
+def make_nvidia_nim_adapter(
+    *,
+    base_url: str = _NVIDIA_NIM_BASE,
+    model: str = _NVIDIA_NIM_MODEL,
+    timeout: int = 120,
+) -> "Callable[[str], str]":
+    """Build an adapter that calls NVIDIA NIM via its OpenAI-compatible REST API.
+
+    Activates when NVIDIA_API_KEY is set. Same /v1/chat/completions shape as
+    ollama_rest, so the head gains 100+ heterogeneous frontier models (a real
+    de-bias / escalation fleet) with no PyPI dependency and no local GPU.
+    """
+    import os as _os
+
+    def adapter(prompt: str) -> str:
+        api_key = _os.environ.get("NVIDIA_API_KEY", "")
+        if not api_key:
+            raise RuntimeError("nvidia_nim: NVIDIA_API_KEY not set")
+        chat_url = base_url.rstrip("/") + "/chat/completions"
+        body = {
+            "model": model,
+            "stream": False,
+            "messages": [{"role": "user", "content": prompt}],
+        }
+        headers = {"Authorization": f"Bearer {api_key}"}
+        try:
+            data = _http_post_json(chat_url, body, headers, timeout)
+            return data["choices"][0]["message"]["content"]
+        except Exception as exc:
+            raise RuntimeError(f"nvidia_nim: {exc}") from exc
+
+    adapter.__name__ = "adapter_nvidia_nim"
+    return adapter
 
 
 def make_gemini_rest_adapter(
@@ -302,6 +349,10 @@ def build_adapters(
             if _gemini_rest_available():
                 registry["gemini_rest"] = make_gemini_rest_adapter()
             continue
+        if name == "nvidia_nim":
+            if _nvidia_nim_available():
+                registry["nvidia_nim"] = make_nvidia_nim_adapter()
+            continue
         spec = SPECS.get(name)
         if spec is None:
             continue
@@ -318,6 +369,9 @@ def build_adapters(
     # Auto-register gemini_rest when GEMINI_API_KEY / GOOGLE_API_KEY is present
     if providers is None and "gemini_rest" not in registry and _gemini_rest_available():
         registry["gemini_rest"] = make_gemini_rest_adapter()
+    # Auto-register nvidia_nim when NVIDIA_API_KEY is present (100+ frontier models)
+    if providers is None and "nvidia_nim" not in registry and _nvidia_nim_available():
+        registry["nvidia_nim"] = make_nvidia_nim_adapter()
 
     return registry
 
