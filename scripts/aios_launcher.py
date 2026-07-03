@@ -373,6 +373,8 @@ _MEMORY_COMMANDS = [
     ("cls-train",  "Phase C: corpus→QLoRA dataset (GPU-free) + founder-gated fine-tune"),
     ("self-model", "What AIOS knows about itself"),
     ("profile",    "Learn & manage your preferences / working style (personalization)"),
+    ("goal",       "Set / pursue / achieve goals — the joy of closing the gap (인생사)"),
+    ("life",       "The agent's life story: honor, aspirations, chapters (인생사)"),
 ]
 # Operator / advanced — functional but not front-of-house for new users.
 _ADVANCED_COMMANDS = [
@@ -587,6 +589,17 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "profile":
         return run_delegate(
             [sys.executable, script_path(root, "aios_user_model.py").as_posix(), *args.args],
+            cwd=Path.cwd())
+
+    if args.cmd == "goal":
+        return run_delegate(
+            [sys.executable, script_path(root, "aios_agent_life.py").as_posix(), *args.args],
+            cwd=Path.cwd())
+
+    if args.cmd == "life":
+        life_args = args.args or ["show"]
+        return run_delegate(
+            [sys.executable, script_path(root, "aios_agent_life.py").as_posix(), *life_args],
             cwd=Path.cwd())
 
     if args.cmd == "onboard":

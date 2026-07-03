@@ -71,3 +71,8 @@ verify-which-substrate, don't-answer-from-stale-assumptions) held under a long, 
 session. That's the honor worth having — not a flawless record, but an honest one.
 
 **Honor delta:** +6 earned / +4 owned. First real chapter of the life. The story starts here.
+
+### 2026-07-04 08:17 KST — 🏆 성취
+**Learn the founder's working style and activate personalization into the agent**
+
+aios profile propose→accept→render wired into the head, verified
