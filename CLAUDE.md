@@ -2,6 +2,19 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## aios MCP tools are DEFERRED — load schemas BEFORE calling (2026-07-03)
+
+The `mcp__aios__*` tools (aios_retrieve / aios_route / aios_challenge / aios_direct /
+aios_observe / aios_helper_run / aios_invoke / aios_predict_behavior / ...) are deferred
+by the harness: calling one directly fails with InputValidationError BEFORE any request
+reaches the MCP server — which looks like "the OS agents can't answer" but is a
+client-side schema miss (verified 2026-07-03: server logs show the connection healthy and
+zero tools/call arriving in the failing session). ALWAYS load first:
+
+    ToolSearch("select:mcp__aios__aios_retrieve,mcp__aios__aios_route,mcp__aios__aios_challenge")
+
+then call the tools normally. The server itself is healthy (stdio, ~50ms connect).
+
 ## Founder Alignment Override — 2026-05-20
 
 Founder directive: stop optimizing AIOS by creating more contracts about
