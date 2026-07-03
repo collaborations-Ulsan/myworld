@@ -473,7 +473,14 @@ def main(argv: list[str] | None = None) -> int:
         return run_delegate(runtime_command(root, [args.cmd, *args.args]), cwd=root)
 
     if args.cmd == "ask":
-        return run_delegate(ask_command(root, args.args), cwd=root)
+        # Unified single-prompt behavior: answer via the intent-routing chat
+        # router (same path as bare `aios "..."`). The governance/praxis envelope
+        # stays available for operator use as `aios ask --route`.
+        if "--route" in args.args or "--plan" in args.args:
+            passthrough = [a for a in args.args if a not in ("--route", "--plan")]
+            return run_delegate(ask_command(root, passthrough), cwd=root)
+        msg = " ".join(a for a in args.args if not a.startswith("-"))
+        return run_delegate(chat_command(root, ["--message", msg]), cwd=root)
 
     if args.cmd == "chat":
         return run_delegate(chat_command(root, args.args), cwd=root)
@@ -537,6 +544,13 @@ def main(argv: list[str] | None = None) -> int:
         return run_delegate(cmd, cwd=Path.cwd())
 
     if args.cmd == "do":
+        # Unified single-prompt behavior: a flag-free `aios do "..."` routes
+        # through the chat router — one consistent behavior with `aios "..."` and
+        # `aios ask`. Power-user flags (--tools/--base-url/--model/--provider/
+        # --dry-run/--max-turns/--verbose/--json) keep the raw harness path below.
+        if args.args and not any(a.startswith("-") for a in args.args):
+            msg = " ".join(args.args)
+            return run_delegate(chat_command(root, ["--message", msg]), cwd=root)
         # Zero-friction task execution: aios do "goal" → harness with smart defaults.
         # Model is left unpinned so the harness routes by task horizon (renewal
         # pillar 2): long/multi-step tasks → reasoning model, short → fast model.
