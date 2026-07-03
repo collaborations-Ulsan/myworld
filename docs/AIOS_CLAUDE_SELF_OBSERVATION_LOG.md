@@ -2692,3 +2692,16 @@ localStorage 히스토리 → 페이지 새로고침 후 대화 복원
 - key_decision: implement the experiment-prescribed correction (guidance attempt-1-only) as ENGINEERING, no new ASC contract (Founder Alignment Override freeze respected)
 - new_invariant_or_pattern_discovered: ledger guidance must be injected attempt-1-only, never always-on (always-on reproduced retry-anchoring harm A 0.85→B 0.70; C recovered to 0.775 + cheapest tokens). AND no-launder applies UPWARD: C beats B on every axis but does NOT beat bare on final solve (A 0.85 > C 0.775) — reported straight, next pivot named.
 - self-correction-of-prior-observation: prior portfolio framing laundered positives→nulls; new CLAUDE.md rule 9 (earn-the-keystone / negative→pivot) applied here — closed the mixed A/B positive over B via the pivot, without over-claiming vs bare
+
+## 2026-07-03 17:00 KST — claude@myworld — demo→service: AIOS surfaces made to deliver value (NIM-backed)
+
+- session_id: founder infowar session (NVIDIA NIM key drop → build agent surfaces)
+- mode_breakdown: observe:verify:decide:intervene:escalate ≈ 10:35:10:40:5 (~heavy verify+intervene)
+- tools_used: Bash, Read, Edit, Write, Agent (2 research subagents: claude/codex arch + local file crack), git (commits as claude@myworld), TaskCreate/Update, ToolSearch, curl (serve verify)
+- tools_NOT_used (CLI gap): playwright/browser — chromium not installed at /opt/google/chrome, could not screenshot the live web UI (ASC-0066: browser-proof is a Claude-CLI-available-but-env-blocked capability)
+- substrate_specific_behaviors_observed: routed LABOR (bulky claude/codex/hermes reverse-engineering reads) to subagents to protect main context; used heterogeneous NIM models directly (deepseek-v4-pro native tool_calls verified) rather than a Claude fork for the agent-CLI build
+- failures_recovered: (1) codex config `wire_api="chat"` broke codex load → reverted from backup; (2) adapter tests went env-sensitive when NVIDIA_API_KEY present → isolated env in setUp; (3) `pkill -f` self-matched (exit 144) → switched to PID-scoped kill (matches prior prizehunter memory)
+- failures_escalated_to_founder: public URL exposure (serve is localhost-only; real tunnel is founder-gated, ASC-0253)
+- key_decision: unify all end-user surfaces (bare `aios`, ask, do, web /run) around the existing intent-classifying chat router + NIM as the service-default provider — one behavior instead of divergent commands
+- new_invariant_or_pattern_discovered: AIOS's surfaces RAN but never DELIVERED value ("governance exoskeleton" — ask emitted a praxis envelope, do swallowed output, serve routed to weak ollama). The demo→service fix was DELIVERY + a strong provider path, NOT more governance. Corollary: before claiming a provider was used, verify WHICH substrate answered — a silent local backstop (ollama) masked NIM and nearly got laundered as a NIM success.
+- self-correction-of-prior-observation: caught myself mid-report about to claim "aios do routes to NIM cleanly" when the clean answer had actually come from the ollama backstop (NIM 404'd on a double-/v1 URL + api_key="none"); re-verified at the unit level before asserting.
