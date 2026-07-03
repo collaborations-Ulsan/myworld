@@ -1088,6 +1088,11 @@ def _auto_provider(goal: str) -> str:
     Always falls back to ollama_rest if either model is missing.
     """
     adapters_mod = _load("aios_adapters")
+    # Prefer the strong hosted NIM fleet (100+ frontier models) when the key is
+    # present — service-grade answers for the web/end-user surface. Falls back to
+    # the always-on local Ollama when NVIDIA_API_KEY is not set.
+    if adapters_mod._nvidia_nim_available():
+        return "nvidia_nim"
     if not adapters_mod._ollama_rest_available():
         if adapters_mod._gemini_rest_available():
             return "gemini_rest"
@@ -1108,8 +1113,9 @@ def _auto_provider(goal: str) -> str:
 def _default_adapters(authorized_provider: str) -> dict[str, Callable[[str], str]]:
     adapters_mod = _load("aios_adapters")
     if authorized_provider == "auto":
-        # Ollama (fast local) → Gemini REST (free cloud) → Anthropic REST (paid cloud)
-        providers = ["ollama_rest", "ollama_rest_8b", "gemini_rest", "anthropic_rest"]
+        # NVIDIA NIM (strong hosted, key-gated) → Ollama (fast local) →
+        # Gemini REST (free cloud) → Anthropic REST (paid cloud)
+        providers = ["nvidia_nim", "ollama_rest", "ollama_rest_8b", "gemini_rest", "anthropic_rest"]
         return adapters_mod.build_adapters(providers=providers)
     return adapters_mod.build_adapters(providers=[authorized_provider])
 

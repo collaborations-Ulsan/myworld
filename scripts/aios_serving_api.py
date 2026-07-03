@@ -167,10 +167,13 @@ class Handler(BaseHTTPRequestHandler):
                 active_sessions = len(_sessions)
             head = _import_head()
             adapters_mod = head._load("aios_adapters")
+            nim_ok = adapters_mod._nvidia_nim_available()
             ollama_ok = adapters_mod._ollama_rest_available()
             gemini_ok = adapters_mod._gemini_rest_available()
             anthropic_ok = adapters_mod._anthropic_rest_available()
-            if ollama_ok:
+            if nim_ok:
+                active_provider = "nvidia_nim"
+            elif ollama_ok:
                 active_provider = "ollama"
             elif gemini_ok:
                 active_provider = "gemini_rest"
