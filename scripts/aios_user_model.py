@@ -17,8 +17,13 @@ CLI:  aios profile propose            # (a)+(b) scan sessions → propose prefer
       aios profile render             # accepted preferences → CLAUDE.md-style block
 """
 from __future__ import annotations
-import os, sys, json, re, argparse
+import os, sys, json, re, argparse, random
 from pathlib import Path
+
+# Exploration rate (recsys filter-bubble guard): with this probability the injected
+# guidance nudges the agent to propose a better approach instead of just conforming to
+# learned habits — so personalization doesn't ossify the user's past behavior.
+EXPLORE_EPSILON = float(os.environ.get("AIOS_PROFILE_EPSILON", "0.15"))
 
 def _aios_home() -> Path:
     return Path(os.environ.get("AIOS_HOME") or (Path.home() / ".aios")).expanduser()
@@ -181,14 +186,26 @@ def _move(keys: list[str], to: str) -> int:
     print(f"{to}: {moved} preference(s). Active profile now drives the agent via `aios profile render`.")
     return 0
 
+def render_block(epsilon: float = EXPLORE_EPSILON) -> str:
+    """Accepted preferences as an injectable guidance block (empty if none).
+
+    The head/router prepends this to the model prompt so personalization is ACTIVE.
+    With probability `epsilon`, append an exploration nudge (filter-bubble guard)."""
+    acc = _load().get("accepted", [])
+    if not acc:
+        return ""
+    lines = ["# 유저 선호 (학습됨, draft-first — 언제든 override 가능)"]
+    lines += [f"- {p['statement']}" for p in acc]
+    if epsilon > 0 and random.random() < epsilon:
+        lines.append("- (탐색) 위 습관을 존중하되, 명백히 더 나은 접근이 있으면 "
+                     "그대로 따르지 말고 간단히 제안하라.")
+    return "\n".join(lines) + "\n"
+
 def cmd_render() -> int:
     """Accepted preferences → an injectable guidance block (for the head/router)."""
-    prof = _load()
-    if not prof["accepted"]:
-        return 0
-    print("# Learned user preferences (accepted, draft-first — user may override anytime)")
-    for p in prof["accepted"]:
-        print(f"- {p['statement']}")
+    block = render_block(epsilon=0.0)   # deterministic for display
+    if block:
+        sys.stdout.write(block)
     return 0
 
 def main(argv=None) -> int:

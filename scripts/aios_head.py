@@ -345,7 +345,7 @@ def make_provider_sampler(provider: str, adapters: dict[str, Callable[[str], str
         f"  {t['name']} — {t.get('description', t['class'])}"
         for t in _tool_list
     )
-    goal_line = f"Goal: {goal[:200]}\n" if goal else ""
+    goal_line = (_user_prefs() + f"Goal: {goal[:200]}\n") if goal else ""
 
     def sampler(history: list[dict]) -> dict:
         tl = _load("aios_turn_loop")
@@ -843,6 +843,17 @@ def _organ_postamble(goal: str, result: dict, root: Path, *, run_id: str | None 
     }
 
 
+def _user_prefs() -> str:
+    """Learned+accepted user preferences (personalization), graceful if absent.
+
+    Prepended to model prompts so the agent respects the user's style. Includes an
+    exploration nudge with probability EXPLORE_EPSILON (filter-bubble guard)."""
+    try:
+        return _load("aios_user_model").render_block()
+    except Exception:  # noqa: BLE001 — personalization is best-effort, never blocks
+        return ""
+
+
 def _organ_synthesis(goal: str, result: dict, preamble: dict | None = None,
                       root: "Path | None" = None, prior_context: str = "") -> str:
     """Synthesis step: after the turn loop, generate a concise final answer.
@@ -929,6 +940,7 @@ def _organ_synthesis(goal: str, result: dict, preamble: dict | None = None,
     _code_hint = any(kw in goal.lower() for kw in (
         "코드", "구현", "작성", "code", "implement", "write", "function", "def ", "class "))
     synthesis_prompt = (
+        f"{_user_prefs()}"
         f"{prior_section}"
         f"Goal: {goal}\n\n"
         f"{mem_context}\n\n"
