@@ -426,6 +426,19 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> int:
+    argv = list(sys.argv[1:] if argv is None else argv)
+
+    # Single-prompt UX (end-user interface = one input box): when the first
+    # non-flag token is not a subcommand, treat the whole input as a natural-
+    # language prompt and route it to the intent-classifying chat router — so
+    # `aios "what is X"` answers, `aios "write a script that ..."` executes, and
+    # the user never has to pick do/ask/chat. Real commands and flags pass through.
+    _nonflag = [a for a in argv if not a.startswith("-")]
+    if _nonflag and _nonflag[0] not in _ALL_COMMANDS and "--root" not in argv:
+        root, _ = resolve_root(None)
+        prompt = " ".join(a for a in argv if a != "--")
+        return run_delegate(chat_command(root, ["--message", prompt]), cwd=root)
+
     parser = build_parser()
     args = parser.parse_args(argv)
 
