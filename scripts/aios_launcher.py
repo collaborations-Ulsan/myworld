@@ -388,6 +388,7 @@ _MEMORY_COMMANDS = [
     ("solve",      "AB-MCTS collective intelligence: solve a hard task across a frozen model pool"),
     ("verify-ledger", "Akashic Merkle verifiability: root / prove an entry / public checkpoint"),
     ("keystone-bench", "Does the AIOS commons/DescentNet causally beat a frequency baseline?"),
+    ("guard",      "Cheap H0 poison filter for the Akashic commons — audit / score a candidate contribution"),
 ]
 # Operator / advanced — functional but not front-of-house for new users.
 _ADVANCED_COMMANDS = [
@@ -659,6 +660,11 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "keystone-bench":
         return run_delegate(
             [sys.executable, script_path(root, "aios_keystone_bench.py").as_posix(), *args.args],
+            cwd=Path.cwd())
+
+    if args.cmd == "guard":
+        return run_delegate(
+            [sys.executable, script_path(root, "aios_akashic_guard.py").as_posix(), *args.args],
             cwd=Path.cwd())
 
     if args.cmd == "onboard":
