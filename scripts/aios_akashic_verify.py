@@ -30,48 +30,49 @@ def _checkpoints() -> Path:
 def _sha(s: str) -> str:
     return hashlib.sha256(s.encode()).hexdigest()
 
-# ── Merkle tree over content-addressed IDs (deterministic: leaves = sorted sha(id)) ──
+# ── Merkle tree — MUST match the Cloudflare Worker's canonical algorithm
+# (deploy/akashic-worker/src/worker.js) so local verification agrees with the hosted
+# commons: leaf = sha256("leaf:"+id) (domain-separated), INSERTION ORDER (never sorted),
+# odd tail duplicates the last node, node = sha256(left_hex + right_hex).
 def _leaf(entry_id: str) -> str:
-    return _sha(entry_id)
+    return _sha("leaf:" + entry_id)
 
-def merkle_root(entry_ids: list[str]) -> str:
-    if not entry_ids:
+def _root_from_leaves(leaves: list[str]) -> str:
+    if not leaves:
         return _sha("")
-    layer = sorted(_leaf(e) for e in entry_ids)
+    layer = list(leaves)
     while len(layer) > 1:
-        nxt = []
-        for i in range(0, len(layer), 2):
-            a = layer[i]
-            b = layer[i + 1] if i + 1 < len(layer) else layer[i]  # duplicate last if odd
-            nxt.append(_sha(a + b))
-        layer = nxt
+        if len(layer) % 2 == 1:
+            layer.append(layer[-1])
+        layer = [_sha(layer[i] + layer[i + 1]) for i in range(0, len(layer), 2)]
     return layer[0]
 
+def merkle_root(entry_ids: list[str]) -> str:
+    return _root_from_leaves([_leaf(e) for e in entry_ids])   # insertion order
+
 def merkle_proof(entry_ids: list[str], target_id: str) -> "list[dict] | None":
-    """Return the sibling path proving target_id ∈ ledger, or None if absent."""
-    layer = sorted(_leaf(e) for e in entry_ids)
+    """Sibling path proving target_id ∈ ledger, or None if absent. `side` = where the
+    SIBLING sits (matches the worker's `position`)."""
+    leaves = [_leaf(e) for e in entry_ids]
     target = _leaf(target_id)
-    if target not in layer:
+    if target not in leaves:
         return None
-    idx = layer.index(target)
-    proof = []
+    idx = leaves.index(target)
+    layer, proof = list(leaves), []
     while len(layer) > 1:
-        sib = idx ^ 1
-        if sib >= len(layer):
-            sib = idx  # odd tail duplicates itself
-        proof.append({"hash": layer[sib], "side": "right" if sib > idx else "left"})
-        nxt = []
-        for i in range(0, len(layer), 2):
-            a = layer[i]; b = layer[i + 1] if i + 1 < len(layer) else layer[i]
-            nxt.append(_sha(a + b))
-        layer, idx = nxt, idx // 2
+        if len(layer) % 2 == 1:
+            layer.append(layer[-1])
+        sib = idx + 1 if idx % 2 == 0 else idx - 1
+        proof.append({"hash": layer[sib], "side": "right" if idx % 2 == 0 else "left"})
+        layer = [_sha(layer[i] + layer[i + 1]) for i in range(0, len(layer), 2)]
+        idx //= 2
     return proof
 
 def verify_proof(target_id: str, proof: list[dict], root: str) -> bool:
     """Independently recompute the root from a leaf + proof and compare."""
     h = _leaf(target_id)
     for step in proof:
-        h = _sha(step["hash"] + h) if step["side"] == "left" else _sha(h + step["hash"])
+        h = _sha(h + step["hash"]) if step["side"] == "right" else _sha(step["hash"] + h)
     return h == root
 
 # ── Local ledger access ──────────────────────────────────────────────────────
