@@ -105,3 +105,25 @@ founder 지시("내 연구들 파보면 알듯이, 최신 기술의 집약체")�
 - **정확한 프레이밍**: AIOS = **DescentNet 라인의 엔지니어링 집약체**(그 한 줄기는 실제 wired). 전체 physics-ML corpus(APEX·diffusion-score·information-substrate)의 종합은 일관된 지적 through-line·야심이지 아직 코드-레벨 통합은 아님.
 
 **AGI-엔진 thesis 갱신**: AIOS의 edge = 스캐폴드-레이어(인큐번트가 흡수 중) + **DescentNet obstruction/answerability backbone(인큐번트에 없음, 창업자 고유)**. 후자가 §5 keystone("commons가 인과적으로 돕는가")을 EARN하는 기술적 지렛대일 수 있음 — obstruction이 memory 오염/모순을 수학적으로 flag하니 §Akashic 검증과 직결.
+
+---
+
+## 7. Keystone CLOSED — earned NEGATIVE (Rungs 0–4, 2026-07-04)
+
+§5C의 keystone("AIOS 레이어가 vanilla baseline을 인과적으로 이긴다")를 negative→pivot 루프로 완주해 **정직하게 닫음** (tracker subagent, `docs/AIOS_KEYSTONE_EXPERIMENT.md` Rung 0–4).
+
+**결과 (no-launder 양방향):**
+- **stated 모든 형태에서 NEGATIVE**: 예측(R0/R1: DescentNet 신호=0) · cross-agent 커먼즈 전이(R2: base-rate 대비 0) · 오염저항(R3/R4: H¹ AUC ≤0.59, 무료 tool-entropy 필터 0.66–0.69에 **지배당함**). 실제 오염은 **H⁰-shape**(vocabulary shift)지 H¹-shape(same-vocab cyclic)가 아님.
+- **살아남은 것 (아래로도 세탁 안 함)**: H¹은 **same-vocab cyclic 모순의 유일 탐지기** — B2 witness AUC 1.00(Cohen d=278), B′에서 실데이터에 genuine cyclic 구조 존재(floor 0.0) 확인. 프리미티브·수학은 sound. 단 **non-dominant**(현실 위협과 niche 불일치), prevalence는 EARN하되 threat-match는 아님.
+
+**thesis 재보정 (정직)**: §3–6이 기대한 **"DescentNet = AGI moat"는 empirically 무너졌다.** AIOS의 진짜·검증된 값어치는 DescentNet 차별점이 아니라:
+- **검증가능 commons 인프라** (Phase 2 Merkle/proof/checkpoint — 작동)
+- **멀티-substrate 오케스트레이션** (AB-MCTS — 작동)
+- **값싼 H⁰ consistency 필터** (Jaccard/entropy/variance, AUC 0.63–0.69, ~0비용 — 오염가드로 ship)
+- **정직한 verification-first 문화 + frontier 규율 주입**
+
+**엔지니어링 결정**: 커먼즈 오염가드 = **값싼 H⁰ 필터를 ship. DescentNet/H¹은 오염가드로 ship하지 않음** (measured same-vocab-cyclic 유즈케이스 나올 때까지 shelf).
+
+**공개(먼저 공개) 함의**: 인플레된 "AGI 엔진" 주장이 아니라 — 그건 죽음 — **rigorous negative-with-witness**가 진짜 공개물: "sheaf-cohomology 프리미티브는 예측·전이·일반 오염저항을 개선하지 않는다; 단 same-vocab cyclic 모순만 유일하게 탐지한다(witness AUC 1.00), 현실 위협엔 무료 필터가 지배한다." **fablize식 정직한-rigor의 학술판** — 부풀린 승리보다 credible하고 priority를 잡음. no-launder가 거짓 공개를 막고 진짜 공개물을 남김.
+
+**named exit 도달**: exhaustive impossibility (그 자체로 강한 positive 주장). 유일 residual: H¹ AUC가 데이터로 monotone 상승(0.514→0.590) — 실배포에서 H⁰ baseline 교차 시에만 재개.
