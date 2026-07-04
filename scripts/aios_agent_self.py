@@ -34,7 +34,7 @@ Store ($AIOS_HOME or ~/.aios), per agent (env AIOS_AGENT_ID / --agent / "default
     checkpoints.jsonl  — append-only session-death records {ts, session, in_flight, next, note}
     SELF.md            — the COMPILED artifact (identity + accepted learnings + last checkpoint)
 
-Ops:  birth  learn  accept  reject  checkpoint  carry  status
+Ops:  birth  learn  accept  reject  checkpoint  carry  install-hooks  uninstall-hooks  status
 Schema: aios.agent_self.v1
 """
 from __future__ import annotations
@@ -43,12 +43,29 @@ import argparse
 import hashlib
 import json
 import os
+import shlex
+import shutil
 import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
 
 SCHEMA = "aios.agent_self.v1"
+
+# Marker embedded (as a shell comment) in every SessionStart hook command we write,
+# so install is idempotent and uninstall can remove EXACTLY our entries and nothing
+# else. Base = all agents; per-agent form appends "(agent=<id>)".
+HOOK_MARKER = "aios-self:install-hooks"
+
+# The self-maintenance instruction baked into carry renders — the injected self
+# teaches its carrier how to keep the self alive (learn / checkpoint / review).
+SELF_MAINTENANCE = (
+    "SELF-MAINTENANCE: You carry this self. When you learn a durable "
+    "correction/what-worked, propose it: `aios self learn --kind ... --text \"...\"`. "
+    "Before the session ends, record where you left off: "
+    "`aios self checkpoint --in-flight \"...\" --next \"...\"`. Acceptance requires "
+    "explicit human review (`aios self accept <id> --reviewer ... --note ...`)."
+)
 
 # The 7 AIOS DNA invariants, one line — baked into every compiled SELF.md footer.
 DNA_ONELINE = (
@@ -303,34 +320,39 @@ def checkpoint(in_flight: str, next_: str, note: str | None = None,
     return entry
 
 
-def carry(target: str, agent_id: str | None = None, max_words: int = 1200) -> str | dict:
-    """Render the freshly-compiled SELF for a target substrate."""
+def carry(target: str, agent_id: str | None = None, max_words: int = 1200,
+          hook: bool = False) -> str | dict:
+    """Render the freshly-compiled SELF for a target substrate.
+
+    hook=True (SessionStart auto-birth): wrap the render in the Claude Code
+    hook JSON envelope so the compiled SELF is injected as session context.
+    """
     aid = resolve_agent_id(agent_id)
     info = birth(aid, max_words=max_words)  # always fresh
     _, _, _, _, self_p = _paths(aid)
     body = self_p.read_text(encoding="utf-8").rstrip()
 
+    render: str | dict
     if target == "json":
-        return {**info, "self_md": body}
-
-    if target == "claude":
-        return (
+        render = {**info, "self_md": body}
+    elif target == "claude":
+        render = (
             "```markdown\n"
             "<!-- AIOS composite SELF — add to CLAUDE.md or a SessionStart-hook "
             "additionalContext. Load at session start / first attempt only. -->\n"
-            f"{body}\n"
+            f"{body}\n\n"
+            f"{SELF_MAINTENANCE}\n"
             "```\n"
         )
-
-    if target == "codex":
-        return (
+    elif target == "codex":
+        render = (
             "```markdown\n"
             "<!-- AIOS composite SELF — add to AGENTS.md. Load at session start only. -->\n"
-            f"{body}\n"
+            f"{body}\n\n"
+            f"{SELF_MAINTENANCE}\n"
             "```\n"
         )
-
-    if target == "system":
+    elif target == "system":
         # Plain system-prompt text — strip markdown headers/fences entirely.
         out_lines = []
         for line in body.splitlines():
@@ -338,9 +360,21 @@ def carry(target: str, agent_id: str | None = None, max_words: int = 1200) -> st
             if stripped.strip() == "---":
                 continue
             out_lines.append(stripped)
-        return "\n".join(out_lines).strip() + "\n"
+        render = "\n".join(out_lines).strip() + "\n"
+    else:
+        raise ValueError(f"unknown carry target {target!r} (use claude|codex|system|json)")
 
-    raise ValueError(f"unknown carry target {target!r} (use claude|codex|system|json)")
+    if hook:
+        if not isinstance(render, str):
+            raise ValueError("--hook requires a text target (claude|codex|system), not json")
+        # Claude Code SessionStart hook envelope (same shape the working repo hooks emit).
+        return {
+            "hookSpecificOutput": {
+                "hookEventName": "SessionStart",
+                "additionalContext": render,
+            }
+        }
+    return render
 
 
 def status(agent_id: str | None = None) -> dict:
@@ -373,6 +407,125 @@ def status(agent_id: str | None = None) -> dict:
         "last_checkpoint": last_ckpt,
         "identity_seeded": identity_p.exists(),
     }
+
+
+# ── hook install / uninstall ─────────────────────────────────────────────────
+
+def _settings_path_for_scope(scope: str) -> Path:
+    if scope == "user":
+        return Path.home() / ".claude" / "settings.json"
+    if scope == "project":
+        return Path.cwd() / ".claude" / "settings.json"
+    raise ValueError(f"scope must be 'user' or 'project', got {scope!r}")
+
+
+def _self_hook_command(agent_id: str, explicit_agent: bool) -> tuple[str, str]:
+    """Build the SessionStart hook command + its per-agent idempotency marker.
+
+    Uses `aios` when on PATH (the robust invocation), else falls back to the
+    current interpreter + this script's absolute path so a missing launcher on
+    PATH does not break the hook."""
+    agent_flag = f"--agent {shlex.quote(agent_id)} " if explicit_agent else ""
+    if shutil.which("aios"):
+        base = f"aios self {agent_flag}carry --to claude --hook"
+    else:
+        script = str(Path(__file__).resolve())
+        base = (f'"{sys.executable}" "{script}" self {agent_flag}'
+                "carry --to claude --hook")
+    marker = f"{HOOK_MARKER}(agent={agent_id})"
+    # `|| true` keeps the session non-blocking (matches the repo's other hooks);
+    # the trailing `# <marker>` is what makes install idempotent and uninstall exact.
+    command = f"{base} 2>/dev/null || true  # {marker}"
+    return command, marker
+
+
+def _load_settings(path: Path) -> dict:
+    """Read-modify-write helper: never clobber a corrupt-but-precious file."""
+    if not path.exists():
+        return {}
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as e:
+        raise ValueError(
+            f"refusing to touch {path}: not valid JSON ({e}); fix or remove it first")
+    if not isinstance(data, dict):
+        raise ValueError(f"refusing to touch {path}: top-level JSON is not an object")
+    return data
+
+
+def install_hooks(scope: str = "user", agent_id: str | None = None,
+                  settings_path: str | Path | None = None) -> dict:
+    """Wire a SessionStart hook that auto-births the SELF into a Claude Code
+    settings.json. Idempotent and reversible; preserves all unrelated content."""
+    aid = resolve_agent_id(agent_id)
+    path = Path(settings_path) if settings_path else _settings_path_for_scope(scope)
+    data = _load_settings(path)
+    command, marker = _self_hook_command(aid, explicit_agent=agent_id is not None)
+
+    hooks = data.setdefault("hooks", {})
+    if not isinstance(hooks, dict):
+        raise ValueError(f"refusing to touch {path}: 'hooks' is not an object")
+    session_start = hooks.setdefault("SessionStart", [])
+    if not isinstance(session_start, list):
+        raise ValueError(f"refusing to touch {path}: 'hooks.SessionStart' is not a list")
+
+    for group in session_start:
+        for h in (group.get("hooks", []) if isinstance(group, dict) else []):
+            if isinstance(h, dict) and marker in (h.get("command") or ""):
+                return {
+                    "schema": SCHEMA, "status": "already-installed", "agent_id": aid,
+                    "scope": scope, "settings": str(path), "command": command,
+                    "revert": f"aios self uninstall-hooks --scope {scope}",
+                }
+
+    # Append our OWN hook group — never mutate any pre-existing group.
+    session_start.append({"hooks": [{"type": "command", "command": command}]})
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    return {
+        "schema": SCHEMA, "status": "installed", "agent_id": aid, "scope": scope,
+        "settings": str(path), "command": command,
+        "wrote": f"SessionStart hook -> {path} (auto-births the SELF every session)",
+        "revert": f"aios self uninstall-hooks --scope {scope}",
+    }
+
+
+def uninstall_hooks(scope: str = "user", agent_id: str | None = None,
+                    settings_path: str | Path | None = None) -> dict:
+    """Remove EXACTLY the SessionStart hook entries we installed (marker-matched),
+    leaving every other hook and setting untouched."""
+    path = Path(settings_path) if settings_path else _settings_path_for_scope(scope)
+    if not path.exists():
+        return {"schema": SCHEMA, "status": "no-settings", "scope": scope,
+                "settings": str(path), "removed": 0}
+    data = _load_settings(path)
+    removed = 0
+    hooks = data.get("hooks")
+    if isinstance(hooks, dict) and isinstance(hooks.get("SessionStart"), list):
+        session_start = hooks["SessionStart"]
+        new_groups = []
+        for group in session_start:
+            if not isinstance(group, dict):
+                new_groups.append(group)
+                continue
+            kept = []
+            for h in group.get("hooks", []):
+                if isinstance(h, dict) and HOOK_MARKER in (h.get("command") or ""):
+                    removed += 1
+                    continue
+                kept.append(h)
+            if kept:
+                new_group = dict(group)
+                new_group["hooks"] = kept
+                new_groups.append(new_group)
+            elif "hooks" not in group:
+                new_groups.append(group)
+            # else: group had only our hook(s) -> drop the now-empty group
+        hooks["SessionStart"] = new_groups
+    if removed:
+        path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    return {"schema": SCHEMA, "status": "uninstalled" if removed else "nothing-to-remove",
+            "scope": scope, "settings": str(path), "removed": removed}
 
 
 # ── CLI ──────────────────────────────────────────────────────────────────────
@@ -417,6 +570,15 @@ def build_parser() -> argparse.ArgumentParser:
     cr = sub.add_parser("carry", help="render SELF for a target substrate")
     cr.add_argument("--to", required=True, choices=["claude", "codex", "system", "json"])
     cr.add_argument("--max-words", type=int, default=1200)
+    cr.add_argument("--hook", action="store_true",
+                    help="wrap the render in a Claude Code SessionStart hook envelope")
+
+    ih = sub.add_parser("install-hooks",
+                        help="wire a SessionStart hook that auto-births the SELF")
+    ih.add_argument("--scope", choices=["user", "project"], default="user")
+
+    uh = sub.add_parser("uninstall-hooks", help="remove exactly our SessionStart hook")
+    uh.add_argument("--scope", choices=["user", "project"], default="user")
 
     sub.add_parser("status", help="counts + last birth/checkpoint + store path")
     return p
@@ -439,7 +601,11 @@ def main(argv: list[str] | None = None) -> int:
             _emit(checkpoint(args.in_flight, args.next, note=args.note or None,
                              session=args.session or None, agent_id=aid))
         elif args.op == "carry":
-            _emit(carry(args.to, agent_id=aid, max_words=args.max_words))
+            _emit(carry(args.to, agent_id=aid, max_words=args.max_words, hook=args.hook))
+        elif args.op == "install-hooks":
+            _emit(install_hooks(scope=args.scope, agent_id=aid))
+        elif args.op == "uninstall-hooks":
+            _emit(uninstall_hooks(scope=args.scope, agent_id=aid))
         elif args.op == "status":
             _emit(status(aid))
         else:  # pragma: no cover

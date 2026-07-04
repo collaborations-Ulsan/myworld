@@ -59,6 +59,20 @@ Act one is the headline: the ledger turns run 1's experience into run 2's head s
 
 ---
 
+## Your agent, continuous — the composite self
+
+A frozen model is born amnesiac every session. The **composite self** fixes that: a portable, white-box SELF any agent loads at birth — identity + limits, human-reviewed learnings, and the last checkpoint (where you left off) — carried across sessions *and* substrates (Claude Code / Codex / any MCP client).
+
+```sh
+aios self birth            # compile your SELF.md (identity + accepted learnings + last checkpoint)
+aios self install-hooks    # zero-config: wire Claude Code to auto-birth the self every session
+aios self carry --to codex # render the same self for another substrate (Codex / system prompt / json)
+```
+
+Draft-first and honest: nothing enters the self without your explicit review (`aios self accept <id> --reviewer ... --note ...`), and injection happens at session-start only — measured, because mid-retry re-injection collapses recovery 68%->19%.
+
+---
+
 ## AkashicRecord — live behavioral ledger
 
 The global memory layer is live and public. No sign-up required.

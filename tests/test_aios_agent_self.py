@@ -188,6 +188,116 @@ class AgentSelfTest(unittest.TestCase):
         self.assertEqual(st["checkpoints"], 1)
         self.assertTrue(st["store"].startswith(self.tmp.name))
 
+    # ── carry: self-maintenance instruction ────────────────────────────────
+    def test_carry_renders_contain_self_maintenance(self):
+        self.m.birth("a1")
+        claude = self.m.carry("claude", agent_id="a1")
+        codex = self.m.carry("codex", agent_id="a1")
+        self.assertIn("SELF-MAINTENANCE", claude)
+        self.assertIn("aios self learn", claude)
+        self.assertIn("aios self checkpoint", claude)
+        self.assertIn("aios self accept", claude)
+        self.assertIn("SELF-MAINTENANCE", codex)
+
+    # ── carry --hook envelope ──────────────────────────────────────────────
+    def test_carry_hook_emits_valid_envelope(self):
+        self.m.birth("a1")
+        e = self.m.learn("what_worked", "Wired the SessionStart hook.", agent_id="a1")
+        self.m.accept(e["id"], reviewer="r", note="n", agent_id="a1")
+        env = self.m.carry("claude", agent_id="a1", hook=True)
+        self.assertIsInstance(env, dict)
+        # round-trips through json (valid envelope)
+        parsed = json.loads(json.dumps(env))
+        hso = parsed["hookSpecificOutput"]
+        self.assertEqual(hso["hookEventName"], "SessionStart")
+        self.assertIn("Wired the SessionStart hook", hso["additionalContext"])
+        self.assertIn("SELF-MAINTENANCE", hso["additionalContext"])
+
+    def test_carry_hook_json_target_rejected(self):
+        self.m.birth("a1")
+        with self.assertRaises(ValueError):
+            self.m.carry("json", agent_id="a1", hook=True)
+
+    # ── install-hooks: creates + idempotent + preserves + reversible ───────
+    def _settings(self):
+        return Path(self.tmp.name) / "settings.json"
+
+    def test_install_hooks_creates_sessionstart_entry(self):
+        sp = self._settings()
+        info = self.m.install_hooks(scope="project", agent_id="a1", settings_path=sp)
+        self.assertEqual(info["status"], "installed")
+        self.assertTrue(sp.exists())
+        data = json.loads(sp.read_text())
+        groups = data["hooks"]["SessionStart"]
+        cmds = [h["command"] for g in groups for h in g["hooks"]]
+        self.assertTrue(any("carry --to claude --hook" in c for c in cmds))
+        self.assertTrue(any(self.m.HOOK_MARKER in c for c in cmds))
+
+    def test_install_hooks_idempotent(self):
+        sp = self._settings()
+        self.m.install_hooks(scope="project", agent_id="a1", settings_path=sp)
+        second = self.m.install_hooks(scope="project", agent_id="a1", settings_path=sp)
+        self.assertEqual(second["status"], "already-installed")
+        data = json.loads(sp.read_text())
+        cmds = [h["command"] for g in data["hooks"]["SessionStart"]
+                for h in g["hooks"] if self.m.HOOK_MARKER in h["command"]]
+        self.assertEqual(len(cmds), 1)  # no duplicate
+
+    def test_install_hooks_preserves_unrelated(self):
+        sp = self._settings()
+        preexisting = {
+            "permissions": {"defaultMode": "acceptEdits"},
+            "hooks": {
+                "SessionStart": [
+                    {"hooks": [{"type": "command", "command": "echo keep-me"}]}
+                ],
+                "PreToolUse": [
+                    {"matcher": "Bash", "hooks": [{"type": "command", "command": "echo pre"}]}
+                ],
+            },
+        }
+        sp.write_text(json.dumps(preexisting))
+        self.m.install_hooks(scope="project", agent_id="a1", settings_path=sp)
+        data = json.loads(sp.read_text())
+        self.assertEqual(data["permissions"]["defaultMode"], "acceptEdits")
+        all_ss = [h["command"] for g in data["hooks"]["SessionStart"] for h in g["hooks"]]
+        self.assertIn("echo keep-me", all_ss)
+        self.assertEqual(data["hooks"]["PreToolUse"][0]["hooks"][0]["command"], "echo pre")
+        self.assertTrue(any(self.m.HOOK_MARKER in c for c in all_ss))
+
+    def test_uninstall_hooks_removes_only_ours(self):
+        sp = self._settings()
+        preexisting = {
+            "hooks": {
+                "SessionStart": [
+                    {"hooks": [{"type": "command", "command": "echo keep-me"}]}
+                ]
+            }
+        }
+        sp.write_text(json.dumps(preexisting))
+        self.m.install_hooks(scope="project", agent_id="a1", settings_path=sp)
+        out = self.m.uninstall_hooks(scope="project", agent_id="a1", settings_path=sp)
+        self.assertEqual(out["removed"], 1)
+        data = json.loads(sp.read_text())
+        all_ss = [h["command"] for g in data["hooks"]["SessionStart"] for h in g["hooks"]]
+        self.assertIn("echo keep-me", all_ss)  # unrelated survives
+        self.assertFalse(any(self.m.HOOK_MARKER in c for c in all_ss))  # ours gone
+
+    def test_install_hooks_corrupt_settings_aborts_unchanged(self):
+        sp = self._settings()
+        corrupt = "{ this is not: valid json ,,, "
+        sp.write_text(corrupt)
+        with self.assertRaises(ValueError):
+            self.m.install_hooks(scope="project", agent_id="a1", settings_path=sp)
+        self.assertEqual(sp.read_text(), corrupt)  # file untouched
+
+    def test_real_claude_settings_untouched_by_install(self):
+        # sanity: explicit tmp path means the real ~/.claude/settings.json is never in play
+        sp = self._settings()
+        self.m.install_hooks(scope="project", agent_id="a1", settings_path=sp)
+        self.assertTrue(str(self.tmp.name) in str(sp))
+        self.assertNotEqual(str(sp), str(Path.home() / ".claude" / "settings.json"))
+
     # ── CLI smoke ──────────────────────────────────────────────────────────
     def test_cli_status_runs(self):
         rc = self.m.main(["--agent", "a1", "status"])
