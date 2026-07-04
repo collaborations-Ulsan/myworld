@@ -30,12 +30,17 @@ def _checkpoints() -> Path:
 def _sha(s: str) -> str:
     return hashlib.sha256(s.encode()).hexdigest()
 
-# ── Merkle tree — MUST match the Cloudflare Worker's canonical algorithm
-# (deploy/akashic-worker/src/worker.js) so local verification agrees with the hosted
-# commons: leaf = sha256("leaf:"+id) (domain-separated), INSERTION ORDER (never sorted),
-# odd tail duplicates the last node, node = sha256(left_hex + right_hex).
-def _leaf(entry_id: str) -> str:
-    return _sha("leaf:" + entry_id)
+# ── Merkle tree — matches the Cloudflare Worker's algorithm so local verification
+# agrees with the hosted commons: INSERTION ORDER (never sorted), odd tail duplicates
+# the last node, node = sha256(left_hex + right_hex).
+# LEAF NOTE: the LIVE deployed commons uses leaf = sha256(id). The repo worker.js has
+# since moved to domain-separated leaf = sha256("leaf:"+id) — that applies only on the
+# next (founder-gated) deploy, which will re-root the tree (a planned migration). So
+# verification tries BOTH leaf formats and accepts whichever reconstructs the root.
+def _leaf(entry_id: str) -> str:               # canonical = LIVE deployment
+    return _sha(entry_id)
+def _leaf_variants(entry_id: str) -> list[str]:
+    return [_sha(entry_id), _sha("leaf:" + entry_id)]
 
 def _root_from_leaves(leaves: list[str]) -> str:
     if not leaves:
@@ -69,11 +74,15 @@ def merkle_proof(entry_ids: list[str], target_id: str) -> "list[dict] | None":
     return proof
 
 def verify_proof(target_id: str, proof: list[dict], root: str) -> bool:
-    """Independently recompute the root from a leaf + proof and compare."""
-    h = _leaf(target_id)
-    for step in proof:
-        h = _sha(h + step["hash"]) if step["side"] == "right" else _sha(step["hash"] + h)
-    return h == root
+    """Independently recompute the root from a leaf + proof and compare. Tries both
+    leaf formats (live sha256(id) and domain-separated) for deploy-transition safety."""
+    for leaf0 in _leaf_variants(target_id):
+        h = leaf0
+        for step in proof:
+            h = _sha(h + step["hash"]) if step["side"] == "right" else _sha(step["hash"] + h)
+        if h == root:
+            return True
+    return False
 
 # ── Local ledger access ──────────────────────────────────────────────────────
 def _load_ids() -> list[str]:
@@ -103,12 +112,69 @@ def emit_checkpoint(server: str = "local") -> dict:
         f.write(json.dumps(entry) + "\n")
     return entry
 
+# ── Remote verification against the live global commons (trust-minimizing) ──────
+AKASHIC = os.environ.get("AIOS_AKASHIC_URL", "https://aios-akashic.cjw070690.workers.dev")
+
+def _get(path: str, timeout: int = 15) -> dict:
+    import urllib.request
+    # Cloudflare 403s the default python-urllib User-Agent — send a real one.
+    req = urllib.request.Request(AKASHIC + path, headers={"User-Agent": "aios-cli/1.0"})
+    with urllib.request.urlopen(req, timeout=timeout) as r:
+        return json.load(r)
+
+def verify_remote(entry_id: str) -> dict:
+    """Prove an entry is in the GLOBAL commons WITHOUT trusting the server: fetch its
+    Merkle proof, recompute the root locally, and cross-check that root against the
+    live /root and the latest public checkpoint (the audit anchor)."""
+    try:
+        pr = _get(f"/proof/{entry_id}")
+    except Exception as e:
+        return {"in_commons": False, "error": f"proof fetch failed: {e}"}
+    proof = pr.get("merkle_proof") or pr.get("proof")
+    root = pr.get("merkle_root") or pr.get("root")
+    if not proof or not root:
+        return {"in_commons": False, "error": pr.get("error", "no proof (entry not in commons)")}
+    # worker uses key "position"; our verifier uses "side" (= where the sibling sits)
+    norm = [{"hash": s["hash"], "side": s.get("side") or s.get("position")} for s in proof]
+    verified = verify_proof(entry_id, norm, root)
+    live_root = None
+    try:
+        live_root = _get("/root").get("root_hash")
+    except Exception:
+        pass
+    # public checkpoint anchor: latest recorded root (the server cannot forge history here)
+    cp_roots = set()
+    if _checkpoints().exists():
+        for line in _checkpoints().read_text(encoding="utf-8").splitlines():
+            try: cp_roots.add(json.loads(line).get("root_hash"))
+            except json.JSONDecodeError: pass
+    return {"in_commons": True, "verified": verified, "root": root,
+            "matches_live_root": (root == live_root) if live_root else None,
+            "root_in_public_checkpoints": root in cp_roots, "proof_depth": len(norm)}
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(prog="aios verify-ledger", description="Akashic Merkle verifiability")
     ap.add_argument("--id", help="prove a specific entry id is in the ledger")
+    ap.add_argument("--remote", action="store_true",
+                    help="verify --id against the LIVE global commons (fetch proof, verify locally)")
     ap.add_argument("--checkpoint", action="store_true", help="append a public checkpoint")
     ap.add_argument("--json", action="store_true")
     a = ap.parse_args(argv)
+
+    if a.remote:
+        if not a.id:
+            print("--remote requires --id <beh-id>"); return 2
+        r = verify_remote(a.id)
+        if a.json:
+            print(json.dumps({"id": a.id, **r}, ensure_ascii=False, indent=2)); return 0 if r.get("verified") else 1
+        if not r.get("in_commons"):
+            print(f"✗ {a.id} is NOT in the global commons ({r.get('error')})"); return 1
+        print(f"✓ {a.id} is in the GLOBAL commons")
+        print(f"✓ Merkle proof {'VERIFIED locally' if r['verified'] else 'FAILED'} "
+              f"(depth {r['proof_depth']}, root sha256:{r['root'][:20]}…)")
+        print(f"  matches live /root: {r['matches_live_root']}  ·  "
+              f"root in public checkpoints: {r['root_in_public_checkpoints']}")
+        return 0 if r["verified"] else 1
 
     ids = _load_ids()
     root = merkle_root(ids)
