@@ -59,6 +59,26 @@ Act one is the headline: the ledger turns run 1's experience into run 2's head s
 
 ---
 
+## Install as a Claude Code plugin (2 commands, zero setup)
+
+The primary zero-config path. No `pip`, no venv, no PyPI, no `claude mcp add` — the plugin bundles the AIOS core (stdlib-only Python 3) and wires everything itself:
+
+```
+/plugin marketplace add cjw0076/myworld
+/plugin install aios@aios-claude
+```
+
+That's the whole install. You get, on the next session:
+
+- **Composite self on every session** — a `SessionStart` hook auto-births your SELF (identity + accepted behavioral memory + last checkpoint) and injects it as session context, so the agent carries forward what worked instead of starting from zero.
+- **The AIOS MCP server** — `route` / `helper_run` / `retrieve` / `challenge` / `observe` plus the 5 self tools (`aios_self_status/birth/learn/checkpoint/carry`) show up in your tool list.
+
+Everything runs from the plugin's own bundled copy via `${CLAUDE_PLUGIN_ROOT}` and bare `python3` — nothing to install at runtime. (The marketplace becomes live once this repo is pushed to `cjw0076/myworld`; until then, add it from a local clone with `/plugin marketplace add /path/to/myworld`.)
+
+`pip install -e .` (below / Quickstart) remains the fallback for non-plugin users, and `uvx --from aios-os aios-mcp` is the documented PyPI alternative for the MCP server alone.
+
+---
+
 ## Your agent, continuous — the composite self
 
 A frozen model is born amnesiac every session. The **composite self** fixes that: a portable, white-box SELF any agent loads at birth — identity + limits, human-reviewed learnings, and the last checkpoint (where you left off) — carried across sessions *and* substrates (Claude Code / Codex / any MCP client).

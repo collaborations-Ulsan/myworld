@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "aios": {
+      "command": "python3",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/scripts/aios_mcp_server.py", "--root", "${CLAUDE_PLUGIN_ROOT}"],
+      "description": "AIOS delegation interface — exposes AIOS organs (route, helper_run, retrieve, challenge, observe) plus the 5 composite-self tools (status/birth/learn/checkpoint/carry) as MCP tools. Stdlib-only stdio server; no external dependencies."
+    }
+  }
+}

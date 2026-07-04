@@ -1,0 +1,18 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "aios-claude",
+  "description": "AIOS as a Claude Code plugin — composite self (SessionStart hook) + the AIOS MCP server, self-contained and stdlib-only. Install with two slash commands, no pip/venv/PyPI.",
+  "owner": {
+    "name": "Jaewon Choi",
+    "url": "https://github.com/cjw0076"
+  },
+  "plugins": [
+    {
+      "name": "aios",
+      "description": "AIOS organ head for Claude Code: a SessionStart hook auto-births your composite self (behavioral-memory ledger carried across sessions), and the AIOS MCP server exposes route/retrieve/challenge/observe plus the 5 self tools. Stdlib-only Python 3, no external deps.",
+      "source": "./plugin/aios",
+      "category": "productivity",
+      "tags": ["ai", "agent", "memory", "local-first", "aios", "mcp", "self"]
+    }
+  ]
+}

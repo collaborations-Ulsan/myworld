@@ -1,0 +1,14 @@
+{
+  "name": "aios",
+  "version": "0.2.0",
+  "description": "AIOS organ head for Claude Code: SessionStart hook auto-births your composite self (behavioral-memory ledger carried across sessions and models), and the AIOS MCP server exposes route/retrieve/challenge/observe plus the 5 self tools. Self-contained, stdlib-only Python 3 — no pip, venv, or PyPI needed.",
+  "author": {
+    "name": "cjw0076",
+    "email": "cjw070690@gmail.com",
+    "url": "https://github.com/cjw0076"
+  },
+  "homepage": "https://github.com/cjw0076/myworld",
+  "repository": "https://github.com/cjw0076/myworld",
+  "license": "MIT",
+  "keywords": ["ai", "agent", "memory", "local-first", "aios", "mcp", "self"]
+}

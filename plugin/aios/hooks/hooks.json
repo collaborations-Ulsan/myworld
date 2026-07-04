@@ -1,0 +1,17 @@
+{
+  "description": "AIOS composite-self auto-birth: on every session start the compiled SELF (identity + accepted behavioral memory + last checkpoint) is injected as additionalContext, so the agent carries forward what worked instead of starting from zero.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/scripts/aios_agent_self.py\" carry --to claude --hook 2>/dev/null || true",
+            "timeout": 15,
+            "statusMessage": "Birthing AIOS composite self..."
+          }
+        ]
+      }
+    ]
+  }
+}

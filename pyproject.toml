@@ -38,6 +38,11 @@ ollama  = []          # Ollama is a local binary — install via aios setup appl
 
 [project.scripts]
 aios = "aios_launcher:main"
+# Documented PyPI/uvx alternative to the Claude Code plugin:
+#   uvx --from aios-os aios-mcp
+# The plugin itself does NOT depend on this entry point — it runs the bundled
+# scripts/aios_mcp_server.py directly via ${CLAUDE_PLUGIN_ROOT} and bare python3.
+aios-mcp = "aios_mcp_server:main"
 
 [tool.setuptools]
 # The functional AIOS core is a set of flat, stdlib-only modules under scripts/.
@@ -85,6 +90,7 @@ py-modules  = [
     "aios_agent_behavior",
     "aios_agent_self",
     "aios_acp_drive",
+    "aios_mcp_server",
 ]
 # aios_primitives is a stdlib-only PACKAGE (not a flat module): aios_runtime does
 # `from aios_primitives import events`, so it must ship as a package, not via
