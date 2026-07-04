@@ -63,6 +63,15 @@ TOP_P = 0.9
 # Behavioral action vocabulary the ledger reasons over (generic, task-agnostic).
 BEHAVIOR_TOOLS = ["WriteCode", "RunOracle", "ReadError", "FixEdgeCase", "HandleEmpty"]
 
+# Arm D control: a FIXED, generic, task-AGNOSTIC advice string — NOT derived from the
+# ledger. Injected attempt-1-only exactly like Arm C, so D vs C isolates whether the
+# ledger's SPECIFIC recalled content is the active ingredient, or whether ANY sensible
+# advice prefix produces the same first-shot lift. Pre-registered; never tuned per-task.
+FIXED_ADVICE = (
+    "Read the spec carefully. Handle edge cases and empty inputs. "
+    "Write the function, run the test, and fix any failure."
+)
+
 
 # ---------------------------------------------------------------------------
 # Task battery
@@ -385,6 +394,11 @@ def _arm_metrics(runs: list[dict]) -> dict:
     solved = [r for r in runs if r["solved"]]
     first = [r for r in runs if r.get("solved_first")]
     att_solved = [r["attempts"] for r in solved]
+    # Retry recovery (the mechanism variable): among runs whose FIRST attempt failed,
+    # the fraction that were recovered on the oracle-feedback retry. A run passes attempt 1
+    # iff solved_first; so attempt-1 failures = not solved_first, and recovered = solved.
+    first_fails = [r for r in runs if not r.get("solved_first")]
+    recovered = [r for r in first_fails if r["solved"]]
     return {
         "trials": n,
         "solved": len(solved),
@@ -396,6 +410,9 @@ def _arm_metrics(runs: list[dict]) -> dict:
         "total_out_tokens": sum(r["out_tokens"] for r in runs),
         "total_in_tokens": sum(r["in_tokens"] for r in runs),
         "errored_runs": sum(1 for r in runs if not r["ok"]),
+        "attempt1_failures": len(first_fails),
+        "retry_recovered": len(recovered),
+        "retry_recovery_rate": round(len(recovered) / len(first_fails), 4) if first_fails else None,
     }
 
 
@@ -415,29 +432,44 @@ def run_experiment(model: str, trials: int, dry_run: bool = False) -> dict:
     # 2) build the (single, generic) behavioral guidance block
     guidance = build_guidance(model)
 
-    # 3) run both arms on every TEST task x trials, alternating arm order per trial
+    # 3) run all arms on every TEST task x trials, alternating arm order per trial
     per_task: dict[str, dict] = {}
     arm_a_runs: list[dict] = []
     arm_b_runs: list[dict] = []
     arm_c_runs: list[dict] = []
+    arm_d_runs: list[dict] = []
     raw_runs: list[dict] = []
 
     # Arm C = the headline-A/B design correction: ledger guidance on attempt 1 only.
-    ORDERS = [["A", "B", "C"], ["B", "C", "A"], ["C", "A", "B"]]
+    # Arm D = fixed-advice control: attempt-1-only like C, but a generic task-agnostic
+    #         string (FIXED_ADVICE) instead of the ledger — isolates "ledger content"
+    #         from "any sensible advice prefix" (the load-bearing new comparison).
+    ORDERS = [
+        ["A", "B", "C", "D"],
+        ["B", "C", "D", "A"],
+        ["C", "D", "A", "B"],
+        ["D", "A", "B", "C"],
+    ]
     for task_idx, task in enumerate(test_tasks):
         a_runs: list[dict] = []
         b_runs: list[dict] = []
         c_runs: list[dict] = []
+        d_runs: list[dict] = []
         for trial in range(trials):
             # matched seed slot per (task,trial) — same for all arms. Deterministic
             # (task_idx, not hash()) so the whole run is reproducible across processes.
             slot = 1000 + task_idx * 100 + trial
-            order = ORDERS[trial % 3]
+            order = ORDERS[trial % 4]
             results: dict[str, dict] = {}
             for arm in order:
-                g = "" if arm == "A" else guidance["text"]
+                if arm == "A":
+                    g = ""
+                elif arm == "D":
+                    g = FIXED_ADVICE
+                else:  # B, C both use the ledger-derived guidance text
+                    g = guidance["text"]
                 res = run_arm(task, model, guidance=g, seed_slot=slot,
-                              guidance_first_only=(arm == "C"))
+                              guidance_first_only=(arm in ("C", "D")))
                 results[arm] = res
                 raw_runs.append({
                     "task": task.name, "arm": arm, "trial": trial,
@@ -448,19 +480,23 @@ def run_experiment(model: str, trials: int, dry_run: bool = False) -> dict:
             a_runs.append(results["A"])
             b_runs.append(results["B"])
             c_runs.append(results["C"])
+            d_runs.append(results["D"])
         arm_a_runs += a_runs
         arm_b_runs += b_runs
         arm_c_runs += c_runs
+        arm_d_runs += d_runs
         per_task[task.name] = {
             "A": _arm_metrics(a_runs),
             "B": _arm_metrics(b_runs),
             "C": _arm_metrics(c_runs),
+            "D": _arm_metrics(d_runs),
         }
 
     elapsed = round(time.time() - t0, 1)
     agg_a = _arm_metrics(arm_a_runs)
     agg_b = _arm_metrics(arm_b_runs)
     agg_c = _arm_metrics(arm_c_runs)
+    agg_d = _arm_metrics(arm_d_runs)
 
     return {
         "config": {
@@ -482,10 +518,12 @@ def run_experiment(model: str, trials: int, dry_run: bool = False) -> dict:
             "ranked_actions": guidance["ranked"],
             "memories_used": guidance["memories"],
             "predict_method": guidance["method"],
+            "fixed_advice_control": FIXED_ADVICE,
         },
         "arm_A_bare": agg_a,
         "arm_B_ledger": agg_b,
         "arm_C_ledger_first_only": agg_c,
+        "arm_D_fixed_advice": agg_d,
         "per_task": per_task,
         "raw_runs": raw_runs,
         "elapsed_s": elapsed,
@@ -523,13 +561,17 @@ def main(argv: Optional[list[str]] = None) -> int:
 
     a, b = results["arm_A_bare"], results["arm_B_ledger"]
     c = results["arm_C_ledger_first_only"]
+    d = results["arm_D_fixed_advice"]
     print(f"[headline_ab] done in {results['elapsed_s']}s  "
-          f"solve A={a['solve_rate']} B={b['solve_rate']} C={c['solve_rate']}  "
-          f"pass@1 A={a['first_attempt_solve_rate']} B={b['first_attempt_solve_rate']} C={c['first_attempt_solve_rate']}  "
-          f"meanAtt A={a['mean_attempts_all']} B={b['mean_attempts_all']} C={c['mean_attempts_all']}  "
-          f"tok A={a['total_out_tokens']} B={b['total_out_tokens']} C={c['total_out_tokens']}", file=sys.stderr)
-    print("[headline_ab] C = ledger guidance on attempt-1 ONLY (design correction). "
-          "Target: keep B's first-shot lift, recover A's retry recovery.", file=sys.stderr)
+          f"solve A={a['solve_rate']} B={b['solve_rate']} C={c['solve_rate']} D={d['solve_rate']}  "
+          f"pass@1 A={a['first_attempt_solve_rate']} B={b['first_attempt_solve_rate']} C={c['first_attempt_solve_rate']} D={d['first_attempt_solve_rate']}  "
+          f"meanAtt A={a['mean_attempts_all']} B={b['mean_attempts_all']} C={c['mean_attempts_all']} D={d['mean_attempts_all']}  "
+          f"tok A={a['total_out_tokens']} B={b['total_out_tokens']} C={c['total_out_tokens']} D={d['total_out_tokens']}  "
+          f"retryRec A={a['retry_recovery_rate']} B={b['retry_recovery_rate']} C={c['retry_recovery_rate']} D={d['retry_recovery_rate']}", file=sys.stderr)
+    print("[headline_ab] C = ledger guidance attempt-1 ONLY (design correction); "
+          "D = FIXED generic advice attempt-1 only (control). "
+          "Key: C-vs-B fixes retry collapse? C-vs-A keeps first-shot gain? C-vs-D is ledger content > any advice?",
+          file=sys.stderr)
 
     if args.out:
         Path(args.out).parent.mkdir(parents=True, exist_ok=True)

@@ -73,6 +73,69 @@ def test_arm_metrics_empty_solved():
     assert m["mean_attempts_all"] == 2.0
 
 
+def test_arm_metrics_retry_recovery():
+    """Retry-recovery (the mechanism variable): among attempt-1 failures (not solved_first),
+    the fraction recovered on the feedback retry (solved)."""
+    runs = [
+        {"solved": True,  "solved_first": True,  "attempts": 1, "out_tokens": 1, "in_tokens": 1, "ok": True},  # passed@1: not a first-fail
+        {"solved": True,  "solved_first": False, "attempts": 2, "out_tokens": 1, "in_tokens": 1, "ok": True},  # first-fail, recovered
+        {"solved": False, "solved_first": False, "attempts": 2, "out_tokens": 1, "in_tokens": 1, "ok": True},  # first-fail, not recovered
+    ]
+    m = h._arm_metrics(runs)
+    assert m["attempt1_failures"] == 2
+    assert m["retry_recovered"] == 1
+    assert m["retry_recovery_rate"] == 0.5
+    # no attempt-1 failures -> rate is None (no division)
+    m2 = h._arm_metrics([{"solved": True, "solved_first": True, "attempts": 1,
+                          "out_tokens": 1, "in_tokens": 1, "ok": True}])
+    assert m2["attempt1_failures"] == 0
+    assert m2["retry_recovery_rate"] is None
+
+
+def test_arm_d_fixed_advice_first_only(monkeypatch):
+    """Arm D uses the FIXED generic advice string, injected on attempt 1 ONLY (dropped on
+    the oracle-feedback retry) — the same gating as Arm C, but content-agnostic."""
+    prompts: list[str] = []
+
+    def fake_generate(prompt, model, seed, temperature=h.TEMPERATURE):
+        prompts.append(prompt)
+        return {"text": "```python\ndef f():\n    return 1\n```",
+                "out_tokens": 5, "in_tokens": 5, "ok": True, "error": ""}
+
+    monkeypatch.setattr(h, "generate", fake_generate)
+    monkeypatch.setattr(h, "run_oracle", lambda *a: (False, "AssertionError: boom"))  # force the retry
+
+    task = h.load_battery()["test"][0]
+    res = h.run_arm(task, "stub-model", guidance=h.FIXED_ADVICE, seed_slot=7,
+                    guidance_first_only=True)
+    assert res["attempts"] == 2                      # attempt-1 failed -> retried
+    assert h.FIXED_ADVICE in prompts[0]              # attempt 1 carries the fixed advice
+    assert h.FIXED_ADVICE not in prompts[1]          # retry drops it (attempt-1-only)
+    assert task.prompt.strip()[:20] in prompts[1]    # retry still has the real task + oracle error
+
+
+def test_run_experiment_wires_arm_d(monkeypatch):
+    """Fully hermetic: stub the model + oracle and assert Arm D appears in the results dict
+    exactly parallel to A/B/C, and the fixed-advice control string is recorded."""
+    monkeypatch.setattr(
+        h, "generate",
+        lambda prompt, model, seed, temperature=h.TEMPERATURE: {
+            "text": "```python\ndef f():\n    return 1\n```",
+            "out_tokens": 5, "in_tokens": 5, "ok": True, "error": "",
+        },
+    )
+    monkeypatch.setattr(h, "run_oracle", lambda *a: (True, "ok"))  # everything passes -> fast
+
+    results = h.run_experiment(model="stub-model", trials=1, dry_run=True)
+    for key in ("arm_A_bare", "arm_B_ledger", "arm_C_ledger_first_only", "arm_D_fixed_advice"):
+        assert key in results, f"missing arm key: {key}"
+    assert results["arm_D_fixed_advice"]["trials"] == 1
+    assert results["guidance"]["fixed_advice_control"] == h.FIXED_ADVICE
+    # per-task cells carry all four arms
+    for cell in results["per_task"].values():
+        assert set(cell.keys()) == {"A", "B", "C", "D"}
+
+
 def test_no_leakage_guard(monkeypatch):
     """Seed the ledger fully offline (stubbed model + oracle) and assert that NO TEST-task
     identifier leaks into any recorded behavioral object. The ledger must only ever carry
