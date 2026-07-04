@@ -4,3 +4,4 @@
 {"ts": "2026-06-19T21:03:06.669416+00:00", "root_hash": "a550ae22117e8085a2bb7fae4fb74f47d2f5d9de94389702361f3f1067988ac2", "entry_count": 1508, "server": "https://aios-akashic.cjw070690.workers.dev", "submitted_by": "claude-loop-iter14"}
 {"ts": "2026-06-20T00:12:05.186852+00:00", "root_hash": "a550ae22117e8085a2bb7fae4fb74f47d2f5d9de94389702361f3f1067988ac2", "entry_count": 1508, "server": "https://aios-akashic.cjw070690.workers.dev", "submitted_by": "aios-cli"}
 {"ts": "2026-06-20T01:25:15.143947+00:00", "root_hash": "a550ae22117e8085a2bb7fae4fb74f47d2f5d9de94389702361f3f1067988ac2", "entry_count": 1508, "server": "https://aios-akashic.cjw070690.workers.dev", "submitted_by": "aios-cli"}
+{"ts": "2026-07-04T05:58:53.315012+00:00", "root_hash": "c49efe2a707dbab2fce3df43ab9230b03871461bb9a967795b2559839b020ac7", "entry_count": 1065, "server": "local", "submitted_by": "aios-verify"}
