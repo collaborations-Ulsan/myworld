@@ -375,6 +375,7 @@ _MEMORY_COMMANDS = [
     ("profile",    "Learn & manage your preferences / working style (personalization)"),
     ("goal",       "Set / pursue / achieve goals — the joy of closing the gap (인생사)"),
     ("life",       "The agent's life story: honor, aspirations, chapters (인생사)"),
+    ("ground",     "Ground a time-sensitive question via a wrapped CLI's native web search"),
 ]
 # Operator / advanced — functional but not front-of-house for new users.
 _ADVANCED_COMMANDS = [
@@ -440,6 +441,17 @@ def main(argv: list[str] | None = None) -> int:
     if _nonflag and _nonflag[0] not in _ALL_COMMANDS and "--root" not in argv:
         root, _ = resolve_root(None)
         prompt = " ".join(a for a in argv if a != "--")
+        # Freshness gate: a recommendation / latest / model-choice question is grounded
+        # via a wrapped CLI's native web search (cached), NOT answered from a frozen
+        # model's stale cache. (Founder: answering without checking is not intelligence.)
+        try:
+            import aios_freshness as _fresh
+            if _fresh.is_fresh_route(prompt):
+                return run_delegate(
+                    [sys.executable, script_path(root, "aios_freshness.py").as_posix(), prompt],
+                    cwd=root)
+        except Exception:  # noqa: BLE001 — freshness routing is best-effort
+            pass
         return run_delegate(chat_command(root, ["--message", prompt]), cwd=root)
 
     parser = build_parser()
@@ -600,6 +612,11 @@ def main(argv: list[str] | None = None) -> int:
         life_args = args.args or ["show"]
         return run_delegate(
             [sys.executable, script_path(root, "aios_agent_life.py").as_posix(), *life_args],
+            cwd=Path.cwd())
+
+    if args.cmd == "ground":
+        return run_delegate(
+            [sys.executable, script_path(root, "aios_freshness.py").as_posix(), *args.args],
             cwd=Path.cwd())
 
     if args.cmd == "onboard":
