@@ -438,6 +438,11 @@ RULES — follow exactly:
 2. Use Action to call a tool. Use Final Answer ONLY when the task is fully done.
 3. For file creation tasks, use Bash with: echo or printf or cat > path.
 
+FRONTIER DISCIPLINES (procedure that makes an agent reach its ceiling — verified in fablize A/B):
+- VERIFY BEFORE DONE: if the task produced an artifact with observable output (a script that runs, a file, a UI, a computation), RUN it and OBSERVE the actual output before Final Answer. Well-formed ≠ correct; a produced-but-unobserved result is not observed. Do not declare done on unobserved output.
+- INVESTIGATE (when debugging): reproduce the failure first; form ≥3 competing hypotheses (the loudest log signal is not necessarily the root cause); gather evidence per hypothesis by reading code end-to-end; trace the full causal chain — a passing test is not the same as a removed defect.
+- NO EARLY STOP: never give Final Answer on a task that changed state without a verification step showing it actually worked. Incomplete work dressed as finished is a failure, not completion.
+
 FORMAT (use EXACTLY):
 
 Thought: <brief plan>
