@@ -376,6 +376,7 @@ _MEMORY_COMMANDS = [
     ("goal",       "Set / pursue / achieve goals — the joy of closing the gap (인생사)"),
     ("life",       "The agent's life story: honor, aspirations, chapters (인생사)"),
     ("ground",     "Ground a time-sensitive question via a wrapped CLI's native web search"),
+    ("solve",      "AB-MCTS collective intelligence: solve a hard task across a frozen model pool"),
 ]
 # Operator / advanced — functional but not front-of-house for new users.
 _ADVANCED_COMMANDS = [
@@ -617,6 +618,11 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "ground":
         return run_delegate(
             [sys.executable, script_path(root, "aios_freshness.py").as_posix(), *args.args],
+            cwd=Path.cwd())
+
+    if args.cmd == "solve":
+        return run_delegate(
+            [sys.executable, script_path(root, "aios_abmcts.py").as_posix(), *args.args],
             cwd=Path.cwd())
 
     if args.cmd == "onboard":
