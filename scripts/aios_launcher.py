@@ -156,6 +156,12 @@ def dream_command(root: Path, argv: list[str]) -> list[str]:
     return [sys.executable, script_path(root, "aios_dream.py").as_posix(), "--root", root.as_posix(), *argv]
 
 
+def drive_command(root: Path, argv: list[str]) -> list[str]:
+    # Standalone organ: it roots its receipts at AIOS_HOME and takes --cwd for the
+    # engine session, so it needs no --root injection (like demo_command).
+    return [sys.executable, script_path(root, "aios_acp_drive.py").as_posix(), *argv]
+
+
 def research_fetch_command(root: Path, argv: list[str]) -> list[str]:
     return [sys.executable, script_path(root, "aios_research_fetch.py").as_posix(), "--root", root.as_posix(), *argv]
 
@@ -363,6 +369,7 @@ _CORE_COMMANDS = [
     ("status",  "Runtime health and findings"),
     ("demo",    "30-second verifiable-AI demo"),
     ("ask",     "Single-shot question to the organism"),
+    ("drive",   "Drive a provider agent as an AIOS engine (ACP)"),
     ("setup",   "Install local models / configure providers"),
 ]
 _MEMORY_COMMANDS = [
@@ -524,6 +531,11 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.cmd == "dream":
         return run_delegate(dream_command(root, args.args), cwd=root)
+
+    if args.cmd == "drive":
+        # Run in the user's cwd so an engine without an explicit --cwd operates
+        # where the operator invoked `aios drive`.
+        return run_delegate(drive_command(root, args.args), cwd=Path.cwd())
 
     if args.cmd == "research-fetch":
         return run_delegate(research_fetch_command(root, args.args), cwd=root)

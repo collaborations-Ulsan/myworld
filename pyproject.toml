@@ -84,6 +84,7 @@ py-modules  = [
     "aios_local_app",
     "aios_agent_behavior",
     "aios_agent_self",
+    "aios_acp_drive",
 ]
 # aios_primitives is a stdlib-only PACKAGE (not a flat module): aios_runtime does
 # `from aios_primitives import events`, so it must ship as a package, not via
