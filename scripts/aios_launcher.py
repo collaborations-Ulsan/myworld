@@ -372,6 +372,7 @@ _MEMORY_COMMANDS = [
     ("cls-gate",   "Phase C: training-corpus selection + held-out eval (draft-first for weights)"),
     ("cls-train",  "Phase C: corpus→QLoRA dataset (GPU-free) + founder-gated fine-tune"),
     ("self-model", "What AIOS knows about itself"),
+    ("self",       "Agent composite self: birth / learn / carry / checkpoint"),
     ("profile",    "Learn & manage your preferences / working style (personalization)"),
     ("goal",       "Set / pursue / achieve goals — the joy of closing the gap (인생사)"),
     ("life",       "The agent's life story: honor, aspirations, chapters (인생사)"),
@@ -598,6 +599,11 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.cmd == "self-model":
         return run_delegate(self_model_command(root, args.args), cwd=root)
+
+    if args.cmd == "self":
+        return run_delegate(
+            [sys.executable, script_path(root, "aios_agent_self.py").as_posix(), *args.args],
+            cwd=root)
 
     if args.cmd == "profile":
         return run_delegate(
