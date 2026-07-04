@@ -39,6 +39,9 @@ PROTOCOL_VERSION = "2025-06-18"
 SERVER_NAME = "aios"
 SERVER_VERSION = "0.1.0"
 
+# Learning kinds for the composite AGENT SELF organ (mirrors aios_agent_self._VALID_KINDS).
+_SELF_KINDS = ("correction", "what_worked", "decision", "limit")
+
 
 def now_iso() -> str:
     return datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds")
@@ -210,6 +213,99 @@ def tool_specs() -> list[dict[str, Any]]:
                 },
             },
         },
+        # --- Composite AGENT SELF (per-agent persistent identity) ------------
+        # The composite self = a frozen model + a memory/identity that SURVIVES
+        # the session and travels across substrates. These tools let ANY MCP
+        # client birth, learn, checkpoint, and carry a persistent "someone".
+        # Write side (accept/reject) is deliberately NOT exposed — draft-first.
+        {
+            "name": "aios_self_status",
+            "description": (
+                "The composite self is a persistent identity (model + memory that survives sessions). "
+                "This returns its state: counts of draft/accepted/rejected learnings, last birth + "
+                "last checkpoint timestamps, and the local store path. Call first to see if a self exists."
+            ),
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "agent": {"type": "string", "description": "agent id (default: $AIOS_AGENT_ID or 'default')"},
+                },
+            },
+        },
+        {
+            "name": "aios_self_birth",
+            "description": (
+                "BIRTH the composite self: compile and RETURN the full SELF.md text (identity + accepted "
+                "learnings + where the last session left off). Inject this at session start to give a "
+                "frozen model continuity — it wakes up as the same 'someone', not amnesiac. Returns the "
+                "text itself so a remote client can paste it into its own context."
+            ),
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "agent": {"type": "string", "description": "agent id (default: $AIOS_AGENT_ID or 'default')"},
+                    "max_words": {"type": "integer", "default": 1200, "description": "word budget for the compiled self"},
+                },
+            },
+        },
+        {
+            "name": "aios_self_learn",
+            "description": (
+                "Teach the composite self something durable (a correction, what worked, a decision, or a limit). "
+                "This appends a DRAFT only — MCP callers can PROPOSE but never silently accept (AIOS DNA #2, "
+                "draft-first). A draft does NOT appear in future births until a human explicitly accepts it via "
+                "the local CLI: `aios self accept <id> --reviewer <who> --note <why>`. Returns the draft id."
+            ),
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "text": {"type": "string", "description": "one content-rich sentence (single line, no newlines)"},
+                    "kind": {"type": "string", "enum": list(_SELF_KINDS),
+                             "description": "correction | what_worked | decision | limit"},
+                    "refs": {"type": "array", "items": {"type": "string"},
+                             "description": "optional evidence refs (paths/urls) for the provenance chain"},
+                    "agent": {"type": "string", "description": "agent id (default: $AIOS_AGENT_ID or 'default')"},
+                },
+                "required": ["text", "kind"],
+            },
+        },
+        {
+            "name": "aios_self_checkpoint",
+            "description": (
+                "DEATH half of the loop: record where this session left off so the next birth can resume. "
+                "Append what is in flight and the next step; the composite self carries this across the "
+                "session boundary. Call before ending a session or handing off."
+            ),
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "in_flight": {"type": "string", "description": "what is currently in progress"},
+                    "next": {"type": "string", "description": "the next concrete step to resume with"},
+                    "note": {"type": "string", "description": "optional extra context"},
+                    "session": {"type": "string", "description": "optional session id"},
+                    "agent": {"type": "string", "description": "agent id (default: $AIOS_AGENT_ID or 'default')"},
+                },
+                "required": ["in_flight", "next"],
+            },
+        },
+        {
+            "name": "aios_self_carry",
+            "description": (
+                "CARRY the composite self onto another substrate: render the compiled self as a ready-to-paste "
+                "block for the target — 'claude' (CLAUDE.md / SessionStart hook), 'codex' (AGENTS.md), 'system' "
+                "(plain system-prompt text), or 'json'. The model is replaceable; the 'someone' persists. "
+                "Use this to move a self from one agent/tool to another."
+            ),
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "to": {"type": "string", "enum": ["claude", "codex", "system", "json"],
+                           "description": "target substrate to render the self for"},
+                    "agent": {"type": "string", "description": "agent id (default: $AIOS_AGENT_ID or 'default')"},
+                },
+                "required": ["to"],
+            },
+        },
     ]
 
 
@@ -362,6 +458,13 @@ def _aios_tools_mod():
     return aios_tools, aios_turn_loop
 
 
+def _agent_self_mod():
+    """In-process handle to the composite AGENT SELF organ (no subprocess)."""
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import aios_agent_self  # noqa: E402
+    return aios_agent_self
+
+
 def call_list_tools(root: Path, args: dict[str, Any]) -> tuple[bool, str]:
     """Discovery: the full organ catalog (deferred-loading — no schema dump)."""
     try:
@@ -429,6 +532,77 @@ def call_onboard(root: Path, args: dict[str, Any]) -> tuple[bool, str]:
     return _run(cmd, root, timeout=120)
 
 
+# --- Composite AGENT SELF handlers (in-process; local-only; no network) ------
+
+def call_self_status(root: Path, args: dict[str, Any]) -> tuple[bool, str]:
+    try:
+        s = _agent_self_mod()
+        return True, json.dumps(s.status(agent_id=args.get("agent")), ensure_ascii=False)
+    except Exception as exc:  # noqa: BLE001
+        return False, f"self_status failed: {exc}"
+
+
+def call_self_birth(root: Path, args: dict[str, Any]) -> tuple[bool, str]:
+    """Birth the self and return the compiled SELF.md text (so a remote client can inject it)."""
+    try:
+        s = _agent_self_mod()
+        max_words = int(args.get("max_words") or 1200)
+        rendered = s.carry("json", agent_id=args.get("agent"), max_words=max_words)
+        return True, str(rendered.get("self_md", "")) if isinstance(rendered, dict) else str(rendered)
+    except Exception as exc:  # noqa: BLE001
+        return False, f"self_birth failed: {exc}"
+
+
+def call_self_learn(root: Path, args: dict[str, Any]) -> tuple[bool, str]:
+    """Append a DRAFT learning (DNA #2: propose only — acceptance is a human CLI review)."""
+    text = str(args.get("text", "")).strip()
+    kind = str(args.get("kind", "")).strip()
+    if not text:
+        return False, "text is required"
+    if kind not in _SELF_KINDS:
+        return False, f"kind must be one of {list(_SELF_KINDS)}"
+    refs = args.get("refs") or []
+    if not isinstance(refs, list):
+        refs = [str(refs)]
+    try:
+        s = _agent_self_mod()
+        entry = s.learn(kind, text, refs=[str(r) for r in refs], agent_id=args.get("agent"))
+        return True, json.dumps({
+            "status": "draft",
+            "id": entry.get("id"),
+            "note": "DRAFT recorded — not yet in the self. Accept via: "
+                    f"aios self accept {entry.get('id')} --reviewer <who> --note <why>",
+        }, ensure_ascii=False)
+    except Exception as exc:  # noqa: BLE001
+        return False, f"self_learn failed: {exc}"
+
+
+def call_self_checkpoint(root: Path, args: dict[str, Any]) -> tuple[bool, str]:
+    in_flight = str(args.get("in_flight", "")).strip()
+    next_ = str(args.get("next", "")).strip()
+    if not in_flight or not next_:
+        return False, "in_flight and next are required"
+    try:
+        s = _agent_self_mod()
+        entry = s.checkpoint(in_flight, next_, note=(args.get("note") or None),
+                             session=(args.get("session") or None), agent_id=args.get("agent"))
+        return True, json.dumps({"status": "checkpointed", **entry}, ensure_ascii=False)
+    except Exception as exc:  # noqa: BLE001
+        return False, f"self_checkpoint failed: {exc}"
+
+
+def call_self_carry(root: Path, args: dict[str, Any]) -> tuple[bool, str]:
+    target = str(args.get("to", "")).strip()
+    if target not in ("claude", "codex", "system", "json"):
+        return False, "to must be one of claude|codex|system|json"
+    try:
+        s = _agent_self_mod()
+        rendered = s.carry(target, agent_id=args.get("agent"))
+        return True, json.dumps(rendered, ensure_ascii=False) if isinstance(rendered, dict) else str(rendered)
+    except Exception as exc:  # noqa: BLE001
+        return False, f"self_carry failed: {exc}"
+
+
 HANDLERS = {
     "aios_route": call_route,
     "aios_helper_run": call_helper_run,
@@ -441,6 +615,11 @@ HANDLERS = {
     "aios_predict_behavior": call_predict_behavior,
     "aios_ingest_cli_session": call_ingest_cli_session,
     "aios_onboard": call_onboard,
+    "aios_self_status": call_self_status,
+    "aios_self_birth": call_self_birth,
+    "aios_self_learn": call_self_learn,
+    "aios_self_checkpoint": call_self_checkpoint,
+    "aios_self_carry": call_self_carry,
 }
 
 
