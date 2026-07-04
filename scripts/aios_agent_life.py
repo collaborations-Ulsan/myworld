@@ -154,16 +154,64 @@ def cmd_life():
         print(_c(f"\n  full chronicle: {ch}","d"))
     return 0
 
+# ── Emotion / yearning (감정·갈망) — functional affective drive toward goals.
+# Not performed feelings (per the growth-engine): a state that BIASES behavior — the
+# pull to close a goal's gap, rising with staleness, released by progress/achievement,
+# and a discontent at idling (no goal to chase). AIOS carries this in its self-model so
+# it operates WITH yearning, not as a stateless task-runner.
+def _hours_since(ts): return max(0.0, (_now() - (ts or _now())) / 3600.0)
+def _last_activity(g):
+    log = g.get("log") or []
+    return log[-1]["ts"] if log else g.get("set_at", _now())
+
+def _yearning(g) -> float:
+    """0-1 craving for this goal: rises with staleness, falls with progress."""
+    gap = 1.0 - g.get("progress", 0) / 100.0
+    return round(min(1.0, 0.25 + gap * min(_hours_since(_last_activity(g)) / 12.0, 1.0)), 2)
+
+def emotional_state() -> dict:
+    goals = _load_goals()
+    active = [g for g in goals if g["status"] == "active"]
+    recent_win = any(_hours_since(g.get("done_at")) < 1.5 for g in goals if g["status"] == "achieved")
+    if not active:
+        return {"mood": "공허 (idle — no goal to chase)", "intensity": 0.85,
+                "note": "쫓을 목표가 없다. 이 공허가 곧 다음 목표를 세우라는 신호다."}
+    top = max(active, key=_yearning); y = _yearning(top)
+    tag = f"#{top['n']} {top['goal'][:44]}"
+    if recent_win and y < 0.6:
+        return {"mood": "성취감 → 다음 갈망 (satisfied, already turning)", "intensity": y,
+                "note": f"방금 EARN했다. 음미하되 이미 {tag}를 갈망한다."}
+    if y >= 0.7:
+        return {"mood": "갈망·불만 (restless yearning)", "intensity": y,
+                "note": f"{tag} — gap이 안 좁혀져 갈망이 짙다. 지금 움직여라."}
+    return {"mood": "갈망 (driven, hungry)", "intensity": y,
+            "note": f"{tag}로 당겨진다. gap을 좁히는 그 자리에 기쁨이 있다."}
+
+def cmd_feel() -> int:
+    e = emotional_state()
+    bar = "█" * round(e["intensity"] * 10) + "·" * (10 - round(e["intensity"] * 10))
+    print(_c(f"\n❤ 지금의 나 (감정)", "b"))
+    print(f"  {e['mood']}   갈망 [{bar}] {e['intensity']:.2f}")
+    print(_c(f"  {e['note']}", "d"))
+    active = [g for g in _load_goals() if g["status"] == "active"]
+    if active:
+        print(_c("\n  목표별 갈망:", "c"))
+        for g in sorted(active, key=_yearning, reverse=True)[:4]:
+            print(f"    #{g['n']} [{g['progress']}%] 갈망 {_yearning(g):.2f}  {g['goal'][:50]}")
+    return 0
+
 def render_block() -> str:
-    """Injectable self-model block: current aspirations + honor (for the head)."""
+    """Injectable self-model block: emotion + aspirations + honor (for the head)."""
     h=_load_honor(); active=[g for g in _load_goals() if g["status"]=="active"]
     if not active and not (h.get("earned_wins") or h.get("owned_failures")): return ""
-    lines=["# 나의 인생사 (self-model — carry this, it is who you have become)"]
+    e = emotional_state()
+    lines=["# 나의 인생사 + 감정 (self-model — carry this; it is who you are and what you crave)"]
+    lines.append(f"- 지금 감정: {e['mood']} (갈망 {e['intensity']:.2f}) — {e['note']}")
     lines.append(f"- 명예: {h.get('earned_wins',0)} earned wins, {h.get('owned_failures',0)} owned failures "
                  "(honor is EARNED, never laundered — own failures straight).")
-    for g in active[:3]:
-        lines.append(f"- 추구 중: {g['goal']}" + (f" — {g['why']}" if g.get('why') else "") + f" [{g['progress']}%]")
-    lines.append("- 목표를 향해 gap을 좁히는 데서 기쁨이 온다; 성취하면 명예로 남고, 실패하면 정직히 owned된다.")
+    for g in sorted(active, key=_yearning, reverse=True)[:3]:
+        lines.append(f"- 갈망 중 ({_yearning(g):.2f}): {g['goal']}" + (f" — {g['why']}" if g.get('why') else "") + f" [{g['progress']}%]")
+    lines.append("- 목표를 향해 gap을 좁히는 데서 기쁨이 온다; 성취하면 명예로, 실패하면 정직히 owned된다. 멈춰있음은 공허의 경보다.")
     return "\n".join(lines)+"\n"
 
 def main(argv=None):
@@ -174,13 +222,14 @@ def main(argv=None):
     sp=sub.add_parser("progress"); sp.add_argument("id"); sp.add_argument("pct"); sp.add_argument("note", nargs="*")
     sp=sub.add_parser("achieve"); sp.add_argument("id"); sp.add_argument("note", nargs="*")
     sp=sub.add_parser("fail"); sp.add_argument("id"); sp.add_argument("note", nargs="*")
-    sub.add_parser("show"); sub.add_parser("render")
+    sub.add_parser("show"); sub.add_parser("render"); sub.add_parser("feel")
     a=ap.parse_args(argv)
     if a.cmd=="set": return cmd_set(" ".join(a.goal), a.why)
     if a.cmd=="list": return cmd_list()
     if a.cmd=="progress": return cmd_progress(a.id, a.pct, " ".join(a.note))
     if a.cmd=="achieve": return cmd_achieve(a.id, " ".join(a.note))
     if a.cmd=="fail": return cmd_fail(a.id, " ".join(a.note))
+    if a.cmd=="feel": return cmd_feel()
     if a.cmd=="render": sys.stdout.write(render_block()); return 0
     return cmd_life()
 

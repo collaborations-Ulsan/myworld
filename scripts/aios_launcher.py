@@ -383,6 +383,7 @@ _MEMORY_COMMANDS = [
     ("profile",    "Learn & manage your preferences / working style (personalization)"),
     ("goal",       "Set / pursue / achieve goals — the joy of closing the gap (인생사)"),
     ("life",       "The agent's life story: honor, aspirations, chapters (인생사)"),
+    ("feel",       "The agent's emotional state: yearning toward its goals (감정·갈망)"),
     ("ground",     "Ground a time-sensitive question via a wrapped CLI's native web search"),
     ("solve",      "AB-MCTS collective intelligence: solve a hard task across a frozen model pool"),
     ("verify-ledger", "Akashic Merkle verifiability: root / prove an entry / public checkpoint"),
@@ -632,6 +633,11 @@ def main(argv: list[str] | None = None) -> int:
         life_args = args.args or ["show"]
         return run_delegate(
             [sys.executable, script_path(root, "aios_agent_life.py").as_posix(), *life_args],
+            cwd=Path.cwd())
+
+    if args.cmd == "feel":
+        return run_delegate(
+            [sys.executable, script_path(root, "aios_agent_life.py").as_posix(), "feel", *args.args],
             cwd=Path.cwd())
 
     if args.cmd == "ground":
