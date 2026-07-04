@@ -970,18 +970,27 @@ def _load_rows(path: Path, max_rows: int = 0) -> list[dict]:
 
 # ── Global AkashicRecord client ───────────────────────────────────────────────
 
-def _akashic_request(endpoint: str, payload: dict, timeout: int = 15) -> dict:
-    """POST to Global AkashicRecord. Returns parsed JSON or raises."""
+def _akashic_request(endpoint: str, payload: dict, timeout: int = 15,
+                     api_key: str | None = None) -> dict:
+    """POST to Global AkashicRecord. Returns parsed JSON or raises.
+
+    Sends X-AIOS-Key when a key is available — without it /sync returns 402 and the
+    global commons is a silent no-op (bug found by the keystone probe, 2026-07-04).
+    """
     import urllib.request as ureq
     body = json.dumps(payload, ensure_ascii=False).encode()
+    headers = {
+        "Content-Type": "application/json",
+        "User-Agent": "AIOS/0.1",
+        "X-AIOS-Version": "0.1",
+    }
+    key = api_key or _get_stored_api_key()
+    if key:
+        headers["X-AIOS-Key"] = key
     req = ureq.Request(
         f"{AKASHIC_SERVER}{endpoint}",
         data=body,
-        headers={
-            "Content-Type": "application/json",
-            "User-Agent": "AIOS/0.1",
-            "X-AIOS-Version": "0.1",
-        },
+        headers=headers,
         method="POST",
     )
     with ureq.urlopen(req, timeout=timeout) as resp:
