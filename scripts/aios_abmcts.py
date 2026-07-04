@@ -9,6 +9,11 @@ and converges on the best answer — beating any single model on hard tasks.
 
 No thesis conflict (all models frozen; no training). CLI: aios solve "<task>"
 Env: NVIDIA_API_KEY
+
+NOTE: this is a deliberate DEEP-THINK mode for HARD tasks, not interactive — it makes
+many large-frontier-model calls with sequential refine dependencies, so expect ~1.5-3
+minutes. Verified to solve traps single models miss (bat-and-ball → $0.05). For quick
+answers use `aios "..."`; reach for `aios solve` when quality on a hard problem matters.
 """
 from __future__ import annotations
 import os, sys, re, json, math, argparse
@@ -18,20 +23,21 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import aios_adapters as A  # noqa: E402
 
-# Frozen heterogeneous pool (different priors) + a strong judge.
+# Frozen heterogeneous pool (different priors). Kept lean + reliable for bounded
+# latency (kimi-k2.6 dropped — flaky/slow). This is a deliberate deep-think mode.
 POOL = [
     "deepseek-ai/deepseek-v4-pro",
     "qwen/qwen3.5-397b-a17b",
-    "nvidia/nemotron-3-super-120b-a12b",
     "z-ai/glm-5.2",
-    "moonshotai/kimi-k2.6",
+    "meta/llama-3.3-70b-instruct",   # a fast one to keep the round bounded
 ]
 JUDGE = "deepseek-ai/deepseek-v4-flash"   # fast scorer — 0-10 rating is cheap
+_POOL_TIMEOUT = 70
 
 _ADAPTERS: dict[str, "callable"] = {}
 def _model(m: str):
     if m not in _ADAPTERS:
-        _ADAPTERS[m] = A.make_nvidia_nim_adapter(model=m, timeout=120)
+        _ADAPTERS[m] = A.make_nvidia_nim_adapter(model=m, timeout=_POOL_TIMEOUT)
     return _ADAPTERS[m]
 
 def _gen(model: str, task: str) -> str:
@@ -67,7 +73,7 @@ def _ucb(stats: dict, t: int):
             best, best_v = p, v
     return best
 
-def solve(task: str, budget: int = 5, verbose: bool = False):
+def solve(task: str, budget: int = 2, verbose: bool = False):
     """AB-MCTS-lite: parallel diverse init → bandit-guided refine → best."""
     if not os.environ.get("NVIDIA_API_KEY"):
         raise RuntimeError("NVIDIA_API_KEY not set")
@@ -113,7 +119,7 @@ def solve(task: str, budget: int = 5, verbose: bool = False):
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(prog="aios solve", description="AB-MCTS over a frozen NIM pool")
     ap.add_argument("task", nargs="+")
-    ap.add_argument("--budget", type=int, default=5, help="refine rounds after diverse init")
+    ap.add_argument("--budget", type=int, default=2, help="refine rounds after diverse init")
     ap.add_argument("--json", action="store_true")
     ap.add_argument("-q", "--quiet", action="store_true")
     a = ap.parse_args(argv)
