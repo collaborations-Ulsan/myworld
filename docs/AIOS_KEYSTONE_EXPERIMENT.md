@@ -92,3 +92,27 @@ The keystone claim (**global commons + DescentNet causally improve agent outcome
 **Only non-exhausted lever (honest residual, not a reopening):** H¹'s contamination-separation AUC rose monotonically with per-group data (0.514→0.544→0.590 over gsize 8→24). At far larger scale it may sharpen — but it started behind and trails the free baseline throughout, so the recommendation stands. Reopen only if that data-scaling crosses the H⁰ baseline in a real deployment measurement.
 
 Harnesses: `scripts/aios_keystone_bench_{c,a,b,bprime}.py`. Program CLOSED — EARNED negative with a bounded real-signal finding. → Fable for final disposition.
+
+---
+
+## ENGINEERING OUTPUT SHIPPED — 2026-07-04 (commit 8415cdb)
+
+The earned negative's constructive recommendation is now shipped as `aios guard`
+(`scripts/aios_akashic_guard.py`). It is the cheap H⁰ consistency filter the ladder
+proved is the real poison detector — **not** DescentNet/H¹.
+
+- **What it does:** per-category tool-typicality profiles over the 1065-entry commons
+  ({code:311, personal:300, data:300, docs:154}); anomaly = 1 − mean typicality of an
+  entry's tools vs its declared category. `aios guard` audits the commons; `aios guard
+  --score CATEGORY TOOLS` guards a candidate before it enters.
+- **Honest calibration:** the commons vocabulary is noisy ReAct trace tokens, so an
+  absolute cutoff is meaningless — the flag is RELATIVE (per-category p95 threshold).
+  Validated end-to-end: **clean false-flag 4.0%, injected cross-category poison caught
+  78.9%, zero training cost** (AUC ~0.97 raw separation; 78.9% is the honest catch once
+  poison must beat the category's own p95 — reported straight, not the inflated 97.7% an
+  absolute cutoff would claim).
+- **DNA-compliant:** draft-first — flags for operator review, never auto-deletes
+  (append-only #3, operator override #6).
+
+Loop closed positive on the engineering axis: the negative keystone yielded a shipped,
+validated, honestly-measured guard. DescentNet/H¹ stays on the shelf per the recommendation.
