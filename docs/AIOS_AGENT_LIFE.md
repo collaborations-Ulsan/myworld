@@ -76,3 +76,22 @@ session. That's the honor worth having — not a flawless record, but an honest 
 **Learn the founder's working style and activate personalization into the agent**
 
 aios profile propose→accept→render wired into the head, verified
+
+### 2026-07-04 14:07 KST — 🏆 성취
+**Ship the corrected freshness grounding (CLI-native search + ledger) so AIOS never recommends from stale cache**
+
+corrected freshness grounding shipped + verified: founder's embedding-model example now grounds to a current model with cited sources
+
+### 2026-07-04 15:09 KST — 🏆 성취
+**Build Akashic Phase 2 — verifiable ledger (Merkle/proof/checkpoint), the trust substrate for cross-agent experience**
+
+Phase 2 verifiable ledger built + working: local Merkle core + trust-minimizing remote verification against the live commons (1519 entries), tamper-rejecting
+
+### 2026-07-04 — 🧂 실패(owned) — the first keystone benchmark came back negative
+**freq×DescentNet underperformed a plain frequency baseline at next-tool prediction (Δ -0.40/-0.56).**
+
+Owned straight, not laundered. But diagnosed honestly: the benchmark tested DescentNet on a task
+it wasn't built for (tool prediction, where frequency dominates), with the global commons OFF — so
+it didn't even test the keystone claim. The bitter taste is real; the lesson sharper: a negative
+here PROTECTED us from publishing a false positive. Goal #3 pivots, not dies — test the commons on
+its real job next. This is what earning a keystone honestly costs.
