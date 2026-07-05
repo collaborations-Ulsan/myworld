@@ -275,7 +275,7 @@ def main(argv: list[str] | None = None) -> None:
     # cfg carries the generation/execution knobs arms.py reads for solver sampling; README's
     # regime fixes k=6 samples/task with abstention right. Kept minimal + documented here since
     # arms.py's exact needs land with its implementation (adapt minimally if a kwarg differs).
-    cfg = {"k": 6, "gen_temp": 0.8, "gen_max_tokens": 512, "exec_timeout_s": 5.0}
+    cfg = arms.ArmConfig(k=6, temp=0.8, solver_max_tokens=512, exec_timeout_s=5.0)
 
     for arm in arm_list:
         ablate = args.ablate if arm == "C" else None  # ablation only ever applies to arm C

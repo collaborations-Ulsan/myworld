@@ -567,19 +567,21 @@ def _synth_scenario(scenario: str) -> list[dict]:
     return rows
 
 
-if __name__ == "__main__":
+def _run_selftest() -> None:
     os.makedirs("results", exist_ok=True)
-
+    # scratch paths — the self-test must NEVER clobber the real runs.jsonl / REPORT.md
+    scratch_runs = "results/_selftest_runs.jsonl"
+    scratch_report = "results/_selftest_REPORT.md"
     for scenario, expected_verdict in (("witness", "WITNESS"), ("taxonomy", "TAXONOMY")):
         rows = _synth_scenario(scenario)
-        with open(RUNS_PATH_DEFAULT, "w") as f:
+        with open(scratch_runs, "w") as f:
             for row in rows:
                 f.write(json.dumps(row) + "\n")
 
-        outcomes = load_outcomes(RUNS_PATH_DEFAULT)
+        outcomes = load_outcomes(scratch_runs)
         summary = summarize(outcomes)
         verdict = evaluate_killcriterion(summary)
-        report_text = write_report(summary, verdict, path=REPORT_PATH_DEFAULT)
+        report_text = write_report(summary, verdict, path=scratch_report)
 
         print("=" * 80)
         print(f"SCENARIO: {scenario}  ->  VERDICT: {verdict['verdict']}")
@@ -593,3 +595,29 @@ if __name__ == "__main__":
         )
 
     print("Self-test PASSED: synthetic WITNESS scenario -> WITNESS, synthetic TAXONOMY scenario -> TAXONOMY.")
+
+
+def score_real(runs_path: str = RUNS_PATH_DEFAULT, report_path: str = REPORT_PATH_DEFAULT) -> dict:
+    """Score the REAL run ledger and write REPORT.md. Returns the verdict dict."""
+    outcomes = load_outcomes(runs_path)
+    if not outcomes:
+        raise SystemExit(f"no outcomes in {runs_path} — did the R1 run produce rows?")
+    summary = summarize(outcomes)
+    verdict = evaluate_killcriterion(summary)
+    report_text = write_report(summary, verdict, path=report_path)
+    print(report_text)
+    print(f"\n[score] {len(outcomes)} outcomes -> VERDICT: {verdict['verdict']} (decided_by: {verdict['decided_by']}) -> {report_path}")
+    return verdict
+
+
+if __name__ == "__main__":
+    import argparse
+    ap = argparse.ArgumentParser(prog="score", description="Score the AGI-witness run ledger -> verdict")
+    ap.add_argument("--runs", default=RUNS_PATH_DEFAULT, help="path to real runs.jsonl (default)")
+    ap.add_argument("--report", default=REPORT_PATH_DEFAULT, help="output REPORT.md path")
+    ap.add_argument("--selftest", action="store_true", help="run the synthetic WITNESS/TAXONOMY self-test instead")
+    _a = ap.parse_args()
+    if _a.selftest:
+        _run_selftest()
+    else:
+        score_real(_a.runs, _a.report)

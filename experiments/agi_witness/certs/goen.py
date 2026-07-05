@@ -242,6 +242,18 @@ def fit_goen(calib_examples: list[tuple[dict[str, float], bool]], mode: str) -> 
     X = np.array([[feats.get(name, 0.0) for name in feature_order] for feats, _ in calib_examples], dtype=float)
     y = np.array([1.0 if solved else 0.0 for _, solved in calib_examples], dtype=float)
 
+    # Degenerate calibration (all-solved or all-unsolved) has no gradient for a discriminative
+    # fit — sklearn raises "needs >=2 classes". Fall back to a CONSTANT model that predicts the
+    # observed base rate (zero feature weights, bias = logit(rate)). GoEN then rewires ~uniformly,
+    # which is the honest behavior when calibration carries no solve-signal (its ablation simply
+    # won't bite — a real finding, not a crash).
+    if len(np.unique(y)) < 2:
+        rate = float(np.clip(y.mean(), 1e-3, 1 - 1e-3))
+        bias = float(np.log(rate / (1.0 - rate)))
+        print(f"[fit_goen mode={mode}] degenerate calibration ({y.mean():.2f} solved) -> constant model (base-rate)")
+        return GoenModel(weights=np.concatenate([[bias], np.zeros(len(feature_order))]),
+                         feature_order=feature_order, mode=mode)
+
     if _HAS_SKLEARN:
         print(f"[fit_goen mode={mode}] sklearn available -> using sklearn.linear_model.LogisticRegression")
         clf = LogisticRegression(max_iter=1000, random_state=0)
