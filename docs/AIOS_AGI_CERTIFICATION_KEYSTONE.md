@@ -102,3 +102,36 @@ verification-bound task. Negative keystone = exhaustive demonstration that the v
 or monolith-absorption dominates (itself a strong, publishable result about where AGI value is
 NOT). "Static single-agent didn't beat baseline" is already spent — the loop continues at the
 population + learned-coupling regime.
+
+---
+
+## FIRST WITNESS RUN RESULT — 2026-07-05: EARNED NEGATIVE (TAXONOMY), with structure
+
+First real-scale run (24 eval tasks, calibration filled, solver qwen3-next-80b, B_tok=40000,
+R1 A/B/C×3 seeds + ablations×2). Pre-registered verdict: **TAXONOMY** — K1 fired
+(median C=17 ≤ median(max(A,B))=17 + ε=3). Cross-component coupling did NOT beat the better of
+{monolith, independent-certs} by ε on the pre-registered metric (verified solves at fixed budget).
+Reported straight — no laundering either direction.
+
+**Structure in the negative (do not launder down):**
+- A(monolith) 17 solves / 0.708 rate / 0.708 precision; B(independent certs) 13 / 0.542 / **0.867
+  precision**; C(coupled) 17 / **0.731 rate** / 0.845 precision.
+- **DescentNet ablation is the ONLY one that bites** (C 17→13, Δ4 > 2·SE) — sheaf/H⁰ repair does
+  real work inside C. apex/iris/goen ablations don't move C (goen was constant — degenerate
+  all-solved calibration; a known limitation, not a null result about GoEN).
+- **Certificates buy PRECISION, not solve-count**: B trades coverage for the highest precision
+  (fewer wrong submissions); C recovers B's coverage via DescentNet repair, matching the monolith's
+  solve count while keeping higher precision than the monolith. P0(clean) is 1.0 for all arms →
+  all differentiation is on poisoned tasks.
+
+**Pivot (rule 8/9 — suspect the metric before the idea):** the metric rewards verified-solve
+COUNT, but the certificates' actual contribution is precision/abstention (trustworthiness). The
+next honest experiment measures **reliable-accuracy / precision under a fixed budget**, not raw
+solve count — plus a non-degenerate calibration (real solver-derived solved/unsolved labels so
+GoEN and APEX-coverage are actually fit). This is the earned-negative→pivot, not a win claimed nor
+a flat null.
+
+**Provenance note:** the run's first score read PARTIAL due to a score.py↔run.py seam bug
+(`_canonical_arm` expected an integer `tier`; run.py writes the solver model-id string, folding all
+arms to `A@t<model>` → "arms missing"). The 451 outcome rows were intact; fixing canonicalization
+and re-scoring the SAME data gave TAXONOMY. No re-run.

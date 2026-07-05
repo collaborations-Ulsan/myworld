@@ -66,9 +66,16 @@ def _canonical_arm(row: dict) -> str:
     arm = row.get("arm", "")
     if "@t" in arm:
         return arm
+    # `tier` may be an int (1/2) OR the solver model-id string run.py writes (e.g.
+    # "nim:qwen/..."). Only a numeric tier>=2 (or an explicit "t2"/"2"/"tier-2" marker) is the
+    # tier-2 absorption probe; a model-id string is the default tier-1 solver -> plain arm id.
     tier = row.get("tier", 1) or 1
-    if tier != 1:
-        return f"{arm}@t{tier}"
+    if isinstance(tier, (int, float)):
+        is_t2 = tier >= 2
+    else:
+        is_t2 = str(tier).strip().lower() in ("2", "t2", "tier2", "tier-2")
+    if is_t2:
+        return f"{arm}@t2"
     return arm
 
 
