@@ -159,3 +159,28 @@ sandbox; (2) draft-first: all synthetic memories draft-status; (3) append-only a
 receipts, no destructive edits; (4) named exits: Stop conditions above; (5) provenance: every row
 carries evidence_refs + contract_id; (6) operator override: accept/hold/promote are operator
 calls; (7) privacy: forbidden paths listed, `build_index` privacy gate is itself gate S5.
+
+## Evidence addendum (2026-07-05, WP-A/WP-B executed same-day under the standing founder GO)
+
+- **EPISODE_PASS = True, 5/5 gates, THREE seeds** (diag seed 1 → thresholds pinned; sealed seed 2;
+  replication seed 3). Receipt: `descentnet/run_artifacts/descentnet/society_answerability_episode_s2.json`;
+  code + full diagnostic history: `descentnet/descentnet/society_answerability_episode.py`
+  (descentnet commit `08435e8`).
+- Headline (sealed seed): society cost **1.33** vs majority **13.07** / pairwise **13.33** /
+  spend-all **11.00**; false claims **0.000**; buys 1.00/0.00 (ambiguous/gluable); obstructed
+  refuse 1.00; consensus-restricted localization **1.00** vs the injected cell. Akashic sandbox:
+  300 appends, 10/10 reconstruction probes, zero privacy findings (S5).
+- Diagnostic mechanism findings (preserved in the docstring, no relabel): cyclic edges leak the
+  harmonic to the pairwise view; tree edges make pairwise blindness PROVABLE (tree-solvability);
+  the Hodge condition D^T h = 0 forces edge spreading, so localization is correctly gated
+  consensus-restricted against the injected cell.
+- **Heterogeneous adversarial panel run (P-B requirement)** — nemotron-550b / deepseek-v4 /
+  qwen3.5; accepted wording corrections applied to the claim (receipts as-is): pairwise baseline =
+  topology-limit illustration, the equal-information contrast is MAJORITY (full cover, no typed
+  layer — and it still fails); injection validates MECHANISM + COMPOSITION, not
+  unanticipated-contradiction discovery; exact float64 substrate = composition proof, noise
+  robustness REQUIRED before any deployment claim.
+- WP-0281-A: **done**. WP-0281-B: **done** (Akashic integration + S5 inside the episode).
+  WP-0281-C: panel done; report delivered to founder in-session; **remaining**: operator
+  accept/hold decision and the P-C promotion call. Named next phases per panel: noise-robust
+  variant, real-data contradiction discovery, live-agent (packet-runner) variant.
