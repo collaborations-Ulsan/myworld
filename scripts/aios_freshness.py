@@ -35,10 +35,24 @@ def is_fresh(goal: str) -> bool:
 # or "library" aren't sent through a ~28s web search.
 _FRESH_ROUTE_RE = re.compile(
     r"추천|제일\s*좋|가장\s*좋|\bbest\b|latest|newest|최신|state of the art|\bsota\b|recommend|"
-    r"현재\s*(가장|제일|최고|best)|지금\s*(가장|제일|최고|best)|which\s+.*\s+(should|to)\s+(use|pick)|"
+    r"현재\s*(가장|제일|최고|best)|지금\s*(가장|제일|최고|best)|"
+    r"(which|what)\s+.*\s+(should|to)\s+(?:i|we|you)?\s*(use|pick|choose|go\s+with)|"
     r"뭐\s*(써|쓰|좋|추천)|뭐가\s*(좋|나)|골라", re.I)
 
+# Negative guard: a question that references LOCAL repo artifacts is NOT a web-freshness
+# query even when it says "latest/newest" — "the latest contract in docs/contracts" or
+# "the latest operator session" means the newest local FILE, answerable by local tools, not
+# a web search. Route these to the agent path, not ~28s of web grounding.
+_LOCAL_RE = re.compile(
+    r"\b\w+/\w+|\.(md|py|json|sh|txt|csv|ya?ml|toml)\b|"          # paths / file extensions
+    r"contract|계약|operator\s*session|오퍼레이터|ledger|원장|commons|\bASC-|"
+    r"this\s+(file|repo|codebase|project|dir)|이\s*(파일|레포|리포|코드|프로젝트|디렉)|"
+    r"repo\b|codebase|workspace|워크스페이스|디렉토리|폴더|\bfolder\b|우리\s*(코드|repo|리포)",
+    re.I)
+
 def is_fresh_route(goal: str) -> bool:
+    if _LOCAL_RE.search(goal or ""):
+        return False
     return bool(_FRESH_ROUTE_RE.search(goal or ""))
 
 def _norm(goal: str) -> str:

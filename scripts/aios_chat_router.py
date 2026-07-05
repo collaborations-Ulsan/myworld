@@ -1029,7 +1029,6 @@ def _apply_terminal_control_sequences(text: str) -> str:
 def _reflow_soft_wrapped_lines(lines: list[str]) -> list[str]:
     reflowed: list[str] = []
     paragraph = ""
-    previous_line_len = 0
 
     def flush() -> None:
         nonlocal paragraph
@@ -1048,11 +1047,20 @@ def _reflow_soft_wrapped_lines(lines: list[str]) -> list[str]:
             reflowed.append(stripped)
             continue
         if paragraph:
-            separator = "" if previous_line_len >= 60 else " "
-            paragraph = f"{paragraph}{separator}{stripped}"
+            # A newline inside a paragraph is either (a) a prose soft-wrap that broke at
+            # a space — the space was dropped, so rejoin WITH a space (markdown soft break
+            # = space); or (b) a terminal hard-wrap that split a long code/path/URL token
+            # mid-token — rejoin WITHOUT a space. Distinguish by the trailing char: prose
+            # words end in letters/normal punctuation; an incomplete identifier/path ends
+            # in a token-continuation char (_ / \\ =) or a soft-wrap hyphen.
+            if paragraph.endswith("-") and not paragraph.endswith((" -", "--")):
+                paragraph = f"{paragraph[:-1]}{stripped}"  # de-hyphenate wrap
+            elif paragraph.endswith(("_", "/", "\\", "=")):
+                paragraph = f"{paragraph}{stripped}"        # mid-token wrap: glue
+            else:
+                paragraph = f"{paragraph} {stripped}"        # prose word boundary: space
         else:
             paragraph = stripped
-        previous_line_len = len(stripped)
     flush()
     return reflowed
 
