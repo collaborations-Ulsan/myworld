@@ -32,7 +32,12 @@ total token budget `B_tok` per arm (all prompt+completion tokens, incl. certific
 Equal-budget solve count ≡ verified-solve-per-FLOP with fixed denominator → the verification tax
 is structurally baked in; the layer CAN lose. **Secondary:** raw solve-rate, submission precision,
 P0-clean-subset solve-rate (pure tax isolation), wall-seconds, tier-2 `C−A` delta (absorption probe).
-`B_tok` is set in pilot (so A completes the eval stream) and committed HERE before eval: `B_tok = TBD-pilot`.
+`B_tok` is set so arm A can complete the eval stream and committed HERE before eval:
+**`B_tok = 40000` tokens per (arm, seed)** — equal across A/B/C so the comparison is fair and the
+verification tax competes inside the same budget. First run: ~24 eval tasks, solver
+`nim:qwen/qwen3-next-80b-a3b-instruct` (pilot-chosen), R1 seeds 0,1,2 + ablations seeds 0,1. Tier-2
+probe (R7, deepseek-v4-pro) run separately after the first verdict. This is a FIRST real-scale run
+(24 eval / calibration-filled); the full ~100-task version is the prevalence rung after.
 
 ## KILL CRITERION (pre-registered — declares the composition a TAXONOMY / earned negative)
 On R1 (tier-1 `openai/gpt-oss-120b`, 3 seeds, equal budget, ~100 eval tasks), declare negative if:
