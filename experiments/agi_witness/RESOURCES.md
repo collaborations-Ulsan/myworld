@@ -21,6 +21,21 @@ Grounded by probe, not by stale config. Executor agents: read this, don't re-pro
 - NOT installed (stale global-config claim): `qwen3-coder:30b`. Do not assume it.
 - Embeddings: `nomic-embed-text` via ollama.
 
+## Solver gotchas (found building llm.py — Stage 2/3 builders READ THIS)
+- **`openai/gpt-oss-120b` is a REASONING model.** At low `max_tokens` it spends the whole budget
+  on hidden `reasoning_content` and returns `content=null` (`finish_reason="length"`). Use
+  `max_tokens >= ~512` for code generation, and account that reasoning tokens count against the
+  fixed budget (this is on-thesis — the verification tax is real — but it can DOMINATE the
+  budget and muddy the B-vs-C signal). `llm.py._call_nim` normalizes `content=None`→`""`.
+- **Fallback / cleaner-accounting solver:** `qwen/qwen3-next-80b-a3b-instruct` answers cleanly and
+  fast with no heavy hidden-reasoning burn (verified: "sum(lst)" in ~1s). The pilot (dataset.py)
+  should measure generation-easiness for BOTH `openai/gpt-oss-120b` and
+  `qwen/qwen3-next-80b-a3b-instruct` and pick the tier-1 solver where (a) pass@8-given-full-spec
+  is high AND (b) token accounting is clean. Record the choice in README before eval.
+- **api.env line shape** is `export NVIDIA_API_KEY="..."` (not bare `KEY=...`). llm.py handles both.
+- Use `llm.py` for ALL model calls — never hand-roll HTTP. `complete("nim:openai/gpt-oss-120b", ...)`
+  / `complete("ollama:qwen2.5-coder:7b", ...)`; `TokenBudget` for the fixed-budget accounting.
+
 ## Data — the Akashic behavior commons
 - `python3 -c "import sys; sys.path.insert(0,'scripts'); import aios_agent_behavior as B; B.load_behavior_memories()"`
   → **1065 entries**. Per-entry keys: category, content, confidence, domain, provider, relations,
