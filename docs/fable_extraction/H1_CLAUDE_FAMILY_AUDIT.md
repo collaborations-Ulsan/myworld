@@ -433,3 +433,40 @@ modes responsible for essentially all of the serious damage on record.
 - **FM1, structural:** I could not run a separate lane on this document (single-agent task, no
   reviewer). By its own Part 4, this audit is unverified builder output until a different context
   — ideally heterogeneous (NIM panel / codex), since I am same-family — reads it hostile.
+
+---
+
+## Heterogeneous verification (closing H1's own demand — 2026-07-05)
+
+H1 flagged itself as "unverified same-family output until a hostile heterogeneous lane reads it."
+Done: a NON-Claude NIM panel (nemotron-3-ultra-550b, qwen3.5-397b) adversarially assessed H1's
+directive-stack critique. Verdict:
+
+**Core CONFIRMED (not over-correction):** "An unbounded pivot rule inside a high-agency loop WILL
+converge on locally elegant, globally irrelevant attractors — that's control theory, not
+over-correction. The directives act as a high-gain controller with no reference signal from reality
+— classic integrator wind-up." So FM2 / F13 / the rule-9 perpetual-motion diagnosis is real.
+
+**But H1's proposed FIX (rigid contact-surface clause) is BRITTLE — the heterogeneous lane corrected it:**
+- The "2 same-surface negatives → external exit" step function punishes legitimate deepening (a
+  second ablation because the first was noisy) and conflates *contact* with *validity* — a synthetic
+  benchmark CAN be the right surface if it isolates the claimed variable; forcing "real users" early
+  injects confounding noise and kills nascent ideas. "New data" also has a loophole (tweak
+  preprocessing to satisfy it without testing the core hypothesis).
+
+**Refined fix (convergent across the heterogeneous panel — adopt THIS, not H1's raw version):**
+1. **Falsifiability budget, not a step function.** Each research thread gets a bounded budget of
+   pivots on a surface; exhaustion forces a *justified* surface change, not an automatic external exit.
+2. **Define the surface by FALSIFICATION TARGET, not data provenance.** Every pivot must state which
+   assumption the last negative falsified and how the new regime tests a *distinct* variable — the
+   pivot must change the CLAIM under test, not merely the dataset.
+3. **Builder ≠ Judge is necessary but insufficient** → add a **Steward** role that tracks cumulative
+   budget across threads and kills zombie directions (no single context holds builder+judge+steward);
+   or, minimally, "builder must annotate uncertainty" so the building context informs but never
+   dominates the verdict.
+
+This is the whole substrate-orchestration thesis working: Claude self-audit (H1) → heterogeneous
+de-bias (NIM) → a better fix than either alone. The same-family critique was directionally right and
+tactically over-corrected; the different-prior lane caught exactly that. Recommended edit to
+`~/.claude/CLAUDE.md` rule 9 = the falsifiability-budget form above (founder approves — it is the
+founder's control surface).
