@@ -1048,33 +1048,61 @@ def contribute_to_global(
     server: str | None = None,
     opt_in: frozenset | None = None,
     api_key: str | None = None,
+    guard: bool = True,
 ) -> dict[str, Any]:
     """Push local behavioral memories to Global AkashicRecord (opt-in).
 
     If memories is None, reads all agent_behavior memories from local store.
-    Returns {total, ok, dup, skip, errors, earned_akr}.
+    Returns {total, ok, dup, skip, errors, earned_akr, flagged}.
+
+    Poison gate (guard=True, default): before egress, each memory is scored by the
+    cheap H0 consistency filter (aios_akashic_guard) against the LOCAL per-category
+    typicality profile. An entry more atypical for its declared category than ~95% of
+    that category's own entries is WITHHELD from the global commons (counted in
+    `flagged`) — never sent, never deleted locally (draft-first; DNA #3 append-only,
+    #6 operator override — an operator can review flagged and re-contribute). This
+    makes the /contribute sink an actual protective gate, not just a CLI a human runs.
     """
     global AKASHIC_SERVER
     if server:
         AKASHIC_SERVER = server
 
+    all_mems = load_behavior_memories()
     if memories is None:
-        all_mems = load_behavior_memories()
         if opt_in:
             memories = [m for m in all_mems if m.get("category", "unknown") in opt_in]
         else:
             memories = all_mems
 
+    # Poison profiles built from the FULL local corpus (stable per-category p95 thresholds)
+    profiles = None
+    if guard:
+        try:
+            import aios_akashic_guard as _GUARD  # noqa: PLC0415
+            profiles = _GUARD.build_profiles(all_mems)
+        except Exception:  # noqa: BLE001
+            profiles = None  # guard unavailable → fail open (still privacy-gated below)
+
     # Resolve API key
     key = api_key or _get_stored_api_key() or ""
 
     import urllib.request as _ur
-    ok = dup = skip = err = earned = 0
+    ok = dup = skip = err = earned = flagged = 0
     for mem in memories:
         content = mem.get("content", "")
         if not content:
             skip += 1
             continue
+        # Poison gate: withhold entries atypical for their declared category (draft-first)
+        if profiles is not None:
+            try:
+                import aios_akashic_guard as _G2  # noqa: PLC0415
+                score = _G2.poison_score(mem, profiles)
+                if _G2._flagged(score, mem.get("category"), profiles):
+                    flagged += 1
+                    continue
+            except Exception:  # noqa: BLE001
+                pass
         tool_freq = mem.get("tool_freq", {})
         if isinstance(tool_freq, str):
             try:
@@ -1150,6 +1178,7 @@ def contribute_to_global(
         "ok":         ok,
         "dup":        dup,
         "skip":       skip,
+        "flagged":    flagged,
         "errors":     err,
         "earned_akr": earned,
     }
@@ -1534,6 +1563,9 @@ def main(argv: list[str] | None = None) -> int:
             print(f"[contribute] server={result['server']}")
             print(f"  total={result['total']} ok={result['ok']} "
                   f"dup={result['dup']} skip={result['skip']} err={result['errors']}")
+            if result.get("flagged"):
+                print(f"  flagged={result['flagged']} withheld by H0 poison guard "
+                      f"(atypical for category; review: aios guard) — not deleted locally")
             if result.get("earned_akr"):
                 print(f"  earned={result['earned_akr']} AKR")
         return 0
