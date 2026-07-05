@@ -1,7 +1,7 @@
 # ASC-0281 — Society-level answerability episode (DescentNet × APEX × Akashic, sealed decision-cost benchmark)
 
 - contract_id: ASC-0281
-- status: proposed
+- status: closed
 - goal: ONE sealed, receipted episode in which a society of N agents holding partially
   contradictory memories answers a question stream under a measurement budget, governed by the
   composed epistemic layer — DescentNet non-gluing detection → APEX-typed claim gating →
@@ -14,8 +14,8 @@
 - created: 2026-07-05
 - proposer: claude@myworld (standing founder directive 2026-07-05: "everything is for AGI" +
   "Do it till making the AGI" — recorded as provisional GO; formal accept pending operator/founder)
-- accepted: —
-- closed: —
+- accepted: 2026-07-05 (founder directive "APEX, Contract P-C" — P-C authorization recorded as acceptance)
+- closed: 2026-07-05 (P-C delivered; see P-C closeout below)
 
 ## Why (one paragraph)
 
@@ -184,3 +184,26 @@ calls; (7) privacy: forbidden paths listed, `build_index` privacy gate is itself
   WP-0281-C: panel done; report delivered to founder in-session; **remaining**: operator
   accept/hold decision and the P-C promotion call. Named next phases per panel: noise-robust
   variant, real-data contradiction discovery, live-agent (packet-runner) variant.
+
+## P-C closeout (2026-07-05, authorized by founder "Contract P-C")
+
+**Report.** The composed epistemic layer exists and is receipted: EPISODE_PASS 5/5 gates on 3 seeds
+(evidence addendum above). The panel-hardened honest scope is a COMPOSITION PROOF on an exact
+substrate: the organs (DescentNet detector, APEX/IRIS typed router, task-demo economics, Akashic
+append-only provenance) compose into one system whose decision behavior matches the theory — the
+equal-information majority baseline fails on every obstructed row despite seeing the full cover;
+the difference is the typed layer, not information access. Publication artifacts: the episode is
+NOT folded into the arXiv paper (posted separately, commit 237e4c4 package) — it is the first
+receipt of the NEXT paper's subject (the composed layer), kept out to avoid re-opening the sealed
+sweep.
+
+**Promotion recommendation (recommendation-only, per DNA-1).** Do not promote to a live AIOS
+dispatch lane yet. Required first (successor contract candidate, ASC-0282): (1) noise-robust
+variant — obs noise on overlaps, energy-tolerance calibration replacing exact thresholds, expected
+degradation curve receipted; (2) real-data contradiction discovery on sanitized memoryOS aggregate
+receipts (held-out structure, no injection); (3) then SHADOW MODE on one real dispatch lane
+(the layer emits verdicts alongside, binds nothing) with a decision-cost audit after ≥100 real
+packets. Each rung sealed with the established discipline. Operator opens ASC-0282 when ready.
+
+**WP ledger.** WP-0281-A done; WP-0281-B done; WP-0281-C done (panel + this report; operator
+acceptance recorded above).
