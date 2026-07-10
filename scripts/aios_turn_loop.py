@@ -249,6 +249,7 @@ def run_loop(goal: str, sampler: Sampler, registry: Registry, *,
              epistemic_gate: "Callable[[dict, dict], object] | None" = None,
              gate_reject_threshold: int = 3,
              gate_context: dict | None = None,
+             answer_bounce: int = 0,
              max_turns: int = 12, loop_threshold: int = 3, repair_threshold: int = 2,
              record_sink: Callable[[dict], None] | None = None,
              turn_sink: Callable[[dict], None] | None = None,
@@ -288,6 +289,7 @@ def run_loop(goal: str, sampler: Sampler, registry: Registry, *,
     stall_count = 0   # consecutive turns with no real progress (pillar 3)
     all_tools: list[str] = []   # ordered tool sequence for loop-type + AkashicRecord
     gate_reject_count: dict[str, int] = {}   # per-proposal-signature epistemic rejections
+    empty_answer_bounces = 0                 # bounded "state your answer" retries
 
     def emit(rec: dict) -> None:
         if turn_sink:
@@ -317,10 +319,23 @@ def run_loop(goal: str, sampler: Sampler, registry: Registry, *,
             history.append({"role": "assistant", "turn": turn, "tools": [c.name for c in calls]})
 
             if not calls:                                   # model finished — structural terminal
+                answer = (resp.get("text") or "").strip()
+                # Verification-before-submit, cheapest form (2026-07-10 head probe:
+                # the loop accepted a goal-run that ended with answer="" as success —
+                # "ran but delivered nothing"). One bounded bounce: demand the answer.
+                if not answer and empty_answer_bounces < answer_bounce:
+                    empty_answer_bounces += 1
+                    history.append({"role": "system", "kind": "empty_answer_bounce",
+                                    "content": "You finished without stating any answer. "
+                                               "State your final answer to the goal now, "
+                                               "or continue working with tools."})
+                    emit({"kind": "empty_answer_bounce", "turn": turn})
+                    continue
                 audit = _completion_audit(trajectory, contract_receipts=contract_receipts)
                 outcome = {"exit": "model_finished", "turns": turn, "trajectory": trajectory,
                            "completion_audit": audit,
-                           "answer": (resp.get("text") or "").strip()}
+                           "answer": answer,
+                           **({"empty_answer": True} if not answer else {})}
                 break
 
             stop = None

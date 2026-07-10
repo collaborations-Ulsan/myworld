@@ -2744,3 +2744,16 @@ localStorage 히스토리 → 페이지 새로고침 후 대화 복원
 - key_decision: recommend ICLR 2027 + make masterplan M2 (AIOS-DriftBench-mini, pre-registered ≥17/24) the paper's headline closed-loop experiment — external adversarial review and the internal masterplan independently derived the SAME experiment (strong validity signal).
 - new_invariant_or_pattern_discovered: (1) internal-roadmap ↔ external-adversarial-review convergence as a validity test; (2) receipt gap found: ASC-0281 commit claims "3 seeds" but only seed-2 receipt exists on disk (reproducibility discipline violation to fix); (3) paper (2026-06-21) predates and omits all three 07-05 results.
 - self-correction-of-prior-observation: none
+
+## 2026-07-11 00:10 KST — claude@myworld — head 소생: "돌지만 배달 안 함"의 전체 인과사슬 절단
+
+- session_id: 같은 재정의 세션 연속 (founder: "head가 제 역할을 아예 못하네" + agent-native 지시)
+- mode_breakdown: observe:verify:decide:intervene ≈ 5:35:10:50 (진단-수정-라이브재검증 루프 ×8)
+- tools_used: Bash (head 라이브 프로브 ×8, pytest), Read/Edit (kernel 4파일 + tests 4파일), Grep
+- tools_NOT_used: subagent (세션 한도 소진 19:50 리셋 — 진단·수정을 메인 컨텍스트에서 직접 수행; 결과적으로 8회 라이브-재검증 루프는 위임보다 메인이 빨랐음)
+- substrate_specific_behaviors_observed: Codex(gpt-5.5) diff-via-stdin 리뷰가 중첩 샌드박스(bwrap RTM_NEWADDR)를 우회 — 로컬 실행 없이 유효한 7건 발견 (2 critical 포함); "리뷰 불가"를 정직하게 보고한 첫 시도도 기록가치.
+- failures_recovered: head 배달 실패의 6중 인과사슬을 라이브 프로브로 하나씩 절단 — ①turn loop가 빈 answer를 성공 종료로 수용 (→ answer_bounce+empty_answer 라벨) ②레지스트리에 내용검색 툴 부재, 모델이 fs.list→web.search 방황 (→ fs.grep, repo-bounded, 경로+매치수만) ③ollama 어댑터가 qwen3:1.7b(REST)/qwen3:8b(CLI) 하드코딩 — 30b가 설치돼 있는데 미사용 (→ AIOS_OLLAMA_MODEL env, 기본 qwen3-coder:30b) ④샘플러가 done 분기에서 모델 텍스트를 통째로 폐기 — answer가 구조적으로 항상 "" (THE 배달 버그) ⑤greedy \{.*\} regex가 중복/절단 JSON에서 붕괴 (→ raw_decode 스캔 _first_json) ⑥`ollama run`의 ANSI 커서코드가 JSON 파싱 파괴 (→ ANSI 스트립 + strict=False). 최종: fs.grep 1회→정답 파일명, 2턴 종료.
+- failures_escalated_to_founder: none
+- key_decision: founder의 "학습이 안 되어서 제 역할을 못한다" 가설을 검증 — 실제로는 학습 문제가 아니라 **배선 결함 6개의 중첩** (모델 크기 1개 + 하네스 5개). 파인튜닝 전에 하네스를 고치는 게 맞았다 (M5 survey의 "14B 미만 function calling 금지" 밴드와 일치).
+- new_invariant_or_pattern_discovered: **라이브-프로브 루프 패턴** — 같은 toy goal을 수정마다 재실행해 exit/tools/answer 삼중으로 행동 델타를 관측; "테스트 통과"가 아니라 "실제 배달"이 판정 기준. + Codex 리뷰의 "게이트가 안 죽게 하는 fail-open은 게이트를 off arm으로 조용히 변질시킨다" — fail-closed가 ablation 무결성의 전제.
+- self-correction-of-prior-observation: M1 초판(740e1ee)을 "검증 완료"로 보고했으나 Codex 이종 리뷰가 7건(치명 2)을 잡음 — 같은-가중치 검증(나+executor)만으로 통과시킨 것이 오류. 이종 리뷰를 keystone뿐 아니라 kernel 커밋에도 기본값으로.

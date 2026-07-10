@@ -184,6 +184,10 @@ class Handler(BaseHTTPRequestHandler):
             self._json({
                 "status": "ok", "service": "aios_serving_api",
                 "providers": {
+                    "nvidia_nim": {
+                        "available": nim_ok,
+                        "hint": None if nim_ok else "set NVIDIA_API_KEY (free tier at build.nvidia.com)",
+                    },
                     "ollama": {
                         "available": ollama_ok,
                         "hint": None if ollama_ok else "run `aios setup apply` to install ollama + a local model (free, no API key)",

@@ -22,6 +22,7 @@ Adapters intentionally cover the four substrates from the kernel audit:
 """
 from __future__ import annotations
 
+import os
 import shutil
 import subprocess
 from dataclasses import dataclass, field
@@ -78,8 +79,13 @@ SPECS: dict[str, AdapterSpec] = {
     "gemini": AdapterSpec("gemini", "gemini", ["{binary}", "-p", "{prompt}"]),
     # grok headless: -p/--single takes the prompt and prints the reply.
     "grok": AdapterSpec("grok", "grok", ["{binary}", "--single", "{prompt}"]),
+    # 2026-07-10 head probe: qwen3:8b (thinking model) emitted <think> blocks the
+    # sampler parser can't use and the head "ran but delivered nothing" — the verified
+    # agentic model on this box is qwen3-coder:30b (non-thinking, 93-96% well-formed
+    # tool calls). Override per deployment with AIOS_OLLAMA_MODEL.
     "ollama_local": AdapterSpec(
-        "ollama_local", "ollama", ["{binary}", "run", "qwen3:8b", "{prompt}"],
+        "ollama_local", "ollama",
+        ["{binary}", "run", os.environ.get("AIOS_OLLAMA_MODEL", "qwen3-coder:30b"), "{prompt}"],
         timeout=300),
 }
 
@@ -87,7 +93,11 @@ SPECS: dict[str, AdapterSpec] = {
 # Using OpenAI-compat lets future providers (OpenAI, Together.ai, Groq) share the
 # same _http_post_json() path without adding any PyPI dependency.
 _OLLAMA_REST_BASE = "http://localhost:11434/v1"
-_OLLAMA_REST_MODEL = "qwen3:1.7b"   # fast; swappable per deployment
+# 2026-07-10 head probe: the 1.7b default was why the local head "ran but delivered
+# nothing" — qwen3-coder:30b is the verified agentic model on this box (dual RTX 5090,
+# 93-96% well-formed tool calls per the 2026-07 absorption survey). Override per
+# deployment with AIOS_OLLAMA_MODEL (e.g. qwen3:1.7b for cheap smoke tests).
+_OLLAMA_REST_MODEL = os.environ.get("AIOS_OLLAMA_MODEL", "qwen3-coder:30b")
 _OLLAMA_HEALTH_URL = "http://localhost:11434/api/tags"
 
 _ANTHROPIC_API_URL = "https://api.anthropic.com/v1/messages"

@@ -42,6 +42,7 @@ TOOL_SPEC: dict[str, tuple[str, str, str]] = {
     "interior.read":     ("read", "",    'Read internal traces. Args: {"traces":[]}'),
     "fs.list":           ("read", "",    'List readable docs files to find valid paths. Args: {}'),
     "fs.read":           ("read", "",    'Read a file (use fs.list first to find paths). Args: {"path":"docs/README.md"}'),
+    "fs.grep":           ("read", "",    'Search file CONTENTS under the repo for a text pattern — use this to FIND which files mention something. Args: {"pattern":"gate","path":"scripts","glob":"*.py"}'),
     "web.search":        ("advisory", "", 'Search the web. Args: {"query":"<search terms>"}'),
     "web.fetch":         ("advisory", "", 'Fetch a public URL. Args: {"url":"https://..."}'),
     "note.write":        ("write", "propose_contract", 'Save a note. Args: {"title":"<title>","content":"<text up to 2000 chars>"}'),
@@ -184,6 +185,47 @@ def _h_fs_read(a: dict) -> dict:
         except OSError:
             pass
     return {"status": "ok", "bytes": size}
+
+
+_GREP_SKIP_DIRS = {".git", "node_modules", "__pycache__", ".venv", ".aios", ".omc",
+                   ".wrangler", "_from_desktop", "dain", "minyoung"}   # privacy dirs stay out (DNA #7)
+
+
+def _h_fs_grep(a: dict) -> dict:
+    """Content search, repo-bounded (2026-07-10 head probe: without a grep tool the
+    local model wandered fs.list->web.search on a 'which files mention X' goal and
+    delivered nothing). Returns paths + match counts only — no content lines (DNA #7)."""
+    import fnmatch as _fn
+    pattern = str(a.get("pattern", "")).strip()
+    if not pattern:
+        return {"status": "bad_args", "detail": "pattern required"}
+    base = (ROOT / str(a.get("path", "."))).resolve()
+    if ROOT not in base.parents and base != ROOT:
+        return {"status": "denied_scope"}            # bounded to the repo
+    if not base.exists():
+        return {"status": "not_found"}
+    glob = str(a.get("glob", "*"))
+    hits: list[dict] = []
+    scanned = 0
+    for p in sorted(base.rglob("*")):
+        if len(hits) >= 25 or scanned >= 4000:
+            break
+        if not p.is_file() or p.stat().st_size > 1_000_000:
+            continue
+        if any(part in _GREP_SKIP_DIRS for part in p.parts):
+            continue
+        if not _fn.fnmatch(p.name, glob):
+            continue
+        scanned += 1
+        try:
+            text = p.read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            continue
+        n = text.count(pattern)
+        if n:
+            hits.append({"path": str(p.relative_to(ROOT)), "matches": n})
+    hits.sort(key=lambda h: -h["matches"])
+    return {"status": "ok", "hits": hits, "count": len(hits), "scanned": scanned}
 
 
 _WEB_BLOCKED_HOSTS = (
@@ -504,7 +546,7 @@ HANDLERS = {
     "memory.retrieve": _h_retrieve, "capability.route": _h_route,
     "genesis.challenge": _h_challenge, "self.audit": _h_self_audit,
     "interior.read": _h_interior, "stakes.record": _h_stakes,
-    "fs.list": _h_fs_list, "fs.read": _h_fs_read, "fs.write": _h_fs_write,
+    "fs.list": _h_fs_list, "fs.read": _h_fs_read, "fs.grep": _h_fs_grep, "fs.write": _h_fs_write,
     "web.search": _h_web_search, "web.fetch": _h_web_fetch, "note.write": _h_note_write,
     "domain.run": _h_domain_run,
 }

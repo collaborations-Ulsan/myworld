@@ -328,6 +328,20 @@ def _goal_needs_filesystem(goal: str) -> bool:
 
 # --- CLI ----------------------------------------------------------------------
 
+def _first_json(text: str):
+    """Return the first VALID JSON object found anywhere in text, else None.
+    Robust to duplicated/truncated objects and trailing prose (raw_decode scan)."""
+    dec = json.JSONDecoder(strict=False)   # tolerate stray control chars inside strings
+    for m in re.finditer(r"\{", text):
+        try:
+            obj, _ = dec.raw_decode(text[m.start():])
+            if isinstance(obj, dict):
+                return obj
+        except json.JSONDecodeError:
+            continue
+    return None
+
+
 def make_provider_sampler(provider: str, adapters: dict[str, Callable[[str], str]],
                           goal: str = ""):
     """Reactive sampler for the turn-loop: ask the provider for the NEXT single move
@@ -440,20 +454,30 @@ def make_provider_sampler(provider: str, adapters: dict[str, Callable[[str], str
             + "Trajectory:\n"
             + json.dumps(recent, ensure_ascii=False) + "\n"
             'Emit ONLY JSON: {"tool":"<name>","arguments":{...}} for the next single '
-            'action, or {"done":true} when complete. No prose.')
+            'action, or {"done":true,"answer":"<your final answer to the goal>"} when '
+            'complete. No prose outside the JSON.')
         try:
             # "auto" routes per-turn based on goal complexity; resolve to actual key
             _pkey = _auto_provider(goal) if provider == "auto" else provider
             raw = adapters[_pkey](prompt)
         except Exception:  # noqa: BLE001 — provider unreachable → end loop honestly
             return {"tool_calls": []}
-        try:
-            m = re.search(r"\{.*\}", raw, re.S)
-            obj = json.loads(m.group(0)) if m else {"done": True}
-        except (json.JSONDecodeError, AttributeError):
-            return {"tool_calls": []}
+        # Strip qwen3-style <think> blocks and ANSI cursor codes (`ollama run`
+        # interleaves \x1b[..K progress sequences that break JSON parsing) first
+        # (2026-07-10 head probe).
+        visible = re.sub(r"\x1b\[[0-9;?]*[A-Za-z]", "", raw)
+        visible = re.sub(r"<think>.*?</think>", "", visible, flags=re.S).strip()
+        # First VALID JSON object wins (raw_decode scan) — local models sometimes emit
+        # the object twice or truncate a first attempt; the old greedy \{.*\} regex
+        # spanned the garbage and every parse failed (2026-07-10 head probe).
+        obj = _first_json(visible)
+        if obj is None:
+            # No parseable JSON: the visible reply IS the model's answer. Dropping it
+            # was the delivery bug — every --loop run ended answer="" (head probe).
+            return {"tool_calls": [], "text": visible}
         if obj.get("done") or not obj.get("tool"):
-            return {"tool_calls": []}
+            answer = str(obj.get("answer") or obj.get("text") or "").strip()
+            return {"tool_calls": [], "text": answer}
         tool_name = str(obj["tool"])
         # Hard block: if model requests an exhausted tool despite filtered catalog, force done
         if tool_name in exhausted:
@@ -480,7 +504,8 @@ def run_loop_goal(goal: str, *, agent_id: str = "codex@myworld", sampler=None,
                 "detail": "pass a sampler, or run --loop with an available provider"}
     return tl.run_loop(goal, sampler, tools.build_registry(),
                        gate=tools.gate_for(agent_id), max_turns=max_turns,
-                       turn_sink=turn_sink, constraint_provider=constraint_provider)
+                       turn_sink=turn_sink, constraint_provider=constraint_provider,
+                       answer_bounce=1)   # a goal-run that ends answerless gets one "state your answer" nudge (2026-07-10 head probe)
 
 
 def _cosine(a: list[float], b: list[float]) -> float:

@@ -93,3 +93,21 @@ class HandlerTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class FsGrepTests(unittest.TestCase):
+    def test_grep_finds_files_mentioning_pattern(self) -> None:
+        r = T.HANDLERS["fs.grep"]({"pattern": "EpistemicGate", "path": "scripts", "glob": "*.py"})
+        self.assertEqual(r["status"], "ok")
+        paths = [h["path"] for h in r["hits"]]
+        self.assertIn("scripts/aios_epistemic_gate.py", paths)
+
+    def test_grep_is_repo_bounded(self) -> None:
+        r = T.HANDLERS["fs.grep"]({"pattern": "x", "path": "../../.."})
+        self.assertEqual(r["status"], "denied_scope")
+
+    def test_grep_requires_pattern(self) -> None:
+        self.assertEqual(T.HANDLERS["fs.grep"]({})["status"], "bad_args")
+
+    def test_grep_registered_as_read_class(self) -> None:
+        self.assertEqual(T.TOOL_SPEC["fs.grep"][0], "read")

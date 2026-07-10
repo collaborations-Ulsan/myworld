@@ -22,9 +22,12 @@ class HeadLoopTests(unittest.TestCase):
         r = H.run_loop_goal("inspect", agent_id="codex@myworld", sampler=scripted([
             {"tool_calls": [L.ToolCall("self.audit",
                 {"claims": [{"text": "head", "path": "scripts/aios_head.py"}]})]},
-            {"tool_calls": []},
+            # head runs with answer_bounce=1: an answerless finish gets one nudge,
+            # so the finishing step must state an answer (2026-07-10 head probe fix)
+            {"tool_calls": [], "text": "audit complete"},
         ]))
         self.assertEqual(r["exit"], "model_finished")
+        self.assertEqual(r["answer"], "audit complete")
         self.assertTrue(r["kernel_routed"])
 
     def test_no_sampler_is_honest(self) -> None:

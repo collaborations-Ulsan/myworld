@@ -214,6 +214,26 @@ class TurnLoopTests(unittest.TestCase):
         self.assertEqual(r["exit"], "max_turns")
         self.assertNotIn("completion_audit", r)
 
+    # -- empty-answer bounce (2026-07-10 head probe: ran-but-delivered-nothing) --
+
+    def test_empty_answer_gets_one_bounce_then_real_answer_returned(self) -> None:
+        r = L.run_loop("what is 2+2", scripted([
+            {"tool_calls": [], "text": ""},          # finishes silently -> bounced
+            {"tool_calls": [], "text": "4"},         # states the answer after the nudge
+        ]), self.reg, gate=lambda n, a: L.ALLOW, answer_bounce=1)
+        self.assertEqual(r["exit"], "model_finished")
+        self.assertEqual(r["answer"], "4")
+        self.assertNotIn("empty_answer", r)
+
+    def test_persistently_empty_answer_is_labeled_not_laundered(self) -> None:
+        r = L.run_loop("what is 2+2", scripted([
+            {"tool_calls": [], "text": ""},
+            {"tool_calls": [], "text": ""},          # still empty after the bounce
+        ]), self.reg, gate=lambda n, a: L.ALLOW, answer_bounce=1)
+        self.assertEqual(r["exit"], "model_finished")
+        self.assertEqual(r["answer"], "")
+        self.assertTrue(r["empty_answer"])           # visible, never a silent success
+
     # -- Epistemic Gate wiring (masterplan §4 M1) --
 
     def test_epistemic_gate_rejection_blocks_dispatch_and_feeds_rewrite_note(self) -> None:

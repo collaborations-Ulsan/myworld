@@ -59,7 +59,10 @@ class AdaptersTest(unittest.TestCase):
         adapter = self.a.make_adapter(self.a.SPECS["ollama_local"], runner=fake_runner)
         out = adapter("summarize this")
         self.assertEqual(out, "RESPONSE TEXT")
-        self.assertEqual(calls[0][0][:3], ["ollama", "run", "qwen3:8b"])
+        # default local model is env-tunable (AIOS_OLLAMA_MODEL); agentic default 30b
+        import os as _os
+        expected_model = _os.environ.get("AIOS_OLLAMA_MODEL", "qwen3-coder:30b")
+        self.assertEqual(calls[0][0][:3], ["ollama", "run", expected_model])
 
     def test_claude_adapter_sends_prompt_via_stdin(self):
         calls = []
