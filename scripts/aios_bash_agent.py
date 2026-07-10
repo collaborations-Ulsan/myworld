@@ -214,6 +214,7 @@ class BashFallbackAgent:
         self.adapter = adapter
         self.root = Path(root).resolve()
         self.config = config or BashAgentConfig()
+        self._bwrap_broken = False   # set at runtime when bwrap exists but can't run here
 
     def _use_bwrap(self) -> bool:
         mode = self.config.sandbox
@@ -221,7 +222,7 @@ class BashFallbackAgent:
             return True
         if mode == "subprocess":
             return False
-        return _bwrap_available()
+        return _bwrap_available() and not self._bwrap_broken
 
     def _execute(self, command: str) -> "tuple[int, str, str]":
         """Run one command. Returns (returncode, raw_stdout, display_text).
@@ -251,6 +252,14 @@ class BashFallbackAgent:
                 errors="replace",
             )
             stdout, stderr = result.stdout or "", result.stderr or ""
+            # bwrap can EXIST but be unusable (nested sandboxes: "bwrap: setting up
+            # uid map: Permission denied" — observed 2026-07-11). Availability probe
+            # ≠ usability probe: on the first bwrap-level failure in auto mode,
+            # degrade to plain subprocess for the rest of the run and re-execute.
+            if (use_bwrap and self.config.sandbox == "auto" and result.returncode != 0
+                    and "bwrap:" in (stderr + stdout)):
+                self._bwrap_broken = True
+                return self._execute(command)
             display = stdout + (stderr if not stderr else (("" if stdout.endswith("\n") or not stdout else "\n") + stderr))
             return result.returncode, stdout, _truncate(display, cfg.output_cap)
         except subprocess.TimeoutExpired as exc:

@@ -197,3 +197,18 @@ class RunBashAgentFunctionalTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class BwrapRuntimeFallbackTests(unittest.TestCase):
+    def test_broken_bwrap_degrades_to_plain_subprocess_at_runtime(self) -> None:
+        # bwrap exists but can't run (nested sandbox): first bwrap-level failure
+        # in auto mode must degrade to plain subprocess and re-execute.
+        from unittest import mock
+        agent = BA.BashFallbackAgent(lambda p: "", root=".")
+        with mock.patch.object(BA, "_bwrap_available", return_value=True), \
+             mock.patch.object(BA, "build_bwrap_argv",
+                               return_value=["bash", "-c", "echo 'bwrap: setting up uid map: Permission denied' >&2; exit 1"]):
+            rc, stdout, display = agent._execute("echo hi")
+        self.assertEqual(rc, 0)
+        self.assertEqual(stdout.strip(), "hi")
+        self.assertTrue(agent._bwrap_broken)   # subsequent commands skip bwrap entirely
