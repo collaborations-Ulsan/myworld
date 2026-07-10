@@ -52,13 +52,30 @@ class OrgansModeTests(unittest.TestCase):
         self.assertFalse(v.passed)
         self.assertTrue(v.certificates["h0guard"]["flagged"])
 
-    def test_organs_mode_passes_a_consistent_proposal_with_no_conflicting_evidence(self) -> None:
+    def test_organs_mode_with_no_evidence_abstains_explicitly_never_a_silent_pass(self) -> None:
         gate = G.EpistemicGate(mode="organs")
         v = gate.gate({"tool": "fs.read", "arguments": {"path": "docs/README.md"}}, {"goal": "read a doc"})
-        self.assertTrue(v.passed)
-        self.assertEqual(v.verdict, G.CLAIM)
-        # honest degrade: no evidence supplied -> checks report skipped, not a silent pass
+        self.assertTrue(v.passed)                       # non-strict: does not brick a bare loop
+        self.assertEqual(v.verdict, G.ABSTAIN)          # but it is NOT a CLAIM-grade pass
+        self.assertEqual(v.checked, 0)                  # downstream can see nothing was verified
+        self.assertIn("no_applicable_checks", v.reasons)
         self.assertEqual(v.certificates["apex"]["status"], "skipped")
+
+    def test_organs_mode_strict_env_blocks_when_nothing_checkable(self) -> None:
+        gate = G.EpistemicGate(mode="organs")
+        with patch.dict(os.environ, {"AIOS_GATE_STRICT": "1"}):
+            v = gate.gate({"tool": "fs.read"}, {"goal": "read a doc"})
+        self.assertFalse(v.passed)
+        self.assertEqual(v.verdict, G.ABSTAIN)
+
+    def test_organs_mode_fails_closed_when_organ_infrastructure_is_dead(self) -> None:
+        gate = G.EpistemicGate(mode="organs")
+        with patch.object(G, "_import_certs", return_value={"_import_error": "tree gone"}):
+            v = gate.gate({"tool": "x", "claims": [{"kind": "io", "payload": {}}]}, {"goal": "g"})
+        self.assertFalse(v.passed)
+        self.assertEqual(v.verdict, G.MISSPECIFIED)
+        self.assertIn("organs_infrastructure_unavailable", v.reasons)
+        self.assertGreater(v.infra_failures, 0)
 
 
 class FailClosedTests(unittest.TestCase):
@@ -90,14 +107,35 @@ class ModeSelectionTests(unittest.TestCase):
 
 
 class LlmJudgeUnavailableTests(unittest.TestCase):
-    def test_llm_judge_honestly_reports_unavailable_when_endpoint_unreachable(self) -> None:
+    def test_llm_judge_fails_closed_when_judge_call_fails(self) -> None:
+        # A judge arm whose judge is dead must block loudly — it must never silently
+        # degrade into the off arm (would contaminate the M2 ablation).
         import aios_adapters as adapters
         gate = G.EpistemicGate(mode="llm-judge")
-        with patch.object(adapters, "_ollama_rest_available", return_value=False):
+        def _broken_adapter(timeout=20):
+            def _call(prompt):
+                raise ConnectionError("endpoint down")
+            return _call
+        with patch.object(adapters, "make_ollama_rest_adapter", _broken_adapter):
             v = gate.gate({"tool": "x"}, {"goal": "test"})
-        self.assertTrue(v.passed)   # infra absence never blocks — it is honestly reported, not fabricated
+        self.assertFalse(v.passed)
+        self.assertEqual(v.verdict, G.MISSPECIFIED)
         self.assertEqual(v.certificates["llm_judge"]["status"], "unavailable")
         self.assertIn("llm_judge_unavailable", v.reasons[0])
+        self.assertEqual(v.infra_failures, 1)
+
+    def test_llm_judge_failopen_escape_hatch_passes_with_labeled_reason(self) -> None:
+        import aios_adapters as adapters
+        gate = G.EpistemicGate(mode="llm-judge")
+        def _broken_adapter(timeout=20):
+            def _call(prompt):
+                raise ConnectionError("endpoint down")
+            return _call
+        with patch.object(adapters, "make_ollama_rest_adapter", _broken_adapter), \
+             patch.dict(os.environ, {"AIOS_GATE_FAILOPEN": "1"}):
+            v = gate.gate({"tool": "x"}, {"goal": "test"})
+        self.assertTrue(v.passed)
+        self.assertTrue(v.reasons[0].startswith("failopen:"))
 
 
 if __name__ == "__main__":

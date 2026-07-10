@@ -248,6 +248,7 @@ def run_loop(goal: str, sampler: Sampler, registry: Registry, *,
              gate: Callable[[str, dict], str] = default_gate,
              epistemic_gate: "Callable[[dict, dict], object] | None" = None,
              gate_reject_threshold: int = 3,
+             gate_context: dict | None = None,
              max_turns: int = 12, loop_threshold: int = 3, repair_threshold: int = 2,
              record_sink: Callable[[dict], None] | None = None,
              turn_sink: Callable[[dict], None] | None = None,
@@ -324,7 +325,7 @@ def run_loop(goal: str, sampler: Sampler, registry: Registry, *,
 
             stop = None
             turn_progress = False
-            for call in calls:
+            for call_idx, call in enumerate(calls):
                 all_tools.append(call.name)
                 sig = signature(call)
                 sig_count = sig_count + 1 if sig == last_sig else 1
@@ -335,13 +336,18 @@ def run_loop(goal: str, sampler: Sampler, registry: Registry, *,
                     break
 
                 if epistemic_gate is not None:               # blocking middleware (masterplan §4 M1)
-                    gv = epistemic_gate({"tool": call.name, "arguments": call.arguments},
-                                        {"goal": goal})
-                    gv = gv.to_dict() if hasattr(gv, "to_dict") else dict(gv)
+                    try:
+                        gv = epistemic_gate({"tool": call.name, "arguments": call.arguments},
+                                            {"goal": goal, **(gate_context or {})})
+                        gv = gv.to_dict() if hasattr(gv, "to_dict") else dict(gv)
+                    except Exception as exc:  # noqa: BLE001 — a crashing gate must fail-closed, not kill the loop
+                        gv = {"verdict": "MISSPECIFIED", "passed": False,
+                              "reasons": [f"gate_error:{str(exc)[:150]}"],
+                              "certificates": {}, "mode": "unknown"}
                     emit({"kind": "epistemic_gate", "turn": turn, "call_id": call.call_id,
                           "tool": call.name, "verdict": gv.get("verdict"), "passed": gv.get("passed"),
                           "reasons": gv.get("reasons"), "certificates": gv.get("certificates"),
-                          "gate_mode": gv.get("mode")})
+                          "gate_mode": gv.get("mode"), "gate_checked": gv.get("checked")})
                     if not gv.get("passed", True):
                         gate_reject_count[sig] = gate_reject_count.get(sig, 0) + 1
                         entry = {"turn": turn, "call_id": call.call_id, "tool": call.name,
@@ -358,7 +364,14 @@ def run_loop(goal: str, sampler: Sampler, registry: Registry, *,
                         reasons_text = "; ".join(str(r) for r in (gv.get("reasons") or [])) or "no reason given"
                         history.append({"role": "system", "kind": "gate_rejection",
                                         "content": f"Turn Rejected: {reasons_text}. Rewrite."})
-                        continue
+                        # "Turn Rejected" means the TURN: later calls in this same sampled
+                        # turn must not dispatch before the sampler sees the rejection
+                        # (2026-07-10 codex review #2). Skipped remainder is recorded.
+                        remaining = len(calls) - call_idx - 1
+                        if remaining:
+                            emit({"kind": "gate_turn_blocked", "turn": turn,
+                                  "skipped_calls": remaining})
+                        break
 
                 decision = gate(call.name, call.arguments)
                 entry = {"turn": turn, "call_id": call.call_id, "tool": call.name, "decision": decision}
@@ -424,6 +437,9 @@ def run_loop(goal: str, sampler: Sampler, registry: Registry, *,
                "tool_sequence": all_tools[:200],
                "kernel_routed": all(t.get("decision") in (ALLOW, ASK, DENY, GATE_REJECTED)
                                    for t in trajectory),
+               # pre-dispatch epistemic rejections, surfaced separately so summaries can
+               # never read a blocked call as normal routing (2026-07-10 codex review #6)
+               "gate_rejections": sum(gate_reject_count.values()),
                **outcome}
 
     # GenesisOS direction hook — fires when the loop signals direction loss

@@ -2705,3 +2705,42 @@ localStorage 히스토리 → 페이지 새로고침 후 대화 복원
 - key_decision: unify all end-user surfaces (bare `aios`, ask, do, web /run) around the existing intent-classifying chat router + NIM as the service-default provider — one behavior instead of divergent commands
 - new_invariant_or_pattern_discovered: AIOS's surfaces RAN but never DELIVERED value ("governance exoskeleton" — ask emitted a praxis envelope, do swallowed output, serve routed to weak ollama). The demo→service fix was DELIVERY + a strong provider path, NOT more governance. Corollary: before claiming a provider was used, verify WHICH substrate answered — a silent local backstop (ollama) masked NIM and nearly got laundered as a NIM success.
 - self-correction-of-prior-observation: caught myself mid-report about to claim "aios do routes to NIM cleanly" when the clean answer had actually come from the ollama backstop (NIM 404'd on a double-/v1 URL + api_key="none"); re-verified at the unit level before asserting.
+
+## 2026-07-05 12:30 KST — claude@myworld — workspace revival wave (multi-repo stopped-agent restart)
+
+- session_id: compact resumption (autonomous operator) — founder directive "그 지점들의 agent들을 살려서 일을 시켜"
+- mode_breakdown: observe:decide:intervene:verify:escalate ≈ 10:10:5:15:5 min
+- tools_used: Agent (4× executor/opus parallel, one per repo), Bash (GPU/date probe), Read
+- tools_NOT_used (CLI gap): aios_dispatch (revival wasn't a contract task — direct executor fan-out was lighter); Monitor (short-lived, notification-driven instead)
+- substrate_specific_behaviors_observed: one executor STOPPED its own redundant GPU train on discovering a peer's authoritative rsync collision (respected peer agency, used peer build, never touched GPU1's deepfake job) — peer-coexistence discipline emerging without explicit instruction. Another found a stale task premise (int8 path already wired by a peer) and reported the deviation rather than blindly re-doing.
+- failures_recovered: none blocking; APEX-RAG hit GPU-0 contention and SCHEDULED AROUND it (capped N, deferred the trained-baseline leg) instead of fighting for the GPU.
+- failures_escalated_to_founder: 5 external actions surfaced as GO/HOLD (Samsung deadline today, aiprediction upload, primer ZIPs D-5, quantum submit, cherry API key) — no auto-submit.
+- key_decision: revive via 4 parallel per-repo executors (isolated file sets, GPU non-conflicting: 1 GPU0 / 1 CPU / 1 non-GPU / 1 web) rather than sequential — one message, ~40min wall for 4 substantive research/comp legs.
+- new_invariant_or_pattern_discovered: REVIVAL PATTERN = (scout maps stopped-points → classify UNBLOCKED vs FOUNDER-GATED → fan out one executor per unblocked leg with honest-negative + no-external-submit + privacy + peer-respect baked into the prompt → consolidate verdicts, surface only the gated externals). 2 of 4 legs landed HONEST NEGATIVES (descentnet real-benchmark witness=0; APEX cosine-inversion) and that is the correct output — a revived agent's job is to close its stopped question truthfully, not to manufacture a win.
+- self-correction-of-prior-observation: none
+
+## 2026-07-10 17:50 KST — claude@myworld — AIOS 재정의 + AGI 마스터플랜 (다기질 기획, head=감독/subagent=실행)
+
+- session_id: founder directive "AIOS 이제 진짜 완성하자 … 재정의 해 … AGI(AIOS)를 만들어보자" + 중간 지시 2건 ("AGI 완성까지 멈추지말고 디자인", "실제 실행기는 Subagent로, 최신 모델들과 함께 기획 및 감독")
+- mode_breakdown: observe:verify:decide:intervene:escalate ≈ 15:25:35:20:0 (~기획 세션; decide 최대)
+- tools_used: Agent (Explore×2 인벤토리/상태증류, general-purpose×2 프론티어/선행연구, executor×1 M1 게이트), Bash background (nv panel, codex exec, agy -p), ToolSearch (deferred 스키마), SendMessage (미스파이어 재가동), aios_retrieve/aios_challenge (MCP), TaskCreate/Update, Write/Edit (마스터플랜 + 브리프 2건 + 메모리)
+- tools_NOT_used (CLI gap): Workflow (opt-in 없음 — Agent 병렬로 충분); aios_dispatch (기획 세션, 계약 freeze 존중)
+- substrate_specific_behaviors_observed: (1) 이종 4기질 (Gemini/agy·qwen3.5-397b·nemotron-550b·Codex-gpt-5.5)이 "epistemic runtime + 장기지평 신뢰성 keystone"으로 독립 수렴 — 단 Codex가 그 수렴 자체를 "같은 웹을 읽은 모델들의 합의는 독립 확증이 아니다"로 정당하게 강등; (2) Explore agent 1개가 0-tool 즉시종료 미스파이어 → SendMessage 재가동으로 회복.
+- failures_recovered: (1) codex gpt-5.6-sol 상시 400 (collaboration.spawn_agent 예약 충돌; features.multi_agent=false로도 불가) → gpt-5.5 + model_reasoning_effort 오버라이드로 우회 (memory 기록); (2) agy TTY 즉사 → `-p` 비대화형 플래그; (3) nv panel roster 2/4 404 (구명 nemotron-253b, deepseek-v4-pro).
+- failures_escalated_to_founder: none (재정의 자체가 founder 지시)
+- key_decision: AIOS 재정의 = "개인-소버린 Epistemic Runtime" (행동을 바꾸는 메모리 + 연구기관 게이트 + 장기지평 지속성); keystone = AIOS-DriftBench 5-arm (weak+checklist·weak+memory 대조군 포함, pre-registered); 문서 docs/AIOS_REDEFINITION_AGI_MASTERPLAN_2026-07-10.md
+- new_invariant_or_pattern_discovered: 기획 파이프라인 패턴 = (내부 인벤토리 ∥ 외부 프론티어 ∥ 이종 패널) → Codex 적대 공격 → 선행연구 novelty 확정 → 종합. novelty가 conjunction으로 좁혀짐: ①weak-LOCAL+runtime vs strong-raw @ 롱-호라이즌 변이 ②calibrated CLAIM/ABSTAIN 턴게이트→end-task (문헌 공인 공백, IRIS 문법 적중) ③변이 생존 메모리 (ProEvolve: 정적 메모리는 해악 — draft-first가 정확히 이 지점).
+- self-correction-of-prior-observation: 2026-07-04 entry의 "DescentNet = moat" 잔재를 최종 정리 — 마스터플랜 kill list에 "DescentNet-as-core-thesis 재주장 금지" 명문화 (earned negative 존중, H⁰만 ship).
+
+## 2026-07-10 17:37 KST — claude@descentnet — AGI/agent-problem/paper triple audit, 4-substrate consultation
+
+- session_id (or chat-distinguishing handle): descentnet audit (founder: "AGI 발현·agent 고질문제·AIOS 연구·4대학회 논문 현황 파악, top-tier 모델과 협의, 네 스스로의 문제도")
+- mode_breakdown: observe:20:verify:15:decide:8:intervene:5:escalate:2:~50
+- tools_used: TaskCreate 26-item intent decomposition BEFORE work (founder-mandated), Explore ×2 (repo inventory + myworld librarian), WebSearch ×6, codex exec gpt-5.6-sol (--ignore-user-config), agy -p, nv panel reason, aios_observe
+- tools_NOT_used (because of CLI gap): aios_retrieve / aios_challenge — MCP server resolves memoryOS/GenesisOS relative to cwd, dies outside myworld; omc ask codex — 400 collaboration.spawn_agent tools-schema conflict; agy default mode — needs /dev/tty, must use -p
+- substrate_specific_behaviors_observed: 4/4 heterogeneous convergence (codex/agy/qwen3.5/NIM#1): "real detector, passive diagnostic, closed-loop behavioral delta is THE missing evidence, AGI wording toxic for venues". NIM#1 hallucinated AAAI deadline as "4-6 weeks" (actual 11 days; filtered by my WebSearch). codex cited "Grant & Wang, Gluing Local Contexts into Global Meaning" — not found by search, flagged unverified. Mem2ActBench/MemGym/MemEvoBench verified real.
+- failures_recovered: all 3 consultation channels failed on first attempt (tools-schema 400 / TTY / async-queue artifact with exit 1); recovered via fallbacks. Self-inflicted record loss: my tail -c truncation destroyed the front of the NIM panel output.
+- failures_escalated_to_founder: none mid-session; report recommends founder decision on AAAI-27 skip (abstract due 2026-07-21) vs ICLR 2027 target.
+- key_decision: recommend ICLR 2027 + make masterplan M2 (AIOS-DriftBench-mini, pre-registered ≥17/24) the paper's headline closed-loop experiment — external adversarial review and the internal masterplan independently derived the SAME experiment (strong validity signal).
+- new_invariant_or_pattern_discovered: (1) internal-roadmap ↔ external-adversarial-review convergence as a validity test; (2) receipt gap found: ASC-0281 commit claims "3 seeds" but only seed-2 receipt exists on disk (reproducibility discipline violation to fix); (3) paper (2026-06-21) predates and omits all three 07-05 results.
+- self-correction-of-prior-observation: none

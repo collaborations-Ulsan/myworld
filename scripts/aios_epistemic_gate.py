@@ -17,9 +17,10 @@ insertion point.
 
 Three ablation modes (constructor `mode=` or env `AIOS_GATE_MODE`; masterplan §2 A4):
   off        — always passes; records "nothing checked" (the null arm).
-  llm-judge  — one cheap self-check LLM call via the existing ollama_rest adapter
-               (scripts/aios_adapters.py); if the endpoint is unreachable it
-               HONESTLY reports UNAVAILABLE (never fabricates a verdict) and passes.
+  llm-judge  — exactly ONE self-check LLM call attempt via the existing ollama_rest
+               adapter (scripts/aios_adapters.py) on every path (budget parity);
+               an unreachable/failed judge FAIL-CLOSES (reported unavailable, blocks)
+               so a dead judge arm can never silently degrade into the off arm.
   organs     — the real gate: the shipped H0 poison/consistency filter
                (scripts/aios_akashic_guard.py, unmodified) + the ASC-0281 witness's
                APEX/DescentNet certifiers (experiments/agi_witness/{contracts,claims}.py
@@ -80,9 +81,24 @@ class GateVerdict:
     reasons: list[str] = field(default_factory=list)
     certificates: dict[str, Any] = field(default_factory=dict)
     mode: str = ""
+    checked: int = 0          # how many checks actually RAN (status=ok) — 0 means nothing was verified
+    infra_failures: int = 0   # checks that SHOULD have run but couldn't (unavailable/error)
 
     def to_dict(self) -> dict:
         return asdict(self)
+
+
+def _fail_closed(reasons: list[str], certificates: dict, mode: str,
+                 checked: int = 0, infra_failures: int = 0) -> GateVerdict:
+    """Fail-closed verdict, honoring the AIOS_GATE_FAILOPEN=1 debugging escape hatch."""
+    if os.environ.get("AIOS_GATE_FAILOPEN") == "1":
+        return GateVerdict(verdict=CLAIM, passed=True,
+                           reasons=[f"failopen:{r}" for r in reasons],
+                           certificates=certificates, mode=mode,
+                           checked=checked, infra_failures=infra_failures)
+    return GateVerdict(verdict=MISSPECIFIED, passed=False, reasons=reasons,
+                       certificates=certificates, mode=mode,
+                       checked=checked, infra_failures=infra_failures)
 
 
 # ── ASC-0281 witness cert modules — best-effort import, never a hard dependency ──
@@ -233,19 +249,16 @@ class EpistemicGate:
     # -- llm-judge -----------------------------------------------------------
 
     def _gate_llm_judge(self, proposal: dict, context: dict) -> GateVerdict:
+        """Exactly ONE adapter call attempt on every path (budget parity, masterplan §5).
+        An unavailable judge FAIL-CLOSES: a judge arm whose judge is dead must block
+        loudly, not silently degrade into the off arm (2026-07-10 codex review #4/#7).
+        """
         try:
             import aios_adapters as adapters  # noqa: PLC0415
         except Exception as exc:  # noqa: BLE001
-            return GateVerdict(verdict=CLAIM, passed=True,
-                               reasons=["llm_judge_unavailable:import_failed"],
-                               certificates={"llm_judge": {"status": "unavailable", "reason": str(exc)[:120]}},
-                               mode="llm-judge")
-        if not adapters._ollama_rest_available():  # noqa: SLF001 — repo idiom, see aios_adapters callers
-            return GateVerdict(verdict=CLAIM, passed=True,
-                               reasons=["llm_judge_unavailable:endpoint_unreachable"],
-                               certificates={"llm_judge": {"status": "unavailable",
-                                                            "reason": "ollama_rest endpoint unreachable"}},
-                               mode="llm-judge")
+            return _fail_closed(["llm_judge_unavailable:import_failed"],
+                                {"llm_judge": {"status": "unavailable", "reason": str(exc)[:120]}},
+                                "llm-judge", checked=0, infra_failures=1)
         prompt = (
             "Self-check gate. Reply with exactly one word: CONSISTENT or INCONSISTENT.\n"
             f"Proposed tool: {proposal.get('tool')}\n"
@@ -253,17 +266,18 @@ class EpistemicGate:
         )
         try:
             reply = adapters.make_ollama_rest_adapter(timeout=20)(prompt)
-        except Exception as exc:  # noqa: BLE001 — one call attempted; failure degrades honestly
-            return GateVerdict(verdict=CLAIM, passed=True,
-                               reasons=["llm_judge_unavailable:call_failed"],
-                               certificates={"llm_judge": {"status": "unavailable", "reason": str(exc)[:120]}},
-                               mode="llm-judge")
+        except Exception as exc:  # noqa: BLE001 — the one allowed call failed: fail-closed, honestly reported
+            return _fail_closed(["llm_judge_unavailable:call_failed"],
+                                {"llm_judge": {"status": "unavailable", "reason": str(exc)[:120]}},
+                                "llm-judge", checked=0, infra_failures=1)
         inconsistent = "INCONSISTENT" in reply.upper()
         cert = {"llm_judge": {"status": "ok", "result": "INCONSISTENT" if inconsistent else "CONSISTENT"}}
         if inconsistent:
             return GateVerdict(verdict=MISSPECIFIED, passed=False,
-                               reasons=["llm_judge_flagged_inconsistent"], certificates=cert, mode="llm-judge")
-        return GateVerdict(verdict=CLAIM, passed=True, reasons=[], certificates=cert, mode="llm-judge")
+                               reasons=["llm_judge_flagged_inconsistent"], certificates=cert,
+                               mode="llm-judge", checked=1)
+        return GateVerdict(verdict=CLAIM, passed=True, reasons=[], certificates=cert,
+                           mode="llm-judge", checked=1)
 
     # -- organs ---------------------------------------------------------------
 
@@ -271,6 +285,8 @@ class EpistemicGate:
         certificates: dict[str, Any] = {}
         reasons: list[str] = []
         passed = True
+        checked = 0
+        infra_failures = 0
         verdict = str(proposal.get("verdict", CLAIM)).upper()
         if verdict not in _VERDICTS:
             verdict = CLAIM
@@ -282,9 +298,14 @@ class EpistemicGate:
             verdict = MISSPECIFIED
             reasons.append(f"h0guard_flagged:score={h0.get('score')}_gt_thresh={h0.get('threshold')}")
 
-        for cert in _apex_descent_check(proposal, context):
+        for cert in [h0] + _apex_descent_check(proposal, context):
             certificates[cert["cert"]] = cert
-            if cert.get("status") != "ok":
+            status = cert.get("status")
+            if status == "ok":
+                checked += 1
+            elif status in ("unavailable", "error"):
+                infra_failures += 1
+            if status != "ok":
                 continue
             if cert["cert"] == "apex" and cert.get("label") == "CONTRADICTORY":
                 passed = False
@@ -300,8 +321,23 @@ class EpistemicGate:
                 verdict = MISSPECIFIED
                 reasons.append(f"descent_h0_conflict:{cert['h0_conflicts']}")
 
+        # No check actually ran: never let that read as a verified pass downstream
+        # (2026-07-10 codex review #1/#5 — the silent-pass risk the gate exists to kill).
+        if checked == 0:
+            if infra_failures:
+                # organs arm whose organs are DEAD is an invalid arm — block loudly.
+                return _fail_closed(["organs_infrastructure_unavailable"], certificates,
+                                    "organs", checked=0, infra_failures=infra_failures)
+            # No structured evidence supplied: honest ABSTAIN, explicitly labeled.
+            reasons.append("no_applicable_checks")
+            strict = os.environ.get("AIOS_GATE_STRICT") == "1"
+            return GateVerdict(verdict=ABSTAIN, passed=not strict, reasons=reasons,
+                               certificates=certificates, mode="organs",
+                               checked=0, infra_failures=0)
+
         return GateVerdict(verdict=verdict, passed=passed, reasons=reasons,
-                           certificates=certificates, mode="organs")
+                           certificates=certificates, mode="organs",
+                           checked=checked, infra_failures=infra_failures)
 
 
 def make_gate(mode: str | None = None) -> Callable[[dict, dict], GateVerdict]:

@@ -256,6 +256,60 @@ class TurnLoopTests(unittest.TestCase):
         ]), self.reg, gate=lambda n, a: L.ALLOW)
         self.assertEqual(r["trajectory"][0]["status"], "ok")
 
+    def test_epistemic_gate_rejection_blocks_whole_turn_not_just_one_call(self) -> None:
+        # "Turn Rejected" means the TURN: a later call in the same sampled turn must
+        # NOT dispatch before the sampler has seen the rejection (codex review #2).
+        dispatched = {"later": False}
+        self.reg.register("bad", lambda a: "x")
+        self.reg.register("later_tool", lambda a: dispatched.__setitem__("later", True))
+
+        def reject_bad_only(proposal, context):
+            if proposal["tool"] == "bad":
+                return {"verdict": "MISSPECIFIED", "passed": False,
+                        "reasons": ["nope"], "certificates": {}, "mode": "organs"}
+            return {"verdict": "CLAIM", "passed": True, "reasons": [],
+                    "certificates": {}, "mode": "organs"}
+
+        r = L.run_loop("x", scripted([
+            {"tool_calls": [L.ToolCall("bad", {}, call_id="c1"),
+                            L.ToolCall("later_tool", {}, call_id="c2")]},
+            {"tool_calls": []},
+        ]), self.reg, gate=lambda n, a: L.ALLOW, epistemic_gate=reject_bad_only)
+        self.assertFalse(dispatched["later"])            # second call never ran this turn
+        self.assertEqual(r["gate_rejections"], 1)
+
+    def test_epistemic_gate_exception_fails_closed_instead_of_crashing_loop(self) -> None:
+        # A crashing gate callable must become a fail-closed rejection (codex review #3).
+        self.reg.register("t", lambda a: "ok")
+
+        def crashing_gate(proposal, context):
+            raise RuntimeError("gate blew up")
+
+        r = L.run_loop("x", scripted([
+            {"tool_calls": [L.ToolCall("t", {}, call_id="c1")]},
+            {"tool_calls": []},
+        ]), self.reg, gate=lambda n, a: L.ALLOW, epistemic_gate=crashing_gate)
+        self.assertEqual(r["trajectory"][0]["status"], L.GATE_REJECTED)
+        self.assertTrue(r["trajectory"][0]["gate_reasons"][0].startswith("gate_error:"))
+
+    def test_epistemic_gate_context_enrichment_reaches_the_gate(self) -> None:
+        # gate_context lets callers supply known_claims/profiles_population (codex review #1).
+        seen = {}
+
+        def capture_gate(proposal, context):
+            seen.update(context)
+            return {"verdict": "CLAIM", "passed": True, "reasons": [],
+                    "certificates": {}, "mode": "organs"}
+
+        self.reg.register("t", lambda a: "ok")
+        L.run_loop("goal-text", scripted([
+            {"tool_calls": [L.ToolCall("t", {}, call_id="c1")]},
+            {"tool_calls": []},
+        ]), self.reg, gate=lambda n, a: L.ALLOW, epistemic_gate=capture_gate,
+           gate_context={"known_claims": [{"kind": "io"}]})
+        self.assertEqual(seen["goal"], "goal-text")
+        self.assertEqual(seen["known_claims"], [{"kind": "io"}])
+
     def test_epistemic_gate_decision_appended_to_run_log_with_call_id_lineage(self) -> None:
         events = []
 
