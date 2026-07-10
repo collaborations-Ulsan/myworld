@@ -28,6 +28,7 @@ import argparse
 import hashlib
 import importlib.util
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -1244,6 +1245,13 @@ def main(argv: list[str] | None = None) -> int:
                         help="run the full 5-OS organic pipeline: memory→capability→loop→dream_agora→akashic")
     parser.add_argument("--agent", default="codex@myworld", help="agent identity for the gate")
     parser.add_argument("--max-turns", type=int, default=12, help="max agent turns (default: 12)")
+    parser.add_argument("--bash-loop", action="store_true",
+                        help="guaranteed-fallback bash-only agent loop (mini-swe-agent semantics, "
+                             "M5/D1-2) — one bash block per turn, no function-calling/JSON parsing "
+                             "required, works on ANY local model. Routes to the ollama_local REST "
+                             "adapter; does not touch the existing --loop path.")
+    parser.add_argument("--bash-max-steps", type=int, default=20,
+                        help="max steps for --bash-loop (default: 20)")
     args = parser.parse_args(argv)
 
     # CC6: load goal + options from JSON file if --from-file is given
@@ -1266,6 +1274,26 @@ def main(argv: list[str] | None = None) -> int:
             args.max_turns = int(task["max_turns"])
     elif args.goal is None:
         parser.error("goal is required (positional argument or --from-file TASK_JSON)")
+
+    if args.bash_loop:
+        # Provider-death fallback (M5/D1-2): bypasses planner/provider routing
+        # entirely — always the local ollama_rest adapter, so it keeps working
+        # even when every provider CLI (claude/codex/gemini) is unavailable.
+        bash_agent_mod = _load("aios_bash_agent")
+        adapters_mod = _load("aios_adapters")
+        model = os.environ.get("AIOS_OLLAMA_MODEL", "qwen3-coder:30b")
+        adapter = adapters_mod.make_ollama_rest_adapter(model=model)
+        root_path = Path(args.root).resolve()
+        result = bash_agent_mod.run_bash_agent(
+            args.goal, adapter=adapter, root=root_path, max_steps=args.bash_max_steps)
+        print(json.dumps({
+            "status": "closed" if result.exit_reason == "completed" else result.exit_reason,
+            "exit_reason": result.exit_reason,
+            "answer": result.answer,
+            "steps_used": result.steps_used,
+            "observations": [o.__dict__ for o in result.observations],
+        }, ensure_ascii=False, indent=2))
+        return 0 if result.exit_reason == "completed" else 1
 
     # Auto-route provider via role_router when --provider is not set
     routed_role = None
