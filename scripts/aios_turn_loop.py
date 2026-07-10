@@ -17,6 +17,20 @@ injected (a sampler) so the loop is unit-tested with a fake and runs live on a
 substrate-equipped host. Organs become registry handlers — invoked THROUGH this
 loop instead of bypassing the kernel as standalone scripts.
 
+Epistemic Gate seam (masterplan §4 M1, docs/AIOS_REDEFINITION_AGI_MASTERPLAN_2026-07-10.md):
+`run_loop()` takes an optional `epistemic_gate` callable — (proposal: dict, context:
+dict) -> a GateVerdict-like object/dict with `passed`/`verdict`/`reasons`/`certificates`
+(see scripts/aios_epistemic_gate.py) — invoked once per ToolCall, inside the
+`for call in calls:` block, immediately BEFORE the existing authority `gate(name, args)`
+call. A failing verdict blocks dispatch, appends "Turn Rejected: <reasons>. Rewrite." to
+history for the next sampler turn (piggybacking the existing resample mechanism — no new
+control flow), and is counted per proposal signature; 3 rejections of the SAME proposal
+trip a dedicated named exit (`epistemic_gate_circuit_breaker`) so a stubborn model can't
+loop forever against the gate. Kept purely additive: default `None`, so every existing
+caller/test is unaffected. This module intentionally does NOT import
+`aios_epistemic_gate` — the gate is dependency-injected, same pattern as `gate` and
+`constraint_provider`, so this stdlib-only primitive stays decoupled from the cert stack.
+
 Schema: aios.turn_loop.v1
 """
 from __future__ import annotations
@@ -34,6 +48,10 @@ _RUNS_DIR = Path.home() / ".aios" / "runs"
 
 # A gate decision for one tool call.
 ALLOW, ASK, DENY = "allow", "ask", "deny"
+
+# Epistemic-gate rejection decision (masterplan §4 M1) — distinct from the
+# authority ALLOW/ASK/DENY axis; a call never reaches that gate at all.
+GATE_REJECTED = "gate_rejected"
 
 
 @dataclass
@@ -102,6 +120,7 @@ _READ_TOOLS = frozenset({"Read", "aios_retrieve", "aios_route"})
 _ERROR_STATUSES = frozenset({
     "error", "denied", "denied_scope", "timeout", "no_results", "unavailable",
     "not_found", "empty", "failed", "non_json_output", "script_missing",
+    GATE_REJECTED,
 })
 
 
@@ -122,7 +141,9 @@ def render_directives(history: list[dict]) -> str:
                       if h.get("role") == "system" and h.get("kind") == "plan_repair")
     constraints = "".join(f"[REMEMBER] {h.get('content','')}\n" for h in history
                           if h.get("role") == "system" and h.get("kind") == "constraint")
-    return repairs + constraints
+    gate_rejections = "".join(f"[GATE REJECTED] {h.get('content','')}\n" for h in history
+                              if h.get("role") == "system" and h.get("kind") == "gate_rejection")
+    return repairs + constraints + gate_rejections
 
 
 def decondition_history(history: list[dict], keep_recent_errors: int = 1) -> list[dict]:
@@ -225,6 +246,8 @@ def _plan_repair_note(goal: str, turn: int) -> str:
 
 def run_loop(goal: str, sampler: Sampler, registry: Registry, *,
              gate: Callable[[str, dict], str] = default_gate,
+             epistemic_gate: "Callable[[dict, dict], object] | None" = None,
+             gate_reject_threshold: int = 3,
              max_turns: int = 12, loop_threshold: int = 3, repair_threshold: int = 2,
              record_sink: Callable[[dict], None] | None = None,
              turn_sink: Callable[[dict], None] | None = None,
@@ -239,7 +262,20 @@ def run_loop(goal: str, sampler: Sampler, registry: Registry, *,
     they happen — the append-only stream that makes a run RESUMABLE (aios_run_log).
 
     run_log (optional): if provided (or if session_id is given), events are written
-    append-only to ~/.aios/runs/<session_id>.jsonl — the durable run record."""
+    append-only to ~/.aios/runs/<session_id>.jsonl — the durable run record.
+
+    epistemic_gate (optional, masterplan §4 M1): called as
+    `epistemic_gate({"tool": call.name, "arguments": call.arguments}, {"goal": goal})`
+    once per ToolCall, BEFORE the authority `gate`. Anything with `.passed`/`.verdict`/
+    `.reasons`/`.certificates` (a GateVerdict) or an equivalent dict works — see
+    scripts/aios_epistemic_gate.py. Every decision is emitted as a `kind: "epistemic_gate"`
+    record (turn/call_id/tool/verdict/passed/reasons/certificates — names+diagnostics
+    only, DNA #7) through the same `emit()` path as `trajectory`, so it lands in
+    `turn_sink`/`run_log` with full call_id lineage. A rejection blocks dispatch and
+    appends a `gate_rejection` system note to `history` (picked up by `render_directives`
+    on the next sampler call — the existing resample mechanism, no new control flow).
+    `gate_reject_threshold` rejections of the SAME proposal signature trips the
+    `epistemic_gate_circuit_breaker` named exit."""
     # Resolve run log path
     if run_log is None and session_id is not None:
         run_log = make_session_log(session_id)
@@ -250,6 +286,7 @@ def run_loop(goal: str, sampler: Sampler, registry: Registry, *,
     last_sig, sig_count = None, 0
     stall_count = 0   # consecutive turns with no real progress (pillar 3)
     all_tools: list[str] = []   # ordered tool sequence for loop-type + AkashicRecord
+    gate_reject_count: dict[str, int] = {}   # per-proposal-signature epistemic rejections
 
     def emit(rec: dict) -> None:
         if turn_sink:
@@ -296,6 +333,32 @@ def run_loop(goal: str, sampler: Sampler, registry: Registry, *,
                     stop = {"exit": "loop_detected", "turns": turn,
                             "repeated": call.name, "trajectory": trajectory}
                     break
+
+                if epistemic_gate is not None:               # blocking middleware (masterplan §4 M1)
+                    gv = epistemic_gate({"tool": call.name, "arguments": call.arguments},
+                                        {"goal": goal})
+                    gv = gv.to_dict() if hasattr(gv, "to_dict") else dict(gv)
+                    emit({"kind": "epistemic_gate", "turn": turn, "call_id": call.call_id,
+                          "tool": call.name, "verdict": gv.get("verdict"), "passed": gv.get("passed"),
+                          "reasons": gv.get("reasons"), "certificates": gv.get("certificates"),
+                          "gate_mode": gv.get("mode")})
+                    if not gv.get("passed", True):
+                        gate_reject_count[sig] = gate_reject_count.get(sig, 0) + 1
+                        entry = {"turn": turn, "call_id": call.call_id, "tool": call.name,
+                                "decision": GATE_REJECTED, "status": GATE_REJECTED,
+                                "gate_verdict": gv.get("verdict"), "gate_reasons": gv.get("reasons")}
+                        trajectory.append(entry)
+                        emit({"kind": "trajectory", **entry})
+                        history.append({"role": "tool", "tool": call.name, "status": GATE_REJECTED})
+                        if gate_reject_count[sig] >= gate_reject_threshold:
+                            stop = {"exit": "epistemic_gate_circuit_breaker", "turns": turn,
+                                    "repeated": call.name, "reasons": gv.get("reasons"),
+                                    "trajectory": trajectory}
+                            break
+                        reasons_text = "; ".join(str(r) for r in (gv.get("reasons") or [])) or "no reason given"
+                        history.append({"role": "system", "kind": "gate_rejection",
+                                        "content": f"Turn Rejected: {reasons_text}. Rewrite."})
+                        continue
 
                 decision = gate(call.name, call.arguments)
                 entry = {"turn": turn, "call_id": call.call_id, "tool": call.name, "decision": decision}
@@ -359,7 +422,8 @@ def run_loop(goal: str, sampler: Sampler, registry: Registry, *,
                "tool_calls": len(trajectory),
                "loop_type": loop_type,
                "tool_sequence": all_tools[:200],
-               "kernel_routed": all(t.get("decision") in (ALLOW, ASK, DENY) for t in trajectory),
+               "kernel_routed": all(t.get("decision") in (ALLOW, ASK, DENY, GATE_REJECTED)
+                                   for t in trajectory),
                **outcome}
 
     # GenesisOS direction hook — fires when the loop signals direction loss

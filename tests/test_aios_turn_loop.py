@@ -214,6 +214,72 @@ class TurnLoopTests(unittest.TestCase):
         self.assertEqual(r["exit"], "max_turns")
         self.assertNotIn("completion_audit", r)
 
+    # -- Epistemic Gate wiring (masterplan §4 M1) --
+
+    def test_epistemic_gate_rejection_blocks_dispatch_and_feeds_rewrite_note(self) -> None:
+        dispatched = {"v": False}
+        self.reg.register("danger", lambda a: dispatched.__setitem__("v", True))
+
+        def rejecting_gate(proposal, context):
+            return {"verdict": "MISSPECIFIED", "passed": False,
+                    "reasons": ["obviously wrong"], "certificates": {}, "mode": "organs"}
+
+        r = L.run_loop("x", scripted([
+            {"tool_calls": [L.ToolCall("danger", {}, call_id="c1")]},
+            {"tool_calls": []},
+        ]), self.reg, gate=lambda n, a: L.ALLOW, epistemic_gate=rejecting_gate)
+        self.assertFalse(dispatched["v"])                             # never ran — gate blocked it
+        self.assertEqual(r["trajectory"][0]["status"], L.GATE_REJECTED)
+        self.assertEqual(r["trajectory"][0]["gate_verdict"], "MISSPECIFIED")
+
+    def test_epistemic_gate_circuit_breaker_at_threshold(self) -> None:
+        # The SAME proposal, rejected every time -> named exit at gate_reject_threshold,
+        # never an infinite reject loop.
+        same = {"tool_calls": [L.ToolCall("danger", {}, call_id="c")]}
+
+        def always_reject(proposal, context):
+            return {"verdict": "MISSPECIFIED", "passed": False,
+                    "reasons": ["nope"], "certificates": {}, "mode": "organs"}
+
+        r = L.run_loop("x", lambda h: same, self.reg, gate=lambda n, a: L.ALLOW,
+                       epistemic_gate=always_reject, gate_reject_threshold=3,
+                       loop_threshold=100)   # keep the (unrelated) repetition breaker from firing first
+        self.assertEqual(r["exit"], "epistemic_gate_circuit_breaker")
+        self.assertEqual(r["repeated"], "danger")
+
+    def test_epistemic_gate_passthrough_when_none_provided(self) -> None:
+        # Backward compatibility: omitting epistemic_gate changes nothing (default None).
+        self.reg.register("ok_tool", lambda a: "fine")
+        r = L.run_loop("x", scripted([
+            {"tool_calls": [L.ToolCall("ok_tool", {}, call_id="c1")]},
+            {"tool_calls": []},
+        ]), self.reg, gate=lambda n, a: L.ALLOW)
+        self.assertEqual(r["trajectory"][0]["status"], "ok")
+
+    def test_epistemic_gate_decision_appended_to_run_log_with_call_id_lineage(self) -> None:
+        events = []
+
+        def rejecting_gate(proposal, context):
+            return {"verdict": "ABSTAIN", "passed": False, "reasons": ["insufficient evidence"],
+                    "certificates": {"apex": {"status": "ok", "label": "UNDERDETERMINED"}},
+                    "mode": "organs"}
+
+        L.run_loop("x", scripted([
+            {"tool_calls": [L.ToolCall("danger", {}, call_id="call-xyz")]},
+            {"tool_calls": []},
+        ]), self.reg, gate=lambda n, a: L.ALLOW, epistemic_gate=rejecting_gate,
+           turn_sink=lambda r: events.append(r) if r.get("kind") == "epistemic_gate" else None)
+
+        self.assertEqual(len(events), 1)
+        rec = events[0]
+        # Reconstructable decision: call_id lineage + verdict + reasons + certificates.
+        self.assertEqual(rec["call_id"], "call-xyz")
+        self.assertEqual(rec["tool"], "danger")
+        self.assertEqual(rec["verdict"], "ABSTAIN")
+        self.assertFalse(rec["passed"])
+        self.assertEqual(rec["reasons"], ["insufficient evidence"])
+        self.assertIn("apex", rec["certificates"])
+
     def test_loop_detected_injects_genesis_direction(self) -> None:
         """When doom-loop triggers, genesis_direction must appear in outcome."""
         r = L.run_loop("find bugs", scripted([
