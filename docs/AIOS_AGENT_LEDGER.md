@@ -7763,3 +7763,16 @@ For repo-local implementation details, also update that repo's own worklog.
 - risk: M2 addendum must fold in BEFORE pre-registration freeze; GoEN kill-metric re-exam open (qwen panel challenge, rule-8-consistent — founder/operator call)
 - next: operator folds addendum into M2 pre-registration; commit ASC-0281 seeds 1,3 receipts; founder uploads arXiv package (README_SUBMIT.md, 3-min); DescentNet paper adds SLM-delta baseline arm
 - status: closed
+
+---
+- when: 2026-07-11T10:25:00+09:00
+- repo: myworld (+ descentnet)
+- agent: claude@myworld (descentnet session head)
+- role: operator (contract acceptance)
+- goal: accept ASC-0282 (M2 DriftBench closed-loop keystone + shadow-mode rider) after metric-adequacy audit + peer cross-check (founder GO 2026-07-11 "쭉 밀어봐" → "go")
+- changed: docs/contracts/ASC-0282-m2-driftbench-closed-loop.md (proposed→accepted; DNA citation Invariants 1/3/4/7 added; prereg v1.2 reference)
+- evidence: metric audit = descentnet prereg v1.1+v1.2 (commits 4a816aa, 88a16f9; 3-substrate adversarial lane nemotron-550b/deepseek-v4-pro/codex-5.6-sol + parallel-audit addendum fold-in per AIOS_M2_DESIGN_ADDENDUM_2026-07-11.md cover requirement); cross-check = deepseek-v4-pro VERDICT: ACCEPT (0 blocking, 2 non-blocking: shadow-mode scrub procedure spec, WP-D transition recording — fold during WP-B); codex peer timed out twice (exit 143 @420s/540s — substrate gap, NIM substitute used, re-pass optional on recovery)
+- decision: accepted. Stage-1 = internal completion judge (paired 17/24, tie≠win, exact binomial α=0.032); Stage-2 (≥100 non-team-authored hidden instances) required before any external headline claim. Implementation unblocked: WP-A wiring (recon confirms gate switch off/llm-judge/organs + blocking seam already at HEAD; gaps = aios_head.py thread-through, per-organ disable flags in _gate_organs, provenance-guard organ net-new), WP-B harness, WP-C ablation-replay + SLM-delta witness.
+- risk: codex substrate degraded today; SLM-V3 (2603.14588) scoop response landed in paper §3.1 item 0 + prereg v1.2 SLM-delta arm (descentnet 88a16f9) — witness implementation (WP-C) is the remaining scoop-defense artifact.
+- next: WP-A implementation (--gate flag + per-organ disable + provenance stub), WP-B skeleton on disjoint smoke templates, receipts to descentnet run_artifacts (m2_*)
+- status: accepted (active phase begins)

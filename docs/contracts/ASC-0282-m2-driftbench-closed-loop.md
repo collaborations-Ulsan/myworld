@@ -1,11 +1,17 @@
 ---
 contract_id: ASC-0282
-status: proposed
+status: accepted
 goal: Execute masterplan M2 (AIOS-DriftBench-mini closed-loop keystone) under the hardened pre-registration, with real-dispatch shadow-mode as reserved by the masterplan
 created: 2026-07-11
-accepted:
+accepted: 2026-07-11T10:25:00+09:00
 closed:
 ---
+
+> Acceptance cross-check: deepseek-v4-pro (NIM) — VERDICT: ACCEPT, zero
+> blocking objections, two non-blocking notes (shadow-mode scrub procedure
+> detail; WP-D transition recording) to fold during WP-B. The customary peer
+> codex@myworld timed out twice (exit 143, 420s/540s) — substrate gap
+> recorded; a codex re-pass may be run when the service recovers.
 
 # ASC-0282 — M2 DriftBench closed-loop keystone (+ real-dispatch shadow-mode)
 
@@ -20,8 +26,11 @@ push: 2026-07-11 ("마스터플랜이 납득가능한 평가지표인지 판단�
   2x2 + memory arm), `docs/AIOS_REDEFINITION_AGI_MASTERPLAN_2026-07-10.md`.
 - Hardened specification (statistics, ablation-replay gate, owner-bias
   two-stage structure, cost accounting, grader isolation):
-  `descentnet/docs/DESCENTNET_M2_DRIFTBENCH_PREREG_2026-07-10.md` v1 + v1.1.
-  The v1.1 audit (3-substrate adversarial lane) is binding: Stage-1 (24
+  `descentnet/docs/DESCENTNET_M2_DRIFTBENCH_PREREG_2026-07-10.md` v1 + v1.1
+  + v1.2 (v1.2 folds `myworld/docs/AIOS_M2_DESIGN_ADDENDUM_2026-07-11.md` —
+  corrupted-oracle arm, model-family swap, MISSPECIFIED probe, ABSTAIN-AUC
+  secondary, SLM-delta untyped baseline arm with the non-factorization
+  witness, evaluator blinding). The audit chain is binding: Stage-1 (24
   instances, paired wins >= 17/24, tie != win) is the INTERNAL completion
   judge; Stage-2 (>= 100 hidden instances authored by non-team substrates)
   is required before any external headline claim.
@@ -95,11 +104,18 @@ push: 2026-07-11 ("마스터플랜이 납득가능한 평가지표인지 판단�
 
 ## AIOS Role Evidence
 
-Decide-before-act: this contract precedes all harness code. Draft-first:
-organ outputs remain recommendation-only draft packets. No record destroyed:
-prereg is append-only versioned. Named exits: §4.4/§5. Provenance: every
-receipt cites the prereg version and harness hash. Operator override and
-founder override remain possible at every gate.
+DNA citation (per `docs/contracts/README.md` DNA Citation Requirement; this
+contract crosses into a child repo and introduces execution behavior — cites
+`docs/AIOS_DNA.md`): **Invariant 1 (Decide before acting)** — this contract
+precedes all harness code; **Invariant 3 (No record destroyed)** — the prereg
+is append-only versioned (v1 -> v1.1 -> v1.2) and receipts are never edited;
+**Invariant 4 (Every loop has a named exit)** — §5 stop conditions and the
+pre-registered EARN/kill/demote exits; **Invariant 7 (Privacy boundary)** —
+§2 forbidden_files and the shadow-mode scrub rider in §4.5.
+
+Draft-first: organ outputs remain recommendation-only draft packets.
+Provenance: every receipt cites the prereg version and harness hash. Operator
+override and founder override remain possible at every gate.
 
 ### 5-Persona Use
 
