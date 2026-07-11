@@ -155,17 +155,39 @@ class EscalationOrgan:
 
         action_map = {name: _make_gen(name, raw) for name, raw in self.generators.items()}
 
+        # Phase 0 — deterministic probe (standard bandit initialization): attempt
+        # each generator ONCE (sorted order, budget permitting) BEFORE the tree
+        # search, so dead-generator detection never depends on the search's
+        # stochastic sampling (a flaky test proved it did, 2026-07-11). Probe
+        # attempts count against the budget and land in provenance like any
+        # other root generation (parent_id=None).
+        probe_nodes: "list[tuple[_Node, float]]" = []
+        for name in sorted(action_map):
+            if len(provenance) >= budget:
+                break
+            probe_nodes.append(action_map[name](None))
+
         if _HAVE_TREEQUEST:
             engine = "treequest.ABMCTSA"
-            algo = _tq.ABMCTSA()
-            tree = algo.init_tree()
-            for _ in range(budget):
-                tree = algo.step(tree, action_map)
-            pairs = _tq.top_k(tree, algo, k=1)
-            best_node, best_score = pairs[0] if pairs else (None, 0.0)
         else:
             engine = "fallback (treequest-unavailable): UCB1 bandit + expand-or-deepen"
-            best_node, best_score = _fallback_search(action_map, budget)
+
+        best_node, best_score = None, 0.0
+        remaining = budget - len(provenance)
+        if remaining > 0:
+            if _HAVE_TREEQUEST:
+                algo = _tq.ABMCTSA()
+                tree = algo.init_tree()
+                for _ in range(remaining):
+                    tree = algo.step(tree, action_map)
+                pairs = _tq.top_k(tree, algo, k=1)
+                best_node, best_score = pairs[0] if pairs else (None, 0.0)
+            else:
+                best_node, best_score = _fallback_search(action_map, remaining)
+        # A probe answer can be the best overall — the tree never saw it.
+        for node, score in probe_nodes:
+            if node.answer and (best_node is None or score > best_score):
+                best_node, best_score = node, score
 
         ok_entries = [e for e in provenance if e["ok"]]
         if not ok_entries:
