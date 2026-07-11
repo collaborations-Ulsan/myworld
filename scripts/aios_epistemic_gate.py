@@ -16,12 +16,18 @@ change for every existing caller/test. See that function's docstring for the exa
 insertion point.
 
 Per-organ disable (ASC-0282 / prereg v1.1 §C ablation-replay gate): constructor
-`disabled_organs={"apex","descent","h0guard"}` or env `AIOS_GATE_DISABLE_ORGANS`
-(comma-separated). A disabled organ is recorded as status="disabled" (never counted
-as checked, never as an infra failure, never blocks) so a frozen A4 trace can be
-replayed with exactly ONE organ removed and the success flip attributed. Disabling
-ALL organs degenerates to the no-evidence ABSTAIN path, not to the off arm — replay
-always disables exactly one.
+`disabled_organs={"apex","descent","h0guard","provenance"}` or env
+`AIOS_GATE_DISABLE_ORGANS` (comma-separated). An unknown organ name raises
+ValueError at construction (fail-fast) — a typo'd name must never silently run
+with the organ still enabled, which would corrupt the §C causal-credit count.
+A disabled organ is recorded as status="disabled" (never counted as checked,
+never as an infra failure, never blocks) so a frozen A4 trace can be replayed
+with exactly ONE organ removed and the success flip attributed. Disabling ALL
+organs degenerates to the no-evidence ABSTAIN path, not to the off arm — replay
+always disables exactly one. `provenance` (§C organ (iii), "provenance guard")
+is a STUB in this packet: reports status="not_implemented" whenever enabled, so
+it always appears in the gate record (no silent skip, no fabricated pass); the
+real check is a later work packet.
 
 Three ablation modes (constructor `mode=` or env `AIOS_GATE_MODE`; masterplan §2 A4):
   off        — always passes; records "nothing checked" (the null arm).
@@ -243,6 +249,15 @@ def _apex_descent_check(proposal: dict, context: dict,
     return results
 
 
+def _provenance_check(proposal: dict, context: dict) -> dict:
+    """Provenance guard — prereg v1.1 §C organ (iii). STUB in this packet (ASC-0282
+    WP-A reserves the slot so the ablation-replay gate can already ablate all three
+    named organs; the real check is a later work packet). Always appears in the gate
+    record when enabled, explicitly status="not_implemented" so it can never read
+    downstream as a verified pass (mirrors this module's no-fabricated-pass contract)."""
+    return {"cert": "provenance", "status": "not_implemented", "verdict": CLAIM}
+
+
 class EpistemicGate:
     """Blocking epistemic middleware for `aios_turn_loop.run_loop` (masterplan §4 M1).
 
@@ -250,7 +265,7 @@ class EpistemicGate:
     fail-closes (passed=False, verdict=MISSPECIFIED) unless AIOS_GATE_FAILOPEN=1.
     """
 
-    _ORGANS = ("h0guard", "apex", "descent")
+    _ORGANS = ("h0guard", "apex", "descent", "provenance")
 
     def __init__(self, mode: str | None = None,
                  disabled_organs: "set[str] | None" = None):
@@ -258,7 +273,11 @@ class EpistemicGate:
         self.mode = resolved if resolved in _MODES else "organs"
         raw = (set(disabled_organs) if disabled_organs is not None
                else {s.strip() for s in os.environ.get("AIOS_GATE_DISABLE_ORGANS", "").split(",") if s.strip()})
-        self.disabled_organs = frozenset(o for o in raw if o in self._ORGANS)
+        unknown = raw - set(self._ORGANS)
+        if unknown:
+            raise ValueError(f"unknown organ name(s) in disabled_organs: {sorted(unknown)} "
+                             f"(valid: {list(self._ORGANS)})")
+        self.disabled_organs = frozenset(raw)
 
     def gate(self, proposal: dict, context: dict | None = None) -> GateVerdict:
         context = context or {}
@@ -322,8 +341,9 @@ class EpistemicGate:
         verdict = str(proposal.get("verdict", CLAIM)).upper()
         if verdict not in _VERDICTS:
             verdict = CLAIM
-        if self.disabled_organs:
-            certificates["_disabled_organs"] = sorted(self.disabled_organs)
+        # Always present (empty when nothing disabled) — WP-C's ablation-replay engine
+        # reads this record and needs a uniform shape to grep/replay against.
+        certificates["_disabled_organs"] = sorted(self.disabled_organs)
 
         if "h0guard" in self.disabled_organs:
             h0 = {"cert": "h0guard", "status": "disabled", "reason": "ablation_replay_disabled"}
@@ -335,7 +355,12 @@ class EpistemicGate:
             verdict = MISSPECIFIED
             reasons.append(f"h0guard_flagged:score={h0.get('score')}_gt_thresh={h0.get('threshold')}")
 
-        for cert in [h0] + _apex_descent_check(proposal, context, self.disabled_organs):
+        if "provenance" in self.disabled_organs:
+            prov = {"cert": "provenance", "status": "disabled", "reason": "ablation_replay_disabled"}
+        else:
+            prov = _provenance_check(proposal, context)
+
+        for cert in [h0, prov] + _apex_descent_check(proposal, context, self.disabled_organs):
             certificates[cert["cert"]] = cert
             status = cert.get("status")
             if status == "ok":
@@ -381,7 +406,8 @@ def make_gate(mode: str | None = None,
               disabled_organs: "set[str] | None" = None) -> Callable[[dict, dict], GateVerdict]:
     """DI-style factory matching `aios_tools.gate_for` — returns a bound callable
     suitable for `aios_turn_loop.run_loop(..., epistemic_gate=make_gate())`.
-    `disabled_organs` (prereg v1.1 §C): per-organ ablation-replay switch."""
+    `disabled_organs` (prereg v1.1 §C): per-organ ablation-replay switch, any of
+    EpistemicGate._ORGANS ("h0guard"/"apex"/"descent"/"provenance")."""
     return EpistemicGate(mode=mode, disabled_organs=disabled_organs).gate
 
 

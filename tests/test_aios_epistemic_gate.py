@@ -138,5 +138,84 @@ class LlmJudgeUnavailableTests(unittest.TestCase):
         self.assertTrue(v.reasons[0].startswith("failopen:"))
 
 
+class DisabledOrganTests(unittest.TestCase):
+    """ASC-0282 WP-A: the provenance organ (prereg v1.1 §C organ (iii)) and the
+    fail-fast unknown-organ-name guard, on top of the already-shipped per-organ
+    disable mechanism for h0guard/apex/descent (commit 94ac3cb)."""
+
+    _CONTRADICTORY_PROPOSAL = {
+        "tool": "submit_answer",
+        "claims": [{"task_id": "t", "source_id": "proposal", "kind": "io",
+                    "payload": {"input": [1, 2], "output": "B"}}],
+    }
+    _CONTRADICTORY_CONTEXT = {
+        "known_claims": [{"task_id": "t", "source_id": "history", "kind": "io",
+                          "payload": {"input": [1, 2], "output": "A"}}],
+    }
+
+    def test_provenance_stub_always_appears_and_never_blocks(self) -> None:
+        gate = G.EpistemicGate(mode="organs")
+        v = gate.gate({"tool": "fs.read"}, {"goal": "g"})
+        self.assertEqual(v.certificates["provenance"],
+                         {"cert": "provenance", "status": "not_implemented", "verdict": G.CLAIM})
+        self.assertEqual(v.certificates["_disabled_organs"], [])   # always present, empty when none
+
+    def test_h0guard_disabled_shows_disabled_status_apex_descent_still_run(self) -> None:
+        gate = G.EpistemicGate(mode="organs", disabled_organs={"h0guard"})
+        v = gate.gate(self._CONTRADICTORY_PROPOSAL, self._CONTRADICTORY_CONTEXT)
+        self.assertEqual(v.certificates["h0guard"]["status"], "disabled")
+        self.assertEqual(v.certificates["apex"]["label"], "CONTRADICTORY")
+        self.assertEqual(v.certificates["descent"]["h0_conflicts"], [[0, 1]])
+        self.assertEqual(v.certificates["_disabled_organs"], ["h0guard"])
+        self.assertFalse(v.passed)              # apex_contradictory still fires
+        self.assertEqual(v.verdict, G.MISSPECIFIED)
+
+    def test_apex_and_descent_disabled_leaves_h0guard_and_provenance_running(self) -> None:
+        population = [{"category": "code", "top_tools": ["Read", "Edit", "Bash"]} for _ in range(20)]
+        gate = G.EpistemicGate(mode="organs", disabled_organs={"apex", "descent"})
+        v = gate.gate({"tool": "launch_missiles", "category": "code"},
+                      {"profiles_population": population})
+        self.assertEqual(v.certificates["apex"]["status"], "disabled")
+        self.assertEqual(v.certificates["descent"]["status"], "disabled")
+        self.assertEqual(v.certificates["provenance"]["status"], "not_implemented")
+        self.assertEqual(v.certificates["_disabled_organs"], ["apex", "descent"])
+        self.assertFalse(v.passed)              # h0guard_flagged still fires
+        self.assertTrue(v.certificates["h0guard"]["flagged"])
+
+    def test_provenance_disabled_shows_disabled_status(self) -> None:
+        gate = G.EpistemicGate(mode="organs", disabled_organs={"provenance"})
+        v = gate.gate({"tool": "fs.read"}, {"goal": "g"})
+        self.assertEqual(v.certificates["provenance"],
+                         {"cert": "provenance", "status": "disabled",
+                          "reason": "ablation_replay_disabled"})
+        self.assertEqual(v.certificates["_disabled_organs"], ["provenance"])
+
+    def test_unknown_organ_name_raises_at_construction(self) -> None:
+        with self.assertRaises(ValueError):
+            G.EpistemicGate(mode="organs", disabled_organs={"not-a-real-organ"})
+
+    def test_gate_disable_organs_env_var_parses_comma_separated_list(self) -> None:
+        with patch.dict(os.environ, {"AIOS_GATE_DISABLE_ORGANS": "h0guard, provenance"}):
+            gate = G.EpistemicGate(mode="organs")
+            v = gate.gate({"tool": "fs.read"}, {"goal": "g"})
+        self.assertEqual(sorted(gate.disabled_organs), ["h0guard", "provenance"])
+        self.assertEqual(v.certificates["h0guard"]["status"], "disabled")
+        self.assertEqual(v.certificates["provenance"]["status"], "disabled")
+
+    def test_all_organs_disabled_degenerates_to_abstain_not_a_silent_claim_pass(self) -> None:
+        # Prereg v1.1 §C: replay always disables exactly one organ — "all disabled"
+        # is a degenerate case, not a supported ablation point — so this falls
+        # through to the same honest no-evidence ABSTAIN path as zero applicable
+        # checks, rather than a fabricated CLAIM pass (2026-07-11, commit 94ac3cb).
+        gate = G.EpistemicGate(mode="organs",
+                               disabled_organs={"h0guard", "apex", "descent", "provenance"})
+        v = gate.gate(self._CONTRADICTORY_PROPOSAL, self._CONTRADICTORY_CONTEXT)
+        self.assertTrue(v.passed)               # non-strict: does not brick a bare loop
+        self.assertEqual(v.verdict, G.ABSTAIN)  # honest — nothing was actually checked
+        self.assertEqual(v.checked, 0)
+        self.assertEqual(v.certificates["_disabled_organs"],
+                         ["apex", "descent", "h0guard", "provenance"])
+
+
 if __name__ == "__main__":
     unittest.main()

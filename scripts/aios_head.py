@@ -551,10 +551,16 @@ def _make_sampler_for(provider: str, adapters: dict[str, Callable[[str], str]], 
 def run_loop_goal(goal: str, *, agent_id: str = "codex@myworld", sampler=None,
                   max_turns: int = 12,
                   turn_sink: Callable[[dict], None] | None = None,
-                  constraint_provider=None) -> dict:
+                  constraint_provider=None,
+                  epistemic_gate=None) -> dict:
     """Run a goal as a real agent TURN-LOOP (the kernel spine) with AIOS organs as
     kernel tools behind an authority gate — not a single-pass batch over a pre-planned
-    step list. The model is a sampler (DI for tests, provider-backed live)."""
+    step list. The model is a sampler (DI for tests, provider-backed live).
+
+    epistemic_gate (optional, ASC-0282 WP-A): forwarded verbatim to
+    `aios_turn_loop.run_loop` — see that function's docstring and
+    `aios_epistemic_gate.make_gate`. Default None preserves existing behavior for
+    every caller that predates the gate (see `_resolve_epistemic_gate`)."""
     tl = _load("aios_turn_loop")
     tools = _load("aios_tools")
     if sampler is None:
@@ -563,6 +569,7 @@ def run_loop_goal(goal: str, *, agent_id: str = "codex@myworld", sampler=None,
     return tl.run_loop(goal, sampler, tools.build_registry(),
                        gate=tools.gate_for(agent_id), max_turns=max_turns,
                        turn_sink=turn_sink, constraint_provider=constraint_provider,
+                       epistemic_gate=epistemic_gate,
                        answer_bounce=1)   # a goal-run that ends answerless gets one "state your answer" nudge (2026-07-10 head probe)
 
 
@@ -1072,7 +1079,8 @@ def _organ_synthesis(goal: str, result: dict, preamble: dict | None = None,
 
 
 def run_organic_goal(goal: str, *, agent_id: str = "codex@myworld", sampler=None,
-                     max_turns: int = 12, root: Path | None = None) -> dict:
+                     max_turns: int = 12, root: Path | None = None,
+                     epistemic_gate=None) -> dict:
     """The 5-OS organic pipeline — mandatory preamble + turn loop + mandatory postamble.
 
     This is what 'make AIOS actually run organically' means:
@@ -1150,7 +1158,8 @@ def run_organic_goal(goal: str, *, agent_id: str = "codex@myworld", sampler=None
 
     result = run_loop_goal(goal, agent_id=agent_id, sampler=sampler, max_turns=max_turns,
                            turn_sink=run_log.sink,
-                           constraint_provider=_constraint_provider if _pre_constraints else None)
+                           constraint_provider=_constraint_provider if _pre_constraints else None,
+                           epistemic_gate=epistemic_gate)
     postamble = _organ_postamble(goal, result, root, run_id=run_id)
 
     return {
@@ -1277,6 +1286,24 @@ def _load_task_file(path: str) -> dict:
         raise SystemExit(f"aios head --from-file: {exc}") from exc
 
 
+def _resolve_epistemic_gate(gate_mode: str | None, gate_disable: list[str] | None):
+    """Build an epistemic_gate callable for run_organic_goal/run_loop_goal from the
+    --gate/--gate-disable CLI flags (ASC-0282 WP-A), or the programmatic equivalent.
+
+    Behavior-preservation rule: when --gate was not passed AND env AIOS_GATE_MODE is
+    unset, this returns None exactly as before these flags existed, so a bare
+    `aios <goal> --loop` run is unchanged. Only opts in when the caller explicitly
+    asked (--gate) or the env selected a mode — even `--gate off` then constructs a
+    real (always-passing) gate so its per-turn telemetry is emitted, rather than
+    silently matching the epistemic_gate=None path.
+    """
+    if gate_mode is None and not os.environ.get("AIOS_GATE_MODE"):
+        return None
+    eg = _load("aios_epistemic_gate")
+    disabled = set(gate_disable) if gate_disable else None
+    return eg.make_gate(gate_mode, disabled_organs=disabled)
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="aios <goal> — goal-first head")
     parser.add_argument("goal", nargs="?", default=None, help="natural-language goal")
@@ -1304,6 +1331,15 @@ def main(argv: list[str] | None = None) -> int:
                         help="run the full 5-OS organic pipeline: memory→capability→loop→dream_agora→akashic")
     parser.add_argument("--agent", default="codex@myworld", help="agent identity for the gate")
     parser.add_argument("--max-turns", type=int, default=12, help="max agent turns (default: 12)")
+    parser.add_argument("--gate", choices=["off", "llm-judge", "organs"], default=None,
+                        help="epistemic gate mode for --loop/--organic (ASC-0282 WP-A, "
+                             "scripts/aios_epistemic_gate.py). default: env AIOS_GATE_MODE, "
+                             "or unset — no gate, preserving prior behavior (see "
+                             "_resolve_epistemic_gate)")
+    parser.add_argument("--gate-disable", action="append", default=[],
+                        choices=["h0guard", "apex", "descent", "provenance"],
+                        help="disable a specific gate organ in organs mode (repeatable) — "
+                             "ablation-replay per descentnet prereg v1.1 §C")
     parser.add_argument("--bash-loop", action="store_true",
                         help="guaranteed-fallback bash-only agent loop (mini-swe-agent semantics, "
                              "M5/D1-2) — one bash block per turn, no function-calling/JSON parsing "
@@ -1374,7 +1410,8 @@ def main(argv: list[str] | None = None) -> int:
         sampler = _make_sampler_for(args.provider, adapters, args.goal)
         root_path = Path(args.root).resolve()
         outcome = run_organic_goal(args.goal, agent_id=args.agent, sampler=sampler,
-                                   root=root_path, max_turns=args.max_turns)
+                                   root=root_path, max_turns=args.max_turns,
+                                   epistemic_gate=_resolve_epistemic_gate(args.gate, args.gate_disable))
         print(json.dumps(outcome, ensure_ascii=False, indent=2))
         return 0 if outcome.get("exit") in ("model_finished", "needs_approval") else 1
 
@@ -1383,7 +1420,8 @@ def main(argv: list[str] | None = None) -> int:
         sampler = _make_sampler_for(args.provider, adapters, args.goal)
         root_path = Path(args.root).resolve()
         outcome = run_organic_goal(args.goal, agent_id=args.agent, sampler=sampler,
-                                   root=root_path, max_turns=args.max_turns)
+                                   root=root_path, max_turns=args.max_turns,
+                                   epistemic_gate=_resolve_epistemic_gate(args.gate, args.gate_disable))
         print(json.dumps(outcome, ensure_ascii=False, indent=2))
         return 0 if outcome.get("exit") in ("model_finished", "needs_approval") else 1
 
