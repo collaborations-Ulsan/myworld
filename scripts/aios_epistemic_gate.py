@@ -15,6 +15,14 @@ immediately before the existing authority gate (scripts/aios_turn_loop.py, the
 change for every existing caller/test. See that function's docstring for the exact
 insertion point.
 
+Per-organ disable (ASC-0282 / prereg v1.1 §C ablation-replay gate): constructor
+`disabled_organs={"apex","descent","h0guard"}` or env `AIOS_GATE_DISABLE_ORGANS`
+(comma-separated). A disabled organ is recorded as status="disabled" (never counted
+as checked, never as an infra failure, never blocks) so a frozen A4 trace can be
+replayed with exactly ONE organ removed and the success flip attributed. Disabling
+ALL organs degenerates to the no-evidence ABSTAIN path, not to the off arm — replay
+always disables exactly one.
+
 Three ablation modes (constructor `mode=` or env `AIOS_GATE_MODE`; masterplan §2 A4):
   off        — always passes; records "nothing checked" (the null arm).
   llm-judge  — exactly ONE self-check LLM call attempt via the existing ollama_rest
@@ -169,22 +177,34 @@ def _h0_guard_check(proposal: dict, context: dict) -> dict:
         return {"cert": "h0guard", "status": "error", "reason": str(exc)[:150]}
 
 
-def _apex_descent_check(proposal: dict, context: dict) -> list[dict]:
+def _apex_descent_check(proposal: dict, context: dict,
+                        disabled: frozenset = frozenset()) -> list[dict]:
     """Answerability (APEX) + internal-consistency (DescentNet H0) checks over an
     explicit claim set — `context["known_claims"]` (prior evidence on record) plus
     `proposal["claims"]` (what this proposal itself asserts). Reuses
     experiments/agi_witness/{contracts,claims}.py + certs/{apex,descent}.py verbatim
-    (ASC-0281 witness modules) — no reimplementation of the certifiers' math."""
+    (ASC-0281 witness modules) — no reimplementation of the certifiers' math.
+    `disabled` (prereg v1.1 §C): organs to skip entirely, recorded as status="disabled"."""
+    def _disabled_entry(name: str) -> dict:
+        return {"cert": name, "status": "disabled", "reason": "ablation_replay_disabled"}
+
+    if "apex" in disabled and "descent" in disabled:
+        return [_disabled_entry("apex"), _disabled_entry("descent")]
+
     mods = _import_certs()
     if "_import_error" in mods:
         reason = mods["_import_error"]
-        return [{"cert": "apex", "status": "unavailable", "reason": reason},
-                {"cert": "descent", "status": "unavailable", "reason": reason}]
+        return [_disabled_entry("apex") if "apex" in disabled
+                else {"cert": "apex", "status": "unavailable", "reason": reason},
+                _disabled_entry("descent") if "descent" in disabled
+                else {"cert": "descent", "status": "unavailable", "reason": reason}]
 
     raw = list(context.get("known_claims") or []) + list(proposal.get("claims") or [])
     if not raw:
-        return [{"cert": "apex", "status": "skipped", "reason": "no claims provided"},
-                {"cert": "descent", "status": "skipped", "reason": "no claims provided"}]
+        return [_disabled_entry("apex") if "apex" in disabled
+                else {"cert": "apex", "status": "skipped", "reason": "no claims provided"},
+                _disabled_entry("descent") if "descent" in disabled
+                else {"cert": "descent", "status": "skipped", "reason": "no claims provided"}]
 
     Claim, ClaimKind = mods["contracts"].Claim, mods["contracts"].ClaimKind
     try:
@@ -195,25 +215,31 @@ def _apex_descent_check(proposal: dict, context: dict) -> list[dict]:
                 {"cert": "descent", "status": "error", "reason": reason}]
 
     results: list[dict] = []
-    try:
-        apex_mod = mods["apex"]
-        threshold = int(context.get("apex_threshold", 1))
-        calib = apex_mod.ApexCalib(threshold=threshold, metadata={"source": "gate_default_uncalibrated"})
-        cert = apex_mod.apex_certify(claim_objs, calib)
-        results.append({"cert": "apex", "status": "ok", "label": cert.label.value,
-                        "conf": cert.conf, "coverage_gaps": cert.coverage_gaps,
-                        "n_claims": len(claim_objs), "calib_ref": None})
-    except Exception as exc:  # noqa: BLE001
-        results.append({"cert": "apex", "status": "error", "reason": str(exc)[:150]})
+    if "apex" in disabled:
+        results.append(_disabled_entry("apex"))
+    else:
+        try:
+            apex_mod = mods["apex"]
+            threshold = int(context.get("apex_threshold", 1))
+            calib = apex_mod.ApexCalib(threshold=threshold, metadata={"source": "gate_default_uncalibrated"})
+            cert = apex_mod.apex_certify(claim_objs, calib)
+            results.append({"cert": "apex", "status": "ok", "label": cert.label.value,
+                            "conf": cert.conf, "coverage_gaps": cert.coverage_gaps,
+                            "n_claims": len(claim_objs), "calib_ref": None})
+        except Exception as exc:  # noqa: BLE001
+            results.append({"cert": "apex", "status": "error", "reason": str(exc)[:150]})
 
-    try:
-        descent_mod = mods["descent"]
-        cert = descent_mod.descent_certify(claim_objs)
-        results.append({"cert": "descent", "status": "ok",
-                        "h0_conflicts": [list(p) for p in cert.h0_conflicts],
-                        "h1_cycles": cert.h1_cycles, "hf": cert.hf, "n_claims": len(claim_objs)})
-    except Exception as exc:  # noqa: BLE001
-        results.append({"cert": "descent", "status": "error", "reason": str(exc)[:150]})
+    if "descent" in disabled:
+        results.append(_disabled_entry("descent"))
+    else:
+        try:
+            descent_mod = mods["descent"]
+            cert = descent_mod.descent_certify(claim_objs)
+            results.append({"cert": "descent", "status": "ok",
+                            "h0_conflicts": [list(p) for p in cert.h0_conflicts],
+                            "h1_cycles": cert.h1_cycles, "hf": cert.hf, "n_claims": len(claim_objs)})
+        except Exception as exc:  # noqa: BLE001
+            results.append({"cert": "descent", "status": "error", "reason": str(exc)[:150]})
     return results
 
 
@@ -224,9 +250,15 @@ class EpistemicGate:
     fail-closes (passed=False, verdict=MISSPECIFIED) unless AIOS_GATE_FAILOPEN=1.
     """
 
-    def __init__(self, mode: str | None = None):
+    _ORGANS = ("h0guard", "apex", "descent")
+
+    def __init__(self, mode: str | None = None,
+                 disabled_organs: "set[str] | None" = None):
         resolved = (mode or os.environ.get("AIOS_GATE_MODE") or "organs").strip().lower()
         self.mode = resolved if resolved in _MODES else "organs"
+        raw = (set(disabled_organs) if disabled_organs is not None
+               else {s.strip() for s in os.environ.get("AIOS_GATE_DISABLE_ORGANS", "").split(",") if s.strip()})
+        self.disabled_organs = frozenset(o for o in raw if o in self._ORGANS)
 
     def gate(self, proposal: dict, context: dict | None = None) -> GateVerdict:
         context = context or {}
@@ -290,15 +322,20 @@ class EpistemicGate:
         verdict = str(proposal.get("verdict", CLAIM)).upper()
         if verdict not in _VERDICTS:
             verdict = CLAIM
+        if self.disabled_organs:
+            certificates["_disabled_organs"] = sorted(self.disabled_organs)
 
-        h0 = _h0_guard_check(proposal, context)
+        if "h0guard" in self.disabled_organs:
+            h0 = {"cert": "h0guard", "status": "disabled", "reason": "ablation_replay_disabled"}
+        else:
+            h0 = _h0_guard_check(proposal, context)
         certificates["h0guard"] = h0
         if h0.get("status") == "ok" and h0.get("flagged"):
             passed = False
             verdict = MISSPECIFIED
             reasons.append(f"h0guard_flagged:score={h0.get('score')}_gt_thresh={h0.get('threshold')}")
 
-        for cert in [h0] + _apex_descent_check(proposal, context):
+        for cert in [h0] + _apex_descent_check(proposal, context, self.disabled_organs):
             certificates[cert["cert"]] = cert
             status = cert.get("status")
             if status == "ok":
@@ -340,10 +377,12 @@ class EpistemicGate:
                            checked=checked, infra_failures=infra_failures)
 
 
-def make_gate(mode: str | None = None) -> Callable[[dict, dict], GateVerdict]:
+def make_gate(mode: str | None = None,
+              disabled_organs: "set[str] | None" = None) -> Callable[[dict, dict], GateVerdict]:
     """DI-style factory matching `aios_tools.gate_for` — returns a bound callable
-    suitable for `aios_turn_loop.run_loop(..., epistemic_gate=make_gate())`."""
-    return EpistemicGate(mode=mode).gate
+    suitable for `aios_turn_loop.run_loop(..., epistemic_gate=make_gate())`.
+    `disabled_organs` (prereg v1.1 §C): per-organ ablation-replay switch."""
+    return EpistemicGate(mode=mode, disabled_organs=disabled_organs).gate
 
 
 if __name__ == "__main__":
