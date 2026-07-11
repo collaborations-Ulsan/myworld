@@ -330,14 +330,16 @@ def _goal_needs_filesystem(goal: str) -> bool:
 # --- CLI ----------------------------------------------------------------------
 
 def _first_json(text: str):
-    """Return the first VALID JSON object found anywhere in text, else None.
-    Robust to duplicated/truncated objects and trailing prose (raw_decode scan)."""
+    """Return (obj, start, end) for the first VALID JSON object found anywhere in
+    text, else None. start/end let callers recover prose OUTSIDE the object —
+    dropping that prose was why answers still went missing (2026-07-11 T2 rerun:
+    model replied {"done":true} + Korean prose; the prose was the answer)."""
     dec = json.JSONDecoder(strict=False)   # tolerate stray control chars inside strings
     for m in re.finditer(r"\{", text):
         try:
-            obj, _ = dec.raw_decode(text[m.start():])
+            obj, rel_end = dec.raw_decode(text[m.start():])
             if isinstance(obj, dict):
-                return obj
+                return obj, m.start(), m.start() + rel_end
         except json.JSONDecodeError:
             continue
     return None
@@ -471,13 +473,18 @@ def make_provider_sampler(provider: str, adapters: dict[str, Callable[[str], str
         # First VALID JSON object wins (raw_decode scan) — local models sometimes emit
         # the object twice or truncate a first attempt; the old greedy \{.*\} regex
         # spanned the garbage and every parse failed (2026-07-10 head probe).
-        obj = _first_json(visible)
-        if obj is None:
+        found = _first_json(visible)
+        if found is None:
             # No parseable JSON: the visible reply IS the model's answer. Dropping it
             # was the delivery bug — every --loop run ended answer="" (head probe).
             return {"tool_calls": [], "text": visible}
+        obj, j_start, j_end = found
         if obj.get("done") or not obj.get("tool"):
             answer = str(obj.get("answer") or obj.get("text") or "").strip()
+            if not answer:
+                # Model said done without an answer field — recover any prose it
+                # wrote around the JSON object (2026-07-11 T2 rerun fix).
+                answer = (visible[:j_start] + visible[j_end:]).strip()
             return {"tool_calls": [], "text": answer}
         tool_name = str(obj["tool"])
         # Hard block: if model requests an exhausted tool despite filtered catalog, force done

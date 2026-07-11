@@ -127,7 +127,10 @@ def make_ollama_rest_adapter(
     *,
     base_url: str = _OLLAMA_REST_BASE,
     model: str = _OLLAMA_REST_MODEL,
-    timeout: int = 60,
+    # 2026-07-11 offline verification: the 60s default crashed 4/4 bash-loop attempts
+    # under real shared-GPU contention (94-100% busy) — a 30B model legitimately needs
+    # longer. Env-tunable for constrained deployments.
+    timeout: int = int(os.environ.get("AIOS_OLLAMA_TIMEOUT", "180")),
     # Legacy alias kept for callers that pass url= keyword argument.
     url: "str | None" = None,
 ) -> "Callable[[str], str]":

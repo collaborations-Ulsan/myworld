@@ -143,7 +143,11 @@ def render_directives(history: list[dict]) -> str:
                           if h.get("role") == "system" and h.get("kind") == "constraint")
     gate_rejections = "".join(f"[GATE REJECTED] {h.get('content','')}\n" for h in history
                               if h.get("role") == "system" and h.get("kind") == "gate_rejection")
-    return repairs + constraints + gate_rejections
+    # 2026-07-11 T2 rerun: the bounce nudge lived in history but was never rendered
+    # into the prompt — the model literally never heard "state your answer".
+    answer_bounces = "".join(f"[ANSWER NOW] {h.get('content','')}\n" for h in history
+                             if h.get("role") == "system" and h.get("kind") == "empty_answer_bounce")
+    return repairs + constraints + gate_rejections + answer_bounces
 
 
 def decondition_history(history: list[dict], keep_recent_errors: int = 1) -> list[dict]:
@@ -325,10 +329,22 @@ def run_loop(goal: str, sampler: Sampler, registry: Registry, *,
                 # "ran but delivered nothing"). One bounded bounce: demand the answer.
                 if not answer and empty_answer_bounces < answer_bounce:
                     empty_answer_bounces += 1
+                    # Re-surface gathered evidence in the nudge: the 2026-07-11 offline
+                    # verification showed a run where fs.grep had found every needed hit
+                    # yet the model still finished empty — the evidence had scrolled out
+                    # of its effective window. Compact, content-safe summaries only.
+                    ok_evidence = [
+                        {"tool": e.get("tool"), **({"result": e["result"]} if e.get("result") else {})}
+                        for e in trajectory if e.get("status") == "ok"
+                    ][-5:]
+                    evidence_note = (
+                        "\nEvidence you already gathered: " + json.dumps(ok_evidence, ensure_ascii=False)[:1500]
+                    ) if ok_evidence else ""
                     history.append({"role": "system", "kind": "empty_answer_bounce",
                                     "content": "You finished without stating any answer. "
                                                "State your final answer to the goal now, "
-                                               "or continue working with tools."})
+                                               "or continue working with tools."
+                                               + evidence_note})
                     emit({"kind": "empty_answer_bounce", "turn": turn})
                     continue
                 audit = _completion_audit(trajectory, contract_receipts=contract_receipts)

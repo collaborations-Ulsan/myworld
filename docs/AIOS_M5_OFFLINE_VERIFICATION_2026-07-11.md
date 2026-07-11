@@ -125,3 +125,24 @@ answer" check before `--loop` reports `model_finished`, and a
 sanity/plausibility check on bash-loop self-derived counts) are follow-up
 work, not part of this verification run per the no-mid-run-patching
 constraint.
+
+## Errata (append-only) — 2026-07-11 재판정 (수정 후 재실행)
+
+원판정 PARTIAL은 **최초 런에 대해 유효하게 유지**된다. 이후 같은 날, 실패 원인 중 기계적 결함
+2건을 수정하고 해당 태스크만 동일 오프라인 조건(NVIDIA_API_KEY unset, ollama만)에서 재실행:
+
+- **T1 crash → CORRECT**: 원인 = ollama 어댑터 60s 하드코딩 타임아웃 (GPU 94-100% 경합에서 30B에
+  불충분). 수정 = 기본 180s + `AIOS_OLLAMA_TIMEOUT` env. 재실행: 7 steps, 정답
+  ("scripts/aios_epistemic_gate.py; off, llm-judge, organs").
+- **T2 empty → CORRECT**: 원인 3중 — (a) empty-answer 바운스 메시지가 `render_directives`에
+  렌더링되지 않아 모델이 "답을 말하라"를 들은 적 없음 (근인), (b) done-JSON 주변 산문 미회수,
+  (c) exhausted-tool 강제종료 경로가 무텍스트. 수정 = (a) `[ANSWER NOW]` 렌더링 + 수집 증거 재제시,
+  (b) `_first_json` span 기반 산문 회수. 재실행: 6 turns, 정답 3파일
+  (PREREG/RECONCILIATION/ASC-0282, 포맷 노이즈 있으나 검증 가능).
+- T3 (1853→86 오답)은 **수정하지 않음** — 검증-없는-답 클래스로, 정확히 M2 DriftBench가 측정할
+  대상 (verification-before-submit / epistemic gate). 여기서 고치면 벤치 대상을 오염시킨다.
+
+**갱신 판정**: 원 기준(≥4/5 완주 AND ≥3/5 정답)으로 재집계 시 5/5 완주, 4/5 정답 = **EARNED
+(post-fix)** — 단 이는 수정-후 재실행 포함 집계이며, 최초-런 판정(PARTIAL)과 병기한다.
+"provider 전멸에도 살아서 유용하게 답한다"는 이제 4/5 수준으로 실증; 남은 1/5는 게이트가
+해결해야 할 문제로 M2에 이관.
