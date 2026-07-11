@@ -294,6 +294,34 @@ def make_anthropic_rest_adapter(
     return adapter
 
 
+def make_openai_compat_adapter(
+    *,
+    client: "object | None" = None,
+) -> "Callable[[str], str]":
+    """Build a (prompt)->str adapter over aios_llm_client.LLMClient — ONE
+    OpenAI-compatible client with local(ollama)<->NVIDIA NIM failover
+    (masterplan §4 M5/D2-4, absorbed from nanobot's provider-client pattern).
+
+    Registered under provider name "auto_local_nim". Lazily imports
+    aios_llm_client so this module stays import-light for callers that never
+    touch it. Raises on total failure (both endpoints exhausted) so the runner
+    records a failed receipt — same contract as every other adapter here, never
+    fabricates a reply.
+    """
+    import aios_llm_client as _llm  # local import: sibling script, lazy on purpose
+
+    _client = client if client is not None else _llm.LLMClient()
+
+    def adapter(prompt: str) -> str:
+        result = _client.chat([{"role": "user", "content": prompt}])
+        if not result.ok:
+            raise RuntimeError(f"auto_local_nim: {result.error or 'all endpoints failed'}")
+        return result.text
+
+    adapter.__name__ = "adapter_auto_local_nim"
+    return adapter
+
+
 @dataclass
 class AdapterResult:
     ok: bool
@@ -362,6 +390,12 @@ def build_adapters(
         if name == "nvidia_nim":
             if _nvidia_nim_available():
                 registry["nvidia_nim"] = make_nvidia_nim_adapter()
+            continue
+        if name == "auto_local_nim":
+            # Always registers when explicitly requested by name — the client's
+            # own chat() does the local<->NIM failover (and honest failure) at
+            # call time, so there is no presence check to gate on here.
+            registry["auto_local_nim"] = make_openai_compat_adapter()
             continue
         spec = SPECS.get(name)
         if spec is None:

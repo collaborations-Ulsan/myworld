@@ -111,3 +111,48 @@ class FsGrepTests(unittest.TestCase):
 
     def test_grep_registered_as_read_class(self) -> None:
         self.assertEqual(T.TOOL_SPEC["fs.grep"][0], "read")
+
+
+class OpenAIToolsSchemaTests(unittest.TestCase):
+    """to_openai_tools (masterplan §4 M5/D2-4): TOOL_SPEC rendered as the OpenAI
+    tools/function-call JSON schema, so a native tool-calling client can drive
+    the same registry the JSON-prompt sampler uses."""
+
+    def setUp(self) -> None:
+        self.schema = T.to_openai_tools()
+        self.by_name = {t["function"]["name"]: t for t in self.schema}
+
+    def test_every_tool_spec_entry_present(self) -> None:
+        self.assertEqual(set(self.by_name), set(T.TOOL_SPEC))
+
+    def test_each_entry_is_a_valid_function_schema_dict(self) -> None:
+        for tool in self.schema:
+            self.assertEqual(tool["type"], "function")
+            fn = tool["function"]
+            self.assertIsInstance(fn["name"], str)
+            self.assertIsInstance(fn["description"], str)
+            params = fn["parameters"]
+            self.assertEqual(params["type"], "object")
+            self.assertIsInstance(params["properties"], dict)
+
+    def test_description_excludes_args_hint(self) -> None:
+        desc = self.by_name["memory.retrieve"]["function"]["description"]
+        self.assertNotIn("Args:", desc)
+
+    def test_string_arg_parsed_from_hint(self) -> None:
+        params = self.by_name["memory.retrieve"]["function"]["parameters"]
+        self.assertEqual(params["properties"]["task"], {"type": "string"})
+        self.assertIn("task", params["required"])
+
+    def test_array_arg_parsed_from_hint(self) -> None:
+        params = self.by_name["self.audit"]["function"]["parameters"]
+        self.assertEqual(params["properties"]["claims"], {"type": "array", "items": {}})
+
+    def test_empty_args_hint_yields_permissive_empty_object(self) -> None:
+        params = self.by_name["fs.list"]["function"]["parameters"]
+        self.assertEqual(params, {"type": "object", "properties": {}})
+
+    def test_unparseable_hint_degrades_honestly_not_fabricated(self) -> None:
+        # A hint with no "Args:" JSON at all must never invent parameter names.
+        schema = T._args_hint_to_schema("No args hint here at all")
+        self.assertEqual(schema, {"type": "object", "properties": {}})

@@ -21,6 +21,7 @@ Schema: aios.tools.v1
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -578,6 +579,60 @@ def list_tools() -> list[dict]:
     """Discovery surface (teardown §comms: list_tools)."""
     return [{"name": n, "class": c, "domain_action": a or None, "description": d}
             for n, (c, a, d) in TOOL_SPEC.items()]
+
+
+_ARG_HINT_RE = re.compile(
+    r'"(\w+)"\s*:\s*("(?:[^"\\]|\\.)*"|\{\}|\[\]|-?\d+\.?\d*|true|false)')
+
+
+def _args_hint_to_schema(hint: str) -> dict:
+    """Best-effort JSON-schema from the human-readable 'Args: {...}' hint in
+    TOOL_SPEC descriptions (masterplan §4 M5/D2-4 — nanobot tool-registry
+    absorption). Hints are NOT valid JSON (placeholders like "<topic or goal>",
+    bare 0.8/[]/{}) so this is a light key:sample-value scan, not a parser.
+    Honest fallback: an unparseable or empty hint gets a permissive empty-object
+    schema — never a fabricated parameter shape."""
+    m = re.search(r"Args:\s*(\{.*\})", hint)
+    if not m:
+        return {"type": "object", "properties": {}}
+    props: dict[str, dict] = {}
+    required: list[str] = []
+    for key, val in _ARG_HINT_RE.findall(m.group(1)):
+        if val.startswith('"'):
+            schema = {"type": "string"}
+        elif val == "{}":
+            schema = {"type": "object"}
+        elif val == "[]":
+            schema = {"type": "array", "items": {}}
+        elif val in ("true", "false"):
+            schema = {"type": "boolean"}
+        else:
+            schema = {"type": "number"}
+        props[key] = schema
+        required.append(key)
+    if not props:
+        return {"type": "object", "properties": {}}
+    return {"type": "object", "properties": props, "required": required}
+
+
+def to_openai_tools() -> list[dict]:
+    """Render TOOL_SPEC into the OpenAI tools/function-call JSON schema list, so
+    a native tool-calling client (aios_llm_client.LLMClient) can drive the SAME
+    registry the JSON-prompt sampler (aios_head.make_provider_sampler) uses —
+    one registry, two sampler styles. See _args_hint_to_schema for the honesty
+    contract on parameter guessing."""
+    out = []
+    for name, (_cls, _action, hint) in TOOL_SPEC.items():
+        desc = hint.split("Args:")[0].strip()
+        out.append({
+            "type": "function",
+            "function": {
+                "name": name,
+                "description": desc,
+                "parameters": _args_hint_to_schema(hint),
+            },
+        })
+    return out
 
 
 if __name__ == "__main__":

@@ -491,6 +491,63 @@ def make_provider_sampler(provider: str, adapters: dict[str, Callable[[str], str
     return sampler
 
 
+def make_native_sampler(client, goal: str = ""):
+    """Native tool-calling sampler (masterplan §4 M5/D2-4, nanobot absorption):
+    drives the SAME tool registry as make_provider_sampler, but via the
+    OpenAI-compat client's native tool_calls instead of JSON-in-text parsing.
+
+    Used for --provider auto_local_nim when aios_llm_client.LLMClient's primary
+    endpoint model is verified tool-capable (client.primary_supports_tools());
+    every other case keeps using the JSON-prompt sampler, which works on any
+    model. `client` is dependency-injected (aios_llm_client.LLMClient or a
+    fake with the same .chat(messages, tools) -> ChatResult shape) so this is
+    unit-testable without live network.
+    """
+    tools_mod = _load("aios_tools")
+    tl = _load("aios_turn_loop")
+    schema = tools_mod.to_openai_tools()
+    system_prompt = (
+        _freshness_directive(goal) + _user_prefs() +
+        "You are the AIOS agent turn-loop. Call a tool for the next action, or "
+        "reply with your final answer text (no tool call) when the goal is complete.\n"
+        f"Goal: {goal[:200]}\n"
+    )
+
+    def sampler(history: list[dict]) -> dict:
+        recent = tl.decondition_history(history)[-12:]
+        directives = tl.render_directives(recent)
+        messages = [
+            {"role": "system", "content": system_prompt + directives},
+            {"role": "user", "content": "Trajectory so far:\n" + json.dumps(recent, ensure_ascii=False)},
+        ]
+        result = client.chat(messages, tools=schema)
+        if not result.ok:
+            return {"tool_calls": []}                        # endpoint unreachable → end loop honestly
+        if not result.tool_calls:
+            return {"tool_calls": [], "text": result.text.strip()}
+        calls = [tl.ToolCall(tc.get("name", ""), dict(tc.get("arguments") or {}),
+                             call_id=tc.get("id", "")) for tc in result.tool_calls]
+        return {"tool_calls": calls}
+
+    sampler._preamble_ref = {}  # type: ignore[attr-defined]
+    return sampler
+
+
+def _make_sampler_for(provider: str, adapters: dict[str, Callable[[str], str]], goal: str):
+    """Choose native tool-calling sampler vs JSON-prompt sampler per provider
+    (masterplan §4 M5/D2-4). auto_local_nim uses native tool_calls when the
+    resolved primary endpoint's model is verified tool-capable; every other
+    provider (and auto_local_nim on an unverified model) keeps the existing
+    JSON-prompt sampler unchanged — this is purely additive, no default provider
+    behavior changes."""
+    if provider == "auto_local_nim":
+        llm_mod = _load("aios_llm_client")
+        client = llm_mod.LLMClient()
+        if client.primary_supports_tools():
+            return make_native_sampler(client, goal=goal)
+    return make_provider_sampler(provider, adapters, goal=goal)
+
+
 def run_loop_goal(goal: str, *, agent_id: str = "codex@myworld", sampler=None,
                   max_turns: int = 12,
                   turn_sink: Callable[[dict], None] | None = None,
@@ -1227,7 +1284,9 @@ def main(argv: list[str] | None = None) -> int:
                         help="read goal and run options from a JSON file (CC6 formal input)")
     parser.add_argument("--root", default=".", help="workspace root (default: cwd)")
     parser.add_argument("--provider", default=None,
-                        help="planner provider (claude/codex/gemini/ollama_local/auto). "
+                        help="planner provider (claude/codex/gemini/ollama_local/"
+                             "auto_local_nim/auto). auto_local_nim = one OpenAI-compat "
+                             "client, local ollama<->NVIDIA NIM failover (M5/D2-4). "
                              "default: auto-route via role_router")
     parser.add_argument("--allow-write", action="append", default=[],
                         help="grant write scope over a path (repeatable). default: read-only")
@@ -1312,7 +1371,7 @@ def main(argv: list[str] | None = None) -> int:
         return 1
 
     if args.organic:
-        sampler = make_provider_sampler(args.provider, adapters, goal=args.goal)
+        sampler = _make_sampler_for(args.provider, adapters, args.goal)
         root_path = Path(args.root).resolve()
         outcome = run_organic_goal(args.goal, agent_id=args.agent, sampler=sampler,
                                    root=root_path, max_turns=args.max_turns)
@@ -1321,7 +1380,7 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.loop:
         # --loop always runs organically — RunLog + postamble wired by default
-        sampler = make_provider_sampler(args.provider, adapters, goal=args.goal)
+        sampler = _make_sampler_for(args.provider, adapters, args.goal)
         root_path = Path(args.root).resolve()
         outcome = run_organic_goal(args.goal, agent_id=args.agent, sampler=sampler,
                                    root=root_path, max_turns=args.max_turns)
