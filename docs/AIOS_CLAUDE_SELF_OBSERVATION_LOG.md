@@ -2757,3 +2757,42 @@ localStorage 히스토리 → 페이지 새로고침 후 대화 복원
 - key_decision: founder의 "학습이 안 되어서 제 역할을 못한다" 가설을 검증 — 실제로는 학습 문제가 아니라 **배선 결함 6개의 중첩** (모델 크기 1개 + 하네스 5개). 파인튜닝 전에 하네스를 고치는 게 맞았다 (M5 survey의 "14B 미만 function calling 금지" 밴드와 일치).
 - new_invariant_or_pattern_discovered: **라이브-프로브 루프 패턴** — 같은 toy goal을 수정마다 재실행해 exit/tools/answer 삼중으로 행동 델타를 관측; "테스트 통과"가 아니라 "실제 배달"이 판정 기준. + Codex 리뷰의 "게이트가 안 죽게 하는 fail-open은 게이트를 off arm으로 조용히 변질시킨다" — fail-closed가 ablation 무결성의 전제.
 - self-correction-of-prior-observation: M1 초판(740e1ee)을 "검증 완료"로 보고했으나 Codex 이종 리뷰가 7건(치명 2)을 잡음 — 같은-가중치 검증(나+executor)만으로 통과시킨 것이 오류. 이종 리뷰를 keystone뿐 아니라 kernel 커밋에도 기본값으로.
+
+## 2026-07-11 00:15 KST — claude@descentnet — paper-revival sprint executed on founder GO (same session as the audit)
+
+- session_id (or chat-distinguishing handle): descentnet audit session, post-GO execution phase
+- mode_breakdown: observe:5:verify:15:decide:5:intervene:60:escalate:0:~85
+- tools_used: executor subagent (tex/bib mirror + tectonic, 85 tool uses), background seed reruns, Edit×8 on the paper .md, git commit 15c1e79
+- tools_NOT_used (because of CLI gap): prodet python for episode/organ scripts — env is 3.9, memoryOS now requires >=3.10 (dataclass slots); receipts must use system python3
+- substrate_specific_behaviors_observed: the executor caught and corrected FOUR paraphrased (inaccurate) reference titles I had written from consultation summaries — delegation-with-verification catching the orchestrator's own error is the pattern working in reverse; OpenReview bot-wall blocked all fetches (one bib entry remains author-less with TODO rather than guessed)
+- failures_recovered: first seed rerun died on the 3.9/3.10 gap (diagnosed, switched interpreter); one .md edit anchor missed on a line break (retried)
+- failures_escalated_to_founder: none; venue decision was asked and answered (ICLR 2027) before execution
+- key_decision: commit scoped strictly to my own files — a parallel session's untracked sheaf-study docs were identified and left alone
+- new_invariant_or_pattern_discovered: post-seal robustness seeds with frozen thresholds are the honest repair for a receipts-vs-commit-message gap (both seeds PASSED; if they had failed, the receipts would still have been committed)
+- self-correction-of-prior-observation: my References 22-25 titles were paraphrases, not exact titles — writing citations from consultation text without fetching the source is the same stale-recollection failure mode in miniature
+
+## 2026-07-11 00:50 KST — claude@jaewon-box — Global CLAUDE.md diet: AIOS bootstrap re-scoped into myworld/CLAUDE.md
+
+- session_id (or chat-distinguishing handle): fable5 config-diet session (founder asked "too many global instructions?")
+- mode_breakdown: observe:3 verify:2 decide:1 intervene:1 escalate:0 : ~15
+- tools_used: Read, Write, Edit, Bash (wc/grep/cp), memory store
+- tools_NOT_used (because of CLI gap): none relevant (pure config work)
+- substrate_specific_behaviors_observed: global ~/.claude/CLAUDE.md had grown to 40KB/645 lines loaded every session; freshness gate existed in 3 copies (global x2 phrasings + myworld/CLAUDE.md verbatim); global "contracts before code" directly contradicted the 2026-05-20 contract-freeze override — stale global config actively conflicting with newer scoped config
+- failures_recovered: none
+- failures_escalated_to_founder: none (founder pre-approved the diet: "진행시켜")
+- key_decision: myworld/CLAUDE.md is now the single AIOS-scoped source (operator bootstrap + condensed provider contract appended, override-wins clause explicit); global keeps only privacy invariants + pointer + distilled epistemics/routing/drive (~10KB). Backup: ~/.claude/CLAUDE.md.bak-20260711
+- new_invariant_or_pattern_discovered: scripts/aios_provider_prompts.py targets ~/.claude/CLAUDE.md and would re-inject the full provider-contract block on next run — retarget or slim CLAUDE.md.tmpl before rerunning; general pattern: scoped config beats global config, and every global directive is a per-session token tax multiplied by redundancy
+- self-correction-of-prior-observation: none
+
+## 2026-07-11 00:55 KST — claude@universe — founder-commissioned AGI-alignment audit (cross-repo)
+
+- session_id (or chat-distinguishing handle): universe session 2c702fb7 (Opus-4.8-1M head)
+- mode_breakdown: observe:verify:decide:intervene:escalate ≈ 40:30:15:10:5 : ~150
+- tools_used: Agent x6 (librarian pattern; killed by Anthropic session limit mid-flight, ALL resumed with context intact via SendMessage), TaskCreate/TaskUpdate x31, WebSearch/WebFetch (deadlines, SLM-V3 full text), Bash background (codex exec, agy -p, nv panel), Write/Edit (report, briefing pack, memory)
+- tools_NOT_used (because of CLI gap): mcp__aios__* organs — DELIBERATE: the audit's subject must not certify the audit (builder≠judge applied to instruments); Workflow (Agent fan-out sufficed at this scale)
+- substrate_specific_behaviors_observed: (1) provider-death tolerance validated in miniature — Anthropic limit killed 6 Claude subagents while agy/NIM lanes ran unaffected (M5 thesis instance); (2) SendMessage resume = zero-loss recovery for dead subagents; (3) codex exec hangs when backgrounded with open stdin — relaunch with </dev/null
+- failures_recovered: 6 subagent deaths (resume), codex stdin hang (kill+relaunch), stale path assumption (memoryOS is myworld/memoryOS, not a workspace sibling)
+- failures_escalated_to_founder: 8 decision points incl. arXiv upload (founder-only), AAAI-27 skip (approved via GO), GoEN kill-metric re-exam (open)
+- key_decision: audit verdict "not drifting; receipts lag claims at 3 named points" — founder needed because it prices the M2 GO and the paper-vs-runtime resource split
+- new_invariant_or_pattern_discovered: a Claude self-audit OMITTED FM2 (keystone attractor) from its own disease list — invisibility-from-inside is FM2's signature; heterogeneous panel (qwen) independently flagged the audit's narrative-coherence bias. Invariant: builder≠judge applies to AUDITS, not just code — every self-audit needs a non-family lane before founder action.
+- self-correction-of-prior-observation: my universe memory was stale on all three repos (quantum already arXiv-ready, descentnet already AIOS-pivoted, Fable track existed) — "answer from records, not memory" re-validated the hard way
