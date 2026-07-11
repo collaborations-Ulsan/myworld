@@ -193,6 +193,9 @@ Codex의 유효 타격 (모두 수용):
 - Win condition(사전 등록): weak+AIOS가 weak+checklist를 paired 17/24 이상; mutating에서 strong-raw를
   이기거나 격차 대부분을 더 낮은 비용으로 해소; static 컨트롤에서 가짜 lift 없음; trace 감사로
   "runtime이 복구를 유발"함을 확인 (narration이 아니라).
+  **[정정 2026-07-11: 위 17/24는 초안 수치 — static 분모 혼입 모순으로 교정됨. 정본 기준은
+  `docs/AIOS_DRIFTBENCH_PREREG_2026-07-11.md` v1.1 (mutating-only ≥13/18 + exact McNemar).
+  이중 하니스 화해: `docs/AIOS_DRIFTBENCH_RECONCILIATION_2026-07-11.md`.]**
 - Leakage 트랩: 모델 버전·프롬프트 동결, runtime 호출도 예산에 계상, human rescue 금지,
   grader 파일 은닉, harness 동결 후 이름/값/스키마 랜덤화, functional grader 우선(LLM judge는
   bounded secondary만), raw baseline에 competent prompt(허수아비 금지).

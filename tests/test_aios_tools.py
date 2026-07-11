@@ -156,3 +156,76 @@ class OpenAIToolsSchemaTests(unittest.TestCase):
         # A hint with no "Args:" JSON at all must never invent parameter names.
         schema = T._args_hint_to_schema("No args hint here at all")
         self.assertEqual(schema, {"type": "object", "properties": {}})
+
+
+class FsListTests(unittest.TestCase):
+    """fs.list (masterplan §4 M5/D4-6 fix): no args -> pinned key-docs set
+    (backward compatible); {"path", "glob"} -> a real bounded directory listing.
+    Kills the doom-loop a fixed 9-doc list caused for goals outside docs/."""
+
+    def test_no_args_returns_pinned_docs_backward_compatible(self) -> None:
+        r = T.HANDLERS["fs.list"]({})
+        self.assertEqual(r["status"], "ok")
+        self.assertEqual(r["mode"], "pinned")
+        self.assertIn("docs/AIOS_NORTHSTAR.md", [f["path"] for f in r["files"]])
+
+    def test_path_arg_lists_a_real_directory(self) -> None:
+        r = T.HANDLERS["fs.list"]({"path": "scripts", "glob": "aios_mcp_*.py"})
+        self.assertEqual(r["status"], "ok")
+        self.assertEqual(r["mode"], "directory")
+        paths = {f["path"] for f in r["files"]}
+        self.assertIn("scripts/aios_mcp_client.py", paths)
+        self.assertIn("scripts/aios_mcp_server.py", paths)
+        # glob excludes non-matching files
+        self.assertNotIn("scripts/aios_tools.py", paths)
+
+    def test_directory_listing_is_bounded_to_50_entries(self) -> None:
+        r = T.HANDLERS["fs.list"]({"path": "scripts"})   # scripts/ has hundreds of files
+        self.assertEqual(r["status"], "ok")
+        self.assertLessEqual(r["count"], 50)
+        self.assertLessEqual(len(r["files"]), 50)
+
+    def test_path_is_repo_bounded_like_fs_grep(self) -> None:
+        r = T.HANDLERS["fs.list"]({"path": "../../.."})
+        self.assertEqual(r["status"], "denied_scope")
+
+    def test_privacy_dirs_excluded(self) -> None:
+        for privacy_path in ("_from_desktop", "dain", "minyoung"):
+            r = T.HANDLERS["fs.list"]({"path": privacy_path})
+            self.assertEqual(r["status"], "denied_scope", privacy_path)
+
+    def test_nonexistent_directory_is_honest_not_found(self) -> None:
+        r = T.HANDLERS["fs.list"]({"path": "no/such/dir/at/all"})
+        self.assertEqual(r["status"], "not_found")
+
+    def test_single_file_path_lists_just_that_file(self) -> None:
+        r = T.HANDLERS["fs.list"]({"path": "scripts/aios_tools.py"})
+        self.assertEqual(r["status"], "ok")
+        self.assertEqual(r["count"], 1)
+        self.assertEqual(r["files"][0]["path"], "scripts/aios_tools.py")
+        self.assertEqual(r["files"][0]["type"], "file")
+
+    def test_registered_as_read_class(self) -> None:
+        self.assertEqual(T.TOOL_SPEC["fs.list"][0], "read")
+
+
+class SkillUseWiringTests(unittest.TestCase):
+    """skill.use (masterplan §4 M5/D4-6): the Agent Skills loader wired into
+    the same tool registry as every other organ."""
+
+    def test_registered_in_handlers_and_registry(self) -> None:
+        self.assertIn("skill.use", T.HANDLERS)
+        reg = T.build_registry()
+        self.assertIn("skill.use", reg.handlers)
+
+    def test_registered_as_advisory_class(self) -> None:
+        self.assertEqual(T.TOOL_SPEC["skill.use"][0], "advisory")
+
+    def test_loads_the_dogfood_driftbench_skill(self) -> None:
+        r = T.HANDLERS["skill.use"]({"name": "aios-driftbench-prereg"})
+        self.assertEqual(r["status"], "ok")
+        self.assertIn("DriftBench", r["text"])
+
+    def test_missing_skill_is_honest_not_found(self) -> None:
+        r = T.HANDLERS["skill.use"]({"name": "no-such-skill-xyz"})
+        self.assertEqual(r["status"], "not_found")

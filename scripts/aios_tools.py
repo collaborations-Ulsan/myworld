@@ -28,6 +28,7 @@ from pathlib import Path
 
 import aios_authority as authority
 import aios_self_audit as audit
+import aios_skills_loader as skills_loader
 import aios_stakes as stakes
 import aios_trace_interior as interior
 import aios_turn_loop as loop
@@ -41,7 +42,7 @@ TOOL_SPEC: dict[str, tuple[str, str, str]] = {
     "genesis.challenge": ("advisory", "", 'Stress-test a plan. Args: {"text":"<claim or plan to challenge>"}'),
     "self.audit":        ("read", "",    'Check agent health. Args: {"claims":[]}'),
     "interior.read":     ("read", "",    'Read internal traces. Args: {"traces":[]}'),
-    "fs.list":           ("read", "",    'List readable docs files to find valid paths. Args: {}'),
+    "fs.list":           ("read", "",    'List files: no args returns the pinned key-docs set (path discovery). Optional {"path":"<rel dir>","glob":"<pattern>"} lists a real directory instead (bounded <=50 entries, repo-scoped like fs.grep, privacy dirs excluded). Args: {}'),
     "fs.read":           ("read", "",    'Read a file (use fs.list first to find paths). Args: {"path":"docs/README.md"}'),
     "fs.grep":           ("read", "",    'Search file CONTENTS under the repo for a text pattern — use this to FIND which files mention something. Args: {"pattern":"gate","path":"scripts","glob":"*.py"}'),
     "web.search":        ("advisory", "", 'Search the web. Args: {"query":"<search terms>"}'),
@@ -50,6 +51,7 @@ TOOL_SPEC: dict[str, tuple[str, str, str]] = {
     "stakes.record":     ("write", "propose_contract", 'Record a proposal. Args: {"claim":"<proposal>","confidence":0.8}'),
     "fs.write":          ("write", "commit_to_child_repo", 'Write a file (requires authority). Args: {"path":"...","content":"..."}'),
     "domain.run":        ("advisory", "", 'Run a domain AI tool (fraud, attrition, energy, farm, etc.). Args: {"task":"<natural language task>"}'),
+    "skill.use":         ("advisory", "", 'Load an Agent Skill (SKILL.md) by name from .aios/skills/ or ~/.claude/skills/ -- returns its instructions to follow. Args: {"name":"<skill name>"}'),
 }
 
 
@@ -160,14 +162,49 @@ _KEY_DOCS = [
     "AGENTS.md", "README.md",
 ]
 
-def _h_fs_list(_a: dict) -> dict:
-    """List key readable documentation files so the model can discover valid paths."""
-    files = []
-    for rel in _KEY_DOCS:
-        p = ROOT / rel
-        if p.is_file():
-            files.append({"path": rel, "bytes": p.stat().st_size})
-    return {"status": "ok", "files": files, "count": len(files)}
+def _h_fs_list(a: dict) -> dict:
+    """List files. With no args: the pinned key-docs set (backward-compatible
+    path-discovery entry point). With {"path": "<rel dir>", "glob": "<pattern>"}:
+    a real directory listing, bounded like fs.grep (<=50 entries, repo-scoped,
+    privacy dirs excluded) -- fixes the doom-loop the 2026-07-10 D2-4 live run
+    hit when fs.list was a fixed 9-doc list and a goal outside docs/ had no way
+    to discover its own paths."""
+    import fnmatch as _fn
+    a = a or {}
+    rel_path = str(a.get("path", "")).strip()
+    if not rel_path:
+        files = []
+        for rel in _KEY_DOCS:
+            p = ROOT / rel
+            if p.is_file():
+                files.append({"path": rel, "bytes": p.stat().st_size})
+        return {"status": "ok", "mode": "pinned", "files": files, "count": len(files)}
+
+    base = (ROOT / rel_path).resolve()
+    if ROOT not in base.parents and base != ROOT:
+        return {"status": "denied_scope"}            # bounded to the repo, like fs.grep
+    if any(part in _GREP_SKIP_DIRS for part in base.relative_to(ROOT).parts):
+        return {"status": "denied_scope"}             # privacy dirs stay out (DNA #7)
+    if not base.exists():
+        return {"status": "not_found"}
+    glob = str(a.get("glob", "*"))
+    entries: list[dict] = []
+    if base.is_dir():
+        for p in sorted(base.iterdir()):
+            if len(entries) >= 50:
+                break
+            if p.name in _GREP_SKIP_DIRS:
+                continue
+            if not _fn.fnmatch(p.name, glob):
+                continue
+            entry = {"path": str(p.relative_to(ROOT)), "type": "dir" if p.is_dir() else "file"}
+            if p.is_file():
+                entry["bytes"] = p.stat().st_size
+            entries.append(entry)
+    else:
+        entries.append({"path": str(base.relative_to(ROOT)), "type": "file",
+                         "bytes": base.stat().st_size})
+    return {"status": "ok", "mode": "directory", "files": entries, "count": len(entries)}
 
 
 def _h_fs_read(a: dict) -> dict:
@@ -543,13 +580,20 @@ def _h_domain_run(a: dict) -> dict:
         return {"status": "unavailable", "reason": str(exc)[:120]}
 
 
+def _h_skill_use(a: dict) -> dict:
+    """Load an Agent Skill's instructions by name (masterplan §4 M5/D4-6 —
+    Agent Skills loader leg). Delegates entirely to aios_skills_loader, which
+    never executes anything -- only returns text."""
+    return skills_loader.tool_skill_use(a)
+
+
 HANDLERS = {
     "memory.retrieve": _h_retrieve, "capability.route": _h_route,
     "genesis.challenge": _h_challenge, "self.audit": _h_self_audit,
     "interior.read": _h_interior, "stakes.record": _h_stakes,
     "fs.list": _h_fs_list, "fs.read": _h_fs_read, "fs.grep": _h_fs_grep, "fs.write": _h_fs_write,
     "web.search": _h_web_search, "web.fetch": _h_web_fetch, "note.write": _h_note_write,
-    "domain.run": _h_domain_run,
+    "domain.run": _h_domain_run, "skill.use": _h_skill_use,
 }
 
 
@@ -558,6 +602,69 @@ def build_registry() -> loop.Registry:
     for name, handler in HANDLERS.items():
         reg.register(name, handler)
     return reg
+
+
+_MCP_WRITE_PATTERN = re.compile(
+    r"(write|create|delete|remove|update|apply|commit|deploy|edit|save|mutate|patch|insert)", re.I)
+
+
+def register_mcp_tools(registry: loop.Registry, client, prefix: str, *,
+                        tool_spec: dict | None = None) -> dict:
+    """Bridge an already-connected aios_mcp_client.McpClient's tools into
+    `registry` (masterplan §4 M5/D4-6 -- MCP client leg; survey §(g)1: "one MCP
+    client integration opens the ~9,652-server registry as AIOS tools").
+    Additive only -- never removes or replaces an existing tool.
+
+    Every server tool becomes `<prefix><tool_name>` (prefix should end with
+    '.', e.g. "mcp.aios-self."). Read-only stance by default (class
+    "advisory"): an MCP tool is trusted to read but not to write. A tool whose
+    *name* matches a write/mutate pattern is conservatively classed "write" and
+    still passes through the SAME authority gate (verify_authority, action
+    commit_to_child_repo) as a native write tool like fs.write -- an MCP server
+    is never trusted to self-report its own safety.
+
+    `tool_spec` defaults to the module-global TOOL_SPEC (production use, so
+    gate_for()/list_tools()/to_openai_tools() immediately see the bridged
+    tools); pass an isolated dict in tests to avoid mutating shared state.
+
+    Returns {"status": "ok", "registered": [...], "count": n} or an honest
+    {"status": "error"|..., "reason": ...} if the client's list_tools() failed.
+    """
+    spec = TOOL_SPEC if tool_spec is None else tool_spec
+    listing = client.list_tools()
+    if not isinstance(listing, dict) or listing.get("status") != "ok":
+        reason = listing.get("reason", "list_tools failed") if isinstance(listing, dict) else "list_tools failed"
+        return {"status": listing.get("status", "error") if isinstance(listing, dict) else "error",
+                "reason": reason, "registered": [], "count": 0}
+
+    registered: list[str] = []
+    for tool in listing.get("tools", []):
+        name = str((tool or {}).get("name") or "").strip()
+        if not name:
+            continue
+        full_name = f"{prefix}{name}"
+        description = str((tool or {}).get("description") or "").strip()
+        cls = "write" if _MCP_WRITE_PATTERN.search(name) else "advisory"
+        action = "commit_to_child_repo" if cls == "write" else ""
+        try:
+            schema_hint = json.dumps((tool or {}).get("inputSchema") or {}, ensure_ascii=False)
+        except (TypeError, ValueError):
+            schema_hint = "{}"
+        # Deliberately NOT "Args: <json>" -- that phrase triggers _args_hint_to_schema's
+        # regex parser, which is tuned for the hand-written native hints and would
+        # mis-parse an arbitrary server-supplied JSON Schema. Bridged tools honestly
+        # degrade to a permissive empty-object schema in to_openai_tools() instead of
+        # a fabricated one.
+        hint = f"{description} inputSchema: {schema_hint}"[:400]
+        spec[full_name] = (cls, action, hint)
+
+        def _handler(arguments: dict, _client=client, _tool_name=name) -> dict:
+            return _client.call_tool(_tool_name, arguments)
+
+        registry.register(full_name, _handler)
+        registered.append(full_name)
+
+    return {"status": "ok", "registered": registered, "count": len(registered)}
 
 
 def gate_for(agent_id: str):

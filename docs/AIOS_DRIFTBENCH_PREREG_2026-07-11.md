@@ -113,7 +113,12 @@ frontier arm CLI는 버전 고정 가능해야 하며 불가하면 실행 당시
 
 ## Errata (append-only)
 
-- (없음 — v1.1 동결. v1→v1.1 델타: Codex 동결-전 리뷰 15건 반영 — 17/24→mutating 13/18 분리,
+- **2026-07-11 (화해)**: ASC-0282 WP-B(`scripts/m2_driftbench/`)가 실행 substrate로 조합됨;
+  결과 행은 `experiments/driftbench/schema.py` 형식, 판정은 본 문서 §5 기준을 해시 동결된
+  `experiments/driftbench/analyze.py`로 계산. ASC-0282의 17/24(tie≠win)는 그 계약 내부 완료
+  바로만 유효 — 재정의 keystone 판정은 본 문서 단독. 상세:
+  `docs/AIOS_DRIFTBENCH_RECONCILIATION_2026-07-11.md`. (본문 무수정 — 판정 기준 불변.)
+- (v1.1 동결. v1→v1.1 델타: Codex 동결-전 리뷰 15건 반영 — 17/24→mutating 13/18 분리,
   McNemar/α/동률 규칙, 격차해소 공식+분모 규칙+bootstrap CI, static 등가 마진, trace 인과 규칙,
   캡·재시작·missing-data 동결, 실행 격리·순서 랜덤화, 비용모델 sweep, ASK/ABSTAIN·wrong-action
   정의, H3 메모리 정책, 버전·스크립트 해시 동결 절차, 감사자 블라인딩, 결과 스키마 사전 커밋.)
