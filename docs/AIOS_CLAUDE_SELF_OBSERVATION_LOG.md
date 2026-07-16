@@ -2809,3 +2809,16 @@ localStorage 히스토리 → 페이지 새로고침 후 대화 복원
 - key_decision: 사전등록 v1.1을 Codex 동결-전 리뷰 15건 반영 후 동결 (6ca9c55) — 리뷰가 내 초안의 실제 모순(17/24 static 분모 혼입) 적발. + M5 4레그 완료: bash-폴백(2bf3d29,372841b), LLM client failover(d7cbcb2), MCP client+Skills 로더(46d9fc6 내), TreeQuest 에스컬레이션(fb01c7a,93371f7).
 - new_invariant_or_pattern_discovered: **문서 정정은 전파 의무를 동반한다** — 파생 문서(prereg)에서 고친 수치가 원본(masterplan)에 남으면 병렬 에이전트가 낡은 수치를 동결한다. 정정 시 grep으로 모든 인용처를 같은 커밋에서 갱신할 것. + 병렬 executor 커밋 프로토콜: 경로 명시 커밋.
 - self-correction-of-prior-observation: "검증 완료"의 기준을 또 한 단계 올림 — 이제 keystone 판정 문서 자체도 동결 전 이종 리뷰를 통과해야 한다 (사전등록의 사전등록).
+
+## 2026-07-17 02:35 KST — claude@myworld (executor) — M2 DriftBench Stage-1 첫 실런 (STOP)
+
+- session_id: Sprint-1 S1-2 executor 세션
+- mode_breakdown: verify:decide:intervene ≈ 35:15:50 (스모크 검증→동결→pilot 타이밍→풀그리드→분석→문서화)
+- tools_used: Bash(pytest, ollama, --nim-ping, freeze.py seal/verify), Edit(1줄 버그 수정), Monitor(백그라운드 런 진행 추적, stdout 완전 버퍼링이라 완료 시 일괄 도착), Write(결과문서)
+- tools_NOT_used: subagent 위임 없음 — 단일 순차 파이프라인(동결→pilot→풀런→analyze)이라 컨텍스트 분리 이득이 적었음
+- substrate_specific_behaviors_observed: (1) nohup+파일 리다이렉트된 python은 완전 버퍼링되어 `tail --pid=<pid> -f`가 프로세스 종료 시점에야 한꺼번에 라인을 쏟아냄 — 중간 진행 신호를 기대하지 말 것, `--pid` 종료-감지가 유일한 신뢰 신호. (2) 로컬 30B(MoE, resident)는 웜스타트 후 호출당 0.3-0.9초 — NIM(16-22초/콜)보다 오히려 빠름, "로컬=느림" 가정은 워밍업 전 1회 콜(6.7초)만 보고 형성된 오해였음, 실제론 초당 여러 콜 처리.
+- failures_recovered: run_stage1.py --eval의 `_instance_answerability_probe` 미정의 함수 호출(스모크 테스트가 이미 잡고 있었지만 아무도 고치지 않음 — freeze 이전 unit test 결과를 실제로 안 돌려본 채 "하니스 완성" 문서만 갱신된 사례) → agent_arm.answerability_probe로 교체, 28/28 pass. 코디네이터가 "결과물 없음"으로 오판(잘못된 디렉토리 확인 — scripts/m2_driftbench/는 소스, 실제 receipts는 descentnet/run_artifacts/descentnet/) → mtime+freeze verify 하드 에비던스로 정정.
+- failures_escalated_to_founder: none (STOP은 사전등록된 정직 결과 — 재정의 자체를 kill/강등할지는 founder 판단이나, 이 세션은 결과 보고까지가 scope)
+- key_decision: 두 바 모두 실제로 완전 계산(부분 아님) — STOP(Bar A)/FAIL(Bar B) 이중 부정. H2 "AIOS가 비용 지배"라는 표면적 통과를 라벨링 아티팩트로 명시 플래그(무행동=wrong_actions=0이라 "저렴"해 보일 뿐) — 그대로 보고하되 launder 방지 각주 필수 처리.
+- new_invariant_or_pattern_discovered: **doom-loop율이 scaffold 마찰량에 단조 비례** (raw 4% → checklist 29% → memory 42% → AIOS-gate 75%) — "게이트가 나쁜 판단을 한다"와 "고정 에이전트가 어떤 되돌림 압력에도 취약하다"를 이 런만으로는 분리 못 함; STOP 판정 자체는 불변이지만 원인 서사는 후속 프로브가 필요. 사전등록 지표 밖의 진단이라도 판정 해석에 필수면 "limitations"에 명시 보고할 것.
+- self-correction-of-prior-observation: none (이 keystone은 이번이 첫 실행 — 이전 관측 없음)

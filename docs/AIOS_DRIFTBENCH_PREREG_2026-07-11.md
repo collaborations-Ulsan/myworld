@@ -113,6 +113,26 @@ frontier arm CLI는 버전 고정 가능해야 하며 불가하면 실행 당시
 
 ## Errata (append-only)
 
+- **2026-07-17 (첫 런 — freeze + STOP)**: §6 동결 절차 실행, 첫 Stage-1 런 완료.
+  - 모델 ID: weak=`qwen3-coder:30b` (ollama, resident); strong-raw primary=
+    `deepseek-ai/deepseek-v4-pro` (NIM, 이 런에서 실제 사용), fallback=
+    `nvidia/nemotron-3-ultra-550b-a55b` (미사용 — primary 정상).
+  - CLI/env 버전: ollama 0.22.1, Python 3.13.12, Linux 6.17.0-35-generic x86_64.
+  - temperature: requested 0 (weak 어댑터는 pin 불가 — 기존 adapter 한계, 코드 주석에 기록됨).
+  - harness 커밋: 세션 시작 HEAD `8457e40d49d015a909017c270ca996ffb4c9859e` + 이 세션에서
+    `scripts/m2_driftbench/run_stage1.py`의 `_instance_answerability_probe` 미정의 버그를
+    수정(→ `agent_arm.answerability_probe`) 후 동결 — 동결 시점 파일 바이트가 곧 수정본.
+  - 분석 스크립트 해시(재확인, 변경 없음): `experiments/driftbench/schema.py` = `1ed8fd8b…`,
+    `experiments/driftbench/analyze.py` = `53f4037e…` (둘 다 화해문서 동결 접두사와 일치).
+  - freeze seal `combined_sha256` = `583f2f77ce6bbd25ee6bacab727eacd0e986a5eb5ca17a5d20742ab22bf531d7`
+    (`descentnet/run_artifacts/descentnet/m2_freeze_seal.json`); 런 후 `freeze.py verify` =
+    drift 없음(확인됨).
+  - 결과 테이블 스키마: 변경 없음(사전 동결본 그대로 사용, 120 rows, 0 validation errors).
+  - **판정 (Bar A, 이 문서 §5 단독 권위)**: STOP. Condition 1 (mutating paired win)
+    weak+AIOS 1/18 vs weak+checklist (need ≥13/18), McNemar one-sided p=0.999 비유의.
+    Condition 2/4도 FAIL, Condition 3만 PASS. 전수(5 arm × 24 instance) 완료 — partial 아님.
+    상세: `docs/AIOS_DRIFTBENCH_STAGE1_RESULTS_2026-07-17.md`.
+  - ASC-0282 내부 바(17/24, tie≠win)도 별도 FAIL(1/24) — 두 바 모두 부정적, 그대로 공개.
 - **2026-07-11 (화해)**: ASC-0282 WP-B(`scripts/m2_driftbench/`)가 실행 substrate로 조합됨;
   결과 행은 `experiments/driftbench/schema.py` 형식, 판정은 본 문서 §5 기준을 해시 동결된
   `experiments/driftbench/analyze.py`로 계산. ASC-0282의 17/24(tie≠win)는 그 계약 내부 완료

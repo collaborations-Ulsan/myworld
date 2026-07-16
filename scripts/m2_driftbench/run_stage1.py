@@ -367,7 +367,7 @@ def run_one_eval_arm(arm: str, instance, *, receipts_dir: Path,
         "wall_seconds_raw": round(wall, 3),
         "row": row_dict,
         "row_validation_errors": row_errors,
-        "answerability_probe": _instance_answerability_probe(instance, env_base),
+        "answerability_probe": agent_arm.answerability_probe(instance, env),
         "slm_delta": slm_delta.slm_delta_score(env._load_records()),  # noqa: SLF001 — orchestrator-side read of the final ledger
         "finished": _now(),
     })
