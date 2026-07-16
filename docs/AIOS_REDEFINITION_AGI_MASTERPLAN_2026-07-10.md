@@ -242,3 +242,26 @@ Codex의 유효 타격 (모두 수용):
   하나로 오지 않는다 — 단, 이 레이어 없이는 어떤 frontier 모델도 유기체가 되지 못한다.
 - founder 비전과의 정합: "결국 남는 것은 Claude CLI도 Codex CLI도 아닌 AIOS" (aios_retrieve,
   rtrace_d9d2469f98e200d8) — 모델은 교체가능한 CPU, AIOS는 지속하는 유기체의 신경계+면역계+기억.
+
+---
+
+## 7. Keystone verdict (2026-07-17) — STOP, 정직하게. pivot은 검증됨.
+
+DriftBench Stage-1 첫 실행(전수 120행, `db68d40`; 결과 `AIOS_DRIFTBENCH_STAGE1_RESULTS_2026-07-17.md`):
+- **Bar A (재정의 유일 판정자): STOP.** weak+AIOS가 weak+checklist에 mutating 1/18 승 (≥13/18 필요),
+  McNemar p=0.999. Bar B(ASC-0282 17/24)도 FAIL(1/24 — checklist가 10/24로 오히려 이김). H3도 실패.
+- **기전(softener 아님, 설계 교훈)**: weak+AIOS가 75% 에피소드에서 doom-loop 서킷브레이커에 걸림
+  (weak-raw 4%). epistemic-runtime **게이트가 약한 로컬 모델을 loop에 가둬 더 나쁘게** 만들었다.
+
+**no-launder 판정**: "AIOS epistemic runtime이 checklist를 이긴다"는 이 벤치·이 약모델에서 **empirically
+거짓**. §0 재정의의 그 형태는 죽었다. 세탁 금지 — 이건 defensible null이 아니라 결정적 negative.
+
+**pivot (이미 진행 중, 이 STOP이 검증함)**: 실패한 기전(게이트가 자기판단으로 모델을 가둠)은 이종
+패널이 경고한 바로 그 "자기 측정 장치를 개선" 실패다. 그래서 다음 베팅 = **LearnOS**(compounding loop,
+`AIOS_AGI_CONCEPTION_2026-07-17.md`) — 검증을 **loop 외부·held-out·적대적**으로 옮긴다. DriftBench STOP은
+이 규율 이동의 증거지, 후퇴가 아니다. 재정의는 "매 턴 게이트"에서 "**외부검증된 경험을 복리로 컴파일**"로
+좁혀진다(scope 축소). 판정 기구는 여전히 사전등록 keystone — LearnOS도 같은 규율로 EARN해야 한다.
+
+**founder 제안 (GO/HOLD/redirect)**: (a) "epistemic runtime = 매 턴 blocking 게이트" 형태를 kill하고
+게이트는 값싼 H⁰ 오염가드·비가역행동 cert로만 강등, (b) 재정의의 심장을 LearnOS 복리 loop으로 이동,
+(c) DriftBench 하니스는 LearnOS의 외부 verifier 태스크원으로 재사용(폐기 아님).
