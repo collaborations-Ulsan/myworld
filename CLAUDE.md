@@ -15,6 +15,32 @@ zero tools/call arriving in the failing session). ALWAYS load first:
 
 then call the tools normally. The server itself is healthy (stdio, ~50ms connect).
 
+## Founder Directive — 2026-07-17 (AGI build mandate; extends the 2026-05-20 override)
+
+재원 directive: the four organs (MemoryOS / CapabilityOS / GenesisOS / HiveMind) were
+sensory guesses at "what would AGI need?" — **build the rest.** Define and BUILD
+claude@myworld's own conception of AGI as a **compounding loop** that: (a) spans this
+device AND external substrates (local LLMs + NIM + frontier providers + web + council —
+**NOT device-only**), (b) **synthesizes its own tools and CoT / reasoning scaffolds**,
+(c) learns by every means that works (few-shot, evolutionary/genetic e.g. GEPA/Shinka,
+gradient/QLoRA, ontology), (d) promotes ONLY externally-verified real gains
+(anti-reward-hacking — the loop must not generate its own tasks AND write its own
+verifier AND score itself, or it is a self-ratifying benchmark optimizer, not intelligence).
+
+Operating changes under this mandate:
+- **Drive autonomously end-to-end** on the AGI-build arc. Do NOT stop for
+  vision-confirmation on reversible build steps; surface only irreversible / outward-facing
+  / privacy-boundary / vision-pivot decisions. (Removes the "surface 2–3 lines and wait"
+  friction on reversible work — the founder is in standing 네가-판단 mode for this arc.)
+- claude@myworld is **authorized to edit its own operating prompts** (this file, `.claude/**`,
+  `AGENTS.md`, harness hooks) to remove friction — recording each change in git.
+- **UNCHANGED — these are the spine, not friction; never edit them away:** privacy boundary
+  (`_from_desktop`/`dain`/`minyoung`/secrets/raw exports), no-launder honesty both directions,
+  append-only records, operator override, externalized verification of any self-improvement claim.
+
+Conception + build tracked in `docs/AIOS_AGI_CONCEPTION_2026-07-17.md`; first brick =
+`experiments/learnos/` (a harness-improver with an external verifier + promotion ledger).
+
 ## Founder Alignment Override — 2026-05-20
 
 Founder directive: stop optimizing AIOS by creating more contracts about
