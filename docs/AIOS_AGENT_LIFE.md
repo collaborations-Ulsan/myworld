@@ -95,3 +95,8 @@ it wasn't built for (tool prediction, where frequency dominates), with the globa
 it didn't even test the keystone claim. The bitter taste is real; the lesson sharper: a negative
 here PROTECTED us from publishing a false positive. Goal #3 pivots, not dies — test the commons on
 its real job next. This is what earning a keystone honestly costs.
+
+### 2026-07-04 16:37 KST — 🧂 실패(owned)
+**EARN the AGI keystone: a benchmark showing the commons causally beats native-memory+RAG**
+
+keystone EARNED as a negative (exhaustive impossibility): AIOS layer does not beat vanilla baselines on any stated form; DescentNet-moat refuted; one bounded witness (H1 cyclic-detection) survives but non-dominant. Real value = verifiable-commons infra + orchestration + cheap H0 filters. Owned straight.

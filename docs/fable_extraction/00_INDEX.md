@@ -1,5 +1,21 @@
 # Fable 5 Extraction Corpus — harvest everything before 2026-07-07
 
+> **Current status — 2026-07-12:** this file preserves the original campaign
+> framing as history. It is not a verified model card, a rights-cleared training
+> set, or evidence that Fable access ends on the date in the title. Official
+> sources now establish that Fable 5 remains generally available after the
+> July 12 subscription promotion through usage credits/API, while Mythos 5 is
+> limited to approved Project Glasswing customers. The current source ledger is
+> [AIOS_FABLE_MYTHOS_GROUNDING_2026-07-12.md](../research/AIOS_FABLE_MYTHOS_GROUNDING_2026-07-12.md).
+> Use [WORKFLOW_CAPSULE_V1.md](WORKFLOW_CAPSULE_V1.md) for the rights-bounded
+> runtime asset and
+> [WORKFLOW_EVAL_REPORT_V1.md](WORKFLOW_EVAL_REPORT_V1.md) for its V1
+> `HONEST_NEGATIVE` lower-model result. Treat every lineage, recency,
+> benchmark, introspective, and
+> `[V]` claim below as a hypothesis until independently reverified. Hidden
+> reasoning, private Claude history, raw transcripts, and Claude outputs as
+> general-model training targets are excluded.
+
 **Mission (founder):** Fable 5 (heterogeneous frontier model, DIFFERENT prior from Claude) is a
 scarce, expiring resource — available only through **2026-07-07**. Extract ALL of its
 differential knowledge and capability into a durable corpus, so the team keeps the asset after

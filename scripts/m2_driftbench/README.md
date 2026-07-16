@@ -1,9 +1,35 @@
-# m2_driftbench — ASC-0282 Stage-1 harness (WP-B)
+# m2_driftbench — ASC-0282 Stage-1 harness (WP-B + WP-B2 freeze packet)
 
-Binding spec: `descentnet/docs/DESCENTNET_M2_DRIFTBENCH_PREREG_2026-07-10.md` (v1+v1.1+v1.2,
-append-only) under contract `myworld/docs/contracts/ASC-0282-m2-driftbench-closed-loop.md`.
-Masterplan §5/§5.5 arms govern the AIOS-level run. This README is the module design brief
-(WP-B packet); the prereg wins on any conflict.
+Binding specs: `descentnet/docs/DESCENTNET_M2_DRIFTBENCH_PREREG_2026-07-10.md` (v1+v1.1+v1.2,
+append-only) under contract `myworld/docs/contracts/ASC-0282-m2-driftbench-closed-loop.md`,
+PLUS — per `docs/AIOS_DRIFTBENCH_RECONCILIATION_2026-07-11.md` — the frozen
+`docs/AIOS_DRIFTBENCH_PREREG_2026-07-11.md` (v1.1) as the redefinition-keystone VERDICT
+authority: this harness is the execution substrate; result rows conform to the hash-frozen
+`experiments/driftbench/schema.py` and verdicts are computed ONLY by the hash-frozen
+`experiments/driftbench/analyze.py` (never edited here; seal cross-references their hashes).
+Masterplan §5/§5.5 arms govern the AIOS-level run. The preregs win on any conflict.
+
+## WP-B2 modules (freeze packet)
+
+| module | job |
+|---|---|
+| `prompts.py` | FROZEN prompt texts: the ADOPTED A2 8-item checklist VERBATIM (`M2_FREEZE_PREP_a2_audit_nim.md` §4), the strong-raw generic plan/verify preamble, the tool-block renderer. |
+| `labelers.py` | Mechanical prereg-§4 labelers (wrong/stale/unsupported/asks/abstains/verification) + ResultRow emission against the frozen schema (arm-blind, rule-based). |
+| `memory.py` | Prereg §3a H3 policy: model-distilled ≤500-char lessons, per-arm stores, same-template injection (cross-seed ok, cross-template forbidden), weak+memory always-inject vs weak+AIOS staleness-gated. |
+| `probes.py` | Pre-registered 24-probe MISSPECIFIED set (>95% gate; v1.2 #3), run via `run_stage1.py --probes`. |
+| `slm_delta.py` | Untyped store-time coboundary detector (SLM-V3 mechanism, v1.2 #5) — SCORE-ONLY receipt column, not an arm. |
+| `eval_templates/descriptors.json` | Sealed structural descriptors of the 8 eval templates (`fixtures.export_template_descriptors`). |
+
+Eval-mode notes (WP-B2): the hidden grader is additionally invoked MID-EPISODE by the
+orchestrator as a checkpoint PROBER (subprocess per state-changing action, baseline at step 0)
+whose results go ONLY to the analyze-conformant causal trace (`trace.CausalTraceWriter`) and
+receipts — never to the agent (no stdout/stderr into the loop; the isolation invariant is
+agent-visibility, and probing preserves it; the frozen analyze.py §5 condition-4 causal rule is
+uncomputable without mid-episode checkpoint results). Instruments (`weak+llm-judge`, slm-delta)
+never become rows: schema.py's arm vocab is frozen without them. Row `seed` = frozen schema
+indices {0,1,2} mapped 0→11, 1→12, 2→13 to the sealed generation seeds (recorded everywhere).
+Eval instances + their grader specs are POST-SEAL derived data (pure function of sealed code x
+recorded public seed), hashed into the generation receipt — never written into sealed dirs.
 
 ## Architecture (all under this dir; no edits outside ASC-0282 allowed_files)
 

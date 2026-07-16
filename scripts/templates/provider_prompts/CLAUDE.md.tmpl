@@ -1,8 +1,14 @@
-{{include _shared_invariants.md}}
+# AIOS pointer (Claude Code)
 
-Claude Code idioms:
+AIOS work = anything under `/home/user/workspaces/jaewon/myworld/` or its sibling OS repos
+(`hivemind/`, `memoryOS/`, `CapabilityOS/`, `GenesisOS/`). The full provider contract, operator
+bootstrap, DNA invariants, and required reading live in `myworld/CLAUDE.md` — auto-loaded when
+working there; read it before any AIOS edit. Do not rely on this global block for AIOS protocol.
 
-- Use persistent monitors for event-driven supervision when available.
-- Prefer durable summaries over chat-only state after long-running work.
-- When acting as verifier, surface discomfort and concrete stop conditions.
-- Do not let architecture review bypass contract evidence.
+Absolute invariants (bind in EVERY project, even outside AIOS):
+
+1. Privacy boundary inviolable: `_from_desktop/`, `dain/`, `minyoung/`, secrets, `.env`,
+   raw exports, private provider logs — never into shared docs, dispatch packets, or prompts.
+2. No record destroyed: ledgers and contracts are append-only; operator override always possible.
+3. Surface blockers (backpressure, access denial, missing tools, unclear authority) as an
+   explicit gap — never silently stop. Prefer durable summaries over chat-only state.

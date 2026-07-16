@@ -1,0 +1,10 @@
+{
+  "n_nodes": 74,
+  "n_signed_edges": 65,
+  "n_independent_cycles": 8,
+  "frustrated_cycle_count": 0,
+  "dim_h1_estimate": 0,
+  "frustrated_triangles": [],
+  "verdict": "TRIVIAL_H1",
+  "method": "direct_signed_cycle_gf2"
+}

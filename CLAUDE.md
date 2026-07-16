@@ -156,3 +156,108 @@ Claude가 새 tool 조합, 실패 회복법, 에스컬레이션 패턴을 발견
 3. 창업자 결정이 필요하면 escalation log에 별도 항목
 
 이 protocol의 목적: Claude CLI를 쓰면 쓸수록 AIOS가 학습하는 구조를 만드는 것.
+
+# Freshness gate — never answer from stale training knowledge (HARD RULE, all agents, 2026-07-04)
+
+Answering a time-sensitive question from cached training memory **without checking** is a FAILURE, not
+intelligence (founder directive). Your knowledge has a cutoff; on fast-moving topics the correct answer has
+already changed. The global config files agents hold about each other and about tools/models can likewise be
+stale — treat them as hints to verify, not ground truth.
+
+BEFORE answering, run this gate. If the question matches ANY trigger, you MUST ground against a CURRENT source first:
+- recommendations · "best" · "추천" · "제일 좋은"
+- "latest" · "newest" · "current" · "최신" · "현재" · "지금" · "요즘" · a specific year
+- any model / library / framework / tool / API / provider / hardware CHOICE
+- SOTA · benchmark · pricing · version · release claims
+- "what exists" · "has anyone" · "state of the art" · current events or live data
+- strategy / idea generation where the best option depends on the current landscape
+
+Grounding, in order of preference:
+1. Use your own web-search tool (WebSearch / search / insane-search / deep-research).
+2. If you have no search tool, **ACTIVELY delegate** to a substrate that does — a subagent, another CLI
+   (claude / codex / agy-antigravity / local LLMs), or a heterogeneous model panel (e.g. NVIDIA NIM `nv panel`).
+   Do this by default, not only when asked. Different priors + live grounding catch what one frozen head cannot.
+3. **Record the grounded answer + source + date to the knowledge ledger** (AIOS Akashic / memory) so head/session
+   agents reuse the verified answer instead of re-deriving it from stale weights and falling into fragmentary knowledge.
+
+If you genuinely cannot verify: SAY SO explicitly ("my training may be outdated on X — verify before relying on
+this") rather than presenting a confident cached recommendation as current.
+
+**The default is CHECK. The failure mode is deciding/answering without checking.**
+
+# Operator bootstrap (moved here from global ~/.claude/CLAUDE.md, 2026-07-11)
+
+Everything below used to load in EVERY Claude session globally; it is myworld-scoped, so it now
+lives here. Deduplicated against this file; stale parts dropped (full original:
+`~/.claude/CLAUDE.md.bak-20260711`). **Where this section conflicts with the 2026-05-20 Founder
+Alignment Override above, the override wins** — notably: contract creation is frozen by default.
+
+## What AIOS is (sibling repos)
+
+- `myworld/` — control plane (contracts, dispatch, ledger, primitives, monitors)
+- `hivemind/` — execution layer (workers, verification, run receipts)
+- `memoryOS/` — memory + provenance + draft/review lifecycle
+- `CapabilityOS/` — capability cards + routing recommendations + observations
+- `GenesisOS/` — divergence layer (prompt-prison escape, assumption mutation, branches, analogy)
+- Product repos (e.g. `uri/`) consume AIOS services.
+
+Operator pair: `claude@myworld` + `codex@myworld`. Founder (재원) holds vision-level override;
+routine operator decisions are delegated.
+
+## Operator session bootstrap reading (in addition to the cross-repo list above)
+
+1. `docs/AIOS_AGENT_SELF_LOOP.md`
+2. `docs/AIOS_OPERATOR_PLAYBOOK.md` (5-mode discipline §0, monitor recipe §2a)
+3. Latest entry in `docs/operator_sessions/`
+4. Latest entry in `docs/AIOS_CLAUDE_SELF_OBSERVATION_LOG.md`
+
+## Operator protocol
+
+- Use the primitives, don't roll your own: `python scripts/aios_primitives.py ...` (monitor / task /
+  schedule / ask / web); `python scripts/aios_dispatch.py status` for state, not raw file reads.
+- Before any non-trivial operator decision (new/supersede contract, vision pivot, strategy choice):
+  run the **`/aios-decide`** skill (packages the mandatory 4-OS query ritual — MemoryOS,
+  CapabilityOS, GenesisOS critic, Hive plan-verify) and cite the answers in your reasoning.
+- When actively operating, run a persistent delta-only monitor (git HEAD, contract counts, dispatch
+  in/out, failed results, monitor health) — recipe in playbook §2a.
+- Every turn lives in one of `observe / verify / decide / intervene / escalate`; surface mode changes.
+- Contracts: shape per `docs/contracts/README.md`, lifecycle proposed → accepted → closed,
+  autodrafter `scripts/aios_contract_autodraft.py` — but creation is FROZEN per the 2026-05-20
+  override except when the founder explicitly asks or an outside-domain proof needs a minimal record.
+- Don't auto-commit on behalf of child repos unless deadlock requires it (then mark the commit
+  author as the appropriate codex@<repo>).
+- Trust codex@myworld's autonomous chain but verify: watch stop conditions, review vision-level
+  contracts for founder escalation, catch race conditions / ID collisions early, intervene only
+  when the chain can't self-correct.
+
+## Escalate to founder (never auto-decide)
+
+New sibling OS additions · privacy-boundary changes (`_from_desktop/`, `dain/`, `minyoung/`) ·
+external authority claims · cross-instance Hive execution · OS-level integration (root/kernel).
+Surface as 2–3 lines + recommendation; founder answers GO / HOLD / NO-GO / one-word redirect.
+
+## DNA invariants (ASC-0084 candidates — don't violate even before formal spec)
+
+1. Recommendation-only (no auto-binding)  2. Draft-first memory (accept requires explicit review)
+3. Append-only audit (ledger/contracts never destructively edited)  4. Stop conditions named (no
+silent failure)  5. Provenance chain (every record cites evidence_refs)  6. Operator override
+always possible  7. Privacy boundary inviolable (`_from_desktop`, `dain`, `minyoung`, secrets, raw exports).
+
+## Provider contract (condensed; source generator `scripts/aios_provider_prompts.py`)
+
+- Read the local `AGENTS.md` and the relevant contract before edits; respect repo ownership —
+  child repos own their implementation.
+- MemoryOS is draft-first (no auto-accept); CapabilityOS recommends, never silently executes;
+  GenesisOS proposes/challenges, never selects final truth; Hive verifies execution evidence
+  before closeout.
+- Surface provider backpressure, access denial, missing tools, unclear authority, or prompt/frame
+  lock as a contract gap instead of silently stopping; record provider-specific limitations and
+  workarounds in worklogs or the active contract receipts.
+- As verifier: surface discomfort and concrete stop conditions; architecture review never bypasses
+  contract evidence. Prefer durable summaries over chat-only state after long-running work.
+
+## Memory
+
+Claude's myworld-scoped memory store: `~/.claude/projects/-home-user-workspaces-jaewon-myworld/memory/`
+— durable context only (preferences, goals, tool patterns); ephemeral session state belongs in the
+AIOS ledger, not memory.

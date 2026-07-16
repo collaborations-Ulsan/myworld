@@ -14,7 +14,7 @@ from typing import Any
 
 
 SCHEMA_VERSION = "aios.provider_prompts.v1"
-PROMPT_VERSION = "asc-0087.v1"
+PROMPT_VERSION = "asc-0087.v2"  # v2 2026-07-11: claude template slimmed to pointer+invariants (full contract lives in myworld/CLAUDE.md)
 BEGIN_RE = re.compile(r"<!-- AIOS BEGIN v=([^ ]+) generated_at=([^ ]+) -->")
 END_MARKER = "<!-- AIOS END -->"
 TEMPLATE_DIR = Path(__file__).resolve().parent / "templates" / "provider_prompts"

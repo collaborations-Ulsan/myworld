@@ -379,3 +379,41 @@ new CLI behavior or failure mode.
 `ASC-0081-provider-fallback-execution-binding.md` is the executable follow-up:
 it should turn this absorption map into a working Hive fallback path for
 Claude, Codex, Gemini, and local LLM workers.
+
+## 2026-07-11 Headless Heterogeneous Review Receipt
+
+Fresh local evidence from the DrugArena Tower owning repository established a
+bounded provider-harness path without reading API keys, browser sessions,
+keychains, CLI config, or private auth stores:
+
+- `codex-cli 0.144.1` exposed `codex exec` with stdin prompts, `--ephemeral`,
+  `--sandbox read-only`, `--json`, and `--output-last-message`.
+- A Tower review panel routed one canonical, non-scientific packet through
+  `cli:codex` and `cli:claude`. Both returned typed opinions: Codex in
+  12.272 seconds and Claude in 25.139 seconds.
+- The panel retained only normalized opinions plus raw-output hashes and kept
+  the result at `provisional_synthesis`; model agreement did not promote a
+  scientific claim.
+- The same Tower smoke runner now rejects explicitly requested unavailable or
+  unapproved providers instead of silently replacing them with a stub. The
+  deterministic stub remains an explicit offline route.
+
+AIOS routing implication:
+
+```yaml
+provider_harness:
+  before_live_dispatch:
+    - capability_probe
+    - feature_flag_and_control_authorization
+    - bounded_timeout
+  evidence:
+    - normalized_typed_opinion
+    - raw_output_hash_only
+    - provisional_epistemic_status
+  fallback:
+    - never_silent
+    - emit_degraded_or_failed_receipt
+```
+
+This is replayable as a contract-level capability observation, not as a claim
+that any provider authentication state is durable or transferable.

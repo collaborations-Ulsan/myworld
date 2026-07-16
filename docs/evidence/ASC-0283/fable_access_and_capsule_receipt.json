@@ -1,0 +1,88 @@
+{
+  "schema": "aios.fable_access_and_capsule_receipt.v1",
+  "contract_id": "ASC-0283",
+  "recorded_date": "2026-07-12",
+  "timezone": "Asia/Seoul",
+  "provider_surface": "Claude Code CLI 2.1.207",
+  "requested_model": "claude-fable-5",
+  "observed_model_usage_key": "claude-fable-5",
+  "observed_context_window": 1000000,
+  "fallback_configured": false,
+  "bypass_used": false,
+  "session_persistence": false,
+  "private_workspace_context_sent": false,
+  "raw_transcript_retained": false,
+  "training_eligible": false,
+  "rights_class": "internal_runtime_workflow_only",
+  "runs": [
+    {
+      "kind": "model_identity_probe",
+      "status": "success",
+      "cost_usd": 0.243834,
+      "evidence": "modelUsage identified claude-fable-5"
+    },
+    {
+      "kind": "workflow_capsule_attempt",
+      "status": "structured_degraded_failure",
+      "terminal_reason": "max_turns_after_tool_use",
+      "cost_usd": 0.52875,
+      "retained_as_negative_evidence": true
+    },
+    {
+      "kind": "workflow_capsule_projection",
+      "status": "success",
+      "stop_reason": "end_turn",
+      "cost_usd": 0.67323,
+      "observed_model_usage_key": "claude-fable-5",
+      "provider_tools_used": false,
+      "output_projection": "docs/fable_extraction/WORKFLOW_CAPSULE_V1.md"
+    },
+    {
+      "kind": "dynamic_workflow_plan",
+      "status": "plan_only_no_review_result",
+      "cost_usd": 1.902555,
+      "observed_model_usage_key": "claude-fable-5",
+      "note": "Plan mode produced an execution plan but could not present the approval transition in non-interactive mode; the plan file is provider-private and was not read or retained by AIOS."
+    },
+    {
+      "kind": "dynamic_workflow_sonnet_review",
+      "status": "structured_degraded_failure",
+      "terminal_reason": "budget_exhausted_before_final_synthesis",
+      "configured_call_budget_usd": 1.6,
+      "reported_call_cost_usd": 2.1645388,
+      "call_budget_overshoot_usd": 0.5645388,
+      "observed_model_usage": {
+        "claude-fable-5": {
+          "role": "parent_orchestrator",
+          "cost_usd": 1.787071
+        },
+        "claude-sonnet-5": {
+          "role": "review_workers",
+          "cost_usd": 0.3774678
+        }
+      },
+      "final_review_result_available": false,
+      "retained_as_negative_evidence": true,
+      "classification": "provider_budget_guard_overshoot"
+    }
+  ],
+  "total_provider_cost_usd": 5.5129078,
+  "contract_budget_usd": 5.0,
+  "budget_remaining_usd": 0.0,
+  "contract_budget_overshoot_usd": 0.5129078,
+  "provider_calls_stopped": true,
+  "claims_established": [
+    "authorized local access to claude-fable-5 worked on 2026-07-12",
+    "the successful capsule call was served by claude-fable-5",
+    "no silent fallback was used"
+  ],
+  "claims_not_established": [
+    "future access",
+    "Mythos entitlement",
+    "workflow transfer to any lower model",
+    "capability equivalence",
+    "training rights"
+  ],
+  "privacy_note": "Session identifiers and raw provider output were deliberately omitted.",
+  "stop_condition": "Aggregate ASC-0283 spend exceeded USD 5.00 after the CLI-reported per-call guard overshot; all additional provider calls are stopped."
+}

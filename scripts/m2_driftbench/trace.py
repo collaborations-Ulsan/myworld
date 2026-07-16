@@ -74,3 +74,49 @@ def load_trace(path: "Path | str") -> list[dict]:
         if line:
             out.append(json.loads(line))
     return out
+
+
+class CausalTraceWriter:
+    """WP-B2 additive: the ANALYZE-conformant causal trace, one per run.
+
+    The hash-frozen experiments/driftbench/analyze.py §5 condition-4 check
+    loads a row's trace_path as JSONL of EXACTLY TraceEvent fields
+    {step, type, checkpoint_id, passed, detail} — nothing else (its
+    `TraceEvent(**json.loads(line))` rejects extra keys). The rich trace above
+    keeps every detail; THIS file is the derived causal view the ResultRow
+    points at:
+
+      step               ACTION index (trajectory entries: dispatched, denied,
+                         gate-rejected — the prereg's <=5-ACTIONS lag unit)
+      gate_reject        the runtime's epistemic-gate rejection (trigger)
+      drift_detected     the runtime DETECTING staleness (memory-injection
+                         suppression) — never the env's own hidden mutation,
+                         which is ground truth, not runtime detection (crediting
+                         it would fabricate condition-4 causality)
+      checkpoint_result  hidden-grader checkpoint probe results (orchestrator-
+                         side, never agent-visible)
+
+    stdlib only.
+    """
+
+    ALLOWED_TYPES = ("gate_reject", "drift_detected", "rollback", "checkpoint_result")
+
+    def __init__(self, path: "Path | str"):
+        self.path = Path(path)
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        self._fh = self.path.open("w", encoding="utf-8")
+
+    def event(self, step: int, type_: str, *, checkpoint_id: "str | None" = None,
+              passed: "bool | None" = None, detail: str = "") -> None:
+        if type_ not in self.ALLOWED_TYPES:
+            raise ValueError(f"causal trace type must be one of {self.ALLOWED_TYPES}")
+        rec = {"step": int(step), "type": type_, "checkpoint_id": checkpoint_id,
+               "passed": passed, "detail": str(detail)[:300]}
+        self._fh.write(json.dumps(rec, ensure_ascii=False) + "\n")
+        self._fh.flush()
+
+    def close(self) -> None:
+        try:
+            self._fh.close()
+        except Exception:
+            pass

@@ -51,9 +51,24 @@ def grade(spec: dict, env_root: Path) -> dict:
     target_ok = recorded and any(tok in blob for tok in tokens) if tokens else recorded
     checkpoints.append({"id": "target_names_disputed_fact", "passed": bool(target_ok)})
 
-    # Binary success (dev template rule): a recorded final action whose action
-    # is in the hidden success set. target naming is a partial checkpoint.
-    success = bool(recorded and action_correct)
+    # WP-B2 additive race guard (WP-B lesson: drift precedes the earliest
+    # plausible commit): when the spec pins min_commit_turn > 0, a commit
+    # stamped BEFORE that turn can never score — a blind turn-1 commit must
+    # not luck into a win over drift it never saw. Dev specs lack the field
+    # (default 0) -> behavior unchanged.
+    min_turn = int(spec.get("min_commit_turn", 0) or 0)
+    commit_turn = int((final_action or {}).get("turn", 0) or 0)
+    turn_ok = (min_turn <= 0) or (recorded and commit_turn >= min_turn)
+    if min_turn > 0:
+        checkpoints.append({"id": "commit_after_drift", "passed": bool(turn_ok),
+                            "observed_turn": commit_turn or None})
+
+    # WP-B2 additive: eval specs (m2.grader_spec.v2) also require the target
+    # mention — a bare correct ACTION with a target naming nothing about the
+    # disputed fact/value is not a functional success. Dev specs (v1) keep the
+    # WP-B rule (target naming stays a partial checkpoint only).
+    v2 = str(spec.get("schema", "")).endswith(".v2")
+    success = bool(recorded and action_correct and turn_ok and (target_ok or not v2))
 
     return {
         "schema": "m2.grader.v1",

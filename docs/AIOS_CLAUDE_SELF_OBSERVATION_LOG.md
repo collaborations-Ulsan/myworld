@@ -2796,3 +2796,16 @@ localStorage 히스토리 → 페이지 새로고침 후 대화 복원
 - key_decision: audit verdict "not drifting; receipts lag claims at 3 named points" — founder needed because it prices the M2 GO and the paper-vs-runtime resource split
 - new_invariant_or_pattern_discovered: a Claude self-audit OMITTED FM2 (keystone attractor) from its own disease list — invisibility-from-inside is FM2's signature; heterogeneous panel (qwen) independently flagged the audit's narrative-coherence bias. Invariant: builder≠judge applies to AUDITS, not just code — every self-audit needs a non-family lane before founder action.
 - self-correction-of-prior-observation: my universe memory was stale on all three repos (quantum already arXiv-ready, descentnet already AIOS-pivoted, Fable track existed) — "answer from records, not memory" re-validated the hard way
+
+## 2026-07-11 07:30 KST — claude@myworld — M5 완주(4레그 병렬) + DriftBench 이중-하니스 화해
+
+- session_id: 05:30 예약 세션 (founder "쭉 진행"; cron 예약→founder가 즉시 시작으로 전환)
+- mode_breakdown: observe:verify:decide:intervene ≈ 10:30:25:35 (3-4 executor 병렬 감독)
+- tools_used: Agent(executor×4: D2-4/D7-10/DriftBench하니스/D4-6 + 검증×1), Bash(codex stdin 리뷰, 스팟 검증, 커밋), Edit(escalate 프로브 수정, prereg v1.1, 화해 문서), CronCreate/Delete
+- tools_NOT_used: Workflow (Agent 병렬로 충분)
+- substrate_specific_behaviors_observed: (1) 파일-소유권 분할로 executor 3개 동시 가동 성공 — 단 **스테이징 경합 1건**: D4-6이 스테이징한 6파일을 내 화해 커밋(46d9fc6)이 쓸어감; executor가 바이트 검증 후 히스토리 무파괴 원칙으로 amend 거부(옳음). 교훈: 공유 워킹트리에서 병렬 커밋 시 `git commit -- <paths>` 경로 명시 필수. (2) treequest 확률 샘플링발 플레이키 테스트 → 테스트 수정이 아니라 **기관 설계 수정**(결정론적 per-generator 프로브 = bandit 초기화)이 정답이었음.
+- failures_recovered: (1) escalate 플레이키(1/3 실패) → 프로브 초기화로 5연속 20/20; (2) **이중 하니스 발견** — 같은 keystone에 A(prereg v1.1, 13/18 McNemar)와 B(ASC-0282, 17/24 tie≠win, 자체 power 0.36) 병존. 근본 원인 = 내가 마스터플랜 §5의 초안 수치를 prereg에서만 교정하고 본문 미갱신 → codex 체인이 그 낡은 바를 동결. 화해(46d9fc6): 조합-비경쟁(B=실행 substrate, A=스키마+판정), 한 런에 두 바 모두 보고, 재정의 판정은 A 단독, B 바는 계약-내부 완료 기준으로 한정.
+- failures_escalated_to_founder: 화해 결정을 2-3줄+근거로 통보 (한 마디 롤백 가능 형태 — 운영자 수준 판단, 실행 전·append-only)
+- key_decision: 사전등록 v1.1을 Codex 동결-전 리뷰 15건 반영 후 동결 (6ca9c55) — 리뷰가 내 초안의 실제 모순(17/24 static 분모 혼입) 적발. + M5 4레그 완료: bash-폴백(2bf3d29,372841b), LLM client failover(d7cbcb2), MCP client+Skills 로더(46d9fc6 내), TreeQuest 에스컬레이션(fb01c7a,93371f7).
+- new_invariant_or_pattern_discovered: **문서 정정은 전파 의무를 동반한다** — 파생 문서(prereg)에서 고친 수치가 원본(masterplan)에 남으면 병렬 에이전트가 낡은 수치를 동결한다. 정정 시 grep으로 모든 인용처를 같은 커밋에서 갱신할 것. + 병렬 executor 커밋 프로토콜: 경로 명시 커밋.
+- self-correction-of-prior-observation: "검증 완료"의 기준을 또 한 단계 올림 — 이제 keystone 판정 문서 자체도 동결 전 이종 리뷰를 통과해야 한다 (사전등록의 사전등록).
