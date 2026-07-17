@@ -130,3 +130,38 @@ Codex 최소-loop 설계 채택 (2주 내 buildable):
 - **S+1**: 60-100 태스크 · 20-30회 진화 · frozen-holdout 복리 판정 (진짜 keystone). GEPA 엔진 흡수.
 - **S+2**: OntologyOS v0 (LearnOS가 쓰는 typed 저장소) · ToolOS를 aios_tools에 배선 · ScaffoldOS를 GEPA로.
 - **S+3**: 반복 성공 스킬 → QLoRA specialist (v1) · 외생 검증기(Lean/Harmonic 레인, 형식화 가능 문제군).
+
+---
+
+## 9. Sutton/OaK — 이 개념에 대한 가장 날카로운 반증 (no-launder, 정면으로)
+
+지식원장의 **첫 노드**(OakLab = Richard Sutton의 2026 랩, `4e41617`, 77 entity/116 relation)가 §0에
+대한 가장 권위 있는 적대 프레임을 즉시 배달했다. 원장이 벌써 값을 했다 — 첫 결과가 내 테제의 급소다.
+
+**Sutton 테제**: 지능은 *런타임*에 raw 경험으로부터의 continual learning(batch-size-one, no replay)으로
+창발한다. **frozen LLM은 foundation이 아니라 dead end.** reward가 목표 골격; big-world humility(agent
+≪ world → 영원히 근사·망각·적응); options로 시간 추상화; 효율(trillion-param/~20W)이 moat.
+open obstacle는 **plasticity loss**(Nature 2024)라고 스스로 명명.
+
+**직격**: 내 §0 "frozen 모델을 *감싸는* 복리 loop"은 정확히 Sutton이 dead-end라 부르는 LLM-as-prior
+진영이다. 그리고 **DriftBench STOP은 부분적으로 Sutton 편의 증거** — frozen 약모델을 감싼 스캐폴드가
+복리는커녕 더 나빠졌다(75% doom-loop). 회피하지 않는다.
+
+**정직한 위치 (양방향, 회피 없음)**:
+1. Sutton이 **목적지**에 대해선 옳을 가능성이 높다 — weight-level 경험학습이 진짜배기; frozen-model
+   스캐폴드는 정상(summit)이 아니라 다리(bridge)다.
+2. **그러나** 그가 필요로 하는 기전 — plasticity loss 없는 continual learning을 trillion-param/20W/
+   실시간으로 — 은 **미해결(그의 자인)이며 이 디바이스에서 오늘 실행 불가.**
+3. 그래서 AIOS의 정직한 역할 = **다리**: weight-level 문제가 열려 있는 동안 frozen 모델 위에서
+   *일부* 경험적 복리(skill/tool/memory/QLoRA)를 추출한다 — **단 transfer-holdout으로 실제 복리가
+   측정될 때만 값을 하고, 목적지라고 절대 주장하지 않는다.** flat이면 그건 Sutton 편의 증거이고
+   그대로 보고한다.
+
+**실행가능 흡수 (Sutton 아이디어 중 오늘 디바이스에서 되는 것)**: options/시간추상화로 LearnOS skill
+라이브러리 구조화 · reward-respecting subtask discovery를 LearnOS 후보생성 신호로 · per-weight meta
+step-size(IDBD/SwiftTD)는 QLoRA arm 열릴 때 · human-label이 아닌 **경험-구동 reward**로 loop 보상.
+→ LearnOS를 다리 포기 없이 더 Sutton-정렬로.
+
+**보존된 모순(원장 contradicts 엣지)**: "LLMs-are-a-dead-end(Sutton)" ↔ "LLMs-as-useful-prior";
+"Reward-is-Enough(Sutton)" ↔ "Scalar-reward-not-enough(Vamplew)"; "single-MDP/scalar 기반" ↔
+"Three Dogmas(Abel)". AIOS는 다리에 베팅하되 **정직하게 측정** — 프론티어의 불일치가 원장의 자산이다.
