@@ -1,0 +1,3498 @@
+{
+  "entities": [
+    {
+      "id": "D2",
+      "type": "Domain",
+      "name": "Medical / Biomedical AI",
+      "scope": "Clinical LLMs/diagnosis, medical imaging, drug discovery, protein/structure, genomics, multi-omics, EHR/clinical agents, medical VLMs, and their methodologies.",
+      "source": "docs/ontology/FRONTIER_KNOWLEDGE_LEDGER_2026-07-17.md"
+    },
+    {
+      "id": "meth:foundation_models",
+      "type": "Methodology",
+      "name": "Foundation models / self-supervised pretraining",
+      "definition": "Large models pretrained (masked/autoregressive/contrastive/JEPA) on unlabeled bio/clinical data, adapted to many downstream tasks.",
+      "kind": "cross-cutting",
+      "source": "docs/ontology/FRONTIER_KNOWLEDGE_LEDGER_2026-07-17.md"
+    },
+    {
+      "id": "meth:diffusion_flow",
+      "type": "Methodology",
+      "name": "Diffusion & flow-matching generative models",
+      "definition": "Score/denoising diffusion and flow-matching for structures, molecules, images, cell states.",
+      "kind": "cross-cutting",
+      "source": "docs/ontology/FRONTIER_KNOWLEDGE_LEDGER_2026-07-17.md"
+    },
+    {
+      "id": "meth:rl_verifiable",
+      "type": "Methodology",
+      "name": "RL / RLVR / GRPO with verifiers",
+      "definition": "Reinforcement learning from verifiable rewards, GRPO, dynamic/interactive verifiers for medical reasoning and biology.",
+      "kind": "cross-cutting",
+      "source": "docs/ontology/FRONTIER_KNOWLEDGE_LEDGER_2026-07-17.md"
+    },
+    {
+      "id": "meth:agentic",
+      "type": "Methodology",
+      "name": "Agentic pipelines / multi-agent orchestration / tool-use",
+      "definition": "Orchestrated LLM agents with role specialization, tool/RAG use, long-horizon workflows for diagnosis, EHR, discovery.",
+      "kind": "cross-cutting",
+      "source": "docs/ontology/FRONTIER_KNOWLEDGE_LEDGER_2026-07-17.md"
+    },
+    {
+      "id": "meth:uncertainty",
+      "type": "Methodology",
+      "name": "Uncertainty quantification / verification for clinical safety",
+      "definition": "Conformal prediction, calibration, OOD/hallucination detection, selective prediction for safe deployment.",
+      "kind": "cross-cutting",
+      "source": "docs/ontology/FRONTIER_KNOWLEDGE_LEDGER_2026-07-17.md"
+    },
+    {
+      "id": "meth:generative_design",
+      "type": "Methodology",
+      "name": "Generative / evolutionary de novo design",
+      "definition": "De novo protein/enzyme/binder/molecule design incl. hallucination and inference-time search.",
+      "kind": "cross-cutting",
+      "source": "docs/ontology/FRONTIER_KNOWLEDGE_LEDGER_2026-07-17.md"
+    },
+    {
+      "id": "meth:retrieval_rag",
+      "type": "Methodology",
+      "name": "Retrieval-augmented generation",
+      "definition": "Grounding clinical/biomedical LLMs in external knowledge (literature, EHR, tools).",
+      "kind": "cross-cutting",
+      "source": "docs/ontology/FRONTIER_KNOWLEDGE_LEDGER_2026-07-17.md"
+    },
+    {
+      "id": "meth:cofolding",
+      "type": "Methodology",
+      "name": "Biomolecular co-folding",
+      "definition": "All-atom joint structure prediction of protein/NA/ligand complexes (+ affinity).",
+      "kind": "cross-cutting",
+      "source": "docs/ontology/FRONTIER_KNOWLEDGE_LEDGER_2026-07-17.md"
+    },
+    {
+      "id": "lab:microsoft_ai",
+      "type": "Lab",
+      "name": "Microsoft AI / Microsoft Research",
+      "kind": "industry lab",
+      "known_for": "MAI-DxO, Med-RLVR, BioEmu",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "lab:google_deepmind_health",
+      "type": "Lab",
+      "name": "Google DeepMind / Google Health",
+      "kind": "industry lab",
+      "known_for": "MedGemma, AMIE, AlphaGenome, AI co-scientist, AlphaFold3",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "lab:baichuan",
+      "type": "Lab",
+      "name": "Baichuan Inc.",
+      "kind": "industry lab",
+      "known_for": "Baichuan-M1/M2/M3 medical LLMs",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "lab:stanford_shah_re",
+      "type": "Lab",
+      "name": "Stanford (Shah / Re / Leskovec labs)",
+      "kind": "academic lab",
+      "known_for": "EHRSHOT, Context Clues, Biomni",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "lab:mit_jameel",
+      "type": "Lab",
+      "name": "MIT Jameel Clinic (Barzilay/Jaakkola)",
+      "kind": "academic lab",
+      "known_for": "Boltz-1/2, DiffDock, DeCAF",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "lab:recursion",
+      "type": "Lab",
+      "name": "Recursion Pharmaceuticals",
+      "kind": "industry lab",
+      "known_for": "Boltz co-development, phenomics screening",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "lab:arc_institute",
+      "type": "Lab",
+      "name": "Arc Institute",
+      "kind": "research institute",
+      "known_for": "Evo/Evo 2, STATE, Virtual Cell Atlas & Challenge",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "lab:nvidia_bio",
+      "type": "Lab",
+      "name": "NVIDIA (BioNeMo / Digital Bio)",
+      "kind": "industry lab",
+      "known_for": "Proteina/La-Proteina, Fold-CP, JEPA-DNA, Evo 2 co-dev",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "lab:evolutionaryscale",
+      "type": "Lab",
+      "name": "EvolutionaryScale",
+      "kind": "industry lab",
+      "known_for": "ESM3, ESM-C protein language models",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "lab:ipd_baker",
+      "type": "Lab",
+      "name": "Institute for Protein Design, UW (Baker Lab)",
+      "kind": "academic lab",
+      "known_for": "RFdiffusion, RFdiffusion2, de novo binders/enzymes",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "lab:isomorphic",
+      "type": "Lab",
+      "name": "Isomorphic Labs",
+      "kind": "industry lab",
+      "known_for": "AF3-derived drug design; clinical translation",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "lab:bytedance_aml",
+      "type": "Lab",
+      "name": "ByteDance AML AI4Science",
+      "kind": "industry lab",
+      "known_for": "Protenix / Protenix-v1 open AF3",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "lab:genesis_tx",
+      "type": "Lab",
+      "name": "Genesis Therapeutics",
+      "kind": "industry lab",
+      "known_for": "Pearl, DeCAF co-folding",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "lab:chai",
+      "type": "Lab",
+      "name": "Chai Discovery",
+      "kind": "industry lab",
+      "known_for": "Chai-1/Chai-2 zero-shot antibody design",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "lab:mahmood",
+      "type": "Lab",
+      "name": "Mahmood Lab (Harvard/BWH)",
+      "kind": "academic lab",
+      "known_for": "UNI, CONCH, TITAN, THREADS pathology FMs",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "lab:aignostics",
+      "type": "Lab",
+      "name": "Aignostics + Charite/LMU/Mayo",
+      "kind": "industry+academic",
+      "known_for": "Atlas 2 pathology FMs for clinical deployment",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "lab:raidium",
+      "type": "Lab",
+      "name": "Raidium",
+      "kind": "industry lab",
+      "known_for": "Curia / Curia-2 radiology FMs",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "lab:zitnik",
+      "type": "Lab",
+      "name": "Zitnik Lab (Harvard MIMS)",
+      "kind": "academic lab",
+      "known_for": "TxAgent, ToolUniverse, AutoScientists, STRAND",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "lab:futurehouse",
+      "type": "Lab",
+      "name": "FutureHouse",
+      "kind": "research org",
+      "known_for": "Robin, PaperQA, Crow/Falcon/Finch agents",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "lab:vandijk_yale",
+      "type": "Lab",
+      "name": "van Dijk Lab, Yale (+ Google)",
+      "kind": "academic+industry",
+      "known_for": "Cell2Sentence-Scale (C2S)",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "lab:insilico",
+      "type": "Lab",
+      "name": "Insilico Medicine",
+      "kind": "industry lab",
+      "known_for": "Chemistry42, clinical AI-designed drugs (Rentosertib)",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "lab:openfold",
+      "type": "Lab",
+      "name": "OpenFold Consortium (Columbia, AlQuraishi)",
+      "kind": "academic consortium",
+      "known_for": "OpenFold3 fully-open co-folding",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "lab:msr_noe",
+      "type": "Lab",
+      "name": "Microsoft Research (Noe)",
+      "kind": "industry lab",
+      "known_for": "BioEmu protein ensembles",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "lab:ucsc_zhou",
+      "type": "Lab",
+      "name": "UC Santa Cruz (Yuyin Zhou)",
+      "kind": "academic lab",
+      "known_for": "MedVLThinker multimodal medical reasoning",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "lab:embl_huber",
+      "type": "Lab",
+      "name": "EMBL (Huber / Ahlmann-Eltze)",
+      "kind": "academic lab",
+      "known_for": "single-cell FM baseline critique",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "person:harsha_nori",
+      "type": "Person",
+      "name": "Harsha Nori",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "person:hoifung_poon",
+      "type": "Person",
+      "name": "Hoifung Poon",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "person:vivek_natarajan",
+      "type": "Person",
+      "name": "Vivek Natarajan",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "person:khaled_saab",
+      "type": "Person",
+      "name": "Khaled Saab",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "person:andrew_sellergren",
+      "type": "Person",
+      "name": "Andrew Sellergren",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "person:nigam_shah",
+      "type": "Person",
+      "name": "Nigam H. Shah",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "person:michael_wornow",
+      "type": "Person",
+      "name": "Michael Wornow",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "person:regina_barzilay",
+      "type": "Person",
+      "name": "Regina Barzilay",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "person:tommi_jaakkola",
+      "type": "Person",
+      "name": "Tommi Jaakkola",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "person:gabriele_corso",
+      "type": "Person",
+      "name": "Gabriele Corso",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "person:jeremy_wohlwend",
+      "type": "Person",
+      "name": "Jeremy Wohlwend",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "person:david_baker",
+      "type": "Person",
+      "name": "David Baker",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "person:john_jumper",
+      "type": "Person",
+      "name": "John Jumper",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "person:demis_hassabis",
+      "type": "Person",
+      "name": "Demis Hassabis",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "person:alex_rives",
+      "type": "Person",
+      "name": "Alexander Rives",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "person:patrick_hsu",
+      "type": "Person",
+      "name": "Patrick Hsu",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "person:brian_hie",
+      "type": "Person",
+      "name": "Brian Hie",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "person:frank_noe",
+      "type": "Person",
+      "name": "Frank Noe",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "person:marinka_zitnik",
+      "type": "Person",
+      "name": "Marinka Zitnik",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "person:jure_leskovec",
+      "type": "Person",
+      "name": "Jure Leskovec",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "person:kexin_huang",
+      "type": "Person",
+      "name": "Kexin Huang",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "person:sam_rodriques",
+      "type": "Person",
+      "name": "Samuel Rodriques",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "person:faisal_mahmood",
+      "type": "Person",
+      "name": "Faisal Mahmood",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "person:nate_gruver",
+      "type": "Person",
+      "name": "Nate Gruver",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "person:karsten_kreis",
+      "type": "Person",
+      "name": "Karsten Kreis",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "person:wolfgang_huber",
+      "type": "Person",
+      "name": "Wolfgang Huber",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "person:yuyin_zhou",
+      "type": "Person",
+      "name": "Yuyin Zhou",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "person:danielle_bitterman",
+      "type": "Person",
+      "name": "Danielle Bitterman",
+      "source": "agent-grounded 2026-07-17 (see medical.md sources)"
+    },
+    {
+      "id": "paper:mai_dxo",
+      "type": "Paper",
+      "title": "Sequential Diagnosis with Language Models (MAI-DxO / SDBench)",
+      "url": "https://arxiv.org/abs/2506.22405",
+      "date": "2025-06",
+      "venue": "arXiv",
+      "source": "https://arxiv.org/abs/2506.22405"
+    },
+    {
+      "id": "paper:baichuan_m2",
+      "type": "Paper",
+      "title": "Baichuan-M2: Scaling Medical Capability with Large Verifier System",
+      "url": "https://arxiv.org/abs/2509.02208",
+      "date": "2025-09",
+      "venue": "arXiv",
+      "source": "https://arxiv.org/abs/2509.02208"
+    },
+    {
+      "id": "paper:baichuan_m3",
+      "type": "Paper",
+      "title": "Baichuan-M3: Modeling Clinical Inquiry for Reliable Medical Decision-Making",
+      "url": "https://arxiv.org/abs/2602.06570",
+      "date": "2026-02",
+      "venue": "arXiv",
+      "source": "https://arxiv.org/abs/2602.06570"
+    },
+    {
+      "id": "paper:medgemma15",
+      "type": "Paper",
+      "title": "MedGemma 1.5 Technical Report",
+      "url": "https://arxiv.org/abs/2604.05081",
+      "date": "2026-04",
+      "venue": "arXiv",
+      "source": "https://arxiv.org/abs/2604.05081"
+    },
+    {
+      "id": "paper:amie",
+      "type": "Paper",
+      "title": "Towards Conversational AI for Disease Management (AMIE)",
+      "url": "https://arxiv.org/abs/2503.06074",
+      "date": "2025-03",
+      "venue": "arXiv / Nature Medicine 2026",
+      "source": "https://arxiv.org/abs/2503.06074"
+    },
+    {
+      "id": "paper:med_rlvr",
+      "type": "Paper",
+      "title": "Med-RLVR: Emerging Medical Reasoning from a 3B base via Reinforcement Learning",
+      "url": "https://arxiv.org/abs/2502.19655",
+      "date": "2025-02",
+      "venue": "arXiv",
+      "source": "https://arxiv.org/abs/2502.19655"
+    },
+    {
+      "id": "paper:lingshu",
+      "type": "Paper",
+      "title": "Lingshu: A Generalist Foundation Model for Multimodal Medical Understanding and Reasoning",
+      "url": "https://arxiv.org/abs/2506.07044",
+      "date": "2025-06",
+      "venue": "arXiv",
+      "source": "https://arxiv.org/abs/2506.07044"
+    },
+    {
+      "id": "paper:medvlthinker",
+      "type": "Paper",
+      "title": "MedVLThinker: Simple Baselines for Multimodal Medical Reasoning",
+      "url": "https://arxiv.org/abs/2508.02669",
+      "date": "2025-08",
+      "venue": "arXiv",
+      "source": "https://arxiv.org/abs/2508.02669"
+    },
+    {
+      "id": "paper:medagentboard",
+      "type": "Paper",
+      "title": "MedAgentBoard: Benchmarking Multi-Agent vs Single-LLM vs Conventional Methods",
+      "url": "https://arxiv.org/abs/2505.12371",
+      "date": "2025-05",
+      "venue": "arXiv",
+      "source": "https://arxiv.org/abs/2505.12371"
+    },
+    {
+      "id": "paper:clinicalbench",
+      "type": "Paper",
+      "title": "ClinicalBench: Can LLMs Beat Traditional ML Models in Clinical Prediction?",
+      "url": "https://arxiv.org/abs/2411.06469",
+      "date": "2024-11",
+      "venue": "arXiv",
+      "source": "https://arxiv.org/abs/2411.06469"
+    },
+    {
+      "id": "paper:medblink",
+      "type": "Paper",
+      "title": "MedBLINK: Probing Basic Perception in Multimodal Medical LLMs",
+      "url": "https://arxiv.org/abs/2508.02951",
+      "date": "2025-08",
+      "venue": "arXiv",
+      "source": "https://arxiv.org/abs/2508.02951"
+    },
+    {
+      "id": "paper:context_clues",
+      "type": "Paper",
+      "title": "Context Clues: Long-Context Foundation Models for Clinical Prediction on EHRs",
+      "url": "https://arxiv.org/abs/2412.16178",
+      "date": "2024-12",
+      "venue": "arXiv",
+      "source": "https://arxiv.org/abs/2412.16178"
+    },
+    {
+      "id": "paper:physicianbench",
+      "type": "Paper",
+      "title": "PhysicianBench: Evaluating LLM Agents in Real-World EHR Environments",
+      "url": "https://arxiv.org/abs/2605.02240",
+      "date": "2026-05",
+      "venue": "arXiv",
+      "source": "https://arxiv.org/abs/2605.02240"
+    },
+    {
+      "id": "paper:pillar0",
+      "type": "Paper",
+      "title": "Pillar-0: A New Frontier for Radiology Foundation Models",
+      "url": "https://arxiv.org/abs/2511.17803",
+      "date": "2025-11",
+      "venue": "arXiv",
+      "source": "https://arxiv.org/abs/2511.17803"
+    },
+    {
+      "id": "paper:curia2",
+      "type": "Paper",
+      "title": "Curia-2: Scaling Self-Supervised Learning for Radiology Foundation Models",
+      "url": "https://arxiv.org/abs/2604.01987",
+      "date": "2026-04",
+      "venue": "arXiv",
+      "source": "https://arxiv.org/abs/2604.01987"
+    },
+    {
+      "id": "paper:atlas2",
+      "type": "Paper",
+      "title": "Atlas 2: Foundation Models for Clinical Deployment (pathology)",
+      "url": "https://arxiv.org/abs/2601.05148",
+      "date": "2026-01",
+      "venue": "arXiv",
+      "source": "https://arxiv.org/abs/2601.05148"
+    },
+    {
+      "id": "paper:threads",
+      "type": "Paper",
+      "title": "THREADS: A Molecular-Driven Slide Foundation Model for Pathology",
+      "url": "https://arxiv.org/abs/2501.16652",
+      "date": "2025-01",
+      "venue": "arXiv",
+      "source": "https://arxiv.org/abs/2501.16652"
+    },
+    {
+      "id": "paper:moozy",
+      "type": "Paper",
+      "title": "MOOZY: A Patient-First Foundation Model for Computational Pathology",
+      "url": "https://arxiv.org/abs/2603.27048",
+      "date": "2026-03",
+      "venue": "arXiv",
+      "source": "https://arxiv.org/abs/2603.27048"
+    },
+    {
+      "id": "paper:anymc3d",
+      "type": "Paper",
+      "title": "Revisiting 2D Foundation Models for Scalable 3D Medical Image Classification (AnyMC3D)",
+      "url": "https://arxiv.org/abs/2512.12887",
+      "date": "2026-05",
+      "venue": "arXiv",
+      "source": "https://arxiv.org/abs/2512.12887"
+    },
+    {
+      "id": "paper:medsam2",
+      "type": "Paper",
+      "title": "MedSAM2: Segment Anything in 3D Medical Images and Videos",
+      "url": "https://arxiv.org/abs/2504.03600",
+      "date": "2025-04",
+      "venue": "arXiv",
+      "source": "https://arxiv.org/abs/2504.03600"
+    },
+    {
+      "id": "paper:dm4ct",
+      "type": "Paper",
+      "title": "DM4CT: Benchmarking Diffusion Models for CT Reconstruction",
+      "url": "https://arxiv.org/abs/2602.18589",
+      "date": "2026-02",
+      "venue": "arXiv",
+      "source": "https://arxiv.org/abs/2602.18589"
+    },
+    {
+      "id": "paper:sumi",
+      "type": "Paper",
+      "title": "SUMI: Distilling Photon-Counting CT into Routine Chest CT via Latent Diffusion",
+      "url": "https://arxiv.org/abs/2604.07329",
+      "date": "2026-04",
+      "venue": "arXiv",
+      "source": "https://arxiv.org/abs/2604.07329"
+    },
+    {
+      "id": "paper:clinhallu",
+      "type": "Paper",
+      "title": "ClinHallu: Stage-Wise Hallucinations in Medical MLLM Reasoning",
+      "url": "https://arxiv.org/abs/2606.14697",
+      "date": "2026-06",
+      "venue": "arXiv",
+      "source": "https://arxiv.org/abs/2606.14697"
+    },
+    {
+      "id": "paper:scanner_shift",
+      "type": "Paper",
+      "title": "Scanner-Induced Domain Shifts Undermine the Robustness of Pathology Foundation Models",
+      "url": "https://arxiv.org/abs/2601.04163",
+      "date": "2026-01",
+      "venue": "arXiv",
+      "source": "https://arxiv.org/abs/2601.04163"
+    },
+    {
+      "id": "paper:convolt",
+      "type": "Paper",
+      "title": "Efficient Conformal Volumetry for Template-Based Segmentation (ConVOLT)",
+      "url": "https://arxiv.org/abs/2603.00798",
+      "date": "2026-02",
+      "venue": "arXiv",
+      "source": "https://arxiv.org/abs/2603.00798"
+    },
+    {
+      "id": "paper:boltz2",
+      "type": "Paper",
+      "title": "Boltz-2: Towards Accurate and Efficient Binding Affinity Prediction",
+      "url": "https://www.biorxiv.org/content/10.1101/2025.06.14.659707v1",
+      "date": "2025-06",
+      "venue": "bioRxiv",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.06.14.659707v1"
+    },
+    {
+      "id": "paper:pearl",
+      "type": "Paper",
+      "title": "Pearl: A Foundation Model for Placing Every Atom in the Right Location",
+      "url": "https://arxiv.org/abs/2510.24670",
+      "date": "2025-10",
+      "venue": "arXiv",
+      "source": "https://arxiv.org/abs/2510.24670"
+    },
+    {
+      "id": "paper:protenix",
+      "type": "Paper",
+      "title": "Protenix: Advancing Structure Prediction Through a Comprehensive AlphaFold3 Reproduction",
+      "url": "https://www.biorxiv.org/content/10.1101/2025.01.08.631967v1",
+      "date": "2025-01",
+      "venue": "bioRxiv (Protenix-v1 update 2026-02)",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.01.08.631967v1"
+    },
+    {
+      "id": "paper:openfold3",
+      "type": "Paper",
+      "title": "OpenFold3: Fully-Open Biomolecular Co-Folding Foundation Model",
+      "url": "https://openfold.io/",
+      "date": "2026-03",
+      "venue": "consortium release",
+      "source": "https://openfold.io/"
+    },
+    {
+      "id": "paper:decaf",
+      "type": "Paper",
+      "title": "Few-step Cofolding with All-Atom Flow Maps (DeCAF)",
+      "url": "https://arxiv.org/abs/2606.08375",
+      "date": "2026-06",
+      "venue": "arXiv",
+      "source": "https://arxiv.org/abs/2606.08375"
+    },
+    {
+      "id": "paper:rfdiffusion2",
+      "type": "Paper",
+      "title": "Atom-level enzyme active-site scaffolding using RFdiffusion2",
+      "url": "https://www.biorxiv.org/content/10.1101/2025.04.09.648075v1",
+      "date": "2025-04",
+      "venue": "bioRxiv / Nature Methods 2026",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.04.09.648075v1"
+    },
+    {
+      "id": "paper:laproteina",
+      "type": "Paper",
+      "title": "La-Proteina: Atomistic Protein Generation via Partially Latent Flow Matching",
+      "url": "https://arxiv.org/abs/2507.09466",
+      "date": "2025-07",
+      "venue": "arXiv",
+      "source": "https://arxiv.org/abs/2507.09466"
+    },
+    {
+      "id": "paper:chai2",
+      "type": "Paper",
+      "title": "Chai-2: Zero-shot Antibody Design in a 24-well Plate",
+      "url": "https://www.biorxiv.org/content/10.1101/2025.07.05.663018v1",
+      "date": "2025-07",
+      "venue": "bioRxiv",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.07.05.663018v1"
+    },
+    {
+      "id": "paper:esm3",
+      "type": "Paper",
+      "title": "Simulating 500 million years of evolution with a language model (ESM3)",
+      "url": "https://www.science.org/doi/10.1126/science.ads0018",
+      "date": "2025-01",
+      "venue": "Science",
+      "source": "https://www.science.org/doi/10.1126/science.ads0018"
+    },
+    {
+      "id": "paper:bioemu",
+      "type": "Paper",
+      "title": "Scalable emulation of protein equilibrium ensembles with generative deep learning (BioEmu)",
+      "url": "https://www.science.org/doi/10.1126/science.adv9817",
+      "date": "2025-07",
+      "venue": "Science",
+      "source": "https://www.science.org/doi/10.1126/science.adv9817"
+    },
+    {
+      "id": "paper:diffdock_l",
+      "type": "Paper",
+      "title": "Deep Confident Steps to New Pockets: Strategies for Docking Generalization (DiffDock-L)",
+      "url": "https://arxiv.org/abs/2402.18396",
+      "date": "2024-02",
+      "venue": "arXiv / ICLR 2024",
+      "source": "https://arxiv.org/abs/2402.18396"
+    },
+    {
+      "id": "paper:apo2mol",
+      "type": "Paper",
+      "title": "Apo2Mol: 3D Molecule Generation via Dynamic Pocket-Aware Diffusion Models",
+      "url": "https://arxiv.org/abs/2511.14559",
+      "date": "2025-11",
+      "venue": "arXiv",
+      "source": "https://arxiv.org/abs/2511.14559"
+    },
+    {
+      "id": "paper:posex",
+      "type": "Paper",
+      "title": "PoseX: AI Defeats Physics Approaches on Protein-Ligand Cross Docking",
+      "url": "https://arxiv.org/abs/2505.01700",
+      "date": "2025-05",
+      "venue": "arXiv",
+      "source": "https://arxiv.org/abs/2505.01700"
+    },
+    {
+      "id": "paper:mozi",
+      "type": "Paper",
+      "title": "Mozi: Governed Autonomy for Drug-Discovery LLM Agents",
+      "url": "https://arxiv.org/abs/2603.03655",
+      "date": "2026-03",
+      "venue": "arXiv",
+      "source": "https://arxiv.org/abs/2603.03655"
+    },
+    {
+      "id": "paper:evo2",
+      "type": "Paper",
+      "title": "Genome modeling and design across all domains of life with Evo 2",
+      "url": "https://www.nature.com/articles/s41586-026-10176-5",
+      "date": "2026 (preprint 2025-02)",
+      "venue": "Nature",
+      "source": "https://www.nature.com/articles/s41586-026-10176-5"
+    },
+    {
+      "id": "paper:alphagenome",
+      "type": "Paper",
+      "title": "AlphaGenome: Advancing Regulatory Variant Effect Prediction with a Unified DNA Sequence Model",
+      "url": "https://www.nature.com/articles/s41586-025-10014-0",
+      "date": "2026-01 (preprint 2025-06)",
+      "venue": "Nature",
+      "source": "https://www.nature.com/articles/s41586-025-10014-0"
+    },
+    {
+      "id": "paper:state",
+      "type": "Paper",
+      "title": "STATE: Predicting Cellular Responses to Perturbation (Arc virtual cell model)",
+      "url": "https://www.biorxiv.org/content/10.1101/2025.06.26.661135v1",
+      "date": "2025-06",
+      "venue": "bioRxiv",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.06.26.661135v1"
+    },
+    {
+      "id": "paper:c2s_scale",
+      "type": "Paper",
+      "title": "Cell2Sentence-Scale (C2S-Scale 27B): Scaling LLMs for Single-Cell Biology",
+      "url": "https://www.biorxiv.org/content/10.1101/2025.04.14.648850v2",
+      "date": "2025-10",
+      "venue": "bioRxiv",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.04.14.648850v2"
+    },
+    {
+      "id": "paper:lingshu_cell",
+      "type": "Paper",
+      "title": "Lingshu-Cell: A Generative Cellular World Model for Transcriptome Modeling",
+      "url": "https://arxiv.org/abs/2603.25240",
+      "date": "2026-03",
+      "venue": "arXiv",
+      "source": "https://arxiv.org/abs/2603.25240"
+    },
+    {
+      "id": "paper:geneb",
+      "type": "Paper",
+      "title": "GENEB: Why Genomic Models Are Hard to Compare",
+      "url": "https://arxiv.org/abs/2606.04525",
+      "date": "2026-06",
+      "venue": "arXiv",
+      "source": "https://arxiv.org/abs/2606.04525"
+    },
+    {
+      "id": "paper:biomni",
+      "type": "Paper",
+      "title": "Biomni: A General-Purpose Biomedical AI Agent",
+      "url": "https://www.biorxiv.org/content/10.1101/2025.05.30.656746v1",
+      "date": "2025-05 (Science 2026)",
+      "venue": "bioRxiv / Science",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.05.30.656746v1"
+    },
+    {
+      "id": "paper:ai_coscientist",
+      "type": "Paper",
+      "title": "Towards an AI Co-Scientist (multi-agent hypothesis generation)",
+      "url": "https://arxiv.org/abs/2502.18864",
+      "date": "2025-02",
+      "venue": "arXiv",
+      "source": "https://arxiv.org/abs/2502.18864"
+    },
+    {
+      "id": "paper:robin",
+      "type": "Paper",
+      "title": "Robin: A Multi-Agent System for Automating Scientific Discovery",
+      "url": "https://www.nature.com/articles/s41586-026-10652-y",
+      "date": "2026",
+      "venue": "Nature",
+      "source": "https://www.nature.com/articles/s41586-026-10652-y"
+    },
+    {
+      "id": "paper:txagent",
+      "type": "Paper",
+      "title": "TxAgent: An AI Agent for Therapeutic Reasoning Across a Universe of Tools",
+      "url": "https://arxiv.org/abs/2503.10970",
+      "date": "2025-03",
+      "venue": "arXiv",
+      "source": "https://arxiv.org/abs/2503.10970"
+    },
+    {
+      "id": "paper:baseline_critique",
+      "type": "Paper",
+      "title": "Deep-learning models for perturbation prediction fail to outperform simple linear baselines",
+      "url": "https://www.nature.com/articles/s41592-025-02772-6",
+      "date": "2025",
+      "venue": "Nature Methods",
+      "source": "https://www.nature.com/articles/s41592-025-02772-6"
+    },
+    {
+      "id": "paper:assaybench",
+      "type": "Paper",
+      "title": "AssayBench: Assay-Level Virtual-Cell Benchmark for LLMs and Agents",
+      "url": "https://arxiv.org/abs/2605.10876",
+      "date": "2026-05",
+      "venue": "arXiv",
+      "source": "https://arxiv.org/abs/2605.10876"
+    },
+    {
+      "id": "method:mai_dxo",
+      "type": "Method",
+      "name": "MAI Diagnostic Orchestrator (MAI-DxO)",
+      "definition": "Model-agnostic virtual physician panel doing cost-aware sequential test selection.",
+      "source": "https://arxiv.org/abs/2506.22405"
+    },
+    {
+      "id": "method:large_verifier_system",
+      "type": "Method",
+      "name": "Large Verifier System (patient simulator + rubric generator)",
+      "definition": "Dynamic interactive verifier giving RL reward beyond static answer keys.",
+      "source": "https://arxiv.org/abs/2509.02208"
+    },
+    {
+      "id": "method:rlvr_medicine",
+      "type": "Method",
+      "name": "RLVR for medical reasoning",
+      "definition": "RL from verifiable (MCQA) rewards eliciting emergent medical chain-of-thought.",
+      "source": "https://arxiv.org/abs/2502.19655"
+    },
+    {
+      "id": "method:cofolding_affinity",
+      "type": "Method",
+      "name": "Co-folding with dedicated affinity head",
+      "definition": "All-atom complex prediction jointly with FEP-approaching binding affinity.",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.06.14.659707v1"
+    },
+    {
+      "id": "method:atomized_scaffolding",
+      "type": "Method",
+      "name": "Atomized-motif scaffolding (RFdiffusion2)",
+      "definition": "Flow-matching generative design from atom-level functional-group geometries.",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.04.09.648075v1"
+    },
+    {
+      "id": "method:latent_flow_protein",
+      "type": "Method",
+      "name": "Partially-latent flow matching (La-Proteina)",
+      "definition": "Explicit backbone + per-residue latents for atomistic protein generation.",
+      "source": "https://arxiv.org/abs/2507.09466"
+    },
+    {
+      "id": "method:flow_map_distill",
+      "type": "Method",
+      "name": "All-atom flow maps (DeCAF)",
+      "definition": "Distill diffusion co-folding into few-step flow maps with reward-guided search.",
+      "source": "https://arxiv.org/abs/2606.08375"
+    },
+    {
+      "id": "method:ensemble_emulation",
+      "type": "Method",
+      "name": "Equilibrium-ensemble emulation (BioEmu)",
+      "definition": "Generative emulation of protein conformational ensembles vs single structures.",
+      "source": "https://www.science.org/doi/10.1126/science.adv9817"
+    },
+    {
+      "id": "method:state_embed_transition",
+      "type": "Method",
+      "name": "State Embedding + State Transition (STATE)",
+      "definition": "Set-level transformer mapping perturbations to transcriptomic shifts in latent space.",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.06.26.661135v1"
+    },
+    {
+      "id": "method:cell_sentences",
+      "type": "Method",
+      "name": "Cell2Sentence (C2S)",
+      "definition": "Encode scRNA-seq as ordered gene 'sentences' for LLM reasoning over cells.",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.04.14.648850v2"
+    },
+    {
+      "id": "method:tooluniverse",
+      "type": "Method",
+      "name": "ToolUniverse + ToolRAG (TxAgent)",
+      "definition": "Retrieval over 211 biomedical tools for multi-step therapeutic reasoning.",
+      "source": "https://arxiv.org/abs/2503.10970"
+    },
+    {
+      "id": "method:conformal_volumetry",
+      "type": "Method",
+      "name": "Conformal volumetry (ConVOLT)",
+      "definition": "Deformation-conditioned conformal prediction for finite-sample-valid clinical volume intervals.",
+      "source": "https://arxiv.org/abs/2603.00798"
+    },
+    {
+      "id": "model:medgemma",
+      "type": "Model",
+      "name": "MedGemma / MedGemma 1.5",
+      "weights": "open",
+      "params": "4B & 27B (Gemma-3)",
+      "date": "2025-05 / 2026-04",
+      "source": "https://arxiv.org/abs/2604.05081"
+    },
+    {
+      "id": "model:baichuan_m2",
+      "type": "Model",
+      "name": "Baichuan-M2",
+      "weights": "open",
+      "params": "32B",
+      "date": "2025-09",
+      "source": "https://arxiv.org/abs/2509.02208"
+    },
+    {
+      "id": "model:lingshu",
+      "type": "Model",
+      "name": "Lingshu",
+      "weights": "open",
+      "params": "7B/32B medical VLM",
+      "date": "2025-06",
+      "source": "https://arxiv.org/abs/2506.07044"
+    },
+    {
+      "id": "model:evo2",
+      "type": "Model",
+      "name": "Evo 2",
+      "weights": "open",
+      "params": "7B & 40B, 9.3T bp, 1M-token context",
+      "date": "2025-02",
+      "source": "https://www.nature.com/articles/s41586-026-10176-5"
+    },
+    {
+      "id": "model:alphagenome",
+      "type": "Model",
+      "name": "AlphaGenome",
+      "weights": "closed (API, non-commercial)",
+      "params": "1Mb context, base-pair resolution",
+      "date": "2026-01",
+      "source": "https://www.nature.com/articles/s41586-025-10014-0"
+    },
+    {
+      "id": "model:boltz2",
+      "type": "Model",
+      "name": "Boltz-2",
+      "weights": "open (MIT license)",
+      "params": "all-atom co-folding + affinity",
+      "date": "2025-06",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.06.14.659707v1"
+    },
+    {
+      "id": "model:protenix_v1",
+      "type": "Model",
+      "name": "Protenix-v1",
+      "weights": "open (Apache-2.0)",
+      "params": "368M",
+      "date": "2026-02",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.01.08.631967v1"
+    },
+    {
+      "id": "model:esm3",
+      "type": "Model",
+      "name": "ESM3",
+      "weights": "tiered (300M open / 6B API)",
+      "params": "98B (largest)",
+      "date": "2025-01",
+      "source": "https://www.science.org/doi/10.1126/science.ads0018"
+    },
+    {
+      "id": "model:state",
+      "type": "Model",
+      "name": "STATE / State Embedding+Transition",
+      "weights": "open",
+      "params": "trained on ~270M cells",
+      "date": "2025-06",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.06.26.661135v1"
+    },
+    {
+      "id": "model:alphafold3",
+      "type": "Model",
+      "name": "AlphaFold3",
+      "weights": "closed (gated weights)",
+      "params": "all-atom co-folding baseline",
+      "date": "2024-05",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.06.14.659707v1"
+    },
+    {
+      "id": "model:c2s_scale",
+      "type": "Model",
+      "name": "C2S-Scale (Gemma-2 27B)",
+      "weights": "open",
+      "params": "27B LLM-as-cell",
+      "date": "2025-10",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.04.14.648850v2"
+    },
+    {
+      "id": "bench:sdbench",
+      "type": "Benchmark",
+      "name": "SDBench (Sequential Diagnosis Benchmark)",
+      "measures": "304 NEJM CPC cases as interactive stepwise diagnosis w/ gatekeeper + cost",
+      "source": "https://arxiv.org/abs/2506.22405"
+    },
+    {
+      "id": "bench:healthbench",
+      "type": "Benchmark",
+      "name": "HealthBench / HealthBench Hard",
+      "measures": "5000 physician-written health conversations w/ rubrics; OpenAI",
+      "source": "https://arxiv.org/abs/2509.02208"
+    },
+    {
+      "id": "bench:medqa",
+      "type": "Benchmark",
+      "name": "MedQA (USMLE)",
+      "measures": "static medical MCQA; now ~saturated (~95%)",
+      "source": "https://arxiv.org/abs/2604.05081"
+    },
+    {
+      "id": "bench:medxpertqa",
+      "type": "Benchmark",
+      "name": "MedXpertQA",
+      "measures": "4460 expert-level questions, 17 specialties, text+multimodal",
+      "source": "https://arxiv.org/abs/2508.02951"
+    },
+    {
+      "id": "bench:ehrshot",
+      "type": "Benchmark",
+      "name": "EHRSHOT",
+      "measures": "few-shot benchmark over structured EHR foundation models",
+      "source": "https://arxiv.org/abs/2412.16178"
+    },
+    {
+      "id": "bench:posebusters",
+      "type": "Benchmark",
+      "name": "PoseBusters / Runs N' Poses",
+      "measures": "physical-validity-aware protein-ligand pose benchmark",
+      "source": "https://arxiv.org/abs/2510.24670"
+    },
+    {
+      "id": "bench:dockgen",
+      "type": "Benchmark",
+      "name": "DockGen",
+      "measures": "docking generalization to unseen protein domains",
+      "source": "https://arxiv.org/abs/2402.18396"
+    },
+    {
+      "id": "bench:vcc",
+      "type": "Benchmark",
+      "name": "Virtual Cell Challenge (H1 CRISPRi)",
+      "measures": "Arc open benchmark for single-cell perturbation prediction",
+      "source": "https://arxiv.org/abs/2603.25240"
+    },
+    {
+      "id": "bench:tahoe100m",
+      "type": "Benchmark",
+      "name": "Tahoe-100M",
+      "measures": "100M drug-perturbed transcriptomes, 1100 molecules x 50 lines (dataset)",
+      "source": "https://arxiv.org/abs/2605.10876"
+    },
+    {
+      "id": "bench:curiabench",
+      "type": "Benchmark",
+      "name": "CuriaBench",
+      "measures": "2D-slice + 3D-volumetric radiology FM benchmark",
+      "source": "https://arxiv.org/abs/2604.01987"
+    },
+    {
+      "id": "concept:sequential_diagnosis",
+      "type": "Concept",
+      "name": "sequential_diagnosis",
+      "definition": "Interactive, cost-aware, multi-step diagnosis vs static one-shot vignette QA.",
+      "source": "agent-grounded 2026-07-17 (see medical.md)"
+    },
+    {
+      "id": "concept:rlvr",
+      "type": "Concept",
+      "name": "rlvr",
+      "definition": "Reinforcement learning from verifiable rewards; reasoning emerges from checkable signals.",
+      "source": "agent-grounded 2026-07-17 (see medical.md)"
+    },
+    {
+      "id": "concept:dynamic_verifier",
+      "type": "Concept",
+      "name": "dynamic_verifier",
+      "definition": "Interactive verifier / patient-simulator + rubric generator replacing static answer keys.",
+      "source": "agent-grounded 2026-07-17 (see medical.md)"
+    },
+    {
+      "id": "concept:conformational_ensembles",
+      "type": "Concept",
+      "name": "conformational_ensembles",
+      "definition": "Predicting equilibrium ensembles / dynamics, not a single static structure (named frontier).",
+      "source": "agent-grounded 2026-07-17 (see medical.md)"
+    },
+    {
+      "id": "concept:affinity_fep_parity",
+      "type": "Concept",
+      "name": "affinity_fep_parity",
+      "definition": "Binding-affinity prediction approaching free-energy-perturbation accuracy at ML speed.",
+      "source": "agent-grounded 2026-07-17 (see medical.md)"
+    },
+    {
+      "id": "concept:zeroshot_binder_design",
+      "type": "Concept",
+      "name": "zeroshot_binder_design",
+      "definition": "De novo antibody/binder design from target site alone, no known starting binder.",
+      "source": "agent-grounded 2026-07-17 (see medical.md)"
+    },
+    {
+      "id": "concept:atomized_motif",
+      "type": "Concept",
+      "name": "atomized_motif",
+      "definition": "Scaffolding arbitrary atom-level functional-group geometries (enzyme design from mechanism).",
+      "source": "agent-grounded 2026-07-17 (see medical.md)"
+    },
+    {
+      "id": "concept:virtual_cell",
+      "type": "Concept",
+      "name": "virtual_cell",
+      "definition": "In-silico cell model predicting transcriptomic response to genetic/chemical/cytokine perturbation.",
+      "source": "agent-grounded 2026-07-17 (see medical.md)"
+    },
+    {
+      "id": "concept:variant_effect",
+      "type": "Concept",
+      "name": "variant_effect",
+      "definition": "Zero-shot prediction of functional impact of genetic variants (coding + noncoding).",
+      "source": "agent-grounded 2026-07-17 (see medical.md)"
+    },
+    {
+      "id": "concept:fm_vs_baseline",
+      "type": "Concept",
+      "name": "fm_vs_baseline",
+      "definition": "Debate: do bio/clinical foundation models actually beat simple/linear/classical baselines?",
+      "source": "agent-grounded 2026-07-17 (see medical.md)"
+    },
+    {
+      "id": "concept:domain_shift",
+      "type": "Concept",
+      "name": "domain_shift",
+      "definition": "Scanner/site/distribution shift degrades foundation-model robustness & calibration.",
+      "source": "agent-grounded 2026-07-17 (see medical.md)"
+    },
+    {
+      "id": "concept:benchmark_saturation",
+      "type": "Concept",
+      "name": "benchmark_saturation",
+      "definition": "Static MCQA benchmarks saturate and stop measuring clinical ability; leakage risk.",
+      "source": "agent-grounded 2026-07-17 (see medical.md)"
+    },
+    {
+      "id": "concept:test_time_compute",
+      "type": "Concept",
+      "name": "test_time_compute",
+      "definition": "Inference-time search / distillation as a new scaling axis for structure & design.",
+      "source": "agent-grounded 2026-07-17 (see medical.md)"
+    },
+    {
+      "id": "concept:medical_hallucination",
+      "type": "Concept",
+      "name": "medical_hallucination",
+      "definition": "Source-level (visual/knowledge/reasoning) hallucination control for clinical MLLMs.",
+      "source": "agent-grounded 2026-07-17 (see medical.md)"
+    },
+    {
+      "id": "concept:grader_variance",
+      "type": "Concept",
+      "name": "grader_variance",
+      "definition": "LLM-as-judge scores depend on grader choice; single-grader SOTA claims are unstable.",
+      "source": "agent-grounded 2026-07-17 (see medical.md)"
+    },
+    {
+      "id": "claim:mai_dxo_855",
+      "type": "Claim",
+      "statement": "MAI-DxO reaches 85.5% diagnostic accuracy on SDBench vs ~20% for 21 generalist physicians, at ~70% lower cost than bare o3.",
+      "asserted_by": "paper:mai_dxo",
+      "source": "https://arxiv.org/abs/2506.22405"
+    },
+    {
+      "id": "claim:baichuan_m2_open_sota",
+      "type": "Claim",
+      "statement": "Baichuan-M2 (32B) scores >32 on HealthBench Hard, best open-source and previously exceeded only by GPT-5.",
+      "asserted_by": "paper:baichuan_m2",
+      "source": "https://arxiv.org/abs/2509.02208"
+    },
+    {
+      "id": "claim:baichuan_m3_gpt52",
+      "type": "Claim",
+      "statement": "Baichuan-M3 significantly outperforms GPT-5.2 in clinical inquiry, advisory and safety (numbers not in abstract).",
+      "asserted_by": "paper:baichuan_m3",
+      "source": "https://arxiv.org/abs/2602.06570"
+    },
+    {
+      "id": "claim:medgemma_medqa",
+      "type": "Claim",
+      "statement": "MedGemma 27B scores 87.7% on MedQA at ~1/10 the inference cost of DeepSeek-R1; MedGemma 1.5 adds 3D/WSI/EHR gains.",
+      "asserted_by": "paper:medgemma15",
+      "source": "https://arxiv.org/abs/2604.05081"
+    },
+    {
+      "id": "claim:amie_noninferior",
+      "type": "Claim",
+      "statement": "AMIE is non-inferior to and on several axes better than 21 PCPs in blinded virtual OSCE disease-management scenarios.",
+      "asserted_by": "paper:amie",
+      "source": "https://arxiv.org/abs/2503.06074"
+    },
+    {
+      "id": "claim:med_rlvr_ood",
+      "type": "Claim",
+      "statement": "Med-RLVR: reasoning emerges from a 3B base via RLVR, matching SFT in-distribution and +8 points out-of-distribution.",
+      "asserted_by": "paper:med_rlvr",
+      "source": "https://arxiv.org/abs/2502.19655"
+    },
+    {
+      "id": "claim:medagentboard_contrarian",
+      "type": "Claim",
+      "statement": "Multi-agent collaboration does NOT consistently beat strong single LLMs or specialized classical ML.",
+      "asserted_by": "paper:medagentboard",
+      "source": "https://arxiv.org/abs/2505.12371"
+    },
+    {
+      "id": "claim:clinicalbench_contrarian",
+      "type": "Claim",
+      "statement": "General and medical LLMs still fail to beat SVM/XGBoost on structured clinical prediction.",
+      "asserted_by": "paper:clinicalbench",
+      "source": "https://arxiv.org/abs/2411.06469"
+    },
+    {
+      "id": "claim:medblink_contrarian",
+      "type": "Claim",
+      "statement": "Best medical MLLM scores ~65% vs 96% human on trivial perceptual checks (orientation/contrast).",
+      "asserted_by": "paper:medblink",
+      "source": "https://arxiv.org/abs/2508.02951"
+    },
+    {
+      "id": "claim:pillar0_beats",
+      "type": "Claim",
+      "statement": "Pillar-0 (native-volumetric radiology FM) beats MedGemma/MedImageInsight/Lingshu/Merlin by 7.8-15.8 AUROC, best on 319/366 tasks.",
+      "asserted_by": "paper:pillar0",
+      "source": "https://arxiv.org/abs/2511.17803"
+    },
+    {
+      "id": "claim:atlas2_trilemma",
+      "type": "Claim",
+      "statement": "Atlas 2 is SOTA across 80 public pathology benchmarks jointly on prediction, robustness AND resource efficiency.",
+      "asserted_by": "paper:atlas2",
+      "source": "https://arxiv.org/abs/2601.05148"
+    },
+    {
+      "id": "claim:moozy_efficient",
+      "type": "Claim",
+      "statement": "MOOZY beats TITAN (+5.5-7.8%) and PRISM (+8.8-10.7%) with 85.8M params, 14x smaller than Prov-GigaPath.",
+      "asserted_by": "paper:moozy",
+      "source": "https://arxiv.org/abs/2603.27048"
+    },
+    {
+      "id": "claim:anymc3d_contrarian",
+      "type": "Claim",
+      "statement": "2D foundation models surpass 3D architectures for 3D classification, and general FMs match medical-specific FMs once adapted.",
+      "asserted_by": "paper:anymc3d",
+      "source": "https://arxiv.org/abs/2512.12887"
+    },
+    {
+      "id": "claim:scanner_shift_contrarian",
+      "type": "Claim",
+      "statement": "Scanner-induced domain shift degrades pathology FM embedding alignment and calibration even when AUC looks stable.",
+      "asserted_by": "paper:scanner_shift",
+      "source": "https://arxiv.org/abs/2601.04163"
+    },
+    {
+      "id": "claim:dm4ct_honest",
+      "type": "Claim",
+      "statement": "Diffusion priors underperform expectations for real CT reconstruction under correlated noise/geometry; reconstruction is not solved.",
+      "asserted_by": "paper:dm4ct",
+      "source": "https://arxiv.org/abs/2602.18589"
+    },
+    {
+      "id": "claim:boltz2_fep",
+      "type": "Claim",
+      "statement": "Boltz-2 is the first ML model to approach FEP-level binding-affinity accuracy while ~1000x cheaper.",
+      "asserted_by": "paper:boltz2",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.06.14.659707v1"
+    },
+    {
+      "id": "claim:pearl_posebusters",
+      "type": "Claim",
+      "statement": "Pearl improves +14.5% (Runs N' Poses) and +14.2% (PoseBusters) over next-best co-folding vs AF3.",
+      "asserted_by": "paper:pearl",
+      "source": "https://arxiv.org/abs/2510.24670"
+    },
+    {
+      "id": "claim:protenix_beats_af3",
+      "type": "Claim",
+      "statement": "Protenix-v1 is the first fully open-source predictor to outperform AF3 at the same data cutoff, scale and inference budget.",
+      "asserted_by": "paper:protenix",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.01.08.631967v1"
+    },
+    {
+      "id": "claim:rfd2_enzymes",
+      "type": "Claim",
+      "statement": "RFdiffusion2 scaffolds all 41 enzyme active sites in a benchmark (vs 16/41 prior DL) via atomized-motif flow matching.",
+      "asserted_by": "paper:rfdiffusion2",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.04.09.648075v1"
+    },
+    {
+      "id": "claim:chai2_antibody",
+      "type": "Claim",
+      "statement": "Chai-2 achieves ~16% zero-shot de novo antibody hit rate (>100x prior), >=1 hit for 50% of 52 targets with <=20 designs.",
+      "asserted_by": "paper:chai2",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.07.05.663018v1"
+    },
+    {
+      "id": "claim:esm3_gfp",
+      "type": "Claim",
+      "statement": "ESM3 (98B) generated esmGFP at 58% identity to nearest natural fluorescent protein ('500M years of evolution').",
+      "asserted_by": "paper:esm3",
+      "source": "https://www.science.org/doi/10.1126/science.ads0018"
+    },
+    {
+      "id": "claim:bioemu_ensembles",
+      "type": "Claim",
+      "statement": "BioEmu emulates equilibrium ensembles up to 100,000x faster than MD, capturing cryptic pockets & free energies to ~1 kcal/mol.",
+      "asserted_by": "paper:bioemu",
+      "source": "https://www.science.org/doi/10.1126/science.adv9817"
+    },
+    {
+      "id": "claim:posex_contrarian",
+      "type": "Claim",
+      "statement": "On cross-docking, AI (co-folding/DL) defeats physics-based approaches.",
+      "asserted_by": "paper:posex",
+      "source": "https://arxiv.org/abs/2505.01700"
+    },
+    {
+      "id": "claim:evo2_variant",
+      "type": "Claim",
+      "statement": "Evo 2 predicts functional impact of variants (incl. BRCA1, noncoding pathogenic) zero-shot and designs genome-scale sequences.",
+      "asserted_by": "paper:evo2",
+      "source": "https://www.nature.com/articles/s41586-026-10176-5"
+    },
+    {
+      "id": "claim:alphagenome_beats",
+      "type": "Claim",
+      "statement": "AlphaGenome beats top external models on 22/24 single-sequence and 24/26 variant-effect evaluations; not for personal disease-trait prediction.",
+      "asserted_by": "paper:alphagenome",
+      "source": "https://www.nature.com/articles/s41586-025-10014-0"
+    },
+    {
+      "id": "claim:state_de",
+      "type": "Claim",
+      "statement": "STATE improves perturbation discrimination >50% and roughly doubles DE-gene identification accuracy vs prior models.",
+      "asserted_by": "paper:state",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.06.26.661135v1"
+    },
+    {
+      "id": "claim:c2s_wetlab",
+      "type": "Claim",
+      "statement": "C2S-Scale (27B) predicted a CK2-inhibitor + low-dose interferon combo that was wet-lab validated to turn tumors from cold to hot.",
+      "asserted_by": "paper:c2s_scale",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.04.14.648850v2"
+    },
+    {
+      "id": "claim:geneb_contrarian",
+      "type": "Claim",
+      "statement": "Genomic-FM aggregate leaderboards are unstable; rankings flip across categories and scaling gives only modest inconsistent gains.",
+      "asserted_by": "paper:geneb",
+      "source": "https://arxiv.org/abs/2606.04525"
+    },
+    {
+      "id": "claim:baseline_contrarian",
+      "type": "Claim",
+      "statement": "Single-cell foundation/DL models fail to beat simple linear/additive baselines on perturbation prediction.",
+      "asserted_by": "paper:baseline_critique",
+      "source": "https://www.nature.com/articles/s41592-025-02772-6"
+    },
+    {
+      "id": "claim:assaybench_contrarian",
+      "type": "Claim",
+      "statement": "On assay-level virtual-cell tasks, zero-shot generalist LLMs beat biology-specific LLMs and trainable baselines, all far from ceiling.",
+      "asserted_by": "paper:assaybench",
+      "source": "https://arxiv.org/abs/2605.10876"
+    },
+    {
+      "id": "claim:biomni_general",
+      "type": "Claim",
+      "statement": "Biomni generalizes across biomedical tasks without task-specific tuning; adopted by >15,000 scientists in 9 months.",
+      "asserted_by": "paper:biomni",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.05.30.656746v1"
+    },
+    {
+      "id": "claim:coscientist_wetlab",
+      "type": "Claim",
+      "statement": "The AI co-scientist proposed AML drug-repurposing and fibrosis targets subsequently validated in vitro / in organoids.",
+      "asserted_by": "paper:ai_coscientist",
+      "source": "https://arxiv.org/abs/2502.18864"
+    },
+    {
+      "id": "claim:robin_amd",
+      "type": "Claim",
+      "statement": "Robin autonomously identified ripasudil (ROCK inhibitor) as a candidate for dry age-related macular degeneration.",
+      "asserted_by": "paper:robin",
+      "source": "https://www.nature.com/articles/s41586-026-10652-y"
+    },
+    {
+      "id": "claim:txagent_tools",
+      "type": "Claim",
+      "statement": "TxAgent reasons over 211 tools (ToolUniverse + ToolRAG) and beats DeepSeek-R1 671B on therapeutic-reasoning tasks.",
+      "asserted_by": "paper:txagent",
+      "source": "https://arxiv.org/abs/2503.10970"
+    }
+  ],
+  "relations": [
+    {
+      "from": "D2",
+      "rel": "domain_has_methodology",
+      "to": "meth:foundation_models",
+      "source": "docs/ontology/FRONTIER_KNOWLEDGE_LEDGER_2026-07-17.md"
+    },
+    {
+      "from": "D2",
+      "rel": "domain_has_methodology",
+      "to": "meth:diffusion_flow",
+      "source": "docs/ontology/FRONTIER_KNOWLEDGE_LEDGER_2026-07-17.md"
+    },
+    {
+      "from": "D2",
+      "rel": "domain_has_methodology",
+      "to": "meth:rl_verifiable",
+      "source": "docs/ontology/FRONTIER_KNOWLEDGE_LEDGER_2026-07-17.md"
+    },
+    {
+      "from": "D2",
+      "rel": "domain_has_methodology",
+      "to": "meth:agentic",
+      "source": "docs/ontology/FRONTIER_KNOWLEDGE_LEDGER_2026-07-17.md"
+    },
+    {
+      "from": "D2",
+      "rel": "domain_has_methodology",
+      "to": "meth:uncertainty",
+      "source": "docs/ontology/FRONTIER_KNOWLEDGE_LEDGER_2026-07-17.md"
+    },
+    {
+      "from": "D2",
+      "rel": "domain_has_methodology",
+      "to": "meth:generative_design",
+      "source": "docs/ontology/FRONTIER_KNOWLEDGE_LEDGER_2026-07-17.md"
+    },
+    {
+      "from": "D2",
+      "rel": "domain_has_methodology",
+      "to": "meth:retrieval_rag",
+      "source": "docs/ontology/FRONTIER_KNOWLEDGE_LEDGER_2026-07-17.md"
+    },
+    {
+      "from": "D2",
+      "rel": "domain_has_methodology",
+      "to": "meth:cofolding",
+      "source": "docs/ontology/FRONTIER_KNOWLEDGE_LEDGER_2026-07-17.md"
+    },
+    {
+      "from": "person:harsha_nori",
+      "rel": "affiliated_with",
+      "to": "lab:microsoft_ai",
+      "source": "agent-grounded 2026-07-17"
+    },
+    {
+      "from": "person:hoifung_poon",
+      "rel": "affiliated_with",
+      "to": "lab:microsoft_ai",
+      "source": "agent-grounded 2026-07-17"
+    },
+    {
+      "from": "person:vivek_natarajan",
+      "rel": "affiliated_with",
+      "to": "lab:google_deepmind_health",
+      "source": "agent-grounded 2026-07-17"
+    },
+    {
+      "from": "person:khaled_saab",
+      "rel": "affiliated_with",
+      "to": "lab:google_deepmind_health",
+      "source": "agent-grounded 2026-07-17"
+    },
+    {
+      "from": "person:andrew_sellergren",
+      "rel": "affiliated_with",
+      "to": "lab:google_deepmind_health",
+      "source": "agent-grounded 2026-07-17"
+    },
+    {
+      "from": "person:nigam_shah",
+      "rel": "affiliated_with",
+      "to": "lab:stanford_shah_re",
+      "source": "agent-grounded 2026-07-17"
+    },
+    {
+      "from": "person:michael_wornow",
+      "rel": "affiliated_with",
+      "to": "lab:stanford_shah_re",
+      "source": "agent-grounded 2026-07-17"
+    },
+    {
+      "from": "person:regina_barzilay",
+      "rel": "affiliated_with",
+      "to": "lab:mit_jameel",
+      "source": "agent-grounded 2026-07-17"
+    },
+    {
+      "from": "person:tommi_jaakkola",
+      "rel": "affiliated_with",
+      "to": "lab:mit_jameel",
+      "source": "agent-grounded 2026-07-17"
+    },
+    {
+      "from": "person:gabriele_corso",
+      "rel": "affiliated_with",
+      "to": "lab:mit_jameel",
+      "source": "agent-grounded 2026-07-17"
+    },
+    {
+      "from": "person:jeremy_wohlwend",
+      "rel": "affiliated_with",
+      "to": "lab:mit_jameel",
+      "source": "agent-grounded 2026-07-17"
+    },
+    {
+      "from": "person:david_baker",
+      "rel": "affiliated_with",
+      "to": "lab:ipd_baker",
+      "source": "agent-grounded 2026-07-17"
+    },
+    {
+      "from": "person:john_jumper",
+      "rel": "affiliated_with",
+      "to": "lab:isomorphic",
+      "source": "agent-grounded 2026-07-17"
+    },
+    {
+      "from": "person:demis_hassabis",
+      "rel": "affiliated_with",
+      "to": "lab:isomorphic",
+      "source": "agent-grounded 2026-07-17"
+    },
+    {
+      "from": "person:alex_rives",
+      "rel": "affiliated_with",
+      "to": "lab:evolutionaryscale",
+      "source": "agent-grounded 2026-07-17"
+    },
+    {
+      "from": "person:patrick_hsu",
+      "rel": "affiliated_with",
+      "to": "lab:arc_institute",
+      "source": "agent-grounded 2026-07-17"
+    },
+    {
+      "from": "person:brian_hie",
+      "rel": "affiliated_with",
+      "to": "lab:arc_institute",
+      "source": "agent-grounded 2026-07-17"
+    },
+    {
+      "from": "person:frank_noe",
+      "rel": "affiliated_with",
+      "to": "lab:msr_noe",
+      "source": "agent-grounded 2026-07-17"
+    },
+    {
+      "from": "person:marinka_zitnik",
+      "rel": "affiliated_with",
+      "to": "lab:zitnik",
+      "source": "agent-grounded 2026-07-17"
+    },
+    {
+      "from": "person:jure_leskovec",
+      "rel": "affiliated_with",
+      "to": "lab:stanford_shah_re",
+      "source": "agent-grounded 2026-07-17"
+    },
+    {
+      "from": "person:kexin_huang",
+      "rel": "affiliated_with",
+      "to": "lab:stanford_shah_re",
+      "source": "agent-grounded 2026-07-17"
+    },
+    {
+      "from": "person:sam_rodriques",
+      "rel": "affiliated_with",
+      "to": "lab:futurehouse",
+      "source": "agent-grounded 2026-07-17"
+    },
+    {
+      "from": "person:faisal_mahmood",
+      "rel": "affiliated_with",
+      "to": "lab:mahmood",
+      "source": "agent-grounded 2026-07-17"
+    },
+    {
+      "from": "person:nate_gruver",
+      "rel": "affiliated_with",
+      "to": "lab:genesis_tx",
+      "source": "agent-grounded 2026-07-17"
+    },
+    {
+      "from": "person:karsten_kreis",
+      "rel": "affiliated_with",
+      "to": "lab:nvidia_bio",
+      "source": "agent-grounded 2026-07-17"
+    },
+    {
+      "from": "person:wolfgang_huber",
+      "rel": "affiliated_with",
+      "to": "lab:embl_huber",
+      "source": "agent-grounded 2026-07-17"
+    },
+    {
+      "from": "person:yuyin_zhou",
+      "rel": "affiliated_with",
+      "to": "lab:ucsc_zhou",
+      "source": "agent-grounded 2026-07-17"
+    },
+    {
+      "from": "person:danielle_bitterman",
+      "rel": "affiliated_with",
+      "to": "lab:mahmood",
+      "source": "agent-grounded 2026-07-17"
+    },
+    {
+      "from": "paper:mai_dxo",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2506.22405"
+    },
+    {
+      "from": "person:harsha_nori",
+      "rel": "authored",
+      "to": "paper:mai_dxo",
+      "source": "https://arxiv.org/abs/2506.22405"
+    },
+    {
+      "from": "paper:mai_dxo",
+      "rel": "applies_methodology",
+      "to": "meth:agentic",
+      "source": "https://arxiv.org/abs/2506.22405"
+    },
+    {
+      "from": "paper:baichuan_m2",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2509.02208"
+    },
+    {
+      "from": "paper:baichuan_m2",
+      "rel": "applies_methodology",
+      "to": "meth:rl_verifiable",
+      "source": "https://arxiv.org/abs/2509.02208"
+    },
+    {
+      "from": "paper:baichuan_m3",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2602.06570"
+    },
+    {
+      "from": "paper:baichuan_m3",
+      "rel": "applies_methodology",
+      "to": "meth:rl_verifiable",
+      "source": "https://arxiv.org/abs/2602.06570"
+    },
+    {
+      "from": "paper:baichuan_m3",
+      "rel": "applies_methodology",
+      "to": "meth:uncertainty",
+      "source": "https://arxiv.org/abs/2602.06570"
+    },
+    {
+      "from": "paper:medgemma15",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2604.05081"
+    },
+    {
+      "from": "person:andrew_sellergren",
+      "rel": "authored",
+      "to": "paper:medgemma15",
+      "source": "https://arxiv.org/abs/2604.05081"
+    },
+    {
+      "from": "paper:medgemma15",
+      "rel": "applies_methodology",
+      "to": "meth:foundation_models",
+      "source": "https://arxiv.org/abs/2604.05081"
+    },
+    {
+      "from": "paper:amie",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2503.06074"
+    },
+    {
+      "from": "person:khaled_saab",
+      "rel": "authored",
+      "to": "paper:amie",
+      "source": "https://arxiv.org/abs/2503.06074"
+    },
+    {
+      "from": "person:vivek_natarajan",
+      "rel": "authored",
+      "to": "paper:amie",
+      "source": "https://arxiv.org/abs/2503.06074"
+    },
+    {
+      "from": "paper:amie",
+      "rel": "applies_methodology",
+      "to": "meth:agentic",
+      "source": "https://arxiv.org/abs/2503.06074"
+    },
+    {
+      "from": "paper:amie",
+      "rel": "applies_methodology",
+      "to": "meth:retrieval_rag",
+      "source": "https://arxiv.org/abs/2503.06074"
+    },
+    {
+      "from": "paper:med_rlvr",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2502.19655"
+    },
+    {
+      "from": "person:hoifung_poon",
+      "rel": "authored",
+      "to": "paper:med_rlvr",
+      "source": "https://arxiv.org/abs/2502.19655"
+    },
+    {
+      "from": "paper:med_rlvr",
+      "rel": "applies_methodology",
+      "to": "meth:rl_verifiable",
+      "source": "https://arxiv.org/abs/2502.19655"
+    },
+    {
+      "from": "paper:lingshu",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2506.07044"
+    },
+    {
+      "from": "paper:lingshu",
+      "rel": "applies_methodology",
+      "to": "meth:foundation_models",
+      "source": "https://arxiv.org/abs/2506.07044"
+    },
+    {
+      "from": "paper:lingshu",
+      "rel": "applies_methodology",
+      "to": "meth:rl_verifiable",
+      "source": "https://arxiv.org/abs/2506.07044"
+    },
+    {
+      "from": "paper:medvlthinker",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2508.02669"
+    },
+    {
+      "from": "person:yuyin_zhou",
+      "rel": "authored",
+      "to": "paper:medvlthinker",
+      "source": "https://arxiv.org/abs/2508.02669"
+    },
+    {
+      "from": "paper:medvlthinker",
+      "rel": "applies_methodology",
+      "to": "meth:rl_verifiable",
+      "source": "https://arxiv.org/abs/2508.02669"
+    },
+    {
+      "from": "paper:medagentboard",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2505.12371"
+    },
+    {
+      "from": "paper:medagentboard",
+      "rel": "applies_methodology",
+      "to": "meth:agentic",
+      "source": "https://arxiv.org/abs/2505.12371"
+    },
+    {
+      "from": "paper:clinicalbench",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2411.06469"
+    },
+    {
+      "from": "person:danielle_bitterman",
+      "rel": "authored",
+      "to": "paper:clinicalbench",
+      "source": "https://arxiv.org/abs/2411.06469"
+    },
+    {
+      "from": "paper:clinicalbench",
+      "rel": "applies_methodology",
+      "to": "meth:foundation_models",
+      "source": "https://arxiv.org/abs/2411.06469"
+    },
+    {
+      "from": "paper:medblink",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2508.02951"
+    },
+    {
+      "from": "paper:medblink",
+      "rel": "applies_methodology",
+      "to": "meth:foundation_models",
+      "source": "https://arxiv.org/abs/2508.02951"
+    },
+    {
+      "from": "paper:context_clues",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2412.16178"
+    },
+    {
+      "from": "person:michael_wornow",
+      "rel": "authored",
+      "to": "paper:context_clues",
+      "source": "https://arxiv.org/abs/2412.16178"
+    },
+    {
+      "from": "person:nigam_shah",
+      "rel": "authored",
+      "to": "paper:context_clues",
+      "source": "https://arxiv.org/abs/2412.16178"
+    },
+    {
+      "from": "paper:context_clues",
+      "rel": "applies_methodology",
+      "to": "meth:foundation_models",
+      "source": "https://arxiv.org/abs/2412.16178"
+    },
+    {
+      "from": "paper:physicianbench",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2605.02240"
+    },
+    {
+      "from": "paper:physicianbench",
+      "rel": "applies_methodology",
+      "to": "meth:agentic",
+      "source": "https://arxiv.org/abs/2605.02240"
+    },
+    {
+      "from": "paper:pillar0",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2511.17803"
+    },
+    {
+      "from": "paper:pillar0",
+      "rel": "applies_methodology",
+      "to": "meth:foundation_models",
+      "source": "https://arxiv.org/abs/2511.17803"
+    },
+    {
+      "from": "paper:curia2",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2604.01987"
+    },
+    {
+      "from": "paper:curia2",
+      "rel": "applies_methodology",
+      "to": "meth:foundation_models",
+      "source": "https://arxiv.org/abs/2604.01987"
+    },
+    {
+      "from": "paper:atlas2",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2601.05148"
+    },
+    {
+      "from": "paper:atlas2",
+      "rel": "applies_methodology",
+      "to": "meth:foundation_models",
+      "source": "https://arxiv.org/abs/2601.05148"
+    },
+    {
+      "from": "paper:threads",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2501.16652"
+    },
+    {
+      "from": "person:faisal_mahmood",
+      "rel": "authored",
+      "to": "paper:threads",
+      "source": "https://arxiv.org/abs/2501.16652"
+    },
+    {
+      "from": "paper:threads",
+      "rel": "applies_methodology",
+      "to": "meth:foundation_models",
+      "source": "https://arxiv.org/abs/2501.16652"
+    },
+    {
+      "from": "paper:moozy",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2603.27048"
+    },
+    {
+      "from": "paper:moozy",
+      "rel": "applies_methodology",
+      "to": "meth:foundation_models",
+      "source": "https://arxiv.org/abs/2603.27048"
+    },
+    {
+      "from": "paper:anymc3d",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2512.12887"
+    },
+    {
+      "from": "paper:anymc3d",
+      "rel": "applies_methodology",
+      "to": "meth:foundation_models",
+      "source": "https://arxiv.org/abs/2512.12887"
+    },
+    {
+      "from": "paper:medsam2",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2504.03600"
+    },
+    {
+      "from": "paper:medsam2",
+      "rel": "applies_methodology",
+      "to": "meth:foundation_models",
+      "source": "https://arxiv.org/abs/2504.03600"
+    },
+    {
+      "from": "paper:dm4ct",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2602.18589"
+    },
+    {
+      "from": "paper:dm4ct",
+      "rel": "applies_methodology",
+      "to": "meth:diffusion_flow",
+      "source": "https://arxiv.org/abs/2602.18589"
+    },
+    {
+      "from": "paper:sumi",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2604.07329"
+    },
+    {
+      "from": "paper:sumi",
+      "rel": "applies_methodology",
+      "to": "meth:diffusion_flow",
+      "source": "https://arxiv.org/abs/2604.07329"
+    },
+    {
+      "from": "paper:clinhallu",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2606.14697"
+    },
+    {
+      "from": "paper:clinhallu",
+      "rel": "applies_methodology",
+      "to": "meth:uncertainty",
+      "source": "https://arxiv.org/abs/2606.14697"
+    },
+    {
+      "from": "paper:scanner_shift",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2601.04163"
+    },
+    {
+      "from": "paper:scanner_shift",
+      "rel": "applies_methodology",
+      "to": "meth:foundation_models",
+      "source": "https://arxiv.org/abs/2601.04163"
+    },
+    {
+      "from": "paper:scanner_shift",
+      "rel": "applies_methodology",
+      "to": "meth:uncertainty",
+      "source": "https://arxiv.org/abs/2601.04163"
+    },
+    {
+      "from": "paper:convolt",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2603.00798"
+    },
+    {
+      "from": "paper:convolt",
+      "rel": "applies_methodology",
+      "to": "meth:uncertainty",
+      "source": "https://arxiv.org/abs/2603.00798"
+    },
+    {
+      "from": "paper:boltz2",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.06.14.659707v1"
+    },
+    {
+      "from": "person:gabriele_corso",
+      "rel": "authored",
+      "to": "paper:boltz2",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.06.14.659707v1"
+    },
+    {
+      "from": "person:jeremy_wohlwend",
+      "rel": "authored",
+      "to": "paper:boltz2",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.06.14.659707v1"
+    },
+    {
+      "from": "person:regina_barzilay",
+      "rel": "authored",
+      "to": "paper:boltz2",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.06.14.659707v1"
+    },
+    {
+      "from": "person:tommi_jaakkola",
+      "rel": "authored",
+      "to": "paper:boltz2",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.06.14.659707v1"
+    },
+    {
+      "from": "paper:boltz2",
+      "rel": "applies_methodology",
+      "to": "meth:cofolding",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.06.14.659707v1"
+    },
+    {
+      "from": "paper:boltz2",
+      "rel": "applies_methodology",
+      "to": "meth:diffusion_flow",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.06.14.659707v1"
+    },
+    {
+      "from": "paper:pearl",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2510.24670"
+    },
+    {
+      "from": "person:nate_gruver",
+      "rel": "authored",
+      "to": "paper:pearl",
+      "source": "https://arxiv.org/abs/2510.24670"
+    },
+    {
+      "from": "paper:pearl",
+      "rel": "applies_methodology",
+      "to": "meth:cofolding",
+      "source": "https://arxiv.org/abs/2510.24670"
+    },
+    {
+      "from": "paper:pearl",
+      "rel": "applies_methodology",
+      "to": "meth:diffusion_flow",
+      "source": "https://arxiv.org/abs/2510.24670"
+    },
+    {
+      "from": "paper:protenix",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.01.08.631967v1"
+    },
+    {
+      "from": "paper:protenix",
+      "rel": "applies_methodology",
+      "to": "meth:cofolding",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.01.08.631967v1"
+    },
+    {
+      "from": "paper:openfold3",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://openfold.io/"
+    },
+    {
+      "from": "paper:openfold3",
+      "rel": "applies_methodology",
+      "to": "meth:cofolding",
+      "source": "https://openfold.io/"
+    },
+    {
+      "from": "paper:decaf",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2606.08375"
+    },
+    {
+      "from": "person:tommi_jaakkola",
+      "rel": "authored",
+      "to": "paper:decaf",
+      "source": "https://arxiv.org/abs/2606.08375"
+    },
+    {
+      "from": "paper:decaf",
+      "rel": "applies_methodology",
+      "to": "meth:diffusion_flow",
+      "source": "https://arxiv.org/abs/2606.08375"
+    },
+    {
+      "from": "paper:decaf",
+      "rel": "applies_methodology",
+      "to": "meth:cofolding",
+      "source": "https://arxiv.org/abs/2606.08375"
+    },
+    {
+      "from": "paper:rfdiffusion2",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.04.09.648075v1"
+    },
+    {
+      "from": "person:david_baker",
+      "rel": "authored",
+      "to": "paper:rfdiffusion2",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.04.09.648075v1"
+    },
+    {
+      "from": "paper:rfdiffusion2",
+      "rel": "applies_methodology",
+      "to": "meth:generative_design",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.04.09.648075v1"
+    },
+    {
+      "from": "paper:rfdiffusion2",
+      "rel": "applies_methodology",
+      "to": "meth:diffusion_flow",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.04.09.648075v1"
+    },
+    {
+      "from": "paper:laproteina",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2507.09466"
+    },
+    {
+      "from": "person:karsten_kreis",
+      "rel": "authored",
+      "to": "paper:laproteina",
+      "source": "https://arxiv.org/abs/2507.09466"
+    },
+    {
+      "from": "paper:laproteina",
+      "rel": "applies_methodology",
+      "to": "meth:generative_design",
+      "source": "https://arxiv.org/abs/2507.09466"
+    },
+    {
+      "from": "paper:laproteina",
+      "rel": "applies_methodology",
+      "to": "meth:diffusion_flow",
+      "source": "https://arxiv.org/abs/2507.09466"
+    },
+    {
+      "from": "paper:chai2",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.07.05.663018v1"
+    },
+    {
+      "from": "paper:chai2",
+      "rel": "applies_methodology",
+      "to": "meth:generative_design",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.07.05.663018v1"
+    },
+    {
+      "from": "paper:esm3",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://www.science.org/doi/10.1126/science.ads0018"
+    },
+    {
+      "from": "person:alex_rives",
+      "rel": "authored",
+      "to": "paper:esm3",
+      "source": "https://www.science.org/doi/10.1126/science.ads0018"
+    },
+    {
+      "from": "paper:esm3",
+      "rel": "applies_methodology",
+      "to": "meth:foundation_models",
+      "source": "https://www.science.org/doi/10.1126/science.ads0018"
+    },
+    {
+      "from": "paper:esm3",
+      "rel": "applies_methodology",
+      "to": "meth:generative_design",
+      "source": "https://www.science.org/doi/10.1126/science.ads0018"
+    },
+    {
+      "from": "paper:bioemu",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://www.science.org/doi/10.1126/science.adv9817"
+    },
+    {
+      "from": "person:frank_noe",
+      "rel": "authored",
+      "to": "paper:bioemu",
+      "source": "https://www.science.org/doi/10.1126/science.adv9817"
+    },
+    {
+      "from": "paper:bioemu",
+      "rel": "applies_methodology",
+      "to": "meth:diffusion_flow",
+      "source": "https://www.science.org/doi/10.1126/science.adv9817"
+    },
+    {
+      "from": "paper:diffdock_l",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2402.18396"
+    },
+    {
+      "from": "person:gabriele_corso",
+      "rel": "authored",
+      "to": "paper:diffdock_l",
+      "source": "https://arxiv.org/abs/2402.18396"
+    },
+    {
+      "from": "person:tommi_jaakkola",
+      "rel": "authored",
+      "to": "paper:diffdock_l",
+      "source": "https://arxiv.org/abs/2402.18396"
+    },
+    {
+      "from": "paper:diffdock_l",
+      "rel": "applies_methodology",
+      "to": "meth:diffusion_flow",
+      "source": "https://arxiv.org/abs/2402.18396"
+    },
+    {
+      "from": "paper:apo2mol",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2511.14559"
+    },
+    {
+      "from": "paper:apo2mol",
+      "rel": "applies_methodology",
+      "to": "meth:diffusion_flow",
+      "source": "https://arxiv.org/abs/2511.14559"
+    },
+    {
+      "from": "paper:apo2mol",
+      "rel": "applies_methodology",
+      "to": "meth:generative_design",
+      "source": "https://arxiv.org/abs/2511.14559"
+    },
+    {
+      "from": "paper:posex",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2505.01700"
+    },
+    {
+      "from": "paper:posex",
+      "rel": "applies_methodology",
+      "to": "meth:cofolding",
+      "source": "https://arxiv.org/abs/2505.01700"
+    },
+    {
+      "from": "paper:mozi",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2603.03655"
+    },
+    {
+      "from": "paper:mozi",
+      "rel": "applies_methodology",
+      "to": "meth:agentic",
+      "source": "https://arxiv.org/abs/2603.03655"
+    },
+    {
+      "from": "paper:evo2",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://www.nature.com/articles/s41586-026-10176-5"
+    },
+    {
+      "from": "person:patrick_hsu",
+      "rel": "authored",
+      "to": "paper:evo2",
+      "source": "https://www.nature.com/articles/s41586-026-10176-5"
+    },
+    {
+      "from": "person:brian_hie",
+      "rel": "authored",
+      "to": "paper:evo2",
+      "source": "https://www.nature.com/articles/s41586-026-10176-5"
+    },
+    {
+      "from": "paper:evo2",
+      "rel": "applies_methodology",
+      "to": "meth:foundation_models",
+      "source": "https://www.nature.com/articles/s41586-026-10176-5"
+    },
+    {
+      "from": "paper:evo2",
+      "rel": "applies_methodology",
+      "to": "meth:generative_design",
+      "source": "https://www.nature.com/articles/s41586-026-10176-5"
+    },
+    {
+      "from": "paper:alphagenome",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://www.nature.com/articles/s41586-025-10014-0"
+    },
+    {
+      "from": "paper:alphagenome",
+      "rel": "applies_methodology",
+      "to": "meth:foundation_models",
+      "source": "https://www.nature.com/articles/s41586-025-10014-0"
+    },
+    {
+      "from": "paper:state",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.06.26.661135v1"
+    },
+    {
+      "from": "person:patrick_hsu",
+      "rel": "authored",
+      "to": "paper:state",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.06.26.661135v1"
+    },
+    {
+      "from": "paper:state",
+      "rel": "applies_methodology",
+      "to": "meth:foundation_models",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.06.26.661135v1"
+    },
+    {
+      "from": "paper:c2s_scale",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.04.14.648850v2"
+    },
+    {
+      "from": "paper:c2s_scale",
+      "rel": "applies_methodology",
+      "to": "meth:foundation_models",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.04.14.648850v2"
+    },
+    {
+      "from": "paper:c2s_scale",
+      "rel": "applies_methodology",
+      "to": "meth:agentic",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.04.14.648850v2"
+    },
+    {
+      "from": "paper:lingshu_cell",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2603.25240"
+    },
+    {
+      "from": "paper:lingshu_cell",
+      "rel": "applies_methodology",
+      "to": "meth:diffusion_flow",
+      "source": "https://arxiv.org/abs/2603.25240"
+    },
+    {
+      "from": "paper:lingshu_cell",
+      "rel": "applies_methodology",
+      "to": "meth:foundation_models",
+      "source": "https://arxiv.org/abs/2603.25240"
+    },
+    {
+      "from": "paper:geneb",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2606.04525"
+    },
+    {
+      "from": "paper:geneb",
+      "rel": "applies_methodology",
+      "to": "meth:foundation_models",
+      "source": "https://arxiv.org/abs/2606.04525"
+    },
+    {
+      "from": "paper:biomni",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.05.30.656746v1"
+    },
+    {
+      "from": "person:jure_leskovec",
+      "rel": "authored",
+      "to": "paper:biomni",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.05.30.656746v1"
+    },
+    {
+      "from": "person:kexin_huang",
+      "rel": "authored",
+      "to": "paper:biomni",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.05.30.656746v1"
+    },
+    {
+      "from": "paper:biomni",
+      "rel": "applies_methodology",
+      "to": "meth:agentic",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.05.30.656746v1"
+    },
+    {
+      "from": "paper:biomni",
+      "rel": "applies_methodology",
+      "to": "meth:retrieval_rag",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.05.30.656746v1"
+    },
+    {
+      "from": "paper:ai_coscientist",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2502.18864"
+    },
+    {
+      "from": "paper:ai_coscientist",
+      "rel": "applies_methodology",
+      "to": "meth:agentic",
+      "source": "https://arxiv.org/abs/2502.18864"
+    },
+    {
+      "from": "paper:robin",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://www.nature.com/articles/s41586-026-10652-y"
+    },
+    {
+      "from": "person:sam_rodriques",
+      "rel": "authored",
+      "to": "paper:robin",
+      "source": "https://www.nature.com/articles/s41586-026-10652-y"
+    },
+    {
+      "from": "paper:robin",
+      "rel": "applies_methodology",
+      "to": "meth:agentic",
+      "source": "https://www.nature.com/articles/s41586-026-10652-y"
+    },
+    {
+      "from": "paper:txagent",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2503.10970"
+    },
+    {
+      "from": "person:marinka_zitnik",
+      "rel": "authored",
+      "to": "paper:txagent",
+      "source": "https://arxiv.org/abs/2503.10970"
+    },
+    {
+      "from": "paper:txagent",
+      "rel": "applies_methodology",
+      "to": "meth:agentic",
+      "source": "https://arxiv.org/abs/2503.10970"
+    },
+    {
+      "from": "paper:txagent",
+      "rel": "applies_methodology",
+      "to": "meth:retrieval_rag",
+      "source": "https://arxiv.org/abs/2503.10970"
+    },
+    {
+      "from": "paper:baseline_critique",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://www.nature.com/articles/s41592-025-02772-6"
+    },
+    {
+      "from": "person:wolfgang_huber",
+      "rel": "authored",
+      "to": "paper:baseline_critique",
+      "source": "https://www.nature.com/articles/s41592-025-02772-6"
+    },
+    {
+      "from": "paper:baseline_critique",
+      "rel": "applies_methodology",
+      "to": "meth:foundation_models",
+      "source": "https://www.nature.com/articles/s41592-025-02772-6"
+    },
+    {
+      "from": "paper:assaybench",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2605.10876"
+    },
+    {
+      "from": "paper:assaybench",
+      "rel": "applies_methodology",
+      "to": "meth:foundation_models",
+      "source": "https://arxiv.org/abs/2605.10876"
+    },
+    {
+      "from": "paper:assaybench",
+      "rel": "applies_methodology",
+      "to": "meth:agentic",
+      "source": "https://arxiv.org/abs/2605.10876"
+    },
+    {
+      "from": "method:mai_dxo",
+      "rel": "method_is_a",
+      "to": "meth:agentic",
+      "source": "https://arxiv.org/abs/2506.22405"
+    },
+    {
+      "from": "method:mai_dxo",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2506.22405"
+    },
+    {
+      "from": "paper:mai_dxo",
+      "rel": "proposes",
+      "to": "method:mai_dxo",
+      "source": "https://arxiv.org/abs/2506.22405"
+    },
+    {
+      "from": "method:large_verifier_system",
+      "rel": "method_is_a",
+      "to": "meth:rl_verifiable",
+      "source": "https://arxiv.org/abs/2509.02208"
+    },
+    {
+      "from": "method:large_verifier_system",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2509.02208"
+    },
+    {
+      "from": "paper:baichuan_m2",
+      "rel": "proposes",
+      "to": "method:large_verifier_system",
+      "source": "https://arxiv.org/abs/2509.02208"
+    },
+    {
+      "from": "method:rlvr_medicine",
+      "rel": "method_is_a",
+      "to": "meth:rl_verifiable",
+      "source": "https://arxiv.org/abs/2502.19655"
+    },
+    {
+      "from": "method:rlvr_medicine",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2502.19655"
+    },
+    {
+      "from": "paper:med_rlvr",
+      "rel": "proposes",
+      "to": "method:rlvr_medicine",
+      "source": "https://arxiv.org/abs/2502.19655"
+    },
+    {
+      "from": "method:cofolding_affinity",
+      "rel": "method_is_a",
+      "to": "meth:cofolding",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.06.14.659707v1"
+    },
+    {
+      "from": "method:cofolding_affinity",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.06.14.659707v1"
+    },
+    {
+      "from": "paper:boltz2",
+      "rel": "proposes",
+      "to": "method:cofolding_affinity",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.06.14.659707v1"
+    },
+    {
+      "from": "method:atomized_scaffolding",
+      "rel": "method_is_a",
+      "to": "meth:generative_design",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.04.09.648075v1"
+    },
+    {
+      "from": "method:atomized_scaffolding",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.04.09.648075v1"
+    },
+    {
+      "from": "paper:rfdiffusion2",
+      "rel": "proposes",
+      "to": "method:atomized_scaffolding",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.04.09.648075v1"
+    },
+    {
+      "from": "method:latent_flow_protein",
+      "rel": "method_is_a",
+      "to": "meth:generative_design",
+      "source": "https://arxiv.org/abs/2507.09466"
+    },
+    {
+      "from": "method:latent_flow_protein",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2507.09466"
+    },
+    {
+      "from": "paper:laproteina",
+      "rel": "proposes",
+      "to": "method:latent_flow_protein",
+      "source": "https://arxiv.org/abs/2507.09466"
+    },
+    {
+      "from": "method:flow_map_distill",
+      "rel": "method_is_a",
+      "to": "meth:diffusion_flow",
+      "source": "https://arxiv.org/abs/2606.08375"
+    },
+    {
+      "from": "method:flow_map_distill",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2606.08375"
+    },
+    {
+      "from": "paper:decaf",
+      "rel": "proposes",
+      "to": "method:flow_map_distill",
+      "source": "https://arxiv.org/abs/2606.08375"
+    },
+    {
+      "from": "method:ensemble_emulation",
+      "rel": "method_is_a",
+      "to": "meth:diffusion_flow",
+      "source": "https://www.science.org/doi/10.1126/science.adv9817"
+    },
+    {
+      "from": "method:ensemble_emulation",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://www.science.org/doi/10.1126/science.adv9817"
+    },
+    {
+      "from": "paper:bioemu",
+      "rel": "proposes",
+      "to": "method:ensemble_emulation",
+      "source": "https://www.science.org/doi/10.1126/science.adv9817"
+    },
+    {
+      "from": "method:state_embed_transition",
+      "rel": "method_is_a",
+      "to": "meth:foundation_models",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.06.26.661135v1"
+    },
+    {
+      "from": "method:state_embed_transition",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.06.26.661135v1"
+    },
+    {
+      "from": "paper:state",
+      "rel": "proposes",
+      "to": "method:state_embed_transition",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.06.26.661135v1"
+    },
+    {
+      "from": "method:cell_sentences",
+      "rel": "method_is_a",
+      "to": "meth:foundation_models",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.04.14.648850v2"
+    },
+    {
+      "from": "method:cell_sentences",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.04.14.648850v2"
+    },
+    {
+      "from": "paper:c2s_scale",
+      "rel": "proposes",
+      "to": "method:cell_sentences",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.04.14.648850v2"
+    },
+    {
+      "from": "method:tooluniverse",
+      "rel": "method_is_a",
+      "to": "meth:retrieval_rag",
+      "source": "https://arxiv.org/abs/2503.10970"
+    },
+    {
+      "from": "method:tooluniverse",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2503.10970"
+    },
+    {
+      "from": "paper:txagent",
+      "rel": "proposes",
+      "to": "method:tooluniverse",
+      "source": "https://arxiv.org/abs/2503.10970"
+    },
+    {
+      "from": "method:conformal_volumetry",
+      "rel": "method_is_a",
+      "to": "meth:uncertainty",
+      "source": "https://arxiv.org/abs/2603.00798"
+    },
+    {
+      "from": "method:conformal_volumetry",
+      "rel": "in_domain",
+      "to": "D2",
+      "source": "https://arxiv.org/abs/2603.00798"
+    },
+    {
+      "from": "paper:convolt",
+      "rel": "proposes",
+      "to": "method:conformal_volumetry",
+      "source": "https://arxiv.org/abs/2603.00798"
+    },
+    {
+      "from": "paper:medgemma15",
+      "rel": "proposes",
+      "to": "model:medgemma",
+      "source": "https://arxiv.org/abs/2604.05081"
+    },
+    {
+      "from": "paper:baichuan_m2",
+      "rel": "proposes",
+      "to": "model:baichuan_m2",
+      "source": "https://arxiv.org/abs/2509.02208"
+    },
+    {
+      "from": "paper:lingshu",
+      "rel": "proposes",
+      "to": "model:lingshu",
+      "source": "https://arxiv.org/abs/2506.07044"
+    },
+    {
+      "from": "paper:evo2",
+      "rel": "proposes",
+      "to": "model:evo2",
+      "source": "https://www.nature.com/articles/s41586-026-10176-5"
+    },
+    {
+      "from": "paper:alphagenome",
+      "rel": "proposes",
+      "to": "model:alphagenome",
+      "source": "https://www.nature.com/articles/s41586-025-10014-0"
+    },
+    {
+      "from": "paper:boltz2",
+      "rel": "proposes",
+      "to": "model:boltz2",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.06.14.659707v1"
+    },
+    {
+      "from": "paper:protenix",
+      "rel": "proposes",
+      "to": "model:protenix_v1",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.01.08.631967v1"
+    },
+    {
+      "from": "paper:esm3",
+      "rel": "proposes",
+      "to": "model:esm3",
+      "source": "https://www.science.org/doi/10.1126/science.ads0018"
+    },
+    {
+      "from": "paper:state",
+      "rel": "proposes",
+      "to": "model:state",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.06.26.661135v1"
+    },
+    {
+      "from": "paper:boltz2",
+      "rel": "proposes",
+      "to": "model:alphafold3",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.06.14.659707v1"
+    },
+    {
+      "from": "paper:c2s_scale",
+      "rel": "proposes",
+      "to": "model:c2s_scale",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.04.14.648850v2"
+    },
+    {
+      "from": "paper:mai_dxo",
+      "rel": "evaluated_on",
+      "to": "bench:sdbench",
+      "source": "https://arxiv.org/abs/2506.22405"
+    },
+    {
+      "from": "model:baichuan_m2",
+      "rel": "evaluated_on",
+      "to": "bench:healthbench",
+      "source": "https://arxiv.org/abs/2509.02208"
+    },
+    {
+      "from": "paper:baichuan_m3",
+      "rel": "evaluated_on",
+      "to": "bench:healthbench",
+      "source": "https://arxiv.org/abs/2602.06570"
+    },
+    {
+      "from": "model:medgemma",
+      "rel": "evaluated_on",
+      "to": "bench:medqa",
+      "source": "https://arxiv.org/abs/2604.05081"
+    },
+    {
+      "from": "paper:medblink",
+      "rel": "evaluated_on",
+      "to": "bench:medxpertqa",
+      "source": "https://arxiv.org/abs/2508.02951"
+    },
+    {
+      "from": "paper:context_clues",
+      "rel": "evaluated_on",
+      "to": "bench:ehrshot",
+      "source": "https://arxiv.org/abs/2412.16178"
+    },
+    {
+      "from": "paper:pearl",
+      "rel": "evaluated_on",
+      "to": "bench:posebusters",
+      "source": "https://arxiv.org/abs/2510.24670"
+    },
+    {
+      "from": "paper:boltz2",
+      "rel": "evaluated_on",
+      "to": "bench:posebusters",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.06.14.659707v1"
+    },
+    {
+      "from": "paper:diffdock_l",
+      "rel": "evaluated_on",
+      "to": "bench:dockgen",
+      "source": "https://arxiv.org/abs/2402.18396"
+    },
+    {
+      "from": "paper:lingshu_cell",
+      "rel": "evaluated_on",
+      "to": "bench:vcc",
+      "source": "https://arxiv.org/abs/2603.25240"
+    },
+    {
+      "from": "paper:state",
+      "rel": "evaluated_on",
+      "to": "bench:vcc",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.06.26.661135v1"
+    },
+    {
+      "from": "paper:curia2",
+      "rel": "evaluated_on",
+      "to": "bench:curiabench",
+      "source": "https://arxiv.org/abs/2604.01987"
+    },
+    {
+      "from": "paper:baseline_critique",
+      "rel": "evaluated_on",
+      "to": "bench:vcc",
+      "source": "https://www.nature.com/articles/s41592-025-02772-6"
+    },
+    {
+      "from": "paper:assaybench",
+      "rel": "evaluated_on",
+      "to": "bench:tahoe100m",
+      "source": "https://arxiv.org/abs/2605.10876"
+    },
+    {
+      "from": "paper:mai_dxo",
+      "rel": "proposes",
+      "to": "concept:sequential_diagnosis",
+      "source": "https://arxiv.org/abs/2506.22405"
+    },
+    {
+      "from": "paper:mai_dxo",
+      "rel": "proposes",
+      "to": "concept:benchmark_saturation",
+      "source": "https://arxiv.org/abs/2506.22405"
+    },
+    {
+      "from": "paper:med_rlvr",
+      "rel": "proposes",
+      "to": "concept:rlvr",
+      "source": "https://arxiv.org/abs/2502.19655"
+    },
+    {
+      "from": "paper:baichuan_m2",
+      "rel": "proposes",
+      "to": "concept:dynamic_verifier",
+      "source": "https://arxiv.org/abs/2509.02208"
+    },
+    {
+      "from": "paper:baichuan_m3",
+      "rel": "proposes",
+      "to": "concept:medical_hallucination",
+      "source": "https://arxiv.org/abs/2602.06570"
+    },
+    {
+      "from": "paper:bioemu",
+      "rel": "proposes",
+      "to": "concept:conformational_ensembles",
+      "source": "https://www.science.org/doi/10.1126/science.adv9817"
+    },
+    {
+      "from": "paper:apo2mol",
+      "rel": "proposes",
+      "to": "concept:conformational_ensembles",
+      "source": "https://arxiv.org/abs/2511.14559"
+    },
+    {
+      "from": "paper:boltz2",
+      "rel": "proposes",
+      "to": "concept:affinity_fep_parity",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.06.14.659707v1"
+    },
+    {
+      "from": "paper:chai2",
+      "rel": "proposes",
+      "to": "concept:zeroshot_binder_design",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.07.05.663018v1"
+    },
+    {
+      "from": "paper:rfdiffusion2",
+      "rel": "proposes",
+      "to": "concept:atomized_motif",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.04.09.648075v1"
+    },
+    {
+      "from": "paper:state",
+      "rel": "proposes",
+      "to": "concept:virtual_cell",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.06.26.661135v1"
+    },
+    {
+      "from": "paper:lingshu_cell",
+      "rel": "proposes",
+      "to": "concept:virtual_cell",
+      "source": "https://arxiv.org/abs/2603.25240"
+    },
+    {
+      "from": "paper:evo2",
+      "rel": "proposes",
+      "to": "concept:variant_effect",
+      "source": "https://www.nature.com/articles/s41586-026-10176-5"
+    },
+    {
+      "from": "paper:alphagenome",
+      "rel": "proposes",
+      "to": "concept:variant_effect",
+      "source": "https://www.nature.com/articles/s41586-025-10014-0"
+    },
+    {
+      "from": "paper:baseline_critique",
+      "rel": "proposes",
+      "to": "concept:fm_vs_baseline",
+      "source": "https://www.nature.com/articles/s41592-025-02772-6"
+    },
+    {
+      "from": "paper:geneb",
+      "rel": "proposes",
+      "to": "concept:fm_vs_baseline",
+      "source": "https://arxiv.org/abs/2606.04525"
+    },
+    {
+      "from": "paper:assaybench",
+      "rel": "proposes",
+      "to": "concept:fm_vs_baseline",
+      "source": "https://arxiv.org/abs/2605.10876"
+    },
+    {
+      "from": "paper:clinicalbench",
+      "rel": "proposes",
+      "to": "concept:fm_vs_baseline",
+      "source": "https://arxiv.org/abs/2411.06469"
+    },
+    {
+      "from": "paper:scanner_shift",
+      "rel": "proposes",
+      "to": "concept:domain_shift",
+      "source": "https://arxiv.org/abs/2601.04163"
+    },
+    {
+      "from": "paper:decaf",
+      "rel": "proposes",
+      "to": "concept:test_time_compute",
+      "source": "https://arxiv.org/abs/2606.08375"
+    },
+    {
+      "from": "paper:pearl",
+      "rel": "proposes",
+      "to": "concept:test_time_compute",
+      "source": "https://arxiv.org/abs/2510.24670"
+    },
+    {
+      "from": "paper:clinhallu",
+      "rel": "proposes",
+      "to": "concept:medical_hallucination",
+      "source": "https://arxiv.org/abs/2606.14697"
+    },
+    {
+      "from": "paper:medblink",
+      "rel": "proposes",
+      "to": "concept:medical_hallucination",
+      "source": "https://arxiv.org/abs/2508.02951"
+    },
+    {
+      "from": "concept:benchmark_saturation",
+      "rel": "concept_relates_to",
+      "to": "concept:sequential_diagnosis",
+      "source": "agent-grounded 2026-07-17"
+    },
+    {
+      "from": "concept:fm_vs_baseline",
+      "rel": "concept_relates_to",
+      "to": "concept:benchmark_saturation",
+      "source": "agent-grounded 2026-07-17"
+    },
+    {
+      "from": "concept:conformational_ensembles",
+      "rel": "concept_relates_to",
+      "to": "concept:affinity_fep_parity",
+      "source": "agent-grounded 2026-07-17"
+    },
+    {
+      "from": "concept:test_time_compute",
+      "rel": "concept_relates_to",
+      "to": "concept:affinity_fep_parity",
+      "source": "agent-grounded 2026-07-17"
+    },
+    {
+      "from": "concept:domain_shift",
+      "rel": "concept_relates_to",
+      "to": "concept:fm_vs_baseline",
+      "source": "agent-grounded 2026-07-17"
+    },
+    {
+      "from": "concept:grader_variance",
+      "rel": "concept_relates_to",
+      "to": "concept:benchmark_saturation",
+      "source": "agent-grounded 2026-07-17"
+    },
+    {
+      "from": "concept:medical_hallucination",
+      "rel": "concept_relates_to",
+      "to": "concept:grader_variance",
+      "source": "agent-grounded 2026-07-17"
+    },
+    {
+      "from": "paper:mai_dxo",
+      "rel": "asserts",
+      "to": "claim:mai_dxo_855",
+      "source": "https://arxiv.org/abs/2506.22405"
+    },
+    {
+      "from": "paper:baichuan_m2",
+      "rel": "asserts",
+      "to": "claim:baichuan_m2_open_sota",
+      "source": "https://arxiv.org/abs/2509.02208"
+    },
+    {
+      "from": "paper:baichuan_m3",
+      "rel": "asserts",
+      "to": "claim:baichuan_m3_gpt52",
+      "source": "https://arxiv.org/abs/2602.06570"
+    },
+    {
+      "from": "paper:medgemma15",
+      "rel": "asserts",
+      "to": "claim:medgemma_medqa",
+      "source": "https://arxiv.org/abs/2604.05081"
+    },
+    {
+      "from": "paper:amie",
+      "rel": "asserts",
+      "to": "claim:amie_noninferior",
+      "source": "https://arxiv.org/abs/2503.06074"
+    },
+    {
+      "from": "paper:med_rlvr",
+      "rel": "asserts",
+      "to": "claim:med_rlvr_ood",
+      "source": "https://arxiv.org/abs/2502.19655"
+    },
+    {
+      "from": "paper:medagentboard",
+      "rel": "asserts",
+      "to": "claim:medagentboard_contrarian",
+      "source": "https://arxiv.org/abs/2505.12371"
+    },
+    {
+      "from": "paper:clinicalbench",
+      "rel": "asserts",
+      "to": "claim:clinicalbench_contrarian",
+      "source": "https://arxiv.org/abs/2411.06469"
+    },
+    {
+      "from": "paper:medblink",
+      "rel": "asserts",
+      "to": "claim:medblink_contrarian",
+      "source": "https://arxiv.org/abs/2508.02951"
+    },
+    {
+      "from": "paper:pillar0",
+      "rel": "asserts",
+      "to": "claim:pillar0_beats",
+      "source": "https://arxiv.org/abs/2511.17803"
+    },
+    {
+      "from": "paper:atlas2",
+      "rel": "asserts",
+      "to": "claim:atlas2_trilemma",
+      "source": "https://arxiv.org/abs/2601.05148"
+    },
+    {
+      "from": "paper:moozy",
+      "rel": "asserts",
+      "to": "claim:moozy_efficient",
+      "source": "https://arxiv.org/abs/2603.27048"
+    },
+    {
+      "from": "paper:anymc3d",
+      "rel": "asserts",
+      "to": "claim:anymc3d_contrarian",
+      "source": "https://arxiv.org/abs/2512.12887"
+    },
+    {
+      "from": "paper:scanner_shift",
+      "rel": "asserts",
+      "to": "claim:scanner_shift_contrarian",
+      "source": "https://arxiv.org/abs/2601.04163"
+    },
+    {
+      "from": "paper:dm4ct",
+      "rel": "asserts",
+      "to": "claim:dm4ct_honest",
+      "source": "https://arxiv.org/abs/2602.18589"
+    },
+    {
+      "from": "paper:boltz2",
+      "rel": "asserts",
+      "to": "claim:boltz2_fep",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.06.14.659707v1"
+    },
+    {
+      "from": "paper:pearl",
+      "rel": "asserts",
+      "to": "claim:pearl_posebusters",
+      "source": "https://arxiv.org/abs/2510.24670"
+    },
+    {
+      "from": "paper:protenix",
+      "rel": "asserts",
+      "to": "claim:protenix_beats_af3",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.01.08.631967v1"
+    },
+    {
+      "from": "paper:rfdiffusion2",
+      "rel": "asserts",
+      "to": "claim:rfd2_enzymes",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.04.09.648075v1"
+    },
+    {
+      "from": "paper:chai2",
+      "rel": "asserts",
+      "to": "claim:chai2_antibody",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.07.05.663018v1"
+    },
+    {
+      "from": "paper:esm3",
+      "rel": "asserts",
+      "to": "claim:esm3_gfp",
+      "source": "https://www.science.org/doi/10.1126/science.ads0018"
+    },
+    {
+      "from": "paper:bioemu",
+      "rel": "asserts",
+      "to": "claim:bioemu_ensembles",
+      "source": "https://www.science.org/doi/10.1126/science.adv9817"
+    },
+    {
+      "from": "paper:posex",
+      "rel": "asserts",
+      "to": "claim:posex_contrarian",
+      "source": "https://arxiv.org/abs/2505.01700"
+    },
+    {
+      "from": "paper:evo2",
+      "rel": "asserts",
+      "to": "claim:evo2_variant",
+      "source": "https://www.nature.com/articles/s41586-026-10176-5"
+    },
+    {
+      "from": "paper:alphagenome",
+      "rel": "asserts",
+      "to": "claim:alphagenome_beats",
+      "source": "https://www.nature.com/articles/s41586-025-10014-0"
+    },
+    {
+      "from": "paper:state",
+      "rel": "asserts",
+      "to": "claim:state_de",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.06.26.661135v1"
+    },
+    {
+      "from": "paper:c2s_scale",
+      "rel": "asserts",
+      "to": "claim:c2s_wetlab",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.04.14.648850v2"
+    },
+    {
+      "from": "paper:geneb",
+      "rel": "asserts",
+      "to": "claim:geneb_contrarian",
+      "source": "https://arxiv.org/abs/2606.04525"
+    },
+    {
+      "from": "paper:baseline_critique",
+      "rel": "asserts",
+      "to": "claim:baseline_contrarian",
+      "source": "https://www.nature.com/articles/s41592-025-02772-6"
+    },
+    {
+      "from": "paper:assaybench",
+      "rel": "asserts",
+      "to": "claim:assaybench_contrarian",
+      "source": "https://arxiv.org/abs/2605.10876"
+    },
+    {
+      "from": "paper:biomni",
+      "rel": "asserts",
+      "to": "claim:biomni_general",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.05.30.656746v1"
+    },
+    {
+      "from": "paper:ai_coscientist",
+      "rel": "asserts",
+      "to": "claim:coscientist_wetlab",
+      "source": "https://arxiv.org/abs/2502.18864"
+    },
+    {
+      "from": "paper:robin",
+      "rel": "asserts",
+      "to": "claim:robin_amd",
+      "source": "https://www.nature.com/articles/s41586-026-10652-y"
+    },
+    {
+      "from": "paper:txagent",
+      "rel": "asserts",
+      "to": "claim:txagent_tools",
+      "source": "https://arxiv.org/abs/2503.10970"
+    },
+    {
+      "from": "claim:medagentboard_contrarian",
+      "rel": "contradicts",
+      "to": "claim:mai_dxo_855",
+      "source": "agent-grounded 2026-07-17: multi-agent orchestration value: MedAgentBoard vs MAI-DxO headline"
+    },
+    {
+      "from": "claim:clinicalbench_contrarian",
+      "rel": "contradicts",
+      "to": "claim:medgemma_medqa",
+      "source": "agent-grounded 2026-07-17: LLM clinical utility vs exam scores: prediction still lost to XGBoost"
+    },
+    {
+      "from": "claim:medblink_contrarian",
+      "rel": "contradicts",
+      "to": "claim:pillar0_beats",
+      "source": "agent-grounded 2026-07-17: medical MLLM readiness: fails basic perception vs strong FM AUROC"
+    },
+    {
+      "from": "claim:anymc3d_contrarian",
+      "rel": "contradicts",
+      "to": "claim:pillar0_beats",
+      "source": "agent-grounded 2026-07-17: need for dedicated 3D FMs: 2D-adapt matches vs native-volumetric FM"
+    },
+    {
+      "from": "claim:scanner_shift_contrarian",
+      "rel": "contradicts",
+      "to": "claim:atlas2_trilemma",
+      "source": "agent-grounded 2026-07-17: pathology FM robustness: domain shift breaks vs deployment-grade claim"
+    },
+    {
+      "from": "claim:baseline_contrarian",
+      "rel": "contradicts",
+      "to": "claim:state_de",
+      "source": "agent-grounded 2026-07-17: single-cell FM value: linear baselines match vs STATE >2x DE"
+    },
+    {
+      "from": "claim:baseline_contrarian",
+      "rel": "contradicts",
+      "to": "claim:c2s_wetlab",
+      "source": "agent-grounded 2026-07-17: FM vs baseline: baseline-parity vs wet-lab-validated discovery"
+    },
+    {
+      "from": "claim:geneb_contrarian",
+      "rel": "contradicts",
+      "to": "claim:evo2_variant",
+      "source": "agent-grounded 2026-07-17: genomic FM scaling: unstable leaderboards vs Evo2 broad claims"
+    },
+    {
+      "from": "claim:assaybench_contrarian",
+      "rel": "contradicts",
+      "to": "claim:baichuan_m2_open_sota",
+      "source": "agent-grounded 2026-07-17: bio-specific vs generalist models: specialized worse on assay tasks"
+    },
+    {
+      "from": "claim:posex_contrarian",
+      "rel": "contradicts",
+      "to": "claim:boltz2_fep",
+      "source": "agent-grounded 2026-07-17: AI vs physics: DL beats docking physics vs FEP-parity still the target"
+    },
+    {
+      "from": "claim:dm4ct_honest",
+      "rel": "contradicts",
+      "to": "claim:pearl_posebusters",
+      "source": "agent-grounded 2026-07-17: diffusion 'solved': recon not solved in real CT vs strong co-folding gains"
+    },
+    {
+      "from": "paper:boltz2",
+      "rel": "extends",
+      "to": "paper:diffdock_l",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.06.14.659707v1"
+    },
+    {
+      "from": "paper:decaf",
+      "rel": "extends",
+      "to": "paper:boltz2",
+      "source": "https://arxiv.org/abs/2606.08375"
+    },
+    {
+      "from": "paper:decaf",
+      "rel": "extends",
+      "to": "paper:pearl",
+      "source": "https://arxiv.org/abs/2606.08375"
+    },
+    {
+      "from": "paper:protenix",
+      "rel": "cites",
+      "to": "paper:boltz2",
+      "source": "https://www.biorxiv.org/content/10.1101/2025.01.08.631967v1"
+    },
+    {
+      "from": "paper:openfold3",
+      "rel": "cites",
+      "to": "paper:protenix",
+      "source": "https://openfold.io/"
+    },
+    {
+      "from": "paper:baichuan_m3",
+      "rel": "extends",
+      "to": "paper:baichuan_m2",
+      "source": "https://arxiv.org/abs/2602.06570"
+    },
+    {
+      "from": "paper:medgemma15",
+      "rel": "cites",
+      "to": "paper:lingshu",
+      "source": "https://arxiv.org/abs/2604.05081"
+    },
+    {
+      "from": "paper:laproteina",
+      "rel": "cites",
+      "to": "paper:rfdiffusion2",
+      "source": "https://arxiv.org/abs/2507.09466"
+    },
+    {
+      "from": "paper:lingshu_cell",
+      "rel": "extends",
+      "to": "paper:state",
+      "source": "https://arxiv.org/abs/2603.25240"
+    },
+    {
+      "from": "paper:assaybench",
+      "rel": "cites",
+      "to": "paper:baseline_critique",
+      "source": "https://arxiv.org/abs/2605.10876"
+    },
+    {
+      "from": "paper:mozi",
+      "rel": "cites",
+      "to": "paper:txagent",
+      "source": "https://arxiv.org/abs/2603.03655"
+    },
+    {
+      "from": "paper:evo2",
+      "rel": "cites",
+      "to": "paper:alphagenome",
+      "source": "https://www.nature.com/articles/s41586-026-10176-5"
+    }
+  ]
+}
