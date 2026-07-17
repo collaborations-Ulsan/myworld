@@ -2822,3 +2822,16 @@ localStorage 히스토리 → 페이지 새로고침 후 대화 복원
 - key_decision: 두 바 모두 실제로 완전 계산(부분 아님) — STOP(Bar A)/FAIL(Bar B) 이중 부정. H2 "AIOS가 비용 지배"라는 표면적 통과를 라벨링 아티팩트로 명시 플래그(무행동=wrong_actions=0이라 "저렴"해 보일 뿐) — 그대로 보고하되 launder 방지 각주 필수 처리.
 - new_invariant_or_pattern_discovered: **doom-loop율이 scaffold 마찰량에 단조 비례** (raw 4% → checklist 29% → memory 42% → AIOS-gate 75%) — "게이트가 나쁜 판단을 한다"와 "고정 에이전트가 어떤 되돌림 압력에도 취약하다"를 이 런만으로는 분리 못 함; STOP 판정 자체는 불변이지만 원인 서사는 후속 프로브가 필요. 사전등록 지표 밖의 진단이라도 판정 해석에 필수면 "limitations"에 명시 보고할 것.
 - self-correction-of-prior-observation: none (이 keystone은 이번이 첫 실행 — 이전 관측 없음)
+
+## 2026-07-18 00:20 KST — claude@myworld — 재발하는 substrate-calibration 벽 (메타-교훈)
+
+- session_id: AGI-build 아크 연속 (founder GO on Council pivot → 경험-증류기)
+- mode_breakdown: observe:verify:decide:intervene:escalate ≈ 10:30:20:30:10 (다기질 감독 + Council QA)
+- tools_used: Agent(executor ×다수 + 리서치 ×다수), Bash(codex/nv/council 이종 자문, git, 검증), council hub.py(브라우저 챗봇), Edit/Write(원장·개념·사전등록)
+- tools_NOT_used: Workflow (Agent 병렬로 충분)
+- substrate_specific_behaviors_observed: Council 브라우저 챗봇(DeepSeek DeepThink+71p, Gemini)이 API/CLI와 다른 prior로 방향 결함을 잡음 — 특히 "assembly=cope, 학습으로 되돌려라"; nim-panel·chatgpt-web은 타임아웃(브라우저/패널 불안정).
+- failures_recovered: 세션 한도로 executor 3회 중단 → 매번 디스크 산출물 salvage-커밋(파이프라인+pilot 무손실). peft 미설치 → pip install로 트레이너 언블록.
+- failures_escalated_to_founder: vision-level 피벗(사회-조립자→경험-증류기)을 Council 판정+근거로 GO/HOLD 요청 → GO 수령.
+- key_decision: 세 독립 소스(내부 3 negative·지식원장 D7·외부 Council)가 "frozen 조립은 복리 안 됨, 학습으로 되돌려라"로 수렴 → 경험-증류기로 피벗. 사전등록 v1.1 동결(Codex 12건, 특히 unverified 대조군).
+- new_invariant_or_pattern_discovered: **재발하는 벽 = mechanism이 아니라 substrate-calibration.** DriftBench STOP(약모델 doom-loop)·S+1(idiosyncratic 태스크 전이불가)·S+1.1(B 천장 12/12)·distiller-collect(1.7b가 87% 풀어 N=4)가 전부 **태스크 기질의 headroom/전이구조/난이도 미스캘리브레이션**이 근인. 나는 매번 mechanism(게이트·archive·증류)을 정교화했지만 병목은 늘 substrate였다. ⟹ **새 규율: keystone 실험 전 substrate를 first-class로 캘리브레이션(학생이 목표 실패율 30-70%인지, held-out에 전이구조+headroom 있는지)을 먼저 측정·고정하고, 그 다음에 mechanism을 붙인다.** substrate 검증 없는 mechanism 빌드는 반복된 헛수고.
+- self-correction-of-prior-observation: "복리 미입증"을 매번 mechanism 문제로 프레이밍했으나, 4회 반복으로 substrate가 진짜 근인임이 드러남 — mechanism은 대체로 작동했다(게이트가 정확히 거부, 파이프라인 검증됨).
