@@ -1,0 +1,58 @@
+{
+  "arms_run": [
+    "base",
+    "lora_verified_trajectory",
+    "lora_unverified_trajectory"
+  ],
+  "arms_skipped": {},
+  "banner": "PILOT ONLY (N_verified=25 < 250)",
+  "generated_at": 1784306883.7126994,
+  "n_b_tasks": 36,
+  "n_sentinel_tasks": 5,
+  "n_verified_from_collect": 25,
+  "per_arm": {
+    "base": {
+      "b_pass_rate": 0.3888888888888889,
+      "escalation_rate": 0.6111111111111112,
+      "sentinel": {
+        "arm_rate": 1.0,
+        "base_rate": 1.0,
+        "regressed": false
+      }
+    },
+    "lora_unverified_trajectory": {
+      "b_pass_rate": 0.75,
+      "escalation_rate": 0.25,
+      "paired_vs_base": {
+        "n01_base_fail_variant_pass": 14,
+        "n10_base_pass_variant_fail": 1,
+        "n_discordant": 15,
+        "n_pairs": 36,
+        "p_value_one_sided": 0.00048828125,
+        "significant_at_0.05": true
+      },
+      "sentinel": {
+        "arm_rate": 1.0,
+        "base_rate": 1.0,
+        "regressed": false
+      }
+    },
+    "lora_verified_trajectory": {
+      "b_pass_rate": 0.6944444444444444,
+      "escalation_rate": 0.3055555555555556,
+      "paired_vs_base": {
+        "n01_base_fail_variant_pass": 13,
+        "n10_base_pass_variant_fail": 2,
+        "n_discordant": 15,
+        "n_pairs": 36,
+        "p_value_one_sided": 0.003692626953125,
+        "significant_at_0.05": true
+      },
+      "sentinel": {
+        "arm_rate": 1.0,
+        "base_rate": 1.0,
+        "regressed": false
+      }
+    }
+  }
+}
