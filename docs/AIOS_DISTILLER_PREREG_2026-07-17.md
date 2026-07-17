@@ -79,4 +79,14 @@ held-out 구조 격리 · 인과-게이트 · sentinel · Blind-Curator 검증�
 - (v1.1 동결. v1→v1.1: Codex 리뷰 12건 반영 — B 생성기 분리+metamorphic, adversarial/property/blind
   grader, stripped-prompt solution-only 채점, Student-LoRA-unverified·solution-only 대조군, N≥250,
   sentinel rehearsal, H2 동일예산-성공만, H3 cost-adjusted, 2주 스코프 축소.)
-- (첫 런 전 핀 기록 예정: 학생/교사 모델 ID, 시드, 프롬프트 해시, 학습 스크립트 해시, N_train 실측.)
+- **2026-07-18 PILOT 결과** (`64e8950`, `AIOS_DISTILLER_PILOT_RESULTS_2026-07-18.md`): N_verified=25(pilot).
+  학생 qwen3:1.7b, substrate 캘리브레이션 50% pass(헤드룸 확인). B(36) held-out: base 0.389 →
+  verified-LoRA **0.694**(+30.5pp, p=0.0037) / unverified-LoRA **0.750**(+36.1pp, p=0.00049), sentinel
+  무회귀, escalation 0.61→0.25-0.31. **H1 directional EARNED**(증류가 학생을 유의하게 개선 — 아크 첫
+  weight-level positive). **인과-게이트 무이득**(unverified≥verified, 2태스크 차=pilot 노이즈) — 작은
+  N에서 데이터 양이 필터를 이김. 환경: torch cu128로 RTX 5090 GPU 언블록.
+- **confirmatory 설계 (다음 런, 사전 고정)**: N_verified≥250(또는 스코프시 명시), arms =
+  base / verified-LoRA / unverified-LoRA / **soft-weight-LoRA**(hard filter 대신 인과-신뢰도 가중) —
+  게이트의 진짜 값어치를 "질이 양을 이기는 구간"에서 판정. 교사 캐스케이드는 **local/NIM 우선**(frontier
+  CLI quota 최소화). GPU 학습·평가(cu128). 나머지 v1.1 가드 전부 승계.
+- (첫 confirmatory 런 전 핀 기록 예정: 학생/교사 모델 ID, 시드, 프롬프트 해시, 학습 스크립트 해시, N_train 실측.)
