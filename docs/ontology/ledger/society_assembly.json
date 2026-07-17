@@ -1,0 +1,3561 @@
+{
+  "_meta": {
+    "domain_id": "D7",
+    "domain_name": "Multi-agent society + assembly/composition",
+    "schema": "docs/ontology/FRONTIER_KNOWLEDGE_LEDGER_2026-07-17.md §1 (unified, CANONICAL flat-entity {id,type,name,attrs,source,domain} + {src_id,rel,dst_id,source,domain} edge format)",
+    "generated": "2026-07-17",
+    "generated_by": "claude@myworld (D7 deep-populate; founder brief 'AGI = assemble scattered frontier pieces into ONE society'; grounded via 3 parallel research agents + own WebSearch/HF/WebFetch — every node/edge sourced)",
+    "status": "draft-first (append; not accepted — DNA #2)",
+    "format_note": "CANONICAL format matching learning_methods.json (D6). REUSES shared ids so cross-domain edges resolve: org:sakana_ai, org:google_deepmind, org:meta_fair, person:percy_liang, methodology:agentic_pipelines_multi_agent_orchestration_tool_use, methodology:diffusion_flow_matching_generative_models.",
+    "master_table_reconciliation": "Master §2 lists D7='Generative modeling'. Founder brief 2026-07-17 reassigns/expands D7 to multi-agent SOCIETY + assembly/composition; the generative-composition family (F3) carries the generative-modeling content as composition methods. Not a schema violation — an explicit founder re-scope.",
+    "coverage": "48 papers, 32 people, 16 orgs/labs, 16 concepts, 26 claims, 7 benchmarks, 3 methodologies (3 families). 14 contradicts edges. Bound target ~30-45 papers / 3 families: MET (slightly over on purpose to keep the full helps-vs-hurts evidence set intact).",
+    "hypothesis_grade_note": "grade=hypothesis => single-author/unreviewed preprint OR numbers only at abstract level (2606.27288 Co-Failure Ceiling, 2606.32025 SkillComposer, 2604.08880 Capacity-Gap, 2603.09938 merging survey). grade=primary => arxiv/venue verified this session. Future-dated ids (26MM.xxxxx) are 2026 submissions surfaced via HF/WebSearch/WebFetch and cross-checked; AC/DC 2604.14969 was directly fetched and CONFIRMED real (Sakana-affiliated authors).",
+    "deferred": "Honest gaps: (1) 'DAR' is NOT a real single named paper — nearest real matches (RUMAD 2602.23864, Debate-as-Reward 2604.16723, SDRL 2601.22297) recorded in md only, not noded. (2) A2A/ACP protocols noded via the survey (2505.02279) + concept, not per-protocol spec papers; A2A itself is a Google spec/blog, not arxiv. (3) Society-simulation neighbors (OASIS 1M-agents 2411.11581, Concordia companion 2411.07038) mentioned in md, only Concordia core noded. (4) 2026 merging-landscape (STAR, Sparsity-Aware Evolution, Bayesian/Fisher-Rao merging, LoRA Soups) survey-level only. (5) Anthropic/Cognition industry blogs are secondary sources (no arxiv). (6) Mercury/Gemini-Diffusion commercial diffusion LLMs have no primary preprint — md-mention only. (7) coevolution neighbors (SEAL 2605.24426, CoEvoSkills) md-only."
+  },
+  "entities": [
+    {
+      "id": "D7",
+      "type": "Domain",
+      "name": "Multi-agent society + assembly/composition",
+      "attrs": {
+        "scope": "Founder thesis 'AGI = gather scattered frontier pieces into ONE SOCIETY, assemble not invent' (사회를 만드느냐, 흩어진 것을 모아서 하나의 AGI로). Three families: (F1) multi-agent SOCIETY (agent societies, role-differentiated planner/solver/critic, debate/reflection, specialist coevolution, A2A/ACP society infrastructure); (F2) ASSEMBLY/COMPOSITION of models & methods (model merging, mixture-of-agents, routing/ensembling, skill/tool composition, LLM-as-orchestrator); (F3) generative composition methods (diffusion reasoning/planning, flow matching, latent-program synthesis, workflow/agent distillation, retrieval/memory composition). CRUX contradiction preserved: multi-agent-helps vs multi-agent-loses-to-a-single-strong-model.",
+        "grade": "primary",
+        "note_master_table": "Master ledger §2 slots D7='Generative modeling'. Founder brief 2026-07-17 REASSIGNS/EXPANDS D7 to society+assembly; the generative-composition family (F3) subsumes the generative-modeling content as 'how to compose scattered generative pieces'. Documented to avoid schema-drift confusion."
+      },
+      "source": "docs/ontology/FRONTIER_KNOWLEDGE_LEDGER_2026-07-17.md §2 (D7) + founder brief 2026-07-17",
+      "domain": "D7"
+    },
+    {
+      "id": "methodology:multi_agent_society",
+      "type": "Methodology",
+      "name": "Multi-agent society",
+      "attrs": {
+        "definition": "Systems of many LLM-driven agents that interact, differentiate roles (planner/solver/critic), debate/reflect, coevolve into specialists, and communicate over agent-to-agent protocols — the 'society' the founder wants to assemble.",
+        "kind": "orchestration/social",
+        "family": "F1",
+        "grade": "primary"
+      },
+      "source": "agent:multi_agent_society (grounded WebSearch/HF/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "methodology:model_method_assembly_composition",
+      "type": "Methodology",
+      "name": "Assembly / composition of models & methods",
+      "attrs": {
+        "definition": "Composing scattered pretrained pieces into one capable system WITHOUT inventing a new model: weight-space merging, output-space mixture/ensembling, query-level routing, and skill/tool composition with an LLM orchestrator.",
+        "kind": "composition",
+        "family": "F2",
+        "grade": "primary"
+      },
+      "source": "agent:model_assembly_composition (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "methodology:generative_composition_methods",
+      "type": "Methodology",
+      "name": "Generative composition methods",
+      "attrs": {
+        "definition": "Cross-cutting generative methods used to compose and plan: diffusion for reasoning/planning, flow matching, latent-program synthesis/library learning, workflow/agent distillation, and retrieval/memory composition.",
+        "kind": "generative",
+        "family": "F3",
+        "grade": "primary"
+      },
+      "source": "agent:generative_composition_methods (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "org:together_ai",
+      "type": "Org",
+      "name": "Together AI",
+      "attrs": {
+        "kind": "company",
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "org:anthropic",
+      "type": "Org",
+      "name": "Anthropic",
+      "attrs": {
+        "kind": "company",
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "org:ibm",
+      "type": "Org",
+      "name": "IBM",
+      "attrs": {
+        "kind": "company",
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "org:linux_foundation",
+      "type": "Org",
+      "name": "Linux Foundation",
+      "attrs": {
+        "kind": "foundation",
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "org:nvidia",
+      "type": "Org",
+      "name": "NVIDIA",
+      "attrs": {
+        "kind": "company",
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "org:cognition_labs",
+      "type": "Org",
+      "name": "Cognition Labs",
+      "attrs": {
+        "kind": "company",
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "org:inception_labs",
+      "type": "Org",
+      "name": "Inception Labs",
+      "attrs": {
+        "kind": "company",
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "lab:stanford_nlp_hai",
+      "type": "Lab",
+      "name": "Stanford (NLP / HAI)",
+      "attrs": {
+        "kind": "academic",
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "lab:uc_berkeley_sky",
+      "type": "Lab",
+      "name": "UC Berkeley Sky Computing / BAIR",
+      "attrs": {
+        "kind": "academic",
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "lab:tsinghua_fib_lab",
+      "type": "Lab",
+      "name": "Tsinghua FIB Lab",
+      "attrs": {
+        "kind": "academic",
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "lab:mit_csail",
+      "type": "Lab",
+      "name": "MIT CSAIL",
+      "attrs": {
+        "kind": "academic",
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "lab:unc_chapel_hill",
+      "type": "Lab",
+      "name": "UNC Chapel Hill",
+      "attrs": {
+        "kind": "academic",
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "lab:uw_mlfoundations",
+      "type": "Lab",
+      "name": "UW / mlfoundations",
+      "attrs": {
+        "kind": "academic",
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "lab:cornell",
+      "type": "Lab",
+      "name": "Cornell",
+      "attrs": {
+        "kind": "academic",
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "lab:kaist",
+      "type": "Lab",
+      "name": "KAIST",
+      "attrs": {
+        "kind": "academic",
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "lab:uw_madison",
+      "type": "Lab",
+      "name": "UW-Madison",
+      "attrs": {
+        "kind": "academic",
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "person:joon_sung_park",
+      "type": "Person",
+      "name": "Joon Sung Park",
+      "attrs": {
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "person:michael_bernstein",
+      "type": "Person",
+      "name": "Michael Bernstein",
+      "attrs": {
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "person:yong_li",
+      "type": "Person",
+      "name": "Yong Li",
+      "attrs": {
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "person:mert_cemri",
+      "type": "Person",
+      "name": "Mert Cemri",
+      "attrs": {
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "person:ion_stoica",
+      "type": "Person",
+      "name": "Ion Stoica",
+      "attrs": {
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "person:matei_zaharia",
+      "type": "Person",
+      "name": "Matei Zaharia",
+      "attrs": {
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "person:james_zou",
+      "type": "Person",
+      "name": "James Zou",
+      "attrs": {
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "person:lingjiao_chen",
+      "type": "Person",
+      "name": "Lingjiao Chen",
+      "attrs": {
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "person:yilun_du",
+      "type": "Person",
+      "name": "Yilun Du",
+      "attrs": {
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "person:joshua_tenenbaum",
+      "type": "Person",
+      "name": "Joshua B. Tenenbaum",
+      "attrs": {
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "person:igor_mordatch",
+      "type": "Person",
+      "name": "Igor Mordatch",
+      "attrs": {
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "person:yixuan_li",
+      "type": "Person",
+      "name": "Yixuan Li",
+      "attrs": {
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "person:gabriel_ilharco",
+      "type": "Person",
+      "name": "Gabriel Ilharco",
+      "attrs": {
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "person:mitchell_wortsman",
+      "type": "Person",
+      "name": "Mitchell Wortsman",
+      "attrs": {
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "person:colin_raffel",
+      "type": "Person",
+      "name": "Colin Raffel",
+      "attrs": {
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "person:prateek_yadav",
+      "type": "Person",
+      "name": "Prateek Yadav",
+      "attrs": {
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "person:le_yu",
+      "type": "Person",
+      "name": "Le Yu",
+      "attrs": {
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "person:takuya_akiba",
+      "type": "Person",
+      "name": "Takuya Akiba",
+      "attrs": {
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "person:david_ha",
+      "type": "Person",
+      "name": "David Ha",
+      "attrs": {
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "person:yingtao_tian",
+      "type": "Person",
+      "name": "Yingtao Tian",
+      "attrs": {
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "person:yujin_tang",
+      "type": "Person",
+      "name": "Yujin Tang",
+      "attrs": {
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "person:junlin_wang",
+      "type": "Person",
+      "name": "Junlin Wang",
+      "attrs": {
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "person:wenzhe_li",
+      "type": "Person",
+      "name": "Wenzhe Li",
+      "attrs": {
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "person:isaac_ong",
+      "type": "Person",
+      "name": "Isaac Ong",
+      "attrs": {
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "person:guanzhi_wang",
+      "type": "Person",
+      "name": "Guanzhi Wang",
+      "attrs": {
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "person:anima_anandkumar",
+      "type": "Person",
+      "name": "Anima Anandkumar",
+      "attrs": {
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "person:yaron_lipman",
+      "type": "Person",
+      "name": "Yaron Lipman",
+      "attrs": {
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "person:itai_gat",
+      "type": "Person",
+      "name": "Itai Gat",
+      "attrs": {
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "person:michael_janner",
+      "type": "Person",
+      "name": "Michael Janner",
+      "attrs": {
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "person:kevin_ellis",
+      "type": "Person",
+      "name": "Kevin Ellis",
+      "attrs": {
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "person:jacob_andreas",
+      "type": "Person",
+      "name": "Jacob Andreas",
+      "attrs": {
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "person:sung_ju_hwang",
+      "type": "Person",
+      "name": "Sung Ju Hwang",
+      "attrs": {
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2304.03442",
+      "type": "Paper",
+      "name": "Generative Agents: Interactive Simulacra of Human Behavior",
+      "attrs": {
+        "authors": "Park, O'Brien, Cai, Morris, Liang, Bernstein",
+        "date": "2023-04",
+        "venue": "UIST 2023",
+        "url": "https://arxiv.org/abs/2304.03442",
+        "family": "F1",
+        "grade": "primary"
+      },
+      "source": "agent:multi_agent_society (grounded WebSearch/HF/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2502.08691",
+      "type": "Paper",
+      "name": "AgentSociety: Large-Scale Simulation of LLM-Driven Generative Agents",
+      "attrs": {
+        "authors": "Piao, Yan, ..., Yong Li",
+        "date": "2025-02",
+        "venue": "arXiv (Tsinghua FIB)",
+        "url": "https://arxiv.org/abs/2502.08691",
+        "family": "F1",
+        "grade": "primary"
+      },
+      "source": "agent:multi_agent_society (grounded WebSearch/HF/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2312.03664",
+      "type": "Paper",
+      "name": "Concordia: Generative Agent-Based Modeling grounded in physical/social/digital space",
+      "attrs": {
+        "authors": "Vezhnevets et al.",
+        "date": "2023-12",
+        "venue": "arXiv (Google DeepMind)",
+        "url": "https://arxiv.org/abs/2312.03664",
+        "family": "F1",
+        "grade": "primary"
+      },
+      "source": "agent:multi_agent_society (grounded WebSearch/HF/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2510.23595",
+      "type": "Paper",
+      "name": "Multi-Agent Evolve (MAE): LLM Self-Improve through Co-evolution",
+      "attrs": {
+        "authors": "Chen et al.",
+        "date": "2025-10",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2510.23595",
+        "family": "F1",
+        "grade": "primary"
+      },
+      "source": "agent:multi_agent_society (grounded WebSearch/HF/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2603.15255",
+      "type": "Paper",
+      "name": "SAGE: Multi-Agent Self-Evolution for LLM Reasoning",
+      "attrs": {
+        "authors": "SAGE authors",
+        "date": "2026-03",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2603.15255",
+        "family": "F1",
+        "grade": "primary"
+      },
+      "source": "agent:multi_agent_society (grounded WebSearch/HF/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2509.09629",
+      "type": "Paper",
+      "name": "Bridging the Capability Gap: Joint Alignment Tuning for Harmonizing LLM-based Multi-Agent Systems (MOAT)",
+      "attrs": {
+        "authors": "MOAT authors",
+        "date": "2025-09",
+        "venue": "EMNLP 2025 Findings",
+        "url": "https://arxiv.org/abs/2509.09629",
+        "family": "F1",
+        "grade": "primary"
+      },
+      "source": "agent:multi_agent_society (grounded WebSearch/HF/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2305.14325",
+      "type": "Paper",
+      "name": "Improving Factuality and Reasoning in Language Models through Multiagent Debate",
+      "attrs": {
+        "authors": "Du, Li, Torralba, Tenenbaum, Mordatch",
+        "date": "2023-05",
+        "venue": "ICML 2024",
+        "url": "https://arxiv.org/abs/2305.14325",
+        "family": "F1",
+        "grade": "primary"
+      },
+      "source": "agent:multi_agent_society (grounded WebSearch/HF/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2604.14969",
+      "type": "Paper",
+      "name": "Discovering Novel LLM Experts via Task-Capability Coevolution (AC/DC)",
+      "attrs": {
+        "authors": "Dai, Meinardus, Regan, Y. Tian, Y. Tang",
+        "date": "2026-04",
+        "venue": "arXiv (Sakana-affiliated)",
+        "url": "https://arxiv.org/abs/2604.14969",
+        "family": "F1",
+        "grade": "primary"
+      },
+      "source": "agent:multi_agent_society (grounded WebSearch/HF/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2505.02279",
+      "type": "Paper",
+      "name": "A Survey of Agent Interoperability Protocols: MCP, ACP, A2A, ANP",
+      "attrs": {
+        "authors": "Habler et al.",
+        "date": "2025-05",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2505.02279",
+        "family": "F1",
+        "grade": "primary"
+      },
+      "source": "agent:multi_agent_society (grounded WebSearch/HF/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2505.12371",
+      "type": "Paper",
+      "name": "MedAgentBoard: Benchmarking Multi-Agent Collaboration with Conventional Methods for Diverse Medical Tasks",
+      "attrs": {
+        "authors": "Zhu, ..., Liantao Ma, Lequan Yu",
+        "date": "2025-05",
+        "venue": "NeurIPS 2025 D&B",
+        "url": "https://arxiv.org/abs/2505.12371",
+        "family": "F1",
+        "grade": "primary"
+      },
+      "source": "agent:multi_agent_society (grounded WebSearch/HF/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2503.13657",
+      "type": "Paper",
+      "name": "Why Do Multi-Agent LLM Systems Fail? (MAST)",
+      "attrs": {
+        "authors": "Cemri, Pan, Yang, ..., Keutzer, Parameswaran, Stoica, Zaharia",
+        "date": "2025-03",
+        "venue": "arXiv (UC Berkeley)",
+        "url": "https://arxiv.org/abs/2503.13657",
+        "family": "F1",
+        "grade": "primary"
+      },
+      "source": "agent:multi_agent_society (grounded WebSearch/HF/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2602.01011",
+      "type": "Paper",
+      "name": "Multi-Agent Teams Hold Experts Back",
+      "attrs": {
+        "authors": "Pappu, El, Cao, ..., James Zou",
+        "date": "2026-02",
+        "venue": "arXiv (Stanford)",
+        "url": "https://arxiv.org/abs/2602.01011",
+        "family": "F1",
+        "grade": "primary"
+      },
+      "source": "agent:multi_agent_society (grounded WebSearch/HF/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2606.13003",
+      "type": "Paper",
+      "name": "The Illusion of Multi-Agent Advantage",
+      "attrs": {
+        "authors": "unlisted",
+        "date": "2026-06",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2606.13003",
+        "family": "F1",
+        "grade": "primary"
+      },
+      "source": "agent:multi_agent_society (grounded WebSearch/HF/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2502.08788",
+      "type": "Paper",
+      "name": "Stop Overvaluing Multi-Agent Debate",
+      "attrs": {
+        "authors": "Hu et al.",
+        "date": "2025-02",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2502.08788",
+        "family": "F1",
+        "grade": "primary"
+      },
+      "source": "agent:multi_agent_society (grounded WebSearch/HF/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2508.17536",
+      "type": "Paper",
+      "name": "Debate or Vote: How LLM Multi-Agent Debate Really Helps",
+      "attrs": {
+        "authors": "Choi, Zhu, Yixuan Li",
+        "date": "2025-08",
+        "venue": "arXiv (UW-Madison)",
+        "url": "https://arxiv.org/abs/2508.17536",
+        "family": "F1",
+        "grade": "primary"
+      },
+      "source": "agent:multi_agent_society (grounded WebSearch/HF/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2505.22960",
+      "type": "Paper",
+      "name": "Revisiting Multi-Agent Debate as Test-Time Scaling",
+      "attrs": {
+        "authors": "unlisted",
+        "date": "2025-05",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2505.22960",
+        "family": "F1",
+        "grade": "primary"
+      },
+      "source": "agent:multi_agent_society (grounded WebSearch/HF/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2402.18272",
+      "type": "Paper",
+      "name": "Rethinking the Bounds of LLM Reasoning: Are Multi-Agent Discussions the Key?",
+      "attrs": {
+        "authors": "Wang, Wang, Su, Tong, Song",
+        "date": "2024-02",
+        "venue": "ACL 2024",
+        "url": "https://arxiv.org/abs/2402.18272",
+        "family": "F1",
+        "grade": "primary"
+      },
+      "source": "agent:multi_agent_society (grounded WebSearch/HF/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2403.02419",
+      "type": "Paper",
+      "name": "Are More LLM Calls All You Need? Towards Scaling Laws of Compound Inference Systems",
+      "attrs": {
+        "authors": "Lingjiao Chen, Davis, ..., Stoica, Zaharia, Zou",
+        "date": "2024-03",
+        "venue": "NeurIPS 2024",
+        "url": "https://arxiv.org/abs/2403.02419",
+        "family": "F1",
+        "grade": "primary"
+      },
+      "source": "agent:multi_agent_society (grounded WebSearch/HF/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2212.04089",
+      "type": "Paper",
+      "name": "Editing Models with Task Arithmetic",
+      "attrs": {
+        "authors": "Ilharco, Ribeiro, Wortsman, ...",
+        "date": "2022-12",
+        "venue": "ICLR 2023",
+        "url": "https://arxiv.org/abs/2212.04089",
+        "family": "F2",
+        "grade": "primary"
+      },
+      "source": "agent:model_assembly_composition (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2306.01708",
+      "type": "Paper",
+      "name": "TIES-Merging: Resolving Interference When Merging Models",
+      "attrs": {
+        "authors": "Yadav, Tam, Choshen, Raffel, Bansal",
+        "date": "2023-06",
+        "venue": "NeurIPS 2023",
+        "url": "https://arxiv.org/abs/2306.01708",
+        "family": "F2",
+        "grade": "primary"
+      },
+      "source": "agent:model_assembly_composition (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2311.03099",
+      "type": "Paper",
+      "name": "Language Models are Super Mario: Absorbing Abilities as a Free Lunch (DARE)",
+      "attrs": {
+        "authors": "Le Yu, Bowen Yu, ...",
+        "date": "2023-11",
+        "venue": "ICML 2024",
+        "url": "https://arxiv.org/abs/2311.03099",
+        "family": "F2",
+        "grade": "primary"
+      },
+      "source": "agent:model_assembly_composition (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2403.13187",
+      "type": "Paper",
+      "name": "Evolutionary Optimization of Model Merging Recipes",
+      "attrs": {
+        "authors": "Akiba, Shing, Tang, Ha",
+        "date": "2024-03",
+        "venue": "Nature Machine Intelligence 2025",
+        "url": "https://arxiv.org/abs/2403.13187",
+        "family": "F2",
+        "grade": "primary"
+      },
+      "source": "agent:model_assembly_composition (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2203.05482",
+      "type": "Paper",
+      "name": "Model Soups: averaging weights of multiple fine-tuned models",
+      "attrs": {
+        "authors": "Wortsman, Ilharco, Gadre, ...",
+        "date": "2022-03",
+        "venue": "ICML 2022",
+        "url": "https://arxiv.org/abs/2203.05482",
+        "family": "F2",
+        "grade": "primary"
+      },
+      "source": "agent:model_assembly_composition (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2511.21437",
+      "type": "Paper",
+      "name": "A Systematic Study of In-the-Wild Model Merging for LLMs",
+      "attrs": {
+        "authors": "Hitit, Girrbach, Akata",
+        "date": "2025-11",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2511.21437",
+        "family": "F2",
+        "grade": "primary"
+      },
+      "source": "agent:model_assembly_composition (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2603.09938",
+      "type": "Paper",
+      "name": "Model Merging in the Era of LLMs: Methods, Applications, Future Directions (survey)",
+      "attrs": {
+        "authors": "Song, Zheng",
+        "date": "2026-03",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2603.09938",
+        "family": "F2",
+        "grade": "hypothesis"
+      },
+      "source": "agent:model_assembly_composition (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2406.04692",
+      "type": "Paper",
+      "name": "Mixture-of-Agents Enhances Large Language Model Capabilities",
+      "attrs": {
+        "authors": "Junlin Wang, Jue Wang, Athiwaratkun, ..., Zou",
+        "date": "2024-06",
+        "venue": "ICLR 2025",
+        "url": "https://arxiv.org/abs/2406.04692",
+        "family": "F2",
+        "grade": "primary"
+      },
+      "source": "agent:model_assembly_composition (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2502.00674",
+      "type": "Paper",
+      "name": "Rethinking Mixture-of-Agents: Is Mixing Different LLMs Beneficial? (Self-MoA)",
+      "attrs": {
+        "authors": "Wenzhe Li et al.",
+        "date": "2025-02",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2502.00674",
+        "family": "F2",
+        "grade": "primary"
+      },
+      "source": "agent:model_assembly_composition (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2402.05120",
+      "type": "Paper",
+      "name": "More Agents Is All You Need (Agent Forest)",
+      "attrs": {
+        "authors": "Junyou Li, Qin Zhang, Yangbin Yu",
+        "date": "2024-02",
+        "venue": "arXiv (Tencent)",
+        "url": "https://arxiv.org/abs/2402.05120",
+        "family": "F2",
+        "grade": "primary"
+      },
+      "source": "agent:model_assembly_composition (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2306.02561",
+      "type": "Paper",
+      "name": "LLM-Blender: Ensembling LLMs with Pairwise Ranking and Generative Fusion",
+      "attrs": {
+        "authors": "Dongfu Jiang, Xiang Ren, Bill Yuchen Lin",
+        "date": "2023-06",
+        "venue": "ACL 2023",
+        "url": "https://arxiv.org/abs/2306.02561",
+        "family": "F2",
+        "grade": "primary"
+      },
+      "source": "agent:model_assembly_composition (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2606.27288",
+      "type": "Paper",
+      "name": "When Does Combining Language Models Help? A Co-Failure Ceiling across 67 Frontier Models",
+      "attrs": {
+        "authors": "single-author preprint",
+        "date": "2026-06",
+        "venue": "arXiv (unreviewed)",
+        "url": "https://arxiv.org/abs/2606.27288",
+        "family": "F2",
+        "grade": "hypothesis"
+      },
+      "source": "agent:model_assembly_composition (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2406.18665",
+      "type": "Paper",
+      "name": "RouteLLM: Learning to Route LLMs with Preference Data",
+      "attrs": {
+        "authors": "Ong, Almahairi, Wu, ..., Gonzalez, Stoica",
+        "date": "2024-06",
+        "venue": "arXiv (LMSYS/Berkeley)",
+        "url": "https://arxiv.org/abs/2406.18665",
+        "family": "F2",
+        "grade": "primary"
+      },
+      "source": "agent:model_assembly_composition (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2305.05176",
+      "type": "Paper",
+      "name": "FrugalGPT: How to Use LLMs While Reducing Cost and Improving Performance",
+      "attrs": {
+        "authors": "Lingjiao Chen, Zaharia, Zou",
+        "date": "2023-05",
+        "venue": "arXiv (Stanford)",
+        "url": "https://arxiv.org/abs/2305.05176",
+        "family": "F2",
+        "grade": "primary"
+      },
+      "source": "agent:model_assembly_composition (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2503.04412",
+      "type": "Paper",
+      "name": "Wider or Deeper? Scaling LLM Inference-Time Compute with Adaptive Branching Tree Search (AB-MCTS / TreeQuest)",
+      "attrs": {
+        "authors": "Misaki, Akiba, ...",
+        "date": "2025-03",
+        "venue": "arXiv (Sakana AI)",
+        "url": "https://arxiv.org/abs/2503.04412",
+        "family": "F2",
+        "grade": "primary"
+      },
+      "source": "agent:model_assembly_composition (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2305.16291",
+      "type": "Paper",
+      "name": "Voyager: An Open-Ended Embodied Agent with Large Language Models",
+      "attrs": {
+        "authors": "Guanzhi Wang, Xie, Jiang, ..., Fan, Anandkumar",
+        "date": "2025-05",
+        "venue": "TMLR 2024 (v 2023-05)",
+        "url": "https://arxiv.org/abs/2305.16291",
+        "family": "F2",
+        "grade": "primary"
+      },
+      "source": "agent:model_assembly_composition (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2606.32025",
+      "type": "Paper",
+      "name": "Generative Skill Composition for LLM Agents (SkillComposer)",
+      "attrs": {
+        "authors": "Xinyu Zhao, Zhen Tan, Tadiparthi",
+        "date": "2026-06",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2606.32025",
+        "family": "F2",
+        "grade": "hypothesis"
+      },
+      "source": "agent:model_assembly_composition (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2502.09992",
+      "type": "Paper",
+      "name": "Large Language Diffusion Models (LLaDA)",
+      "attrs": {
+        "authors": "Nie, Zhu, Chongxuan Li, ...",
+        "date": "2025-02",
+        "venue": "NeurIPS 2025",
+        "url": "https://arxiv.org/abs/2502.09992",
+        "family": "F3",
+        "grade": "primary"
+      },
+      "source": "agent:generative_composition_methods (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2402.07754",
+      "type": "Paper",
+      "name": "Diffusion-of-Thought: Chain-of-Thought Reasoning in Diffusion Language Models",
+      "attrs": {
+        "authors": "Ye, Gong, Kuleshov, ...",
+        "date": "2024-02",
+        "venue": "NeurIPS 2024",
+        "url": "https://arxiv.org/abs/2402.07754",
+        "family": "F3",
+        "grade": "primary"
+      },
+      "source": "agent:generative_composition_methods (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2504.12216",
+      "type": "Paper",
+      "name": "d1: Scaling Reasoning in Diffusion LLMs via Reinforcement Learning",
+      "attrs": {
+        "authors": "Zhao, Gupta, Grover",
+        "date": "2025-04",
+        "venue": "arXiv (UCLA)",
+        "url": "https://arxiv.org/abs/2504.12216",
+        "family": "F3",
+        "grade": "primary"
+      },
+      "source": "agent:generative_composition_methods (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2603.13243",
+      "type": "Paper",
+      "name": "Think First, Diffuse Fast: Improving Diffusion LM Reasoning via Autoregressive Plan Conditioning",
+      "attrs": {
+        "authors": "St Sauver",
+        "date": "2026-03",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2603.13243",
+        "family": "F3",
+        "grade": "primary"
+      },
+      "source": "agent:generative_composition_methods (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2210.02747",
+      "type": "Paper",
+      "name": "Flow Matching for Generative Modeling",
+      "attrs": {
+        "authors": "Lipman, Chen, Ben-Hamu, Nickel, Le",
+        "date": "2022-10",
+        "venue": "ICLR 2023",
+        "url": "https://arxiv.org/abs/2210.02747",
+        "family": "F3",
+        "grade": "primary"
+      },
+      "source": "agent:generative_composition_methods (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2407.15595",
+      "type": "Paper",
+      "name": "Discrete Flow Matching",
+      "attrs": {
+        "authors": "Gat, Remez, Shaul, ..., Adi, Lipman",
+        "date": "2024-07",
+        "venue": "NeurIPS 2024",
+        "url": "https://arxiv.org/abs/2407.15595",
+        "family": "F3",
+        "grade": "primary"
+      },
+      "source": "agent:generative_composition_methods (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2205.09991",
+      "type": "Paper",
+      "name": "Planning with Diffusion for Flexible Behavior Synthesis (Diffuser)",
+      "attrs": {
+        "authors": "Janner, Du, Tenenbaum, Levine",
+        "date": "2022-05",
+        "venue": "ICML 2022",
+        "url": "https://arxiv.org/abs/2205.09991",
+        "family": "F3",
+        "grade": "primary"
+      },
+      "source": "agent:generative_composition_methods (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2006.08381",
+      "type": "Paper",
+      "name": "DreamCoder: Growing generalizable, interpretable knowledge with wake-sleep Bayesian program learning",
+      "attrs": {
+        "authors": "Ellis, Wong, Nye, ..., Solar-Lezama, Tenenbaum",
+        "date": "2020-06",
+        "venue": "PLDI 2021",
+        "url": "https://arxiv.org/abs/2006.08381",
+        "family": "F3",
+        "grade": "primary"
+      },
+      "source": "agent:generative_composition_methods (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2310.19791",
+      "type": "Paper",
+      "name": "LILO: Learning Interpretable Libraries by Compressing and Documenting Code",
+      "attrs": {
+        "authors": "Grand, Wong, ..., Tenenbaum, Andreas",
+        "date": "2023-10",
+        "venue": "ICLR 2024",
+        "url": "https://arxiv.org/abs/2310.19791",
+        "family": "F3",
+        "grade": "primary"
+      },
+      "source": "agent:generative_composition_methods (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2505.17612",
+      "type": "Paper",
+      "name": "Distilling LLM Agent into Small Models with Retrieval and Code Tools (Agent Distillation)",
+      "attrs": {
+        "authors": "Kang, Jeong, Lee, Cho, Hwang",
+        "date": "2025-05",
+        "venue": "arXiv (KAIST/KRAFTON)",
+        "url": "https://arxiv.org/abs/2505.17612",
+        "family": "F3",
+        "grade": "primary"
+      },
+      "source": "agent:generative_composition_methods (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2602.03955",
+      "type": "Paper",
+      "name": "AgentArk: Distilling Multi-Agent Intelligence into a Single Agent",
+      "attrs": {
+        "authors": "Luo, Jin, Yu, Kumar, Li, ...",
+        "date": "2026-02",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2602.03955",
+        "family": "F3",
+        "grade": "primary"
+      },
+      "source": "agent:generative_composition_methods (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2604.08880",
+      "type": "Paper",
+      "name": "Revisiting the Capacity Gap in Chain-of-Thought Distillation",
+      "attrs": {
+        "authors": "unlisted",
+        "date": "2026-04",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2604.08880",
+        "family": "F3",
+        "grade": "hypothesis"
+      },
+      "source": "agent:generative_composition_methods (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "paper:2603.02473",
+      "type": "Paper",
+      "name": "Diagnosing Retrieval vs. Utilization Bottlenecks in LLM Agent Memory",
+      "attrs": {
+        "authors": "Yuan, Su, Yao",
+        "date": "2026-03",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2603.02473",
+        "family": "F3",
+        "grade": "primary"
+      },
+      "source": "agent:generative_composition_methods (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "bench:alpacaeval_2",
+      "type": "Benchmark",
+      "name": "AlpacaEval 2.0",
+      "attrs": {
+        "measures": "LLM-judged instruction-following win-rate",
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "bench:arc_agi_2",
+      "type": "Benchmark",
+      "name": "ARC-AGI-2",
+      "attrs": {
+        "measures": "abstraction & reasoning generalization",
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "bench:medagentboard",
+      "type": "Benchmark",
+      "name": "MedAgentBoard",
+      "attrs": {
+        "measures": "medical QA/VQA/EHR/workflow — multi-agent vs single-LLM vs conventional",
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "bench:mast_data",
+      "type": "Benchmark",
+      "name": "MAST-Data / Who&When",
+      "attrs": {
+        "measures": "annotated multi-agent-system failure traces",
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "bench:gsm8k",
+      "type": "Benchmark",
+      "name": "GSM8K",
+      "attrs": {
+        "measures": "grade-school math reasoning",
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "bench:gpqa_diamond",
+      "type": "Benchmark",
+      "name": "GPQA-Diamond",
+      "attrs": {
+        "measures": "graduate-level hard QA",
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "bench:locomo",
+      "type": "Benchmark",
+      "name": "LoCoMo",
+      "attrs": {
+        "measures": "long-conversation agent memory",
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "concept:multi_agent_helps_vs_hurts",
+      "type": "Concept",
+      "name": "Multi-agent-helps vs multi-agent-loses-to-single-strong-model",
+      "attrs": {
+        "definition": "The central D7 contradiction: whether a society of assembled agents beats one strong model, or the coordination tax and correlated failures make a single strong model (or CoT-Self-Consistency) win.",
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "concept:generative_agents_memory_stream_reflection",
+      "type": "Concept",
+      "name": "Generative agents (memory stream + reflection + planning)",
+      "attrs": {
+        "definition": "The Park et al. architecture that made LLM social simulation believable; the lineage anchor for agent societies.",
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "concept:planner_solver_critic_decomposition",
+      "type": "Concept",
+      "name": "Planner / Solver / Critic role decomposition",
+      "attrs": {
+        "definition": "Role-differentiated multi-agent structure (also Proposer/Judge, Challenger/Planner/Solver/Critic).",
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "concept:task_capability_coevolution",
+      "type": "Concept",
+      "name": "Task-capability coevolution",
+      "attrs": {
+        "definition": "Co-evolving models (via merging) and synthetic tasks to grow an archive of specialist experts (AC/DC, MAE, SAGE, SEAL).",
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "concept:multi_agent_debate_martingale",
+      "type": "Concept",
+      "name": "Debate-as-martingale (voting drives the gains)",
+      "attrs": {
+        "definition": "Under identical inputs, multi-agent debate forms a martingale over beliefs — expected correctness does not rise with rounds; majority voting, not the debate structure, accounts for most measured gains.",
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "concept:agent_interoperability_stack",
+      "type": "Concept",
+      "name": "Agent interoperability stack (MCP / A2A / ACP / ANP)",
+      "attrs": {
+        "definition": "Society infrastructure: MCP (tool access), A2A (Google, cross-platform agent collaboration), ACP (IBM, edge/local), ANP (decentralized marketplaces). A2A donated to Linux Foundation 2025-06.",
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "concept:task_vector_arithmetic",
+      "type": "Concept",
+      "name": "Task vector arithmetic",
+      "attrs": {
+        "definition": "Weight delta (finetuned − pretrained) treated as a composable vector: add/negate/scale to assemble capabilities.",
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "concept:destructive_interference_merging",
+      "type": "Concept",
+      "name": "Destructive interference in merging",
+      "attrs": {
+        "definition": "Naive summation of task vectors hurts; TIES/DARE exist to de-interfere (trim, sign-elect, drop-and-rescale).",
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "concept:quality_vs_diversity_tradeoff",
+      "type": "Concept",
+      "name": "Quality-vs-diversity tradeoff in composition",
+      "attrs": {
+        "definition": "Diversity helps only when component quality is held equal; adding weaker/heterogeneous pieces lowers average quality.",
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "concept:co_failure_ceiling",
+      "type": "Concept",
+      "name": "Co-failure ceiling (1 − beta)",
+      "attrs": {
+        "definition": "Ensemble accuracy is capped by 1 minus the rate all models fail the same query; combining rarely beats the single best model without a strong query-level routing signal.",
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "concept:llm_as_orchestrator_routing",
+      "type": "Concept",
+      "name": "LLM-as-orchestrator / query-level routing",
+      "attrs": {
+        "definition": "Pick-one or direct-per-step across heterogeneous models (RouteLLM, FrugalGPT, AB-MCTS model selection).",
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "concept:skill_library_composition",
+      "type": "Concept",
+      "name": "Skill-library / generative skill composition",
+      "attrs": {
+        "definition": "Ever-growing library of executable, retrievable skills that compose into new behavior without weight updates.",
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "concept:planning_as_inference",
+      "type": "Concept",
+      "name": "Planning-as-inference (diffusion planning)",
+      "attrs": {
+        "definition": "Train a generative (diffusion/flow) model over trajectories and sample coherent long-horizon plans via denoising.",
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "concept:library_learning_abstraction",
+      "type": "Concept",
+      "name": "Library learning / abstraction (program synthesis)",
+      "attrs": {
+        "definition": "Grow reusable compositional symbolic abstractions (DreamCoder/LILO) — programs as composable skills.",
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "concept:agent_workflow_distillation",
+      "type": "Concept",
+      "name": "Agent / workflow distillation",
+      "attrs": {
+        "definition": "Collapse a multi-step or multi-agent workflow into one smaller model or capsule — AIOS's own ASC-0284 negative sits here.",
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "concept:write_vs_retrieve_bottleneck",
+      "type": "Concept",
+      "name": "Write-vs-retrieve memory-composition bottleneck",
+      "attrs": {
+        "definition": "Composition quality lives in retrieval, not write-time processing; raw-chunk storage can match expensive extraction.",
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "claim:d7_anthropic_multiagent_beats_single",
+      "type": "Claim",
+      "name": "Anthropic's orchestrator (Opus) + parallel subagents (Sonnet) beat single-agent Opus by 90.2% on an internal research eval — but at ~15x the token cost (Anthropic engineering blog, 2025-06).",
+      "attrs": {
+        "grade": "primary",
+        "asserted_by": "paper:2304.03442",
+        "url": "https://www.anthropic.com/engineering/multi-agent-research-system"
+      },
+      "source": "agent:multi_agent_society (grounded WebSearch/HF/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "claim:d7_debate_improves_reasoning",
+      "type": "Claim",
+      "name": "Multiple LLM instances debating over rounds improve factuality and math/strategic reasoning and reduce hallucination (Du et al.).",
+      "attrs": {
+        "grade": "primary",
+        "asserted_by": "paper:2305.14325"
+      },
+      "source": "agent:multi_agent_society (grounded WebSearch/HF/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "claim:d7_accdc_small_experts_beat_larger",
+      "type": "Claim",
+      "name": "AC/DC coevolves LLMs via model merging + synthetic tasks into an archive of small experts that surpass larger LLMs on capability coverage while using less GPU memory.",
+      "attrs": {
+        "grade": "primary",
+        "asserted_by": "paper:2604.14969"
+      },
+      "source": "agent:multi_agent_society (grounded WebSearch/HF/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "claim:d7_medagentboard_not_consistent",
+      "type": "Claim",
+      "name": "Across medical QA/VQA/EHR/workflow, multi-agent collaboration does NOT consistently beat advanced single LLMs and loses to specialized conventional methods on VQA/EHR; extra complexity must be justified.",
+      "attrs": {
+        "grade": "primary",
+        "asserted_by": "paper:2505.12371"
+      },
+      "source": "agent:multi_agent_society (grounded WebSearch/HF/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "claim:d7_mast_gains_minimal",
+      "type": "Claim",
+      "name": "MAS performance gains on popular benchmarks 'often remain minimal compared with single-agent frameworks'; failures are structural (14 modes / 3 categories), needing redesign not prompt fixes (kappa=0.88, 1600+ traces).",
+      "attrs": {
+        "grade": "primary",
+        "asserted_by": "paper:2503.13657"
+      },
+      "source": "agent:multi_agent_society (grounded WebSearch/HF/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "claim:d7_teams_hold_experts_back",
+      "type": "Claim",
+      "name": "Self-organizing LLM teams fail to match their own best expert member — losses up to 37.6% — even when told who the expert is; the bottleneck is expert-leveraging (integrative averaging), not identification.",
+      "attrs": {
+        "grade": "primary",
+        "asserted_by": "paper:2602.01011"
+      },
+      "source": "agent:multi_agent_society (grounded WebSearch/HF/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "claim:d7_illusion_underperform_cot_sc",
+      "type": "Claim",
+      "name": "Automatically-generated multi-agent systems consistently underperform CoT-Self-Consistency despite up to 10x cost — 'architectural bloat' masked by evaluation frameworks.",
+      "attrs": {
+        "grade": "primary",
+        "asserted_by": "paper:2606.13003"
+      },
+      "source": "agent:multi_agent_society (grounded WebSearch/HF/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "claim:d7_debate_is_voting",
+      "type": "Claim",
+      "name": "Majority voting alone accounts for most of multi-agent debate's gains; under identical inputs debate is a martingale over beliefs, so debate itself does not raise expected correctness.",
+      "attrs": {
+        "grade": "primary",
+        "asserted_by": "paper:2508.17536"
+      },
+      "source": "agent:multi_agent_society (grounded WebSearch/HF/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "claim:d7_single_prompt_matches_multiagent",
+      "type": "Claim",
+      "name": "A single agent with strong prompting roughly matches the best multi-agent discussion; multi-agent only wins when no demonstration is in the prompt.",
+      "attrs": {
+        "grade": "primary",
+        "asserted_by": "paper:2402.18272"
+      },
+      "source": "agent:multi_agent_society (grounded WebSearch/HF/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "claim:d7_more_calls_rise_then_fall",
+      "type": "Claim",
+      "name": "In compound inference (Vote / Filter-Vote), performance first rises then FALLS as the number of LLM calls increases — more calls can hurt.",
+      "attrs": {
+        "grade": "primary",
+        "asserted_by": "paper:2403.02419"
+      },
+      "source": "agent:multi_agent_society (grounded WebSearch/HF/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "claim:d7_moa_mixing_helps",
+      "type": "Claim",
+      "name": "Layered Mixture-of-Agents over open-source models scores 65.1% on AlpacaEval 2.0 vs 57.5% for GPT-4 Omni; LLMs generate better responses when shown others' outputs ('collaborativeness'), even from weaker models.",
+      "attrs": {
+        "grade": "primary",
+        "asserted_by": "paper:2406.04692"
+      },
+      "source": "agent:model_assembly_composition (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "claim:d7_evomerge_7b_beats_70b",
+      "type": "Claim",
+      "name": "Evolutionary merging in parameter + data-flow space produced a 7B Japanese-math model (EvoLLM-JP, 55.2%) that surpasses some 70B models — assembling existing open models without training.",
+      "attrs": {
+        "grade": "primary",
+        "asserted_by": "paper:2403.13187"
+      },
+      "source": "agent:model_assembly_composition (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "claim:d7_abmcts_multimodel_beats_individual",
+      "type": "Claim",
+      "name": "Multi-LLM AB-MCTS (o4-mini + Gemini-2.5-Pro + R1-0528) solves 27.5% of ARC-AGI-2 vs 23% for o4-mini alone by adaptively choosing wider-vs-deeper AND which model per step (Thompson sampling).",
+      "attrs": {
+        "grade": "primary",
+        "asserted_by": "paper:2503.04412"
+      },
+      "source": "agent:model_assembly_composition (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "claim:d7_more_agents_scale",
+      "type": "Claim",
+      "name": "Pure sampling-and-voting scales with agent count: an ensemble of ~15 lets Llama2-13B approach Llama2-70B; gains grow with task difficulty.",
+      "attrs": {
+        "grade": "primary",
+        "asserted_by": "paper:2402.05120"
+      },
+      "source": "agent:model_assembly_composition (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "claim:d7_skillcomposer_gains",
+      "type": "Claim",
+      "name": "Predicting an executable skill plan from (task, skill library) gives +23.1 / +18.2 pp over baselines on production coding agents (abstract-level numbers).",
+      "attrs": {
+        "grade": "hypothesis",
+        "asserted_by": "paper:2606.32025"
+      },
+      "source": "agent:model_assembly_composition (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "claim:d7_selfmoa_single_best_wins",
+      "type": "Claim",
+      "name": "Self-MoA (aggregating samples from the single best model) beats mixed Mixture-of-Agents by +6.6% on AlpacaEval 2.0 and +3.8% avg (MMLU/CRUX/MATH); mixing weaker models lowers average quality — quality dominates diversity.",
+      "attrs": {
+        "grade": "primary",
+        "asserted_by": "paper:2502.00674"
+      },
+      "source": "agent:model_assembly_composition (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "claim:d7_cofailure_ceiling",
+      "type": "Claim",
+      "name": "Ensemble accuracy is hard-capped at 1 - beta (beta = shared-failure rate, measured ~0.05-0.13, ~2.5x worse than independence); 'combining models rarely beats the single best model without a strong query-level routing signal' (single-author preprint, numbers UNVERIFIED beyond abstract).",
+      "attrs": {
+        "grade": "hypothesis",
+        "asserted_by": "paper:2606.27288"
+      },
+      "source": "agent:model_assembly_composition (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "claim:d7_inthewild_only_task_arithmetic",
+      "type": "Claim",
+      "name": "Across 6 merging methods x 4 LLMs x 12 checkpoints x 16 benchmarks, Task Arithmetic is the ONLY method that reliably gains; interference-aware/subspace methods (TIES/DARE-style) give no notable gain over base in the wild.",
+      "attrs": {
+        "grade": "primary",
+        "asserted_by": "paper:2511.21437"
+      },
+      "source": "agent:model_assembly_composition (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "claim:d7_ties_dare_de_interfere",
+      "type": "Claim",
+      "name": "Interference-aware merging (TIES trim+elect-sign; DARE drop-and-rescale of 90-99% of deltas) beats naive task arithmetic in-paper by removing destructive interference across tasks.",
+      "attrs": {
+        "grade": "primary",
+        "asserted_by": "paper:2306.01708"
+      },
+      "source": "agent:model_assembly_composition (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "claim:d7_routellm_cost_cut",
+      "type": "Claim",
+      "name": "Learned strong/weak routing from preference data cuts cost >2x with no quality loss and transfers across model pairs; FrugalGPT cascades match GPT-4 at up to 98% lower cost.",
+      "attrs": {
+        "grade": "primary",
+        "asserted_by": "paper:2406.18665"
+      },
+      "source": "agent:model_assembly_composition (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "claim:d7_diffusion_llm_competitive",
+      "type": "Claim",
+      "name": "An 8B masked diffusion LM trained from scratch (LLaDA) is competitive with LLaMA3-8B in in-context learning and instruction following — first strong evidence diffusion LMs rival autoregressive at scale.",
+      "attrs": {
+        "grade": "primary",
+        "asserted_by": "paper:2502.09992"
+      },
+      "source": "agent:generative_composition_methods (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "claim:d7_diffusion_underperforms_multistep",
+      "type": "Claim",
+      "name": "Diffusion LMs consistently underperform on multi-step reasoning, but a training-free ~100-token AR-generated plan lifts LLaDA-8B GSM8K 75.6->87.2% (+11.6pp, matching same-size AR) — the gap is a coordination problem, largely closable with structure conditioning.",
+      "attrs": {
+        "grade": "primary",
+        "asserted_by": "paper:2603.13243"
+      },
+      "source": "agent:generative_composition_methods (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "claim:d7_over_capable_teacher_degrades",
+      "type": "Claim",
+      "name": "CoT distillation follows a power law in teacher/student/data, with a U-shaped regime where an OVER-capable teacher DEGRADES the student — the strongest teacher is not the best teacher.",
+      "attrs": {
+        "grade": "hypothesis",
+        "asserted_by": "paper:2604.08880"
+      },
+      "source": "agent:generative_composition_methods (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "claim:d7_agentark_multiagent_into_single",
+      "type": "Claim",
+      "name": "Multi-agent debate dynamics can be distilled into ONE model's weights (reasoning-SFT + trajectory augmentation + process-aware training), keeping single-agent cost while gaining multi-agent self-correction.",
+      "attrs": {
+        "grade": "primary",
+        "asserted_by": "paper:2602.03955"
+      },
+      "source": "agent:generative_composition_methods (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "claim:d7_write_barely_matters_retrieve_dominates",
+      "type": "Claim",
+      "name": "On LoCoMo, the retrieval method dominates agent-memory quality (~20pt spread) while the write strategy barely matters (3-8pt); zero-LLM raw-chunk storage matches expensive Mem0/MemGPT extraction.",
+      "attrs": {
+        "grade": "primary",
+        "asserted_by": "paper:2603.02473"
+      },
+      "source": "agent:generative_composition_methods (grounded WebSearch/arxiv, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "id": "claim:d7_aios_asc0284_capsule_negative",
+      "type": "Claim",
+      "name": "AIOS's own ASC-0284: distilling a multi-step agent 'runtime capsule' into a small local model (qwen3:1.7b) returned HONEST_NEGATIVE — B1(capsule) won 0/12 paired tasks, both arms 0/12 exact success, capsule increased scope violations 1->3. Workflow/capsule distillation did NOT transfer to a T1 substrate.",
+      "attrs": {
+        "grade": "primary"
+      },
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    }
+  ],
+  "relations": [
+    {
+      "src_id": "D7",
+      "rel": "domain_has_methodology",
+      "dst_id": "methodology:multi_agent_society",
+      "source": "schema §3",
+      "domain": "D7"
+    },
+    {
+      "src_id": "D7",
+      "rel": "domain_has_methodology",
+      "dst_id": "methodology:model_method_assembly_composition",
+      "source": "schema §3",
+      "domain": "D7"
+    },
+    {
+      "src_id": "D7",
+      "rel": "domain_has_methodology",
+      "dst_id": "methodology:generative_composition_methods",
+      "source": "schema §3",
+      "domain": "D7"
+    },
+    {
+      "src_id": "methodology:multi_agent_society",
+      "rel": "concept_relates_to",
+      "dst_id": "methodology:agentic_pipelines_multi_agent_orchestration_tool_use",
+      "source": "cross-domain reuse: society = social layer above D4 orchestration methodology",
+      "domain": "D7"
+    },
+    {
+      "src_id": "methodology:generative_composition_methods",
+      "rel": "concept_relates_to",
+      "dst_id": "methodology:diffusion_flow_matching_generative_models",
+      "source": "cross-domain reuse of the generative-modeling methodology node",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:joon_sung_park",
+      "rel": "affiliated_with",
+      "dst_id": "lab:stanford_nlp_hai",
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:michael_bernstein",
+      "rel": "affiliated_with",
+      "dst_id": "lab:stanford_nlp_hai",
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:yong_li",
+      "rel": "affiliated_with",
+      "dst_id": "lab:tsinghua_fib_lab",
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:mert_cemri",
+      "rel": "affiliated_with",
+      "dst_id": "lab:uc_berkeley_sky",
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:ion_stoica",
+      "rel": "affiliated_with",
+      "dst_id": "lab:uc_berkeley_sky",
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:matei_zaharia",
+      "rel": "affiliated_with",
+      "dst_id": "lab:uc_berkeley_sky",
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:james_zou",
+      "rel": "affiliated_with",
+      "dst_id": "lab:stanford_nlp_hai",
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:lingjiao_chen",
+      "rel": "affiliated_with",
+      "dst_id": "lab:stanford_nlp_hai",
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:yilun_du",
+      "rel": "affiliated_with",
+      "dst_id": "lab:mit_csail",
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:joshua_tenenbaum",
+      "rel": "affiliated_with",
+      "dst_id": "lab:mit_csail",
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:igor_mordatch",
+      "rel": "affiliated_with",
+      "dst_id": "org:google_deepmind",
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:yixuan_li",
+      "rel": "affiliated_with",
+      "dst_id": "lab:uw_madison",
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:gabriel_ilharco",
+      "rel": "affiliated_with",
+      "dst_id": "lab:uw_mlfoundations",
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:mitchell_wortsman",
+      "rel": "affiliated_with",
+      "dst_id": "lab:uw_mlfoundations",
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:colin_raffel",
+      "rel": "affiliated_with",
+      "dst_id": "lab:unc_chapel_hill",
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:prateek_yadav",
+      "rel": "affiliated_with",
+      "dst_id": "lab:unc_chapel_hill",
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:takuya_akiba",
+      "rel": "affiliated_with",
+      "dst_id": "org:sakana_ai",
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:david_ha",
+      "rel": "affiliated_with",
+      "dst_id": "org:sakana_ai",
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:yingtao_tian",
+      "rel": "affiliated_with",
+      "dst_id": "org:sakana_ai",
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:yujin_tang",
+      "rel": "affiliated_with",
+      "dst_id": "org:sakana_ai",
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:junlin_wang",
+      "rel": "affiliated_with",
+      "dst_id": "org:together_ai",
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:isaac_ong",
+      "rel": "affiliated_with",
+      "dst_id": "lab:uc_berkeley_sky",
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:guanzhi_wang",
+      "rel": "affiliated_with",
+      "dst_id": "org:nvidia",
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:anima_anandkumar",
+      "rel": "affiliated_with",
+      "dst_id": "org:nvidia",
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:yaron_lipman",
+      "rel": "affiliated_with",
+      "dst_id": "org:meta_fair",
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:itai_gat",
+      "rel": "affiliated_with",
+      "dst_id": "org:meta_fair",
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:michael_janner",
+      "rel": "affiliated_with",
+      "dst_id": "lab:uc_berkeley_sky",
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:kevin_ellis",
+      "rel": "affiliated_with",
+      "dst_id": "lab:cornell",
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:jacob_andreas",
+      "rel": "affiliated_with",
+      "dst_id": "lab:mit_csail",
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:sung_ju_hwang",
+      "rel": "affiliated_with",
+      "dst_id": "lab:kaist",
+      "source": "claude@myworld verification (WebSearch/WebFetch, 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:percy_liang",
+      "rel": "affiliated_with",
+      "dst_id": "lab:stanford_nlp_hai",
+      "source": "reuse existing D1 person id; Generative Agents co-author",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2304.03442",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F1",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2304.03442",
+      "rel": "in_domain",
+      "dst_id": "methodology:multi_agent_society",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:joon_sung_park",
+      "rel": "authored",
+      "dst_id": "paper:2304.03442",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:michael_bernstein",
+      "rel": "authored",
+      "dst_id": "paper:2304.03442",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:percy_liang",
+      "rel": "authored",
+      "dst_id": "paper:2304.03442",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2502.08691",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F1",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2502.08691",
+      "rel": "in_domain",
+      "dst_id": "methodology:multi_agent_society",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:yong_li",
+      "rel": "authored",
+      "dst_id": "paper:2502.08691",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2312.03664",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F1",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2312.03664",
+      "rel": "in_domain",
+      "dst_id": "methodology:multi_agent_society",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2510.23595",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F1",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2510.23595",
+      "rel": "in_domain",
+      "dst_id": "methodology:multi_agent_society",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2603.15255",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F1",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2603.15255",
+      "rel": "in_domain",
+      "dst_id": "methodology:multi_agent_society",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2509.09629",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F1",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2509.09629",
+      "rel": "in_domain",
+      "dst_id": "methodology:multi_agent_society",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2305.14325",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F1",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2305.14325",
+      "rel": "in_domain",
+      "dst_id": "methodology:multi_agent_society",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:yilun_du",
+      "rel": "authored",
+      "dst_id": "paper:2305.14325",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:joshua_tenenbaum",
+      "rel": "authored",
+      "dst_id": "paper:2305.14325",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:igor_mordatch",
+      "rel": "authored",
+      "dst_id": "paper:2305.14325",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2604.14969",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F1",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2604.14969",
+      "rel": "in_domain",
+      "dst_id": "methodology:multi_agent_society",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:yingtao_tian",
+      "rel": "authored",
+      "dst_id": "paper:2604.14969",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:yujin_tang",
+      "rel": "authored",
+      "dst_id": "paper:2604.14969",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2505.02279",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F1",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2505.02279",
+      "rel": "in_domain",
+      "dst_id": "methodology:multi_agent_society",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2505.12371",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F1",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2505.12371",
+      "rel": "in_domain",
+      "dst_id": "methodology:multi_agent_society",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2503.13657",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F1",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2503.13657",
+      "rel": "in_domain",
+      "dst_id": "methodology:multi_agent_society",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:mert_cemri",
+      "rel": "authored",
+      "dst_id": "paper:2503.13657",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:ion_stoica",
+      "rel": "authored",
+      "dst_id": "paper:2503.13657",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:matei_zaharia",
+      "rel": "authored",
+      "dst_id": "paper:2503.13657",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2602.01011",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F1",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2602.01011",
+      "rel": "in_domain",
+      "dst_id": "methodology:multi_agent_society",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:james_zou",
+      "rel": "authored",
+      "dst_id": "paper:2602.01011",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2606.13003",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F1",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2606.13003",
+      "rel": "in_domain",
+      "dst_id": "methodology:multi_agent_society",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2502.08788",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F1",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2502.08788",
+      "rel": "in_domain",
+      "dst_id": "methodology:multi_agent_society",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2508.17536",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F1",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2508.17536",
+      "rel": "in_domain",
+      "dst_id": "methodology:multi_agent_society",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:yixuan_li",
+      "rel": "authored",
+      "dst_id": "paper:2508.17536",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2505.22960",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F1",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2505.22960",
+      "rel": "in_domain",
+      "dst_id": "methodology:multi_agent_society",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2402.18272",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F1",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2402.18272",
+      "rel": "in_domain",
+      "dst_id": "methodology:multi_agent_society",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2403.02419",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F1",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2403.02419",
+      "rel": "in_domain",
+      "dst_id": "methodology:multi_agent_society",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:lingjiao_chen",
+      "rel": "authored",
+      "dst_id": "paper:2403.02419",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:james_zou",
+      "rel": "authored",
+      "dst_id": "paper:2403.02419",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2212.04089",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F2",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2212.04089",
+      "rel": "in_domain",
+      "dst_id": "methodology:model_method_assembly_composition",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:gabriel_ilharco",
+      "rel": "authored",
+      "dst_id": "paper:2212.04089",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:mitchell_wortsman",
+      "rel": "authored",
+      "dst_id": "paper:2212.04089",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2306.01708",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F2",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2306.01708",
+      "rel": "in_domain",
+      "dst_id": "methodology:model_method_assembly_composition",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:prateek_yadav",
+      "rel": "authored",
+      "dst_id": "paper:2306.01708",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:colin_raffel",
+      "rel": "authored",
+      "dst_id": "paper:2306.01708",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2311.03099",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F2",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2311.03099",
+      "rel": "in_domain",
+      "dst_id": "methodology:model_method_assembly_composition",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:le_yu",
+      "rel": "authored",
+      "dst_id": "paper:2311.03099",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2403.13187",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F2",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2403.13187",
+      "rel": "in_domain",
+      "dst_id": "methodology:model_method_assembly_composition",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:takuya_akiba",
+      "rel": "authored",
+      "dst_id": "paper:2403.13187",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:david_ha",
+      "rel": "authored",
+      "dst_id": "paper:2403.13187",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2203.05482",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F2",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2203.05482",
+      "rel": "in_domain",
+      "dst_id": "methodology:model_method_assembly_composition",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:mitchell_wortsman",
+      "rel": "authored",
+      "dst_id": "paper:2203.05482",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:gabriel_ilharco",
+      "rel": "authored",
+      "dst_id": "paper:2203.05482",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2511.21437",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F2",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2511.21437",
+      "rel": "in_domain",
+      "dst_id": "methodology:model_method_assembly_composition",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2603.09938",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F2",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2603.09938",
+      "rel": "in_domain",
+      "dst_id": "methodology:model_method_assembly_composition",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2406.04692",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F2",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2406.04692",
+      "rel": "in_domain",
+      "dst_id": "methodology:model_method_assembly_composition",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:junlin_wang",
+      "rel": "authored",
+      "dst_id": "paper:2406.04692",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:james_zou",
+      "rel": "authored",
+      "dst_id": "paper:2406.04692",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2502.00674",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F2",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2502.00674",
+      "rel": "in_domain",
+      "dst_id": "methodology:model_method_assembly_composition",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:wenzhe_li",
+      "rel": "authored",
+      "dst_id": "paper:2502.00674",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2402.05120",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F2",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2402.05120",
+      "rel": "in_domain",
+      "dst_id": "methodology:model_method_assembly_composition",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2306.02561",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F2",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2306.02561",
+      "rel": "in_domain",
+      "dst_id": "methodology:model_method_assembly_composition",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2606.27288",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F2",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2606.27288",
+      "rel": "in_domain",
+      "dst_id": "methodology:model_method_assembly_composition",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2406.18665",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F2",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2406.18665",
+      "rel": "in_domain",
+      "dst_id": "methodology:model_method_assembly_composition",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:isaac_ong",
+      "rel": "authored",
+      "dst_id": "paper:2406.18665",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:ion_stoica",
+      "rel": "authored",
+      "dst_id": "paper:2406.18665",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2305.05176",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F2",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2305.05176",
+      "rel": "in_domain",
+      "dst_id": "methodology:model_method_assembly_composition",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:lingjiao_chen",
+      "rel": "authored",
+      "dst_id": "paper:2305.05176",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:matei_zaharia",
+      "rel": "authored",
+      "dst_id": "paper:2305.05176",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:james_zou",
+      "rel": "authored",
+      "dst_id": "paper:2305.05176",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2503.04412",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F2",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2503.04412",
+      "rel": "in_domain",
+      "dst_id": "methodology:model_method_assembly_composition",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:takuya_akiba",
+      "rel": "authored",
+      "dst_id": "paper:2503.04412",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2305.16291",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F2",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2305.16291",
+      "rel": "in_domain",
+      "dst_id": "methodology:model_method_assembly_composition",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:guanzhi_wang",
+      "rel": "authored",
+      "dst_id": "paper:2305.16291",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:anima_anandkumar",
+      "rel": "authored",
+      "dst_id": "paper:2305.16291",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2606.32025",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F2",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2606.32025",
+      "rel": "in_domain",
+      "dst_id": "methodology:model_method_assembly_composition",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2502.09992",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F3",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2502.09992",
+      "rel": "in_domain",
+      "dst_id": "methodology:generative_composition_methods",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2402.07754",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F3",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2402.07754",
+      "rel": "in_domain",
+      "dst_id": "methodology:generative_composition_methods",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2504.12216",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F3",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2504.12216",
+      "rel": "in_domain",
+      "dst_id": "methodology:generative_composition_methods",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2603.13243",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F3",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2603.13243",
+      "rel": "in_domain",
+      "dst_id": "methodology:generative_composition_methods",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2210.02747",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F3",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2210.02747",
+      "rel": "in_domain",
+      "dst_id": "methodology:generative_composition_methods",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:yaron_lipman",
+      "rel": "authored",
+      "dst_id": "paper:2210.02747",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2407.15595",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F3",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2407.15595",
+      "rel": "in_domain",
+      "dst_id": "methodology:generative_composition_methods",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:itai_gat",
+      "rel": "authored",
+      "dst_id": "paper:2407.15595",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:yaron_lipman",
+      "rel": "authored",
+      "dst_id": "paper:2407.15595",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2205.09991",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F3",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2205.09991",
+      "rel": "in_domain",
+      "dst_id": "methodology:generative_composition_methods",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:michael_janner",
+      "rel": "authored",
+      "dst_id": "paper:2205.09991",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:yilun_du",
+      "rel": "authored",
+      "dst_id": "paper:2205.09991",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:joshua_tenenbaum",
+      "rel": "authored",
+      "dst_id": "paper:2205.09991",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2006.08381",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F3",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2006.08381",
+      "rel": "in_domain",
+      "dst_id": "methodology:generative_composition_methods",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:kevin_ellis",
+      "rel": "authored",
+      "dst_id": "paper:2006.08381",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:joshua_tenenbaum",
+      "rel": "authored",
+      "dst_id": "paper:2006.08381",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2310.19791",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F3",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2310.19791",
+      "rel": "in_domain",
+      "dst_id": "methodology:generative_composition_methods",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:jacob_andreas",
+      "rel": "authored",
+      "dst_id": "paper:2310.19791",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:joshua_tenenbaum",
+      "rel": "authored",
+      "dst_id": "paper:2310.19791",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2505.17612",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F3",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2505.17612",
+      "rel": "in_domain",
+      "dst_id": "methodology:generative_composition_methods",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "person:sung_ju_hwang",
+      "rel": "authored",
+      "dst_id": "paper:2505.17612",
+      "source": "authorship (grounded 2026-07-17)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2602.03955",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F3",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2602.03955",
+      "rel": "in_domain",
+      "dst_id": "methodology:generative_composition_methods",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2604.08880",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F3",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2604.08880",
+      "rel": "in_domain",
+      "dst_id": "methodology:generative_composition_methods",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2603.02473",
+      "rel": "in_domain",
+      "dst_id": "D7",
+      "source": "family tag F3",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2603.02473",
+      "rel": "in_domain",
+      "dst_id": "methodology:generative_composition_methods",
+      "source": "family methodology tag",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2304.03442",
+      "rel": "asserts",
+      "dst_id": "claim:d7_anthropic_multiagent_beats_single",
+      "source": "claim provenance",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2305.14325",
+      "rel": "asserts",
+      "dst_id": "claim:d7_debate_improves_reasoning",
+      "source": "claim provenance",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2604.14969",
+      "rel": "asserts",
+      "dst_id": "claim:d7_accdc_small_experts_beat_larger",
+      "source": "claim provenance",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2505.12371",
+      "rel": "asserts",
+      "dst_id": "claim:d7_medagentboard_not_consistent",
+      "source": "claim provenance",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2503.13657",
+      "rel": "asserts",
+      "dst_id": "claim:d7_mast_gains_minimal",
+      "source": "claim provenance",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2602.01011",
+      "rel": "asserts",
+      "dst_id": "claim:d7_teams_hold_experts_back",
+      "source": "claim provenance",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2606.13003",
+      "rel": "asserts",
+      "dst_id": "claim:d7_illusion_underperform_cot_sc",
+      "source": "claim provenance",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2508.17536",
+      "rel": "asserts",
+      "dst_id": "claim:d7_debate_is_voting",
+      "source": "claim provenance",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2402.18272",
+      "rel": "asserts",
+      "dst_id": "claim:d7_single_prompt_matches_multiagent",
+      "source": "claim provenance",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2403.02419",
+      "rel": "asserts",
+      "dst_id": "claim:d7_more_calls_rise_then_fall",
+      "source": "claim provenance",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2406.04692",
+      "rel": "asserts",
+      "dst_id": "claim:d7_moa_mixing_helps",
+      "source": "claim provenance",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2403.13187",
+      "rel": "asserts",
+      "dst_id": "claim:d7_evomerge_7b_beats_70b",
+      "source": "claim provenance",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2503.04412",
+      "rel": "asserts",
+      "dst_id": "claim:d7_abmcts_multimodel_beats_individual",
+      "source": "claim provenance",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2402.05120",
+      "rel": "asserts",
+      "dst_id": "claim:d7_more_agents_scale",
+      "source": "claim provenance",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2606.32025",
+      "rel": "asserts",
+      "dst_id": "claim:d7_skillcomposer_gains",
+      "source": "claim provenance",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2502.00674",
+      "rel": "asserts",
+      "dst_id": "claim:d7_selfmoa_single_best_wins",
+      "source": "claim provenance",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2606.27288",
+      "rel": "asserts",
+      "dst_id": "claim:d7_cofailure_ceiling",
+      "source": "claim provenance",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2511.21437",
+      "rel": "asserts",
+      "dst_id": "claim:d7_inthewild_only_task_arithmetic",
+      "source": "claim provenance",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2306.01708",
+      "rel": "asserts",
+      "dst_id": "claim:d7_ties_dare_de_interfere",
+      "source": "claim provenance",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2406.18665",
+      "rel": "asserts",
+      "dst_id": "claim:d7_routellm_cost_cut",
+      "source": "claim provenance",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2502.09992",
+      "rel": "asserts",
+      "dst_id": "claim:d7_diffusion_llm_competitive",
+      "source": "claim provenance",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2603.13243",
+      "rel": "asserts",
+      "dst_id": "claim:d7_diffusion_underperforms_multistep",
+      "source": "claim provenance",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2604.08880",
+      "rel": "asserts",
+      "dst_id": "claim:d7_over_capable_teacher_degrades",
+      "source": "claim provenance",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2602.03955",
+      "rel": "asserts",
+      "dst_id": "claim:d7_agentark_multiagent_into_single",
+      "source": "claim provenance",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2603.02473",
+      "rel": "asserts",
+      "dst_id": "claim:d7_write_barely_matters_retrieve_dominates",
+      "source": "claim provenance",
+      "domain": "D7"
+    },
+    {
+      "src_id": "claim:d7_aios_asc0284_capsule_negative",
+      "rel": "concept_relates_to",
+      "dst_id": "concept:agent_workflow_distillation",
+      "source": "AIOS internal negative evidence",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2304.03442",
+      "rel": "proposes",
+      "dst_id": "concept:generative_agents_memory_stream_reflection",
+      "source": "paper proposes concept",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2604.14969",
+      "rel": "proposes",
+      "dst_id": "concept:task_capability_coevolution",
+      "source": "paper proposes concept",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2510.23595",
+      "rel": "proposes",
+      "dst_id": "concept:task_capability_coevolution",
+      "source": "paper proposes concept",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2508.17536",
+      "rel": "proposes",
+      "dst_id": "concept:multi_agent_debate_martingale",
+      "source": "paper proposes concept",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2505.02279",
+      "rel": "proposes",
+      "dst_id": "concept:agent_interoperability_stack",
+      "source": "paper proposes concept",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2212.04089",
+      "rel": "proposes",
+      "dst_id": "concept:task_vector_arithmetic",
+      "source": "paper proposes concept",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2306.01708",
+      "rel": "proposes",
+      "dst_id": "concept:destructive_interference_merging",
+      "source": "paper proposes concept",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2311.03099",
+      "rel": "proposes",
+      "dst_id": "concept:destructive_interference_merging",
+      "source": "paper proposes concept",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2502.00674",
+      "rel": "proposes",
+      "dst_id": "concept:quality_vs_diversity_tradeoff",
+      "source": "paper proposes concept",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2606.27288",
+      "rel": "proposes",
+      "dst_id": "concept:co_failure_ceiling",
+      "source": "paper proposes concept",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2406.18665",
+      "rel": "proposes",
+      "dst_id": "concept:llm_as_orchestrator_routing",
+      "source": "paper proposes concept",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2503.04412",
+      "rel": "proposes",
+      "dst_id": "concept:llm_as_orchestrator_routing",
+      "source": "paper proposes concept",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2305.16291",
+      "rel": "proposes",
+      "dst_id": "concept:skill_library_composition",
+      "source": "paper proposes concept",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2606.32025",
+      "rel": "proposes",
+      "dst_id": "concept:skill_library_composition",
+      "source": "paper proposes concept",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2205.09991",
+      "rel": "proposes",
+      "dst_id": "concept:planning_as_inference",
+      "source": "paper proposes concept",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2006.08381",
+      "rel": "proposes",
+      "dst_id": "concept:library_learning_abstraction",
+      "source": "paper proposes concept",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2310.19791",
+      "rel": "proposes",
+      "dst_id": "concept:library_learning_abstraction",
+      "source": "paper proposes concept",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2505.17612",
+      "rel": "proposes",
+      "dst_id": "concept:agent_workflow_distillation",
+      "source": "paper proposes concept",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2602.03955",
+      "rel": "proposes",
+      "dst_id": "concept:agent_workflow_distillation",
+      "source": "paper proposes concept",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2603.02473",
+      "rel": "proposes",
+      "dst_id": "concept:write_vs_retrieve_bottleneck",
+      "source": "paper proposes concept",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2210.02747",
+      "rel": "proposes",
+      "dst_id": "concept:planning_as_inference",
+      "source": "paper proposes concept",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2406.04692",
+      "rel": "evaluated_on",
+      "dst_id": "bench:alpacaeval_2",
+      "source": "reported evaluation",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2502.00674",
+      "rel": "evaluated_on",
+      "dst_id": "bench:alpacaeval_2",
+      "source": "reported evaluation",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2503.04412",
+      "rel": "evaluated_on",
+      "dst_id": "bench:arc_agi_2",
+      "source": "reported evaluation",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2505.12371",
+      "rel": "evaluated_on",
+      "dst_id": "bench:medagentboard",
+      "source": "reported evaluation",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2503.13657",
+      "rel": "evaluated_on",
+      "dst_id": "bench:mast_data",
+      "source": "reported evaluation",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2603.13243",
+      "rel": "evaluated_on",
+      "dst_id": "bench:gsm8k",
+      "source": "reported evaluation",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2603.02473",
+      "rel": "evaluated_on",
+      "dst_id": "bench:locomo",
+      "source": "reported evaluation",
+      "domain": "D7"
+    },
+    {
+      "src_id": "paper:2606.27288",
+      "rel": "evaluated_on",
+      "dst_id": "bench:gpqa_diamond",
+      "source": "reported evaluation",
+      "domain": "D7"
+    },
+    {
+      "src_id": "claim:d7_anthropic_multiagent_beats_single",
+      "rel": "contradicts",
+      "dst_id": "claim:d7_illusion_underperform_cot_sc",
+      "source": "frontier disagreement: multi-agent +90.2% (curated, 15x cost) vs auto-MAS underperform CoT-SC at 10x cost — the helps-vs-hurts crux",
+      "domain": "D7"
+    },
+    {
+      "src_id": "claim:d7_anthropic_multiagent_beats_single",
+      "rel": "contradicts",
+      "dst_id": "claim:d7_medagentboard_not_consistent",
+      "source": "frontier disagreement: multi-agent wins on open-ended research vs does-not-consistently-beat-single-LLM on medical tasks",
+      "domain": "D7"
+    },
+    {
+      "src_id": "claim:d7_debate_improves_reasoning",
+      "rel": "contradicts",
+      "dst_id": "claim:d7_debate_is_voting",
+      "source": "frontier disagreement: debate improves reasoning vs voting (not debate) drives the gains; debate = martingale",
+      "domain": "D7"
+    },
+    {
+      "src_id": "claim:d7_debate_improves_reasoning",
+      "rel": "contradicts",
+      "dst_id": "claim:d7_single_prompt_matches_multiagent",
+      "source": "frontier disagreement: debate helps vs a single strong-prompted agent already matches best multi-agent discussion",
+      "domain": "D7"
+    },
+    {
+      "src_id": "claim:d7_moa_mixing_helps",
+      "rel": "contradicts",
+      "dst_id": "claim:d7_selfmoa_single_best_wins",
+      "source": "frontier disagreement: mixing different LLMs helps (MoA) vs single-best-model self-ensemble wins (Self-MoA); THE assembly crux",
+      "domain": "D7"
+    },
+    {
+      "src_id": "claim:d7_moa_mixing_helps",
+      "rel": "contradicts",
+      "dst_id": "claim:d7_cofailure_ceiling",
+      "source": "frontier disagreement: ensembles keep gaining vs hard 1-beta ceiling — gains only from decorrelated failures + a routing signal",
+      "domain": "D7"
+    },
+    {
+      "src_id": "claim:d7_more_agents_scale",
+      "rel": "contradicts",
+      "dst_id": "claim:d7_more_calls_rise_then_fall",
+      "source": "frontier disagreement: raw agent-count scaling helps vs accuracy rises-then-falls as calls increase",
+      "domain": "D7"
+    },
+    {
+      "src_id": "claim:d7_more_agents_scale",
+      "rel": "contradicts",
+      "dst_id": "claim:d7_selfmoa_single_best_wins",
+      "source": "frontier disagreement: count-scaling of possibly-weaker agents vs quality-dominates-diversity",
+      "domain": "D7"
+    },
+    {
+      "src_id": "claim:d7_ties_dare_de_interfere",
+      "rel": "contradicts",
+      "dst_id": "claim:d7_inthewild_only_task_arithmetic",
+      "source": "frontier disagreement: TIES/DARE beat task arithmetic in-paper vs only Task Arithmetic reliably gains in the wild",
+      "domain": "D7"
+    },
+    {
+      "src_id": "claim:d7_diffusion_llm_competitive",
+      "rel": "contradicts",
+      "dst_id": "claim:d7_diffusion_underperforms_multistep",
+      "source": "frontier disagreement: diffusion LMs rival autoregressive vs diffusion LMs underperform multi-step reasoning (closable via plan conditioning)",
+      "domain": "D7"
+    },
+    {
+      "src_id": "claim:d7_agentark_multiagent_into_single",
+      "rel": "contradicts",
+      "dst_id": "claim:d7_over_capable_teacher_degrades",
+      "source": "frontier disagreement: multi-agent intelligence distills cleanly into one model vs an over-capable teacher degrades the student",
+      "domain": "D7"
+    },
+    {
+      "src_id": "claim:d7_agentark_multiagent_into_single",
+      "rel": "contradicts",
+      "dst_id": "claim:d7_aios_asc0284_capsule_negative",
+      "source": "frontier disagreement: workflow distillation transfers (AgentArk) vs AIOS ASC-0284 capsule-distillation HONEST_NEGATIVE on a small substrate",
+      "domain": "D7"
+    },
+    {
+      "src_id": "claim:d7_teams_hold_experts_back",
+      "rel": "contradicts",
+      "dst_id": "claim:d7_anthropic_multiagent_beats_single",
+      "source": "frontier disagreement: self-organizing teams lose to their own expert (-37.6%) vs orchestrated subagents beat the single agent",
+      "domain": "D7"
+    },
+    {
+      "src_id": "claim:d7_write_barely_matters_retrieve_dominates",
+      "rel": "contradicts",
+      "dst_id": "claim:d7_moa_mixing_helps",
+      "source": "frontier disagreement: composition value is in retrieval/selection not adding components — reframes 'more pieces' toward routing",
+      "domain": "D7"
+    }
+  ]
+}
