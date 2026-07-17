@@ -1,0 +1,4297 @@
+{
+ "entities": [
+  {
+   "id": "D3",
+   "type": "Domain",
+   "name": "Physical / Embodied AI",
+   "attrs": {
+    "scope": "Robot learning, VLA, diffusion/flow policy, world models for control, sim2real, humanoids, manipulation/locomotion, imitation+RL, tactile/multimodal sensing, real-time control",
+    "wave": "wave-1 deep-populate 2026-07-17"
+   },
+   "source": "docs/ontology/FRONTIER_KNOWLEDGE_LEDGER_2026-07-17.md"
+  },
+  {
+   "id": "meth:diffusion_flow_policy",
+   "type": "Methodology",
+   "name": "Diffusion / Flow-matching Policy",
+   "attrs": {
+    "definition": "Generate robot action chunks with denoising-diffusion or flow-matching generative models; handles multimodal action distributions.",
+    "kind": "generative-policy"
+   },
+   "source": "docs/ontology/FRONTIER_KNOWLEDGE_LEDGER_2026-07-17.md"
+  },
+  {
+   "id": "meth:vla",
+   "type": "Methodology",
+   "name": "Vision-Language-Action (VLA) models",
+   "attrs": {
+    "definition": "Fine-tune internet-pretrained VLMs into generalist robot policies mapping vision+language to actions.",
+    "kind": "foundation-policy"
+   },
+   "source": "docs/ontology/FRONTIER_KNOWLEDGE_LEDGER_2026-07-17.md"
+  },
+  {
+   "id": "meth:world_model_control",
+   "type": "Methodology",
+   "name": "World models for control",
+   "attrs": {
+    "definition": "Learn predictive models of dynamics (latent or generative video) and use them to plan, imagine, evaluate, or supervise policies.",
+    "kind": "model-based"
+   },
+   "source": "docs/ontology/FRONTIER_KNOWLEDGE_LEDGER_2026-07-17.md"
+  },
+  {
+   "id": "meth:imitation_learning",
+   "type": "Methodology",
+   "name": "Imitation learning / behavior cloning",
+   "attrs": {
+    "definition": "Learn policies from human/teleop demonstrations; action chunking; low-cost data collection.",
+    "kind": "supervised"
+   },
+   "source": "docs/ontology/FRONTIER_KNOWLEDGE_LEDGER_2026-07-17.md"
+  },
+  {
+   "id": "meth:rl_robot",
+   "type": "Methodology",
+   "name": "RL for real robots / dexterity",
+   "attrs": {
+    "definition": "Online/offline RL on hardware, RL fine-tuning of imitation/VLA policies, dexterous manipulation.",
+    "kind": "reinforcement"
+   },
+   "source": "docs/ontology/FRONTIER_KNOWLEDGE_LEDGER_2026-07-17.md"
+  },
+  {
+   "id": "meth:sim2real",
+   "type": "Methodology",
+   "name": "Sim-to-real transfer",
+   "attrs": {
+    "definition": "Close the sim-real dynamics gap: domain randomization, learned residual/delta dynamics, GPU-parallel sim, real2sim.",
+    "kind": "transfer"
+   },
+   "source": "docs/ontology/FRONTIER_KNOWLEDGE_LEDGER_2026-07-17.md"
+  },
+  {
+   "id": "meth:locomotion_wbc",
+   "type": "Methodology",
+   "name": "Locomotion / whole-body control",
+   "attrs": {
+    "definition": "Legged locomotion, humanoid whole-body control, motion tracking/retargeting, loco-manipulation.",
+    "kind": "control"
+   },
+   "source": "docs/ontology/FRONTIER_KNOWLEDGE_LEDGER_2026-07-17.md"
+  },
+  {
+   "id": "meth:tactile_sensing",
+   "type": "Methodology",
+   "name": "Tactile / multimodal sensing",
+   "attrs": {
+    "definition": "Vision-based & magnetic tactile sensing, tactile representation/foundation models, touch+vision fusion.",
+    "kind": "perception"
+   },
+   "source": "docs/ontology/FRONTIER_KNOWLEDGE_LEDGER_2026-07-17.md"
+  },
+  {
+   "id": "meth:realtime_control",
+   "type": "Methodology",
+   "name": "Real-time / async inference control",
+   "attrs": {
+    "definition": "Latency-hiding for high-frequency control: action chunking, async/real-time chunking, speculative inference.",
+    "kind": "systems"
+   },
+   "source": "docs/ontology/FRONTIER_KNOWLEDGE_LEDGER_2026-07-17.md"
+  },
+  {
+   "id": "org:physical_intelligence",
+   "type": "Org",
+   "name": "Physical Intelligence",
+   "attrs": {
+    "kind": "company"
+   },
+   "source": "https://www.physicalintelligence.company/"
+  },
+  {
+   "id": "org:google_deepmind",
+   "type": "Org",
+   "name": "Google DeepMind (Robotics)",
+   "attrs": {
+    "kind": "lab"
+   },
+   "source": "https://deepmind.google/"
+  },
+  {
+   "id": "org:nvidia",
+   "type": "Org",
+   "name": "NVIDIA (GEAR / Isaac / Cosmos)",
+   "attrs": {
+    "kind": "company"
+   },
+   "source": "https://research.nvidia.com/labs/gear/"
+  },
+  {
+   "id": "org:meta_fair",
+   "type": "Org",
+   "name": "Meta FAIR",
+   "attrs": {
+    "kind": "lab"
+   },
+   "source": "https://ai.meta.com/research/"
+  },
+  {
+   "id": "org:stanford",
+   "type": "Org",
+   "name": "Stanford University",
+   "attrs": {
+    "kind": "university"
+   },
+   "source": "https://arxiv.org/abs/2406.09246"
+  },
+  {
+   "id": "org:berkeley",
+   "type": "Org",
+   "name": "UC Berkeley",
+   "attrs": {
+    "kind": "university"
+   },
+   "source": "https://arxiv.org/abs/2405.12213"
+  },
+  {
+   "id": "org:cmu",
+   "type": "Org",
+   "name": "Carnegie Mellon University",
+   "attrs": {
+    "kind": "university"
+   },
+   "source": "https://arxiv.org/abs/2309.14341"
+  },
+  {
+   "id": "org:ucsd",
+   "type": "Org",
+   "name": "UC San Diego",
+   "attrs": {
+    "kind": "university"
+   },
+   "source": "https://arxiv.org/abs/2402.16796"
+  },
+  {
+   "id": "org:tsinghua",
+   "type": "Org",
+   "name": "Tsinghua / Shanghai Qi Zhi",
+   "attrs": {
+    "kind": "university"
+   },
+   "source": "https://arxiv.org/abs/2410.18647"
+  },
+  {
+   "id": "org:mit",
+   "type": "Org",
+   "name": "MIT CSAIL",
+   "attrs": {
+    "kind": "university"
+   },
+   "source": "https://arxiv.org/abs/2505.21851"
+  },
+  {
+   "id": "org:eth",
+   "type": "Org",
+   "name": "ETH Zurich (RSL)",
+   "attrs": {
+    "kind": "university"
+   },
+   "source": "https://arxiv.org/abs/2604.17335"
+  },
+  {
+   "id": "org:bytedance",
+   "type": "Org",
+   "name": "ByteDance Research",
+   "attrs": {
+    "kind": "company"
+   },
+   "source": "https://arxiv.org/abs/2507.15493"
+  },
+  {
+   "id": "org:figure",
+   "type": "Org",
+   "name": "Figure AI",
+   "attrs": {
+    "kind": "company"
+   },
+   "source": "https://www.figure.ai/news/helix"
+  },
+  {
+   "id": "org:1x",
+   "type": "Org",
+   "name": "1X Technologies",
+   "attrs": {
+    "kind": "company"
+   },
+   "source": "https://www.1x.tech/"
+  },
+  {
+   "id": "org:agibot",
+   "type": "Org",
+   "name": "AgiBot / OpenDriveLab",
+   "attrs": {
+    "kind": "company"
+   },
+   "source": "https://arxiv.org/abs/2503.06669"
+  },
+  {
+   "id": "org:shanghai_ai_lab",
+   "type": "Org",
+   "name": "Shanghai AI Laboratory",
+   "attrs": {
+    "kind": "lab"
+   },
+   "source": "https://arxiv.org/abs/2607.06401"
+  },
+  {
+   "id": "org:openai",
+   "type": "Org",
+   "name": "OpenAI",
+   "attrs": {
+    "kind": "company"
+   },
+   "source": "https://arxiv.org/abs/1808.00177"
+  },
+  {
+   "id": "org:unitree",
+   "type": "Org",
+   "name": "Unitree Robotics",
+   "attrs": {
+    "kind": "company"
+   },
+   "source": "https://www.unitree.com/"
+  },
+  {
+   "id": "org:columbia",
+   "type": "Org",
+   "name": "Columbia University",
+   "attrs": {
+    "kind": "university"
+   },
+   "source": "https://arxiv.org/abs/2303.04137"
+  },
+  {
+   "id": "org:tri",
+   "type": "Org",
+   "name": "Toyota Research Institute",
+   "attrs": {
+    "kind": "company"
+   },
+   "source": "https://arxiv.org/abs/2303.04137"
+  },
+  {
+   "id": "person:cheng_chi",
+   "type": "Person",
+   "name": "Cheng Chi",
+   "attrs": {
+    "affiliation": "stanford",
+    "note": "Diffusion Policy & UMI lead; in-the-wild handheld data"
+   },
+   "source": "https://arxiv.org/abs/2303.04137"
+  },
+  {
+   "id": "person:shuran_song",
+   "type": "Person",
+   "name": "Shuran Song",
+   "attrs": {
+    "affiliation": "stanford",
+    "note": "PI Diffusion Policy/UMI/Cosmos Policy/MoF; formerly Columbia"
+   },
+   "source": "https://arxiv.org/abs/2303.04137"
+  },
+  {
+   "id": "person:russ_tedrake",
+   "type": "Person",
+   "name": "Russ Tedrake",
+   "attrs": {
+    "affiliation": "mit",
+    "note": "Diffusion Policy co-author; TRI/MIT manipulation"
+   },
+   "source": "https://arxiv.org/abs/2303.04137"
+  },
+  {
+   "id": "person:sergey_levine",
+   "type": "Person",
+   "name": "Sergey Levine",
+   "attrs": {
+    "affiliation": "physical_intelligence",
+    "note": "Berkeley + Physical Intelligence; OpenVLA/Octo/pi-series/RTC/HIL-SERL/RLPD"
+   },
+   "source": "https://arxiv.org/abs/2410.24164"
+  },
+  {
+   "id": "person:chelsea_finn",
+   "type": "Person",
+   "name": "Chelsea Finn",
+   "attrs": {
+    "affiliation": "stanford",
+    "note": "Stanford + Physical Intelligence co-founder; ACT/ALOHA/pi0/OpenVLA-OFT/Ctrl-World"
+   },
+   "source": "https://arxiv.org/abs/2304.13705"
+  },
+  {
+   "id": "person:karol_hausman",
+   "type": "Person",
+   "name": "Karol Hausman",
+   "attrs": {
+    "affiliation": "physical_intelligence",
+    "note": "CEO Physical Intelligence; ex-Google robotics RT-1/RT-2"
+   },
+   "source": "https://arxiv.org/abs/2410.24164"
+  },
+  {
+   "id": "person:kevin_black",
+   "type": "Person",
+   "name": "Kevin Black",
+   "attrs": {
+    "affiliation": "physical_intelligence",
+    "note": "pi0 / FAST / RTC lead"
+   },
+   "source": "https://arxiv.org/abs/2506.07339"
+  },
+  {
+   "id": "person:karl_pertsch",
+   "type": "Person",
+   "name": "Karl Pertsch",
+   "attrs": {
+    "affiliation": "berkeley",
+    "note": "Octo/OpenVLA/FAST/DROID/RoboArena"
+   },
+   "source": "https://arxiv.org/abs/2501.09747"
+  },
+  {
+   "id": "person:moojin_kim",
+   "type": "Person",
+   "name": "Moo Jin Kim",
+   "attrs": {
+    "affiliation": "stanford",
+    "note": "OpenVLA & OpenVLA-OFT lead; Cosmos Policy; CoT-VLA"
+   },
+   "source": "https://arxiv.org/abs/2406.09246"
+  },
+  {
+   "id": "person:percy_liang",
+   "type": "Person",
+   "name": "Percy Liang",
+   "attrs": {
+    "affiliation": "stanford",
+    "note": "OpenVLA-OFT; Cosmos Policy"
+   },
+   "source": "https://arxiv.org/abs/2502.19645"
+  },
+  {
+   "id": "person:yann_lecun",
+   "type": "Person",
+   "name": "Yann LeCun",
+   "attrs": {
+    "affiliation": "meta_fair",
+    "note": "JEPA architecture; latent non-generative world models"
+   },
+   "source": "https://arxiv.org/abs/2404.08471"
+  },
+  {
+   "id": "person:adrien_bardes",
+   "type": "Person",
+   "name": "Adrien Bardes",
+   "attrs": {
+    "affiliation": "meta_fair",
+    "note": "V-JEPA / V-JEPA 2 author"
+   },
+   "source": "https://arxiv.org/abs/2404.08471"
+  },
+  {
+   "id": "person:danijar_hafner",
+   "type": "Person",
+   "name": "Danijar Hafner",
+   "attrs": {
+    "affiliation": "google_deepmind",
+    "note": "Dreamer lineage (V1-V4), model-based RL"
+   },
+   "source": "https://arxiv.org/abs/2301.04104"
+  },
+  {
+   "id": "person:lerrel_pinto",
+   "type": "Person",
+   "name": "Lerrel Pinto",
+   "attrs": {
+    "affiliation": "meta_fair",
+    "note": "DINO-WM; NYU + Meta"
+   },
+   "source": "https://arxiv.org/abs/2411.04983"
+  },
+  {
+   "id": "person:jim_fan",
+   "type": "Person",
+   "name": "Linxi Jim Fan",
+   "attrs": {
+    "affiliation": "nvidia",
+    "note": "NVIDIA GEAR; GR00T; dexterous humanoid RL"
+   },
+   "source": "https://arxiv.org/abs/2503.14734"
+  },
+  {
+   "id": "person:yuke_zhu",
+   "type": "Person",
+   "name": "Yuke Zhu",
+   "attrs": {
+    "affiliation": "nvidia",
+    "note": "GEAR co-lead; RoboCasa; dexterous humanoid RL"
+   },
+   "source": "https://arxiv.org/abs/2502.20396"
+  },
+  {
+   "id": "person:deepak_pathak",
+   "type": "Person",
+   "name": "Deepak Pathak",
+   "attrs": {
+    "affiliation": "cmu",
+    "note": "Extreme Parkour/RMA/DexWild/ViPRA"
+   },
+   "source": "https://arxiv.org/abs/2309.14341"
+  },
+  {
+   "id": "person:marco_hutter",
+   "type": "Person",
+   "name": "Marco Hutter",
+   "attrs": {
+    "affiliation": "eth",
+    "note": "ANYmal; perceptive locomotion; terrain-aware humanoid loco"
+   },
+   "source": "https://arxiv.org/abs/2604.17335"
+  },
+  {
+   "id": "person:xiaolong_wang",
+   "type": "Person",
+   "name": "Xiaolong Wang",
+   "attrs": {
+    "affiliation": "ucsd",
+    "note": "ExBody/GMT; in-hand dexterity"
+   },
+   "source": "https://arxiv.org/abs/2402.16796"
+  },
+  {
+   "id": "person:xuebin_peng",
+   "type": "Person",
+   "name": "Xue Bin Peng",
+   "attrs": {
+    "affiliation": "nvidia",
+    "note": "DeepMimic heritage; GMT/TWIST/iDP3 motion imitation"
+   },
+   "source": "https://arxiv.org/abs/2506.14770"
+  },
+  {
+   "id": "person:karen_liu",
+   "type": "Person",
+   "name": "C. Karen Liu",
+   "attrs": {
+    "affiliation": "stanford",
+    "note": "DexCap/TWIST/GMR/SimToolReal"
+   },
+   "source": "https://arxiv.org/abs/2403.07788"
+  },
+  {
+   "id": "person:pieter_abbeel",
+   "type": "Person",
+   "name": "Pieter Abbeel",
+   "attrs": {
+    "affiliation": "berkeley",
+    "note": "Fast humanoid RL; Perceptive Humanoid Parkour"
+   },
+   "source": "https://arxiv.org/abs/2512.01996"
+  },
+  {
+   "id": "person:tairan_he",
+   "type": "Person",
+   "name": "Tairan He",
+   "attrs": {
+    "affiliation": "cmu",
+    "note": "ASAP/HOVER/OmniH2O; delta-action sim2real"
+   },
+   "source": "https://arxiv.org/abs/2502.01143"
+  },
+  {
+   "id": "person:zipeng_fu",
+   "type": "Person",
+   "name": "Zipeng Fu",
+   "attrs": {
+    "affiliation": "stanford",
+    "note": "Mobile ALOHA/HumanPlus lead"
+   },
+   "source": "https://arxiv.org/abs/2401.02117"
+  },
+  {
+   "id": "person:tony_zhao",
+   "type": "Person",
+   "name": "Tony Z. Zhao",
+   "attrs": {
+    "affiliation": "stanford",
+    "note": "ACT/ALOHA rig lead"
+   },
+   "source": "https://arxiv.org/abs/2304.13705"
+  },
+  {
+   "id": "person:yunzhu_li",
+   "type": "Person",
+   "name": "Yunzhu Li",
+   "attrs": {
+    "affiliation": "columbia",
+    "note": "Tactile-informed dynamics; Touch in the Wild"
+   },
+   "source": "https://arxiv.org/abs/2507.15062"
+  },
+  {
+   "id": "person:huazhe_xu",
+   "type": "Person",
+   "name": "Huazhe Xu",
+   "attrs": {
+    "affiliation": "tsinghua",
+    "note": "DP3/H3DP/Reactive Diffusion Policy"
+   },
+   "source": "https://arxiv.org/abs/2403.03954"
+  },
+  {
+   "id": "person:yilun_du",
+   "type": "Person",
+   "name": "Yilun Du",
+   "attrs": {
+    "affiliation": "mit",
+    "note": "Generative/energy models; Streaming Diffusion Policy; OAT"
+   },
+   "source": "https://arxiv.org/abs/2406.04806"
+  },
+  {
+   "id": "person:jitendra_malik",
+   "type": "Person",
+   "name": "Jitendra Malik",
+   "attrs": {
+    "affiliation": "berkeley",
+    "note": "Humanoid locomotion RL; dexterous humanoid RL"
+   },
+   "source": "https://arxiv.org/abs/2303.03381"
+  },
+  {
+   "id": "person:jeannette_bohg",
+   "type": "Person",
+   "name": "Jeannette Bohg",
+   "attrs": {
+    "affiliation": "stanford",
+    "note": "Consistency Policy; SimToolReal; MoF"
+   },
+   "source": "https://arxiv.org/abs/2405.07503"
+  },
+  {
+   "id": "person:byron_boots",
+   "type": "Person",
+   "name": "Byron Boots",
+   "attrs": {
+    "affiliation": "meta_fair",
+    "note": "Sparsh / Sparsh-skin tactile foundation models"
+   },
+   "source": "https://arxiv.org/abs/2505.11420"
+  },
+  {
+   "id": "person:danny_driess",
+   "type": "Person",
+   "name": "Danny Driess",
+   "attrs": {
+    "affiliation": "physical_intelligence",
+    "note": "pi0/FAST; ex-DeepMind PaLM-E"
+   },
+   "source": "https://arxiv.org/abs/2410.24164"
+  },
+  {
+   "id": "paper:2303.04137",
+   "type": "Paper",
+   "name": "Diffusion Policy: Visuomotor Policy Learning via Action Diffusion",
+   "attrs": {
+    "arxiv_id": "2303.04137",
+    "date": "2023-03",
+    "methodology": "diffusion_flow_policy",
+    "title": "Diffusion Policy: Visuomotor Policy Learning via Action Diffusion"
+   },
+   "source": "https://arxiv.org/abs/2303.04137"
+  },
+  {
+   "id": "paper:2403.03954",
+   "type": "Paper",
+   "name": "3D Diffusion Policy (DP3)",
+   "attrs": {
+    "arxiv_id": "2403.03954",
+    "date": "2024-03",
+    "methodology": "diffusion_flow_policy",
+    "title": "3D Diffusion Policy (DP3)"
+   },
+   "source": "https://arxiv.org/abs/2403.03954"
+  },
+  {
+   "id": "paper:2405.07503",
+   "type": "Paper",
+   "name": "Consistency Policy: Accelerated Visuomotor Policies via Consistency Distillation",
+   "attrs": {
+    "arxiv_id": "2405.07503",
+    "date": "2024-05",
+    "methodology": "diffusion_flow_policy",
+    "title": "Consistency Policy: Accelerated Visuomotor Policies via Consistency Distillation"
+   },
+   "source": "https://arxiv.org/abs/2405.07503"
+  },
+  {
+   "id": "paper:2407.01812",
+   "type": "Paper",
+   "name": "Equivariant Diffusion Policy",
+   "attrs": {
+    "arxiv_id": "2407.01812",
+    "date": "2024-07",
+    "methodology": "diffusion_flow_policy",
+    "title": "Equivariant Diffusion Policy"
+   },
+   "source": "https://arxiv.org/abs/2407.01812"
+  },
+  {
+   "id": "paper:2410.21257",
+   "type": "Paper",
+   "name": "One-Step Diffusion Policy (OneDP)",
+   "attrs": {
+    "arxiv_id": "2410.21257",
+    "date": "2024-10",
+    "methodology": "diffusion_flow_policy",
+    "title": "One-Step Diffusion Policy (OneDP)"
+   },
+   "source": "https://arxiv.org/abs/2410.21257"
+  },
+  {
+   "id": "paper:2406.04806",
+   "type": "Paper",
+   "name": "Streaming Diffusion Policy (SDP)",
+   "attrs": {
+    "arxiv_id": "2406.04806",
+    "date": "2024-06",
+    "methodology": "diffusion_flow_policy",
+    "title": "Streaming Diffusion Policy (SDP)"
+   },
+   "source": "https://arxiv.org/abs/2406.04806"
+  },
+  {
+   "id": "paper:2410.10803",
+   "type": "Paper",
+   "name": "Improved 3D Diffusion Policy (iDP3): Generalizable Humanoid Manipulation",
+   "attrs": {
+    "arxiv_id": "2410.10803",
+    "date": "2024-10",
+    "methodology": "diffusion_flow_policy",
+    "title": "Improved 3D Diffusion Policy (iDP3): Generalizable Humanoid Manipulation"
+   },
+   "source": "https://arxiv.org/abs/2410.10803"
+  },
+  {
+   "id": "paper:2505.21851",
+   "type": "Paper",
+   "name": "Streaming Flow Policy",
+   "attrs": {
+    "arxiv_id": "2505.21851",
+    "date": "2025-05",
+    "methodology": "diffusion_flow_policy",
+    "title": "Streaming Flow Policy"
+   },
+   "source": "https://arxiv.org/abs/2505.21851"
+  },
+  {
+   "id": "paper:2507.21053",
+   "type": "Paper",
+   "name": "Flow Matching Policy Gradients (FPO)",
+   "attrs": {
+    "arxiv_id": "2507.21053",
+    "date": "2025-07",
+    "methodology": "diffusion_flow_policy",
+    "title": "Flow Matching Policy Gradients (FPO)"
+   },
+   "source": "https://arxiv.org/abs/2507.21053"
+  },
+  {
+   "id": "paper:2509.01819",
+   "type": "Paper",
+   "name": "ManiFlow: General Robot Manipulation Policy via Consistency Flow Training",
+   "attrs": {
+    "arxiv_id": "2509.01819",
+    "date": "2025-09",
+    "methodology": "diffusion_flow_policy",
+    "title": "ManiFlow: General Robot Manipulation Policy via Consistency Flow Training"
+   },
+   "source": "https://arxiv.org/abs/2509.01819"
+  },
+  {
+   "id": "paper:2507.10543",
+   "type": "Paper",
+   "name": "MP1: MeanFlow Tames Policy Learning in 1-step",
+   "attrs": {
+    "arxiv_id": "2507.10543",
+    "date": "2025-07",
+    "methodology": "diffusion_flow_policy",
+    "title": "MP1: MeanFlow Tames Policy Learning in 1-step"
+   },
+   "source": "https://arxiv.org/abs/2507.10543"
+  },
+  {
+   "id": "paper:2601.16163",
+   "type": "Paper",
+   "name": "Cosmos Policy: Fine-Tuning Video Models for Visuomotor Control and Planning",
+   "attrs": {
+    "arxiv_id": "2601.16163",
+    "date": "2026-01",
+    "methodology": "diffusion_flow_policy",
+    "title": "Cosmos Policy: Fine-Tuning Video Models for Visuomotor Control and Planning"
+   },
+   "source": "https://arxiv.org/abs/2601.16163"
+  },
+  {
+   "id": "paper:2512.01809",
+   "type": "Paper",
+   "name": "Much Ado About Noising: Dispelling the Myths of Generative Robotic Control",
+   "attrs": {
+    "arxiv_id": "2512.01809",
+    "date": "2025-12",
+    "methodology": "diffusion_flow_policy",
+    "title": "Much Ado About Noising: Dispelling the Myths of Generative Robotic Control"
+   },
+   "source": "https://arxiv.org/abs/2512.01809"
+  },
+  {
+   "id": "paper:2508.20072",
+   "type": "Paper",
+   "name": "Discrete Diffusion VLA: Bringing Discrete Diffusion to Action Decoding",
+   "attrs": {
+    "arxiv_id": "2508.20072",
+    "date": "2025-08",
+    "methodology": "diffusion_flow_policy",
+    "title": "Discrete Diffusion VLA: Bringing Discrete Diffusion to Action Decoding"
+   },
+   "source": "https://arxiv.org/abs/2508.20072"
+  },
+  {
+   "id": "paper:2607.11884",
+   "type": "Paper",
+   "name": "Mixture of Frames Policy (MoF): Multi-Frame Action Denoising",
+   "attrs": {
+    "arxiv_id": "2607.11884",
+    "date": "2026-07",
+    "methodology": "diffusion_flow_policy",
+    "title": "Mixture of Frames Policy (MoF): Multi-Frame Action Denoising"
+   },
+   "source": "https://arxiv.org/abs/2607.11884"
+  },
+  {
+   "id": "paper:2606.17551",
+   "type": "Paper",
+   "name": "Reversal Q-Learning (flow offline RL)",
+   "attrs": {
+    "arxiv_id": "2606.17551",
+    "date": "2026-06",
+    "methodology": "diffusion_flow_policy",
+    "title": "Reversal Q-Learning (flow offline RL)"
+   },
+   "source": "https://arxiv.org/abs/2606.17551"
+  },
+  {
+   "id": "paper:2212.06817",
+   "type": "Paper",
+   "name": "RT-1: Robotics Transformer for Real-World Control at Scale",
+   "attrs": {
+    "arxiv_id": "2212.06817",
+    "date": "2022-12",
+    "methodology": "vla",
+    "title": "RT-1: Robotics Transformer for Real-World Control at Scale",
+    "flag": "verify-id"
+   },
+   "source": "https://arxiv.org/abs/2212.06817"
+  },
+  {
+   "id": "paper:2307.15818",
+   "type": "Paper",
+   "name": "RT-2: VLA Models Transfer Web Knowledge to Robotic Control",
+   "attrs": {
+    "arxiv_id": "2307.15818",
+    "date": "2023-07",
+    "methodology": "vla",
+    "title": "RT-2: VLA Models Transfer Web Knowledge to Robotic Control"
+   },
+   "source": "https://arxiv.org/abs/2307.15818"
+  },
+  {
+   "id": "paper:2310.08864",
+   "type": "Paper",
+   "name": "Open X-Embodiment: Robotic Learning Datasets and RT-X Models",
+   "attrs": {
+    "arxiv_id": "2310.08864",
+    "date": "2023-10",
+    "methodology": "vla",
+    "title": "Open X-Embodiment: Robotic Learning Datasets and RT-X Models"
+   },
+   "source": "https://arxiv.org/abs/2310.08864"
+  },
+  {
+   "id": "paper:2405.12213",
+   "type": "Paper",
+   "name": "Octo: An Open-Source Generalist Robot Policy",
+   "attrs": {
+    "arxiv_id": "2405.12213",
+    "date": "2024-05",
+    "methodology": "vla",
+    "title": "Octo: An Open-Source Generalist Robot Policy"
+   },
+   "source": "https://arxiv.org/abs/2405.12213"
+  },
+  {
+   "id": "paper:2406.09246",
+   "type": "Paper",
+   "name": "OpenVLA: An Open-Source Vision-Language-Action Model",
+   "attrs": {
+    "arxiv_id": "2406.09246",
+    "date": "2024-06",
+    "methodology": "vla",
+    "title": "OpenVLA: An Open-Source Vision-Language-Action Model"
+   },
+   "source": "https://arxiv.org/abs/2406.09246"
+  },
+  {
+   "id": "paper:2410.24164",
+   "type": "Paper",
+   "name": "pi0: A Vision-Language-Action Flow Model for General Robot Control",
+   "attrs": {
+    "arxiv_id": "2410.24164",
+    "date": "2024-10",
+    "methodology": "vla",
+    "title": "pi0: A Vision-Language-Action Flow Model for General Robot Control"
+   },
+   "source": "https://arxiv.org/abs/2410.24164"
+  },
+  {
+   "id": "paper:2501.09747",
+   "type": "Paper",
+   "name": "FAST: Efficient Action Tokenization for VLA Models (pi0-FAST)",
+   "attrs": {
+    "arxiv_id": "2501.09747",
+    "date": "2025-01",
+    "methodology": "vla",
+    "title": "FAST: Efficient Action Tokenization for VLA Models (pi0-FAST)"
+   },
+   "source": "https://arxiv.org/abs/2501.09747"
+  },
+  {
+   "id": "paper:2502.19645",
+   "type": "Paper",
+   "name": "OpenVLA-OFT: Fine-Tuning VLAs — Optimizing Speed and Success",
+   "attrs": {
+    "arxiv_id": "2502.19645",
+    "date": "2025-02",
+    "methodology": "vla",
+    "title": "OpenVLA-OFT: Fine-Tuning VLAs — Optimizing Speed and Success"
+   },
+   "source": "https://arxiv.org/abs/2502.19645"
+  },
+  {
+   "id": "paper:2504.16054",
+   "type": "Paper",
+   "name": "pi0.5: a VLA Model with Open-World Generalization",
+   "attrs": {
+    "arxiv_id": "2504.16054",
+    "date": "2025-04",
+    "methodology": "vla",
+    "title": "pi0.5: a VLA Model with Open-World Generalization"
+   },
+   "source": "https://arxiv.org/abs/2504.16054"
+  },
+  {
+   "id": "paper:2604.15483",
+   "type": "Paper",
+   "name": "pi0.7: A Steerable Generalist Robotic Foundation Model with Emergent Capabilities",
+   "attrs": {
+    "arxiv_id": "2604.15483",
+    "date": "2026-04",
+    "methodology": "vla",
+    "title": "pi0.7: A Steerable Generalist Robotic Foundation Model with Emergent Capabilities",
+    "flag": "agent-sourced"
+   },
+   "source": "https://arxiv.org/abs/2604.15483"
+  },
+  {
+   "id": "paper:2503.20020",
+   "type": "Paper",
+   "name": "Gemini Robotics: Bringing AI into the Physical World",
+   "attrs": {
+    "arxiv_id": "2503.20020",
+    "date": "2025-03",
+    "methodology": "vla",
+    "title": "Gemini Robotics: Bringing AI into the Physical World"
+   },
+   "source": "https://arxiv.org/abs/2503.20020"
+  },
+  {
+   "id": "paper:2510.03342",
+   "type": "Paper",
+   "name": "Gemini Robotics 1.5: Advanced Embodied Reasoning, Thinking, Motion Transfer",
+   "attrs": {
+    "arxiv_id": "2510.03342",
+    "date": "2025-10",
+    "methodology": "vla",
+    "title": "Gemini Robotics 1.5: Advanced Embodied Reasoning, Thinking, Motion Transfer"
+   },
+   "source": "https://arxiv.org/abs/2510.03342"
+  },
+  {
+   "id": "paper:2503.14734",
+   "type": "Paper",
+   "name": "GR00T N1: An Open Foundation Model for Generalist Humanoid Robots",
+   "attrs": {
+    "arxiv_id": "2503.14734",
+    "date": "2025-03",
+    "methodology": "vla",
+    "title": "GR00T N1: An Open Foundation Model for Generalist Humanoid Robots"
+   },
+   "source": "https://arxiv.org/abs/2503.14734"
+  },
+  {
+   "id": "paper:2507.15493",
+   "type": "Paper",
+   "name": "GR-3 Technical Report",
+   "attrs": {
+    "arxiv_id": "2507.15493",
+    "date": "2025-07",
+    "methodology": "vla",
+    "title": "GR-3 Technical Report"
+   },
+   "source": "https://arxiv.org/abs/2507.15493"
+  },
+  {
+   "id": "paper:2411.19650",
+   "type": "Paper",
+   "name": "CogACT: Foundational VLA Synergizing Cognition and Action",
+   "attrs": {
+    "arxiv_id": "2411.19650",
+    "date": "2024-11",
+    "methodology": "vla",
+    "title": "CogACT: Foundational VLA Synergizing Cognition and Action"
+   },
+   "source": "https://arxiv.org/abs/2411.19650"
+  },
+  {
+   "id": "paper:2510.13054",
+   "type": "Paper",
+   "name": "VLA-0: Building SOTA VLAs with Zero Modification (actions as text)",
+   "attrs": {
+    "arxiv_id": "2510.13054",
+    "date": "2025-10",
+    "methodology": "vla",
+    "title": "VLA-0: Building SOTA VLAs with Zero Modification (actions as text)"
+   },
+   "source": "https://arxiv.org/abs/2510.13054"
+  },
+  {
+   "id": "paper:2602.04215",
+   "type": "Paper",
+   "name": "OAT: Ordered Action Tokenization",
+   "attrs": {
+    "arxiv_id": "2602.04215",
+    "date": "2026-02",
+    "methodology": "vla",
+    "title": "OAT: Ordered Action Tokenization"
+   },
+   "source": "https://arxiv.org/abs/2602.04215"
+  },
+  {
+   "id": "paper:2602.03310",
+   "type": "Paper",
+   "name": "RDT2: Scaling Limit of UMI Data toward Zero-Shot Cross-Embodiment",
+   "attrs": {
+    "arxiv_id": "2602.03310",
+    "date": "2026-02",
+    "methodology": "vla",
+    "title": "RDT2: Scaling Limit of UMI Data toward Zero-Shot Cross-Embodiment"
+   },
+   "source": "https://arxiv.org/abs/2602.03310"
+  },
+  {
+   "id": "paper:2503.22020",
+   "type": "Paper",
+   "name": "CoT-VLA: Visual Chain-of-Thought Reasoning for VLAs",
+   "attrs": {
+    "arxiv_id": "2503.22020",
+    "date": "2025-03",
+    "methodology": "vla",
+    "title": "CoT-VLA: Visual Chain-of-Thought Reasoning for VLAs"
+   },
+   "source": "https://arxiv.org/abs/2503.22020"
+  },
+  {
+   "id": "paper:2506.01844",
+   "type": "Paper",
+   "name": "SmolVLA: A Vision-Language-Action Model for Affordable & Efficient Robotics",
+   "attrs": {
+    "arxiv_id": "2506.01844",
+    "date": "2025-06",
+    "methodology": "vla",
+    "title": "SmolVLA: A Vision-Language-Action Model for Affordable & Efficient Robotics"
+   },
+   "source": "https://arxiv.org/abs/2506.01844"
+  },
+  {
+   "id": "paper:2506.09930",
+   "type": "Paper",
+   "name": "INT-ACT: Probing the Generalization Boundaries of VLA Models",
+   "attrs": {
+    "arxiv_id": "2506.09930",
+    "date": "2025-06",
+    "methodology": "vla",
+    "title": "INT-ACT: Probing the Generalization Boundaries of VLA Models"
+   },
+   "source": "https://arxiv.org/abs/2506.09930"
+  },
+  {
+   "id": "paper:2404.08471",
+   "type": "Paper",
+   "name": "V-JEPA: Revisiting Feature Prediction for Learning Visual Representations from Video",
+   "attrs": {
+    "arxiv_id": "2404.08471",
+    "date": "2024-04",
+    "methodology": "world_model_control",
+    "title": "V-JEPA: Revisiting Feature Prediction for Learning Visual Representations from Video"
+   },
+   "source": "https://arxiv.org/abs/2404.08471"
+  },
+  {
+   "id": "paper:2506.09985",
+   "type": "Paper",
+   "name": "V-JEPA 2: Self-Supervised Video Models Enable Understanding, Prediction, Planning",
+   "attrs": {
+    "arxiv_id": "2506.09985",
+    "date": "2025-06",
+    "methodology": "world_model_control",
+    "title": "V-JEPA 2: Self-Supervised Video Models Enable Understanding, Prediction, Planning"
+   },
+   "source": "https://arxiv.org/abs/2506.09985"
+  },
+  {
+   "id": "paper:2603.14482",
+   "type": "Paper",
+   "name": "V-JEPA 2.1: Unlocking Dense Features in Video Self-Supervised Learning",
+   "attrs": {
+    "arxiv_id": "2603.14482",
+    "date": "2026-03",
+    "methodology": "world_model_control",
+    "title": "V-JEPA 2.1: Unlocking Dense Features in Video Self-Supervised Learning"
+   },
+   "source": "https://arxiv.org/abs/2603.14482"
+  },
+  {
+   "id": "paper:2411.04983",
+   "type": "Paper",
+   "name": "DINO-WM: World Models on Pre-trained Visual Features enable Zero-shot Planning",
+   "attrs": {
+    "arxiv_id": "2411.04983",
+    "date": "2024-11",
+    "methodology": "world_model_control",
+    "title": "DINO-WM: World Models on Pre-trained Visual Features enable Zero-shot Planning"
+   },
+   "source": "https://arxiv.org/abs/2411.04983"
+  },
+  {
+   "id": "paper:2512.24497",
+   "type": "Paper",
+   "name": "What Drives Success in Physical Planning with JEPA World Models?",
+   "attrs": {
+    "arxiv_id": "2512.24497",
+    "date": "2025-12",
+    "methodology": "world_model_control",
+    "title": "What Drives Success in Physical Planning with JEPA World Models?"
+   },
+   "source": "https://arxiv.org/abs/2512.24497"
+  },
+  {
+   "id": "paper:2301.04104",
+   "type": "Paper",
+   "name": "DreamerV3: Mastering Diverse Domains through World Models",
+   "attrs": {
+    "arxiv_id": "2301.04104",
+    "date": "2023-01",
+    "methodology": "world_model_control",
+    "title": "DreamerV3: Mastering Diverse Domains through World Models"
+   },
+   "source": "https://arxiv.org/abs/2301.04104"
+  },
+  {
+   "id": "paper:2509.24527",
+   "type": "Paper",
+   "name": "Dreamer 4: Training Agents Inside of Scalable World Models",
+   "attrs": {
+    "arxiv_id": "2509.24527",
+    "date": "2025-09",
+    "methodology": "world_model_control",
+    "title": "Dreamer 4: Training Agents Inside of Scalable World Models",
+    "flag": "agent-sourced"
+   },
+   "source": "https://arxiv.org/abs/2509.24527"
+  },
+  {
+   "id": "paper:2402.15391",
+   "type": "Paper",
+   "name": "Genie: Generative Interactive Environments",
+   "attrs": {
+    "arxiv_id": "2402.15391",
+    "date": "2024-02",
+    "methodology": "world_model_control",
+    "title": "Genie: Generative Interactive Environments"
+   },
+   "source": "https://arxiv.org/abs/2402.15391"
+  },
+  {
+   "id": "paper:2501.03575",
+   "type": "Paper",
+   "name": "Cosmos World Foundation Model Platform for Physical AI",
+   "attrs": {
+    "arxiv_id": "2501.03575",
+    "date": "2025-01",
+    "methodology": "world_model_control",
+    "title": "Cosmos World Foundation Model Platform for Physical AI"
+   },
+   "source": "https://arxiv.org/abs/2501.03575"
+  },
+  {
+   "id": "paper:2606.02800",
+   "type": "Paper",
+   "name": "Cosmos 3: Omnimodal World Models for Physical AI",
+   "attrs": {
+    "arxiv_id": "2606.02800",
+    "date": "2026-06",
+    "methodology": "world_model_control",
+    "title": "Cosmos 3: Omnimodal World Models for Physical AI",
+    "flag": "agent-sourced"
+   },
+   "source": "https://arxiv.org/abs/2606.02800"
+  },
+  {
+   "id": "paper:2412.14803",
+   "type": "Paper",
+   "name": "Video Prediction Policy (VPP): Generalist Policy with Predictive Visual Representations",
+   "attrs": {
+    "arxiv_id": "2412.14803",
+    "date": "2024-12",
+    "methodology": "world_model_control",
+    "title": "Video Prediction Policy (VPP): Generalist Policy with Predictive Visual Representations"
+   },
+   "source": "https://arxiv.org/abs/2412.14803"
+  },
+  {
+   "id": "paper:2410.06158",
+   "type": "Paper",
+   "name": "GR-2: Generative Video-Language-Action Model with Web-Scale Knowledge",
+   "attrs": {
+    "arxiv_id": "2410.06158",
+    "date": "2024-10",
+    "methodology": "world_model_control",
+    "title": "GR-2: Generative Video-Language-Action Model with Web-Scale Knowledge"
+   },
+   "source": "https://arxiv.org/abs/2410.06158"
+  },
+  {
+   "id": "paper:2506.21539",
+   "type": "Paper",
+   "name": "WorldVLA: Towards Autoregressive Action World Model",
+   "attrs": {
+    "arxiv_id": "2506.21539",
+    "date": "2025-06",
+    "methodology": "world_model_control",
+    "title": "WorldVLA: Towards Autoregressive Action World Model"
+   },
+   "source": "https://arxiv.org/abs/2506.21539"
+  },
+  {
+   "id": "paper:2510.10125",
+   "type": "Paper",
+   "name": "Ctrl-World: A Controllable Generative World Model for Robot Manipulation",
+   "attrs": {
+    "arxiv_id": "2510.10125",
+    "date": "2025-10",
+    "methodology": "world_model_control",
+    "title": "Ctrl-World: A Controllable Generative World Model for Robot Manipulation"
+   },
+   "source": "https://arxiv.org/abs/2510.10125"
+  },
+  {
+   "id": "paper:2511.07732",
+   "type": "Paper",
+   "name": "ViPRA: Video Prediction for Robot Actions",
+   "attrs": {
+    "arxiv_id": "2511.07732",
+    "date": "2025-11",
+    "methodology": "world_model_control",
+    "title": "ViPRA: Video Prediction for Robot Actions"
+   },
+   "source": "https://arxiv.org/abs/2511.07732"
+  },
+  {
+   "id": "paper:2607.06401",
+   "type": "Paper",
+   "name": "A Definition and Roadmap for World Models",
+   "attrs": {
+    "arxiv_id": "2607.06401",
+    "date": "2026-07",
+    "methodology": "world_model_control",
+    "title": "A Definition and Roadmap for World Models",
+    "flag": "agent-sourced"
+   },
+   "source": "https://arxiv.org/abs/2607.06401"
+  },
+  {
+   "id": "paper:2506.07339",
+   "type": "Paper",
+   "name": "Real-Time Execution of Action Chunking Flow Policies (RTC)",
+   "attrs": {
+    "arxiv_id": "2506.07339",
+    "date": "2025-06",
+    "methodology": "realtime_control",
+    "title": "Real-Time Execution of Action Chunking Flow Policies (RTC)"
+   },
+   "source": "https://arxiv.org/abs/2506.07339"
+  },
+  {
+   "id": "paper:2512.05964",
+   "type": "Paper",
+   "name": "Training-Time Action Conditioning for Efficient Real-Time Chunking",
+   "attrs": {
+    "arxiv_id": "2512.05964",
+    "date": "2025-12",
+    "methodology": "realtime_control",
+    "title": "Training-Time Action Conditioning for Efficient Real-Time Chunking"
+   },
+   "source": "https://arxiv.org/abs/2512.05964"
+  },
+  {
+   "id": "paper:2603.19199",
+   "type": "Paper",
+   "name": "FASTER: Rethinking Real-Time Flow VLAs",
+   "attrs": {
+    "arxiv_id": "2603.19199",
+    "date": "2026-03",
+    "methodology": "realtime_control",
+    "title": "FASTER: Rethinking Real-Time Flow VLAs",
+    "flag": "agent-sourced"
+   },
+   "source": "https://arxiv.org/abs/2603.19199"
+  },
+  {
+   "id": "paper:2601.20130",
+   "type": "Paper",
+   "name": "REMAC: Real-Time Robot Execution with Masked Action Chunking",
+   "attrs": {
+    "arxiv_id": "2601.20130",
+    "date": "2026-01",
+    "methodology": "realtime_control",
+    "title": "REMAC: Real-Time Robot Execution with Masked Action Chunking"
+   },
+   "source": "https://arxiv.org/abs/2601.20130"
+  },
+  {
+   "id": "paper:2512.01031",
+   "type": "Paper",
+   "name": "VLASH: Real-Time VLAs via Future-State-Aware Asynchronous Inference",
+   "attrs": {
+    "arxiv_id": "2512.01031",
+    "date": "2025-12",
+    "methodology": "realtime_control",
+    "title": "VLASH: Real-Time VLAs via Future-State-Aware Asynchronous Inference"
+   },
+   "source": "https://arxiv.org/abs/2512.01031"
+  },
+  {
+   "id": "paper:2304.13705",
+   "type": "Paper",
+   "name": "ACT / ALOHA: Learning Fine-Grained Bimanual Manipulation with Low-Cost Hardware",
+   "attrs": {
+    "arxiv_id": "2304.13705",
+    "date": "2023-04",
+    "methodology": "imitation_learning",
+    "title": "ACT / ALOHA: Learning Fine-Grained Bimanual Manipulation with Low-Cost Hardware"
+   },
+   "source": "https://arxiv.org/abs/2304.13705"
+  },
+  {
+   "id": "paper:2401.02117",
+   "type": "Paper",
+   "name": "Mobile ALOHA: Bimanual Mobile Manipulation with Low-Cost Whole-Body Teleoperation",
+   "attrs": {
+    "arxiv_id": "2401.02117",
+    "date": "2024-01",
+    "methodology": "imitation_learning",
+    "title": "Mobile ALOHA: Bimanual Mobile Manipulation with Low-Cost Whole-Body Teleoperation"
+   },
+   "source": "https://arxiv.org/abs/2401.02117"
+  },
+  {
+   "id": "paper:2402.10329",
+   "type": "Paper",
+   "name": "UMI: Universal Manipulation Interface — In-The-Wild Robot Teaching Without Robots",
+   "attrs": {
+    "arxiv_id": "2402.10329",
+    "date": "2024-02",
+    "methodology": "imitation_learning",
+    "title": "UMI: Universal Manipulation Interface — In-The-Wild Robot Teaching Without Robots"
+   },
+   "source": "https://arxiv.org/abs/2402.10329"
+  },
+  {
+   "id": "paper:2403.07788",
+   "type": "Paper",
+   "name": "DexCap: Portable Mocap Data Collection for Dexterous Manipulation",
+   "attrs": {
+    "arxiv_id": "2403.07788",
+    "date": "2024-03",
+    "methodology": "imitation_learning",
+    "title": "DexCap: Portable Mocap Data Collection for Dexterous Manipulation"
+   },
+   "source": "https://arxiv.org/abs/2403.07788"
+  },
+  {
+   "id": "paper:2410.18647",
+   "type": "Paper",
+   "name": "Data Scaling Laws in Imitation Learning for Robotic Manipulation",
+   "attrs": {
+    "arxiv_id": "2410.18647",
+    "date": "2024-10",
+    "methodology": "imitation_learning",
+    "title": "Data Scaling Laws in Imitation Learning for Robotic Manipulation"
+   },
+   "source": "https://arxiv.org/abs/2410.18647"
+  },
+  {
+   "id": "paper:2503.06669",
+   "type": "Paper",
+   "name": "AgiBot World Colosseo: Large-scale Manipulation Platform + GO-1",
+   "attrs": {
+    "arxiv_id": "2503.06669",
+    "date": "2025-03",
+    "methodology": "imitation_learning",
+    "title": "AgiBot World Colosseo: Large-scale Manipulation Platform + GO-1"
+   },
+   "source": "https://arxiv.org/abs/2503.06669"
+  },
+  {
+   "id": "paper:2403.12945",
+   "type": "Paper",
+   "name": "DROID: A Large-Scale In-The-Wild Robot Manipulation Dataset",
+   "attrs": {
+    "arxiv_id": "2403.12945",
+    "date": "2024-03",
+    "methodology": "imitation_learning",
+    "title": "DROID: A Large-Scale In-The-Wild Robot Manipulation Dataset"
+   },
+   "source": "https://arxiv.org/abs/2403.12945"
+  },
+  {
+   "id": "paper:2503.02881",
+   "type": "Paper",
+   "name": "Reactive Diffusion Policy (RDP) + TactAR: Slow-Fast Visual-Tactile Imitation",
+   "attrs": {
+    "arxiv_id": "2503.02881",
+    "date": "2025-03",
+    "methodology": "imitation_learning",
+    "title": "Reactive Diffusion Policy (RDP) + TactAR: Slow-Fast Visual-Tactile Imitation"
+   },
+   "source": "https://arxiv.org/abs/2503.02881"
+  },
+  {
+   "id": "paper:2507.06219",
+   "type": "Paper",
+   "name": "Is Diversity All You Need for Scalable Robotic Manipulation? (GO-1-Pro)",
+   "attrs": {
+    "arxiv_id": "2507.06219",
+    "date": "2025-07",
+    "methodology": "imitation_learning",
+    "title": "Is Diversity All You Need for Scalable Robotic Manipulation? (GO-1-Pro)",
+    "flag": "agent-sourced"
+   },
+   "source": "https://arxiv.org/abs/2507.06219"
+  },
+  {
+   "id": "paper:2410.21845",
+   "type": "Paper",
+   "name": "HIL-SERL: Precise & Dexterous Manipulation via Human-in-the-Loop RL",
+   "attrs": {
+    "arxiv_id": "2410.21845",
+    "date": "2024-10",
+    "methodology": "rl_robot",
+    "title": "HIL-SERL: Precise & Dexterous Manipulation via Human-in-the-Loop RL"
+   },
+   "source": "https://arxiv.org/abs/2410.21845"
+  },
+  {
+   "id": "paper:2604.23073",
+   "type": "Paper",
+   "name": "RLT (RL Token): Precise Manipulation with Efficient Online RL on a Frozen VLA",
+   "attrs": {
+    "arxiv_id": "2604.23073",
+    "date": "2026-04",
+    "methodology": "rl_robot",
+    "title": "RLT (RL Token): Precise Manipulation with Efficient Online RL on a Frozen VLA",
+    "flag": "agent-sourced"
+   },
+   "source": "https://arxiv.org/abs/2604.23073"
+  },
+  {
+   "id": "paper:1808.00177",
+   "type": "Paper",
+   "name": "Learning Dexterous In-Hand Manipulation (Dactyl)",
+   "attrs": {
+    "arxiv_id": "1808.00177",
+    "date": "2018-08",
+    "methodology": "rl_robot",
+    "title": "Learning Dexterous In-Hand Manipulation (Dactyl)"
+   },
+   "source": "https://arxiv.org/abs/1808.00177"
+  },
+  {
+   "id": "paper:1910.07113",
+   "type": "Paper",
+   "name": "Solving Rubik's Cube with a Robot Hand (Automatic Domain Randomization)",
+   "attrs": {
+    "arxiv_id": "1910.07113",
+    "date": "2019-10",
+    "methodology": "sim2real",
+    "title": "Solving Rubik's Cube with a Robot Hand (Automatic Domain Randomization)"
+   },
+   "source": "https://arxiv.org/abs/1910.07113"
+  },
+  {
+   "id": "paper:2502.20396",
+   "type": "Paper",
+   "name": "Sim-to-Real RL for Vision-Based Dexterous Manipulation on Humanoids",
+   "attrs": {
+    "arxiv_id": "2502.20396",
+    "date": "2025-02",
+    "methodology": "rl_robot",
+    "title": "Sim-to-Real RL for Vision-Based Dexterous Manipulation on Humanoids"
+   },
+   "source": "https://arxiv.org/abs/2502.20396"
+  },
+  {
+   "id": "paper:2502.04307",
+   "type": "Paper",
+   "name": "DexterityGen: Foundation Controller for Dexterous Manipulation",
+   "attrs": {
+    "arxiv_id": "2502.04307",
+    "date": "2025-02",
+    "methodology": "rl_robot",
+    "title": "DexterityGen: Foundation Controller for Dexterous Manipulation"
+   },
+   "source": "https://arxiv.org/abs/2502.04307"
+  },
+  {
+   "id": "paper:2602.16863",
+   "type": "Paper",
+   "name": "SimToolReal: Zero-Shot Dexterous Tool Manipulation via Sim-to-Real RL",
+   "attrs": {
+    "arxiv_id": "2602.16863",
+    "date": "2026-02",
+    "methodology": "rl_robot",
+    "title": "SimToolReal: Zero-Shot Dexterous Tool Manipulation via Sim-to-Real RL"
+   },
+   "source": "https://arxiv.org/abs/2602.16863"
+  },
+  {
+   "id": "paper:2502.01143",
+   "type": "Paper",
+   "name": "ASAP: Aligning Simulation and Real-World Physics for Agile Humanoid Skills",
+   "attrs": {
+    "arxiv_id": "2502.01143",
+    "date": "2025-02",
+    "methodology": "sim2real",
+    "title": "ASAP: Aligning Simulation and Real-World Physics for Agile Humanoid Skills"
+   },
+   "source": "https://arxiv.org/abs/2502.01143"
+  },
+  {
+   "id": "paper:2511.04831",
+   "type": "Paper",
+   "name": "Isaac Lab: A GPU-Accelerated Simulation Framework for Multi-Modal Robot Learning",
+   "attrs": {
+    "arxiv_id": "2511.04831",
+    "date": "2025-11",
+    "methodology": "sim2real",
+    "title": "Isaac Lab: A GPU-Accelerated Simulation Framework for Multi-Modal Robot Learning"
+   },
+   "source": "https://arxiv.org/abs/2511.04831"
+  },
+  {
+   "id": "paper:2512.01996",
+   "type": "Paper",
+   "name": "Learning Sim-to-Real Humanoid Locomotion in 15 Minutes (FastSAC/FastTD3)",
+   "attrs": {
+    "arxiv_id": "2512.01996",
+    "date": "2025-12",
+    "methodology": "sim2real",
+    "title": "Learning Sim-to-Real Humanoid Locomotion in 15 Minutes (FastSAC/FastTD3)"
+   },
+   "source": "https://arxiv.org/abs/2512.01996"
+  },
+  {
+   "id": "paper:2303.03381",
+   "type": "Paper",
+   "name": "Real-World Humanoid Locomotion with Reinforcement Learning (transformer, Digit)",
+   "attrs": {
+    "arxiv_id": "2303.03381",
+    "date": "2023-03",
+    "methodology": "locomotion_wbc",
+    "title": "Real-World Humanoid Locomotion with Reinforcement Learning (transformer, Digit)"
+   },
+   "source": "https://arxiv.org/abs/2303.03381"
+  },
+  {
+   "id": "paper:2402.16796",
+   "type": "Paper",
+   "name": "Expressive Whole-Body Control (ExBody) for Humanoid Robots",
+   "attrs": {
+    "arxiv_id": "2402.16796",
+    "date": "2024-02",
+    "methodology": "locomotion_wbc",
+    "title": "Expressive Whole-Body Control (ExBody) for Humanoid Robots"
+   },
+   "source": "https://arxiv.org/abs/2402.16796"
+  },
+  {
+   "id": "paper:2410.21229",
+   "type": "Paper",
+   "name": "HOVER: Versatile Neural Whole-Body Controller for Humanoid Robots",
+   "attrs": {
+    "arxiv_id": "2410.21229",
+    "date": "2024-10",
+    "methodology": "locomotion_wbc",
+    "title": "HOVER: Versatile Neural Whole-Body Controller for Humanoid Robots"
+   },
+   "source": "https://arxiv.org/abs/2410.21229"
+  },
+  {
+   "id": "paper:2506.14770",
+   "type": "Paper",
+   "name": "GMT: General Motion Tracking for Humanoid Whole-Body Control",
+   "attrs": {
+    "arxiv_id": "2506.14770",
+    "date": "2025-06",
+    "methodology": "locomotion_wbc",
+    "title": "GMT: General Motion Tracking for Humanoid Whole-Body Control"
+   },
+   "source": "https://arxiv.org/abs/2506.14770"
+  },
+  {
+   "id": "paper:2511.07820",
+   "type": "Paper",
+   "name": "SONIC: Supersizing Motion Tracking (scaling laws for humanoid control)",
+   "attrs": {
+    "arxiv_id": "2511.07820",
+    "date": "2025-11",
+    "methodology": "locomotion_wbc",
+    "title": "SONIC: Supersizing Motion Tracking (scaling laws for humanoid control)"
+   },
+   "source": "https://arxiv.org/abs/2511.07820"
+  },
+  {
+   "id": "paper:2406.10454",
+   "type": "Paper",
+   "name": "HumanPlus: Humanoid Shadowing and Imitation from Humans",
+   "attrs": {
+    "arxiv_id": "2406.10454",
+    "date": "2024-06",
+    "methodology": "locomotion_wbc",
+    "title": "HumanPlus: Humanoid Shadowing and Imitation from Humans"
+   },
+   "source": "https://arxiv.org/abs/2406.10454"
+  },
+  {
+   "id": "paper:2406.08858",
+   "type": "Paper",
+   "name": "OmniH2O: Universal Dexterous Human-to-Humanoid Teleoperation and Learning",
+   "attrs": {
+    "arxiv_id": "2406.08858",
+    "date": "2024-06",
+    "methodology": "locomotion_wbc",
+    "title": "OmniH2O: Universal Dexterous Human-to-Humanoid Teleoperation and Learning"
+   },
+   "source": "https://arxiv.org/abs/2406.08858"
+  },
+  {
+   "id": "paper:2505.02833",
+   "type": "Paper",
+   "name": "TWIST: Teleoperated Whole-Body Imitation System",
+   "attrs": {
+    "arxiv_id": "2505.02833",
+    "date": "2025-05",
+    "methodology": "locomotion_wbc",
+    "title": "TWIST: Teleoperated Whole-Body Imitation System"
+   },
+   "source": "https://arxiv.org/abs/2505.02833"
+  },
+  {
+   "id": "paper:2510.02252",
+   "type": "Paper",
+   "name": "GMR: Retargeting Matters — General Motion Retargeting",
+   "attrs": {
+    "arxiv_id": "2510.02252",
+    "date": "2025-10",
+    "methodology": "locomotion_wbc",
+    "title": "GMR: Retargeting Matters — General Motion Retargeting"
+   },
+   "source": "https://arxiv.org/abs/2510.02252"
+  },
+  {
+   "id": "paper:2604.17335",
+   "type": "Paper",
+   "name": "Learning Whole-Body Humanoid Locomotion via Motion Generation and Motion Tracking",
+   "attrs": {
+    "arxiv_id": "2604.17335",
+    "date": "2026-04",
+    "methodology": "locomotion_wbc",
+    "title": "Learning Whole-Body Humanoid Locomotion via Motion Generation and Motion Tracking"
+   },
+   "source": "https://arxiv.org/abs/2604.17335"
+  },
+  {
+   "id": "paper:2606.08548",
+   "type": "Paper",
+   "name": "OASIS: Simulation-Data-Driven Humanoid Loco-Manipulation",
+   "attrs": {
+    "arxiv_id": "2606.08548",
+    "date": "2026-06",
+    "methodology": "locomotion_wbc",
+    "title": "OASIS: Simulation-Data-Driven Humanoid Loco-Manipulation",
+    "flag": "agent-sourced"
+   },
+   "source": "https://arxiv.org/abs/2606.08548"
+  },
+  {
+   "id": "paper:2309.14341",
+   "type": "Paper",
+   "name": "Extreme Parkour with Legged Robots",
+   "attrs": {
+    "arxiv_id": "2309.14341",
+    "date": "2023-09",
+    "methodology": "locomotion_wbc",
+    "title": "Extreme Parkour with Legged Robots"
+   },
+   "source": "https://arxiv.org/abs/2309.14341"
+  },
+  {
+   "id": "paper:2602.15827",
+   "type": "Paper",
+   "name": "Perceptive Humanoid Parkour: Chaining Dynamic Human Skills via Motion Matching",
+   "attrs": {
+    "arxiv_id": "2602.15827",
+    "date": "2026-02",
+    "methodology": "locomotion_wbc",
+    "title": "Perceptive Humanoid Parkour: Chaining Dynamic Human Skills via Motion Matching"
+   },
+   "source": "https://arxiv.org/abs/2602.15827"
+  },
+  {
+   "id": "paper:2505.11420",
+   "type": "Paper",
+   "name": "Sparsh-skin: Self-Supervised Tactile Representation for Magnetic Skin",
+   "attrs": {
+    "arxiv_id": "2505.11420",
+    "date": "2025-05",
+    "methodology": "tactile_sensing",
+    "title": "Sparsh-skin: Self-Supervised Tactile Representation for Magnetic Skin"
+   },
+   "source": "https://arxiv.org/abs/2505.11420"
+  },
+  {
+   "id": "paper:2602.09617",
+   "type": "Paper",
+   "name": "AnyTouch 2: General Optical Tactile Representation for Dynamic Perception",
+   "attrs": {
+    "arxiv_id": "2602.09617",
+    "date": "2026-02",
+    "methodology": "tactile_sensing",
+    "title": "AnyTouch 2: General Optical Tactile Representation for Dynamic Perception"
+   },
+   "source": "https://arxiv.org/abs/2602.09617"
+  },
+  {
+   "id": "paper:2507.15062",
+   "type": "Paper",
+   "name": "Touch in the Wild: Fine-Grained Manipulation with a Portable Visuo-Tactile Gripper",
+   "attrs": {
+    "arxiv_id": "2507.15062",
+    "date": "2025-07",
+    "methodology": "tactile_sensing",
+    "title": "Touch in the Wild: Fine-Grained Manipulation with a Portable Visuo-Tactile Gripper"
+   },
+   "source": "https://arxiv.org/abs/2507.15062"
+  },
+  {
+   "id": "paper:2603.15257",
+   "type": "Paper",
+   "name": "HapticVLA: Contact-Rich Manipulation via VLA without Inference-Time Tactile Sensing",
+   "attrs": {
+    "arxiv_id": "2603.15257",
+    "date": "2026-03",
+    "methodology": "tactile_sensing",
+    "title": "HapticVLA: Contact-Rich Manipulation via VLA without Inference-Time Tactile Sensing"
+   },
+   "source": "https://arxiv.org/abs/2603.15257"
+  },
+  {
+   "id": "paper:2401.18084",
+   "type": "Paper",
+   "name": "UniTouch: Binding Touch to Everything — Unified Multimodal Tactile Representations",
+   "attrs": {
+    "arxiv_id": "2401.18084",
+    "date": "2024-01",
+    "methodology": "tactile_sensing",
+    "title": "UniTouch: Binding Touch to Everything — Unified Multimodal Tactile Representations"
+   },
+   "source": "https://arxiv.org/abs/2401.18084"
+  },
+  {
+   "id": "method:diffusion_policy",
+   "type": "Method",
+   "name": "Diffusion Policy",
+   "attrs": {
+    "instance_of": "diffusion_flow_policy"
+   },
+   "source": "https://arxiv.org/abs/2303.04137"
+  },
+  {
+   "id": "method:flow_matching_policy",
+   "type": "Method",
+   "name": "Flow-matching action expert",
+   "attrs": {
+    "instance_of": "diffusion_flow_policy"
+   },
+   "source": "https://arxiv.org/abs/2410.24164"
+  },
+  {
+   "id": "method:action_chunking",
+   "type": "Method",
+   "name": "Action Chunking (ACT)",
+   "attrs": {
+    "instance_of": "imitation_learning"
+   },
+   "source": "https://arxiv.org/abs/2304.13705"
+  },
+  {
+   "id": "method:fast_tokenizer",
+   "type": "Method",
+   "name": "FAST frequency-space action tokenizer",
+   "attrs": {
+    "instance_of": "vla"
+   },
+   "source": "https://arxiv.org/abs/2501.09747"
+  },
+  {
+   "id": "method:dual_system_vla",
+   "type": "Method",
+   "name": "Dual-system (System1/System2) VLA",
+   "attrs": {
+    "instance_of": "vla"
+   },
+   "source": "https://arxiv.org/abs/2503.14734"
+  },
+  {
+   "id": "method:real_time_chunking",
+   "type": "Method",
+   "name": "Real-Time Chunking (RTC)",
+   "attrs": {
+    "instance_of": "realtime_control"
+   },
+   "source": "https://arxiv.org/abs/2506.07339"
+  },
+  {
+   "id": "method:jepa_wm",
+   "type": "Method",
+   "name": "JEPA action-conditioned world model",
+   "attrs": {
+    "instance_of": "world_model_control"
+   },
+   "source": "https://arxiv.org/abs/2506.09985"
+  },
+  {
+   "id": "method:delta_action_sim2real",
+   "type": "Method",
+   "name": "Delta/residual action sim2real",
+   "attrs": {
+    "instance_of": "sim2real"
+   },
+   "source": "https://arxiv.org/abs/2502.01143"
+  },
+  {
+   "id": "method:domain_randomization",
+   "type": "Method",
+   "name": "Domain randomization (ADR)",
+   "attrs": {
+    "instance_of": "sim2real"
+   },
+   "source": "https://arxiv.org/abs/1910.07113"
+  },
+  {
+   "id": "method:motion_tracking_wbc",
+   "type": "Method",
+   "name": "Motion-tracking whole-body control",
+   "attrs": {
+    "instance_of": "locomotion_wbc"
+   },
+   "source": "https://arxiv.org/abs/2506.14770"
+  },
+  {
+   "id": "method:tactile_foundation_model",
+   "type": "Method",
+   "name": "Tactile foundation/representation model",
+   "attrs": {
+    "instance_of": "tactile_sensing"
+   },
+   "source": "https://arxiv.org/abs/2505.11420"
+  },
+  {
+   "id": "method:one_step_flow",
+   "type": "Method",
+   "name": "One-step / MeanFlow action generation",
+   "attrs": {
+    "instance_of": "diffusion_flow_policy"
+   },
+   "source": "https://arxiv.org/abs/2507.10543"
+  },
+  {
+   "id": "model:openvla",
+   "type": "Model",
+   "name": "OpenVLA",
+   "attrs": {
+    "weights": "open",
+    "params": "7B",
+    "date": "2024-06"
+   },
+   "source": "https://arxiv.org/abs/2406.09246"
+  },
+  {
+   "id": "model:pi0",
+   "type": "Model",
+   "name": "pi0",
+   "attrs": {
+    "weights": "open-weights",
+    "params": "~3B",
+    "date": "2024-10"
+   },
+   "source": "https://arxiv.org/abs/2410.24164"
+  },
+  {
+   "id": "model:groot_n1",
+   "type": "Model",
+   "name": "GR00T N1",
+   "attrs": {
+    "weights": "open",
+    "params": "2B",
+    "date": "2025-03"
+   },
+   "source": "https://arxiv.org/abs/2503.14734"
+  },
+  {
+   "id": "model:gemini_robotics",
+   "type": "Model",
+   "name": "Gemini Robotics / -ER",
+   "attrs": {
+    "weights": "closed",
+    "params": "-",
+    "date": "2025-03"
+   },
+   "source": "https://arxiv.org/abs/2503.20020"
+  },
+  {
+   "id": "model:vjepa2",
+   "type": "Model",
+   "name": "V-JEPA 2 / V-JEPA 2-AC",
+   "attrs": {
+    "weights": "open",
+    "params": "300M (AC head)",
+    "date": "2025-06"
+   },
+   "source": "https://arxiv.org/abs/2506.09985"
+  },
+  {
+   "id": "model:cosmos_wfm",
+   "type": "Model",
+   "name": "NVIDIA Cosmos WFM",
+   "attrs": {
+    "weights": "open-weights",
+    "params": "2B/14B",
+    "date": "2025-01"
+   },
+   "source": "https://arxiv.org/abs/2501.03575"
+  },
+  {
+   "id": "model:octo",
+   "type": "Model",
+   "name": "Octo",
+   "attrs": {
+    "weights": "open",
+    "params": "27M-93M",
+    "date": "2024-05"
+   },
+   "source": "https://arxiv.org/abs/2405.12213"
+  },
+  {
+   "id": "model:smolvla",
+   "type": "Model",
+   "name": "SmolVLA",
+   "attrs": {
+    "weights": "open",
+    "params": "~450M",
+    "date": "2025-06"
+   },
+   "source": "https://arxiv.org/abs/2506.01844"
+  },
+  {
+   "id": "model:helix",
+   "type": "Model",
+   "name": "Figure Helix",
+   "attrs": {
+    "weights": "closed",
+    "params": "-",
+    "date": "2025-02"
+   },
+   "source": "https://www.figure.ai/news/helix"
+  },
+  {
+   "id": "model:genie3",
+   "type": "Model",
+   "name": "DeepMind Genie 3",
+   "attrs": {
+    "weights": "closed",
+    "params": "-",
+    "date": "2025-08"
+   },
+   "source": "https://deepmind.google/blog/genie-3-a-new-frontier-for-world-models/"
+  },
+  {
+   "id": "bench:libero",
+   "type": "Benchmark",
+   "name": "LIBERO",
+   "attrs": {
+    "measures": "Lifelong/knowledge-transfer IL; 130 tasks / 4 suites",
+    "arxiv_id": "2306.03310"
+   },
+   "source": "https://arxiv.org/abs/2306.03310"
+  },
+  {
+   "id": "bench:robocasa",
+   "type": "Benchmark",
+   "name": "RoboCasa",
+   "attrs": {
+    "measures": "Large-scale kitchen sim; generalist IL scaling & sim2real",
+    "arxiv_id": "2406.02523"
+   },
+   "source": "https://arxiv.org/abs/2406.02523"
+  },
+  {
+   "id": "bench:maniskill3",
+   "type": "Benchmark",
+   "name": "ManiSkill3",
+   "attrs": {
+    "measures": "GPU-parallel sim+render; scalable RL/IL throughput",
+    "arxiv_id": "2410.00425"
+   },
+   "source": "https://arxiv.org/abs/2410.00425"
+  },
+  {
+   "id": "bench:roboarena",
+   "type": "Benchmark",
+   "name": "RoboArena",
+   "attrs": {
+    "measures": "Distributed crowd-sourced real-world generalist-policy eval",
+    "arxiv_id": "2506.18123"
+   },
+   "source": "https://arxiv.org/abs/2506.18123"
+  },
+  {
+   "id": "bench:calvin",
+   "type": "Benchmark",
+   "name": "CALVIN",
+   "attrs": {
+    "measures": "Language-conditioned long-horizon; chained 5-subtask",
+    "arxiv_id": "2112.03227",
+    "flag": "verify-id"
+   },
+   "source": "https://arxiv.org/abs/2112.03227"
+  },
+  {
+   "id": "bench:simplerenv",
+   "type": "Benchmark",
+   "name": "SimplerEnv",
+   "attrs": {
+    "measures": "Sim eval correlated with real-robot performance",
+    "arxiv_id": "2405.05941",
+    "flag": "verify-id"
+   },
+   "source": "https://arxiv.org/abs/2405.05941"
+  },
+  {
+   "id": "bench:robomimic",
+   "type": "Benchmark",
+   "name": "RoboMimic",
+   "attrs": {
+    "measures": "Offline IL from human demos; algorithm sensitivity study",
+    "arxiv_id": "2108.03298",
+    "flag": "verify-id"
+   },
+   "source": "https://arxiv.org/abs/2108.03298"
+  },
+  {
+   "id": "bench:ht_bench",
+   "type": "Benchmark",
+   "name": "HT-Bench",
+   "attrs": {
+    "measures": "Dexterous full-hand tactile representation benchmark (10M RGB+7.8M tactile)",
+    "arxiv_id": "2606.19161"
+   },
+   "source": "https://arxiv.org/abs/2606.19161"
+  },
+  {
+   "id": "dataset:oxe",
+   "type": "Dataset",
+   "name": "Open X-Embodiment",
+   "attrs": {
+    "measures": "22 embodiments, 1M+ trajectories, 527 skills (cross-embodiment corpus)",
+    "arxiv_id": "2310.08864"
+   },
+   "source": "https://arxiv.org/abs/2310.08864"
+  },
+  {
+   "id": "dataset:droid",
+   "type": "Dataset",
+   "name": "DROID",
+   "attrs": {
+    "measures": "76k trajectories, 564 scenes, 84 tasks, 3 continents",
+    "arxiv_id": "2403.12945"
+   },
+   "source": "https://arxiv.org/abs/2403.12945"
+  },
+  {
+   "id": "dataset:agibot",
+   "type": "Dataset",
+   "name": "AgiBot World",
+   "attrs": {
+    "measures": "1M+ trajectories, 217 tasks, visuo-tactile; +30% over OXE",
+    "arxiv_id": "2503.06669"
+   },
+   "source": "https://arxiv.org/abs/2503.06669"
+  },
+  {
+   "id": "concept:action_chunking",
+   "type": "Concept",
+   "name": "Action chunking",
+   "attrs": {
+    "definition": "Predict a chunk of future actions to reduce compounding error & enable temporal consistency."
+   },
+   "source": "ledger-synthesis"
+  },
+  {
+   "id": "concept:multimodal_action",
+   "type": "Concept",
+   "name": "Multimodal action distribution",
+   "attrs": {
+    "definition": "Multiple valid actions per state; generative heads (diffusion/flow) model the multi-peaked distribution."
+   },
+   "source": "ledger-synthesis"
+  },
+  {
+   "id": "concept:cross_embodiment",
+   "type": "Concept",
+   "name": "Cross-embodiment generalization",
+   "attrs": {
+    "definition": "One policy/dataset spanning heterogeneous robot bodies and action spaces."
+   },
+   "source": "ledger-synthesis"
+  },
+  {
+   "id": "concept:latent_vs_generative_wm",
+   "type": "Concept",
+   "name": "Latent vs generative world model",
+   "attrs": {
+    "definition": "Predict abstract latents (JEPA) vs generate pixels/video (Genie/Cosmos)."
+   },
+   "source": "ledger-synthesis"
+  },
+  {
+   "id": "concept:system1_system2",
+   "type": "Concept",
+   "name": "System-1/System-2 split",
+   "attrs": {
+    "definition": "Slow VLM reasoning (S2) + fast reactive visuomotor policy (S1)."
+   },
+   "source": "ledger-synthesis"
+  },
+  {
+   "id": "concept:sim2real_gap",
+   "type": "Concept",
+   "name": "Sim-to-real gap",
+   "attrs": {
+    "definition": "Dynamics/appearance mismatch between simulator and hardware."
+   },
+   "source": "ledger-synthesis"
+  },
+  {
+   "id": "concept:async_inference",
+   "type": "Concept",
+   "name": "Asynchronous inference",
+   "attrs": {
+    "definition": "Run model inference while executing the previous action chunk to hide latency."
+   },
+   "source": "ledger-synthesis"
+  },
+  {
+   "id": "concept:latent_action",
+   "type": "Concept",
+   "name": "Latent action",
+   "attrs": {
+    "definition": "Action representation inferred from unlabeled video to enable actionless pretraining."
+   },
+   "source": "ledger-synthesis"
+  },
+  {
+   "id": "concept:motion_retargeting",
+   "type": "Concept",
+   "name": "Motion retargeting",
+   "attrs": {
+    "definition": "Map human MoCap/video motion onto a robot's kinematics for tracking."
+   },
+   "source": "ledger-synthesis"
+  },
+  {
+   "id": "concept:knowledge_insulation",
+   "type": "Concept",
+   "name": "Knowledge insulation",
+   "attrs": {
+    "definition": "Preserve VLM semantic priors from being washed out by action fine-tuning."
+   },
+   "source": "ledger-synthesis"
+  },
+  {
+   "id": "claim:dp_46",
+   "type": "Claim",
+   "name": "Diffusion Policy improves avg +46.9% over prior imitation SOTA across 4 benchmarks",
+   "attrs": {
+    "asserting_paper": "paper:2303.04137"
+   },
+   "source": "https://arxiv.org/abs/2303.04137"
+  },
+  {
+   "id": "claim:openvla_beats_rt2x",
+   "type": "Claim",
+   "name": "OpenVLA (7B) beats closed RT-2-X (55B) by 16.5% abs across 29 tasks",
+   "attrs": {
+    "asserting_paper": "paper:2406.09246"
+   },
+   "source": "https://arxiv.org/abs/2406.09246"
+  },
+  {
+   "id": "claim:fast_matches_flow",
+   "type": "Claim",
+   "name": "Autoregressive pi0-FAST matches diffusion/flow pi0 while cutting training up to 5x",
+   "attrs": {
+    "asserting_paper": "paper:2501.09747"
+   },
+   "source": "https://arxiv.org/abs/2501.09747"
+  },
+  {
+   "id": "claim:vla0_text_best",
+   "type": "Claim",
+   "name": "Actions-as-plain-text (VLA-0) beats action-head & tokenizer VLAs on LIBERO",
+   "attrs": {
+    "asserting_paper": "paper:2510.13054"
+   },
+   "source": "https://arxiv.org/abs/2510.13054"
+  },
+  {
+   "id": "claim:much_ado",
+   "type": "Claim",
+   "name": "Diffusion/flow gains come from iterative supervised computation, NOT multimodality capture",
+   "attrs": {
+    "asserting_paper": "paper:2512.01809"
+   },
+   "source": "https://arxiv.org/abs/2512.01809"
+  },
+  {
+   "id": "claim:vjepa2_zeroshot",
+   "type": "Claim",
+   "name": "Latent JEPA world model plans zero-shot on real Franka from 62h unlabeled video, no reward",
+   "attrs": {
+    "asserting_paper": "paper:2506.09985"
+   },
+   "source": "https://arxiv.org/abs/2506.09985"
+  },
+  {
+   "id": "claim:jepawm_beats",
+   "type": "Claim",
+   "name": "Tuned JEPA-WM beats DINO-WM and V-JEPA-2-AC on navigation+manipulation planning",
+   "attrs": {
+    "asserting_paper": "paper:2512.24497"
+   },
+   "source": "https://arxiv.org/abs/2512.24497"
+  },
+  {
+   "id": "claim:cosmos3_beats_specialists",
+   "type": "Claim",
+   "name": "One omnimodal generative world model (Cosmos 3) beats specialized VLA/VLM (agent-sourced)",
+   "attrs": {
+    "asserting_paper": "paper:2606.02800"
+   },
+   "source": "https://arxiv.org/abs/2606.02800"
+  },
+  {
+   "id": "claim:int_act_gap",
+   "type": "Claim",
+   "name": "VLAs have good high-level intentions but poor motor execution OOD; action-finetuning erodes VLM reasoning",
+   "attrs": {
+    "asserting_paper": "paper:2506.09930"
+   },
+   "source": "https://arxiv.org/abs/2506.09930"
+  },
+  {
+   "id": "claim:asap_delta",
+   "type": "Claim",
+   "name": "Learning a delta/residual dynamics action model beats SysID & domain randomization for agile humanoid sim2real",
+   "attrs": {
+    "asserting_paper": "paper:2502.01143"
+   },
+   "source": "https://arxiv.org/abs/2502.01143"
+  },
+  {
+   "id": "claim:oasis_sim_beats_real",
+   "type": "Claim",
+   "name": "Sim-trained loco-manipulation policy beats real-teleop-trained on most tasks (broader coverage)",
+   "attrs": {
+    "asserting_paper": "paper:2606.08548"
+   },
+   "source": "https://arxiv.org/abs/2606.08548"
+  },
+  {
+   "id": "claim:gmr_retargeting",
+   "type": "Claim",
+   "name": "Much apparent RL robustness is really compensating for poor motion-retargeting quality",
+   "attrs": {
+    "asserting_paper": "paper:2510.02252"
+   },
+   "source": "https://arxiv.org/abs/2510.02252"
+  },
+  {
+   "id": "claim:data_diversity",
+   "type": "Claim",
+   "name": "IL generalization follows a power law in #environments & #objects; diversity >> raw demo count",
+   "attrs": {
+    "asserting_paper": "paper:2410.18647"
+   },
+   "source": "https://arxiv.org/abs/2410.18647"
+  },
+  {
+   "id": "claim:diversity_confound",
+   "type": "Claim",
+   "name": "More diversity is NOT always better; expert-velocity multimodality can confound the policy",
+   "attrs": {
+    "asserting_paper": "paper:2507.06219"
+   },
+   "source": "https://arxiv.org/abs/2507.06219"
+  },
+  {
+   "id": "claim:rtc_latency",
+   "type": "Claim",
+   "name": "Real-time chunking (inpainting) makes any diffusion/flow VLA robust to inference delay, no retraining",
+   "attrs": {
+    "asserting_paper": "paper:2506.07339"
+   },
+   "source": "https://arxiv.org/abs/2506.07339"
+  },
+  {
+   "id": "claim:15min_humanoid",
+   "type": "Claim",
+   "name": "Off-policy RL trains a full humanoid locomotion policy in 15 min on one RTX 4090",
+   "attrs": {
+    "asserting_paper": "paper:2512.01996"
+   },
+   "source": "https://arxiv.org/abs/2512.01996"
+  },
+  {
+   "id": "claim:sonic_scaling",
+   "type": "Claim",
+   "name": "Humanoid motion-tracking control performance scales steadily with compute/data (1.2M->42M params, 700h)",
+   "attrs": {
+    "asserting_paper": "paper:2511.07820"
+   },
+   "source": "https://arxiv.org/abs/2511.07820"
+  }
+ ],
+ "relations": [
+  {
+   "src": "D3",
+   "rel": "domain_has_methodology",
+   "dst": "meth:diffusion_flow_policy",
+   "source": "schema-D3-wave1"
+  },
+  {
+   "src": "D3",
+   "rel": "domain_has_methodology",
+   "dst": "meth:vla",
+   "source": "schema-D3-wave1"
+  },
+  {
+   "src": "D3",
+   "rel": "domain_has_methodology",
+   "dst": "meth:world_model_control",
+   "source": "schema-D3-wave1"
+  },
+  {
+   "src": "D3",
+   "rel": "domain_has_methodology",
+   "dst": "meth:imitation_learning",
+   "source": "schema-D3-wave1"
+  },
+  {
+   "src": "D3",
+   "rel": "domain_has_methodology",
+   "dst": "meth:rl_robot",
+   "source": "schema-D3-wave1"
+  },
+  {
+   "src": "D3",
+   "rel": "domain_has_methodology",
+   "dst": "meth:sim2real",
+   "source": "schema-D3-wave1"
+  },
+  {
+   "src": "D3",
+   "rel": "domain_has_methodology",
+   "dst": "meth:locomotion_wbc",
+   "source": "schema-D3-wave1"
+  },
+  {
+   "src": "D3",
+   "rel": "domain_has_methodology",
+   "dst": "meth:tactile_sensing",
+   "source": "schema-D3-wave1"
+  },
+  {
+   "src": "D3",
+   "rel": "domain_has_methodology",
+   "dst": "meth:realtime_control",
+   "source": "schema-D3-wave1"
+  },
+  {
+   "src": "person:cheng_chi",
+   "rel": "affiliated_with",
+   "dst": "org:stanford",
+   "source": "https://arxiv.org/abs/2303.04137"
+  },
+  {
+   "src": "person:shuran_song",
+   "rel": "affiliated_with",
+   "dst": "org:stanford",
+   "source": "https://arxiv.org/abs/2303.04137"
+  },
+  {
+   "src": "person:russ_tedrake",
+   "rel": "affiliated_with",
+   "dst": "org:mit",
+   "source": "https://arxiv.org/abs/2303.04137"
+  },
+  {
+   "src": "person:sergey_levine",
+   "rel": "affiliated_with",
+   "dst": "org:physical_intelligence",
+   "source": "https://arxiv.org/abs/2410.24164"
+  },
+  {
+   "src": "person:chelsea_finn",
+   "rel": "affiliated_with",
+   "dst": "org:stanford",
+   "source": "https://arxiv.org/abs/2304.13705"
+  },
+  {
+   "src": "person:karol_hausman",
+   "rel": "affiliated_with",
+   "dst": "org:physical_intelligence",
+   "source": "https://arxiv.org/abs/2410.24164"
+  },
+  {
+   "src": "person:kevin_black",
+   "rel": "affiliated_with",
+   "dst": "org:physical_intelligence",
+   "source": "https://arxiv.org/abs/2506.07339"
+  },
+  {
+   "src": "person:karl_pertsch",
+   "rel": "affiliated_with",
+   "dst": "org:berkeley",
+   "source": "https://arxiv.org/abs/2501.09747"
+  },
+  {
+   "src": "person:moojin_kim",
+   "rel": "affiliated_with",
+   "dst": "org:stanford",
+   "source": "https://arxiv.org/abs/2406.09246"
+  },
+  {
+   "src": "person:percy_liang",
+   "rel": "affiliated_with",
+   "dst": "org:stanford",
+   "source": "https://arxiv.org/abs/2502.19645"
+  },
+  {
+   "src": "person:yann_lecun",
+   "rel": "affiliated_with",
+   "dst": "org:meta_fair",
+   "source": "https://arxiv.org/abs/2404.08471"
+  },
+  {
+   "src": "person:adrien_bardes",
+   "rel": "affiliated_with",
+   "dst": "org:meta_fair",
+   "source": "https://arxiv.org/abs/2404.08471"
+  },
+  {
+   "src": "person:danijar_hafner",
+   "rel": "affiliated_with",
+   "dst": "org:google_deepmind",
+   "source": "https://arxiv.org/abs/2301.04104"
+  },
+  {
+   "src": "person:lerrel_pinto",
+   "rel": "affiliated_with",
+   "dst": "org:meta_fair",
+   "source": "https://arxiv.org/abs/2411.04983"
+  },
+  {
+   "src": "person:jim_fan",
+   "rel": "affiliated_with",
+   "dst": "org:nvidia",
+   "source": "https://arxiv.org/abs/2503.14734"
+  },
+  {
+   "src": "person:yuke_zhu",
+   "rel": "affiliated_with",
+   "dst": "org:nvidia",
+   "source": "https://arxiv.org/abs/2502.20396"
+  },
+  {
+   "src": "person:deepak_pathak",
+   "rel": "affiliated_with",
+   "dst": "org:cmu",
+   "source": "https://arxiv.org/abs/2309.14341"
+  },
+  {
+   "src": "person:marco_hutter",
+   "rel": "affiliated_with",
+   "dst": "org:eth",
+   "source": "https://arxiv.org/abs/2604.17335"
+  },
+  {
+   "src": "person:xiaolong_wang",
+   "rel": "affiliated_with",
+   "dst": "org:ucsd",
+   "source": "https://arxiv.org/abs/2402.16796"
+  },
+  {
+   "src": "person:xuebin_peng",
+   "rel": "affiliated_with",
+   "dst": "org:nvidia",
+   "source": "https://arxiv.org/abs/2506.14770"
+  },
+  {
+   "src": "person:karen_liu",
+   "rel": "affiliated_with",
+   "dst": "org:stanford",
+   "source": "https://arxiv.org/abs/2403.07788"
+  },
+  {
+   "src": "person:pieter_abbeel",
+   "rel": "affiliated_with",
+   "dst": "org:berkeley",
+   "source": "https://arxiv.org/abs/2512.01996"
+  },
+  {
+   "src": "person:tairan_he",
+   "rel": "affiliated_with",
+   "dst": "org:cmu",
+   "source": "https://arxiv.org/abs/2502.01143"
+  },
+  {
+   "src": "person:zipeng_fu",
+   "rel": "affiliated_with",
+   "dst": "org:stanford",
+   "source": "https://arxiv.org/abs/2401.02117"
+  },
+  {
+   "src": "person:tony_zhao",
+   "rel": "affiliated_with",
+   "dst": "org:stanford",
+   "source": "https://arxiv.org/abs/2304.13705"
+  },
+  {
+   "src": "person:yunzhu_li",
+   "rel": "affiliated_with",
+   "dst": "org:columbia",
+   "source": "https://arxiv.org/abs/2507.15062"
+  },
+  {
+   "src": "person:huazhe_xu",
+   "rel": "affiliated_with",
+   "dst": "org:tsinghua",
+   "source": "https://arxiv.org/abs/2403.03954"
+  },
+  {
+   "src": "person:yilun_du",
+   "rel": "affiliated_with",
+   "dst": "org:mit",
+   "source": "https://arxiv.org/abs/2406.04806"
+  },
+  {
+   "src": "person:jitendra_malik",
+   "rel": "affiliated_with",
+   "dst": "org:berkeley",
+   "source": "https://arxiv.org/abs/2303.03381"
+  },
+  {
+   "src": "person:jeannette_bohg",
+   "rel": "affiliated_with",
+   "dst": "org:stanford",
+   "source": "https://arxiv.org/abs/2405.07503"
+  },
+  {
+   "src": "person:byron_boots",
+   "rel": "affiliated_with",
+   "dst": "org:meta_fair",
+   "source": "https://arxiv.org/abs/2505.11420"
+  },
+  {
+   "src": "person:danny_driess",
+   "rel": "affiliated_with",
+   "dst": "org:physical_intelligence",
+   "source": "https://arxiv.org/abs/2410.24164"
+  },
+  {
+   "src": "paper:2303.04137",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2303.04137"
+  },
+  {
+   "src": "person:cheng_chi",
+   "rel": "authored",
+   "dst": "paper:2303.04137",
+   "source": "https://arxiv.org/abs/2303.04137"
+  },
+  {
+   "src": "person:shuran_song",
+   "rel": "authored",
+   "dst": "paper:2303.04137",
+   "source": "https://arxiv.org/abs/2303.04137"
+  },
+  {
+   "src": "person:russ_tedrake",
+   "rel": "authored",
+   "dst": "paper:2303.04137",
+   "source": "https://arxiv.org/abs/2303.04137"
+  },
+  {
+   "src": "paper:2403.03954",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2403.03954"
+  },
+  {
+   "src": "person:huazhe_xu",
+   "rel": "authored",
+   "dst": "paper:2403.03954",
+   "source": "https://arxiv.org/abs/2403.03954"
+  },
+  {
+   "src": "paper:2405.07503",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2405.07503"
+  },
+  {
+   "src": "person:jeannette_bohg",
+   "rel": "authored",
+   "dst": "paper:2405.07503",
+   "source": "https://arxiv.org/abs/2405.07503"
+  },
+  {
+   "src": "paper:2407.01812",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2407.01812"
+  },
+  {
+   "src": "paper:2410.21257",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2410.21257"
+  },
+  {
+   "src": "paper:2406.04806",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2406.04806"
+  },
+  {
+   "src": "person:yilun_du",
+   "rel": "authored",
+   "dst": "paper:2406.04806",
+   "source": "https://arxiv.org/abs/2406.04806"
+  },
+  {
+   "src": "paper:2410.10803",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2410.10803"
+  },
+  {
+   "src": "person:xuebin_peng",
+   "rel": "authored",
+   "dst": "paper:2410.10803",
+   "source": "https://arxiv.org/abs/2410.10803"
+  },
+  {
+   "src": "paper:2505.21851",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2505.21851"
+  },
+  {
+   "src": "paper:2507.21053",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2507.21053"
+  },
+  {
+   "src": "paper:2509.01819",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2509.01819"
+  },
+  {
+   "src": "paper:2507.10543",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2507.10543"
+  },
+  {
+   "src": "paper:2601.16163",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2601.16163"
+  },
+  {
+   "src": "person:moojin_kim",
+   "rel": "authored",
+   "dst": "paper:2601.16163",
+   "source": "https://arxiv.org/abs/2601.16163"
+  },
+  {
+   "src": "person:shuran_song",
+   "rel": "authored",
+   "dst": "paper:2601.16163",
+   "source": "https://arxiv.org/abs/2601.16163"
+  },
+  {
+   "src": "person:percy_liang",
+   "rel": "authored",
+   "dst": "paper:2601.16163",
+   "source": "https://arxiv.org/abs/2601.16163"
+  },
+  {
+   "src": "paper:2512.01809",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2512.01809"
+  },
+  {
+   "src": "paper:2508.20072",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2508.20072"
+  },
+  {
+   "src": "paper:2607.11884",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2607.11884"
+  },
+  {
+   "src": "person:shuran_song",
+   "rel": "authored",
+   "dst": "paper:2607.11884",
+   "source": "https://arxiv.org/abs/2607.11884"
+  },
+  {
+   "src": "person:jeannette_bohg",
+   "rel": "authored",
+   "dst": "paper:2607.11884",
+   "source": "https://arxiv.org/abs/2607.11884"
+  },
+  {
+   "src": "paper:2606.17551",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2606.17551"
+  },
+  {
+   "src": "person:sergey_levine",
+   "rel": "authored",
+   "dst": "paper:2606.17551",
+   "source": "https://arxiv.org/abs/2606.17551"
+  },
+  {
+   "src": "paper:2212.06817",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2212.06817"
+  },
+  {
+   "src": "paper:2307.15818",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2307.15818"
+  },
+  {
+   "src": "paper:2310.08864",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2310.08864"
+  },
+  {
+   "src": "person:karl_pertsch",
+   "rel": "authored",
+   "dst": "paper:2310.08864",
+   "source": "https://arxiv.org/abs/2310.08864"
+  },
+  {
+   "src": "paper:2405.12213",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2405.12213"
+  },
+  {
+   "src": "person:karl_pertsch",
+   "rel": "authored",
+   "dst": "paper:2405.12213",
+   "source": "https://arxiv.org/abs/2405.12213"
+  },
+  {
+   "src": "person:sergey_levine",
+   "rel": "authored",
+   "dst": "paper:2405.12213",
+   "source": "https://arxiv.org/abs/2405.12213"
+  },
+  {
+   "src": "paper:2406.09246",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2406.09246"
+  },
+  {
+   "src": "person:moojin_kim",
+   "rel": "authored",
+   "dst": "paper:2406.09246",
+   "source": "https://arxiv.org/abs/2406.09246"
+  },
+  {
+   "src": "person:karl_pertsch",
+   "rel": "authored",
+   "dst": "paper:2406.09246",
+   "source": "https://arxiv.org/abs/2406.09246"
+  },
+  {
+   "src": "person:chelsea_finn",
+   "rel": "authored",
+   "dst": "paper:2406.09246",
+   "source": "https://arxiv.org/abs/2406.09246"
+  },
+  {
+   "src": "person:sergey_levine",
+   "rel": "authored",
+   "dst": "paper:2406.09246",
+   "source": "https://arxiv.org/abs/2406.09246"
+  },
+  {
+   "src": "paper:2410.24164",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2410.24164"
+  },
+  {
+   "src": "person:kevin_black",
+   "rel": "authored",
+   "dst": "paper:2410.24164",
+   "source": "https://arxiv.org/abs/2410.24164"
+  },
+  {
+   "src": "person:sergey_levine",
+   "rel": "authored",
+   "dst": "paper:2410.24164",
+   "source": "https://arxiv.org/abs/2410.24164"
+  },
+  {
+   "src": "person:chelsea_finn",
+   "rel": "authored",
+   "dst": "paper:2410.24164",
+   "source": "https://arxiv.org/abs/2410.24164"
+  },
+  {
+   "src": "person:danny_driess",
+   "rel": "authored",
+   "dst": "paper:2410.24164",
+   "source": "https://arxiv.org/abs/2410.24164"
+  },
+  {
+   "src": "paper:2501.09747",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2501.09747"
+  },
+  {
+   "src": "person:karl_pertsch",
+   "rel": "authored",
+   "dst": "paper:2501.09747",
+   "source": "https://arxiv.org/abs/2501.09747"
+  },
+  {
+   "src": "person:sergey_levine",
+   "rel": "authored",
+   "dst": "paper:2501.09747",
+   "source": "https://arxiv.org/abs/2501.09747"
+  },
+  {
+   "src": "paper:2502.19645",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2502.19645"
+  },
+  {
+   "src": "person:moojin_kim",
+   "rel": "authored",
+   "dst": "paper:2502.19645",
+   "source": "https://arxiv.org/abs/2502.19645"
+  },
+  {
+   "src": "person:chelsea_finn",
+   "rel": "authored",
+   "dst": "paper:2502.19645",
+   "source": "https://arxiv.org/abs/2502.19645"
+  },
+  {
+   "src": "person:percy_liang",
+   "rel": "authored",
+   "dst": "paper:2502.19645",
+   "source": "https://arxiv.org/abs/2502.19645"
+  },
+  {
+   "src": "paper:2504.16054",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2504.16054"
+  },
+  {
+   "src": "paper:2604.15483",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2604.15483"
+  },
+  {
+   "src": "paper:2503.20020",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2503.20020"
+  },
+  {
+   "src": "paper:2510.03342",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2510.03342"
+  },
+  {
+   "src": "paper:2503.14734",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2503.14734"
+  },
+  {
+   "src": "person:jim_fan",
+   "rel": "authored",
+   "dst": "paper:2503.14734",
+   "source": "https://arxiv.org/abs/2503.14734"
+  },
+  {
+   "src": "paper:2507.15493",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2507.15493"
+  },
+  {
+   "src": "paper:2411.19650",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2411.19650"
+  },
+  {
+   "src": "paper:2510.13054",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2510.13054"
+  },
+  {
+   "src": "paper:2602.04215",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2602.04215"
+  },
+  {
+   "src": "person:yilun_du",
+   "rel": "authored",
+   "dst": "paper:2602.04215",
+   "source": "https://arxiv.org/abs/2602.04215"
+  },
+  {
+   "src": "paper:2602.03310",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2602.03310"
+  },
+  {
+   "src": "paper:2503.22020",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2503.22020"
+  },
+  {
+   "src": "person:moojin_kim",
+   "rel": "authored",
+   "dst": "paper:2503.22020",
+   "source": "https://arxiv.org/abs/2503.22020"
+  },
+  {
+   "src": "paper:2506.01844",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2506.01844"
+  },
+  {
+   "src": "paper:2506.09930",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2506.09930"
+  },
+  {
+   "src": "paper:2404.08471",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2404.08471"
+  },
+  {
+   "src": "person:yann_lecun",
+   "rel": "authored",
+   "dst": "paper:2404.08471",
+   "source": "https://arxiv.org/abs/2404.08471"
+  },
+  {
+   "src": "person:adrien_bardes",
+   "rel": "authored",
+   "dst": "paper:2404.08471",
+   "source": "https://arxiv.org/abs/2404.08471"
+  },
+  {
+   "src": "paper:2506.09985",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2506.09985"
+  },
+  {
+   "src": "person:yann_lecun",
+   "rel": "authored",
+   "dst": "paper:2506.09985",
+   "source": "https://arxiv.org/abs/2506.09985"
+  },
+  {
+   "src": "person:adrien_bardes",
+   "rel": "authored",
+   "dst": "paper:2506.09985",
+   "source": "https://arxiv.org/abs/2506.09985"
+  },
+  {
+   "src": "paper:2603.14482",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2603.14482"
+  },
+  {
+   "src": "person:yann_lecun",
+   "rel": "authored",
+   "dst": "paper:2603.14482",
+   "source": "https://arxiv.org/abs/2603.14482"
+  },
+  {
+   "src": "paper:2411.04983",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2411.04983"
+  },
+  {
+   "src": "person:lerrel_pinto",
+   "rel": "authored",
+   "dst": "paper:2411.04983",
+   "source": "https://arxiv.org/abs/2411.04983"
+  },
+  {
+   "src": "person:yann_lecun",
+   "rel": "authored",
+   "dst": "paper:2411.04983",
+   "source": "https://arxiv.org/abs/2411.04983"
+  },
+  {
+   "src": "paper:2512.24497",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2512.24497"
+  },
+  {
+   "src": "person:yann_lecun",
+   "rel": "authored",
+   "dst": "paper:2512.24497",
+   "source": "https://arxiv.org/abs/2512.24497"
+  },
+  {
+   "src": "paper:2301.04104",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2301.04104"
+  },
+  {
+   "src": "person:danijar_hafner",
+   "rel": "authored",
+   "dst": "paper:2301.04104",
+   "source": "https://arxiv.org/abs/2301.04104"
+  },
+  {
+   "src": "paper:2509.24527",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2509.24527"
+  },
+  {
+   "src": "person:danijar_hafner",
+   "rel": "authored",
+   "dst": "paper:2509.24527",
+   "source": "https://arxiv.org/abs/2509.24527"
+  },
+  {
+   "src": "paper:2402.15391",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2402.15391"
+  },
+  {
+   "src": "paper:2501.03575",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2501.03575"
+  },
+  {
+   "src": "paper:2606.02800",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2606.02800"
+  },
+  {
+   "src": "paper:2412.14803",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2412.14803"
+  },
+  {
+   "src": "paper:2410.06158",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2410.06158"
+  },
+  {
+   "src": "paper:2506.21539",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2506.21539"
+  },
+  {
+   "src": "paper:2510.10125",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2510.10125"
+  },
+  {
+   "src": "person:chelsea_finn",
+   "rel": "authored",
+   "dst": "paper:2510.10125",
+   "source": "https://arxiv.org/abs/2510.10125"
+  },
+  {
+   "src": "paper:2511.07732",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2511.07732"
+  },
+  {
+   "src": "person:deepak_pathak",
+   "rel": "authored",
+   "dst": "paper:2511.07732",
+   "source": "https://arxiv.org/abs/2511.07732"
+  },
+  {
+   "src": "paper:2607.06401",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2607.06401"
+  },
+  {
+   "src": "paper:2506.07339",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2506.07339"
+  },
+  {
+   "src": "person:kevin_black",
+   "rel": "authored",
+   "dst": "paper:2506.07339",
+   "source": "https://arxiv.org/abs/2506.07339"
+  },
+  {
+   "src": "person:sergey_levine",
+   "rel": "authored",
+   "dst": "paper:2506.07339",
+   "source": "https://arxiv.org/abs/2506.07339"
+  },
+  {
+   "src": "paper:2512.05964",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2512.05964"
+  },
+  {
+   "src": "person:kevin_black",
+   "rel": "authored",
+   "dst": "paper:2512.05964",
+   "source": "https://arxiv.org/abs/2512.05964"
+  },
+  {
+   "src": "person:sergey_levine",
+   "rel": "authored",
+   "dst": "paper:2512.05964",
+   "source": "https://arxiv.org/abs/2512.05964"
+  },
+  {
+   "src": "paper:2603.19199",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2603.19199"
+  },
+  {
+   "src": "paper:2601.20130",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2601.20130"
+  },
+  {
+   "src": "paper:2512.01031",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2512.01031"
+  },
+  {
+   "src": "paper:2304.13705",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2304.13705"
+  },
+  {
+   "src": "person:tony_zhao",
+   "rel": "authored",
+   "dst": "paper:2304.13705",
+   "source": "https://arxiv.org/abs/2304.13705"
+  },
+  {
+   "src": "person:sergey_levine",
+   "rel": "authored",
+   "dst": "paper:2304.13705",
+   "source": "https://arxiv.org/abs/2304.13705"
+  },
+  {
+   "src": "person:chelsea_finn",
+   "rel": "authored",
+   "dst": "paper:2304.13705",
+   "source": "https://arxiv.org/abs/2304.13705"
+  },
+  {
+   "src": "paper:2401.02117",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2401.02117"
+  },
+  {
+   "src": "person:zipeng_fu",
+   "rel": "authored",
+   "dst": "paper:2401.02117",
+   "source": "https://arxiv.org/abs/2401.02117"
+  },
+  {
+   "src": "person:chelsea_finn",
+   "rel": "authored",
+   "dst": "paper:2401.02117",
+   "source": "https://arxiv.org/abs/2401.02117"
+  },
+  {
+   "src": "paper:2402.10329",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2402.10329"
+  },
+  {
+   "src": "person:cheng_chi",
+   "rel": "authored",
+   "dst": "paper:2402.10329",
+   "source": "https://arxiv.org/abs/2402.10329"
+  },
+  {
+   "src": "person:shuran_song",
+   "rel": "authored",
+   "dst": "paper:2402.10329",
+   "source": "https://arxiv.org/abs/2402.10329"
+  },
+  {
+   "src": "paper:2403.07788",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2403.07788"
+  },
+  {
+   "src": "person:karen_liu",
+   "rel": "authored",
+   "dst": "paper:2403.07788",
+   "source": "https://arxiv.org/abs/2403.07788"
+  },
+  {
+   "src": "paper:2410.18647",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2410.18647"
+  },
+  {
+   "src": "paper:2503.06669",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2503.06669"
+  },
+  {
+   "src": "paper:2403.12945",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2403.12945"
+  },
+  {
+   "src": "person:karl_pertsch",
+   "rel": "authored",
+   "dst": "paper:2403.12945",
+   "source": "https://arxiv.org/abs/2403.12945"
+  },
+  {
+   "src": "paper:2503.02881",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2503.02881"
+  },
+  {
+   "src": "person:huazhe_xu",
+   "rel": "authored",
+   "dst": "paper:2503.02881",
+   "source": "https://arxiv.org/abs/2503.02881"
+  },
+  {
+   "src": "paper:2507.06219",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2507.06219"
+  },
+  {
+   "src": "paper:2410.21845",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2410.21845"
+  },
+  {
+   "src": "person:sergey_levine",
+   "rel": "authored",
+   "dst": "paper:2410.21845",
+   "source": "https://arxiv.org/abs/2410.21845"
+  },
+  {
+   "src": "paper:2604.23073",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2604.23073"
+  },
+  {
+   "src": "paper:1808.00177",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/1808.00177"
+  },
+  {
+   "src": "paper:1910.07113",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/1910.07113"
+  },
+  {
+   "src": "paper:2502.20396",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2502.20396"
+  },
+  {
+   "src": "person:jitendra_malik",
+   "rel": "authored",
+   "dst": "paper:2502.20396",
+   "source": "https://arxiv.org/abs/2502.20396"
+  },
+  {
+   "src": "person:jim_fan",
+   "rel": "authored",
+   "dst": "paper:2502.20396",
+   "source": "https://arxiv.org/abs/2502.20396"
+  },
+  {
+   "src": "person:yuke_zhu",
+   "rel": "authored",
+   "dst": "paper:2502.20396",
+   "source": "https://arxiv.org/abs/2502.20396"
+  },
+  {
+   "src": "paper:2502.04307",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2502.04307"
+  },
+  {
+   "src": "paper:2602.16863",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2602.16863"
+  },
+  {
+   "src": "person:karen_liu",
+   "rel": "authored",
+   "dst": "paper:2602.16863",
+   "source": "https://arxiv.org/abs/2602.16863"
+  },
+  {
+   "src": "person:jeannette_bohg",
+   "rel": "authored",
+   "dst": "paper:2602.16863",
+   "source": "https://arxiv.org/abs/2602.16863"
+  },
+  {
+   "src": "paper:2502.01143",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2502.01143"
+  },
+  {
+   "src": "person:tairan_he",
+   "rel": "authored",
+   "dst": "paper:2502.01143",
+   "source": "https://arxiv.org/abs/2502.01143"
+  },
+  {
+   "src": "paper:2511.04831",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2511.04831"
+  },
+  {
+   "src": "paper:2512.01996",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2512.01996"
+  },
+  {
+   "src": "person:pieter_abbeel",
+   "rel": "authored",
+   "dst": "paper:2512.01996",
+   "source": "https://arxiv.org/abs/2512.01996"
+  },
+  {
+   "src": "paper:2303.03381",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2303.03381"
+  },
+  {
+   "src": "person:jitendra_malik",
+   "rel": "authored",
+   "dst": "paper:2303.03381",
+   "source": "https://arxiv.org/abs/2303.03381"
+  },
+  {
+   "src": "paper:2402.16796",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2402.16796"
+  },
+  {
+   "src": "person:xiaolong_wang",
+   "rel": "authored",
+   "dst": "paper:2402.16796",
+   "source": "https://arxiv.org/abs/2402.16796"
+  },
+  {
+   "src": "paper:2410.21229",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2410.21229"
+  },
+  {
+   "src": "person:tairan_he",
+   "rel": "authored",
+   "dst": "paper:2410.21229",
+   "source": "https://arxiv.org/abs/2410.21229"
+  },
+  {
+   "src": "paper:2506.14770",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2506.14770"
+  },
+  {
+   "src": "person:xuebin_peng",
+   "rel": "authored",
+   "dst": "paper:2506.14770",
+   "source": "https://arxiv.org/abs/2506.14770"
+  },
+  {
+   "src": "person:xiaolong_wang",
+   "rel": "authored",
+   "dst": "paper:2506.14770",
+   "source": "https://arxiv.org/abs/2506.14770"
+  },
+  {
+   "src": "paper:2511.07820",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2511.07820"
+  },
+  {
+   "src": "paper:2406.10454",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2406.10454"
+  },
+  {
+   "src": "person:zipeng_fu",
+   "rel": "authored",
+   "dst": "paper:2406.10454",
+   "source": "https://arxiv.org/abs/2406.10454"
+  },
+  {
+   "src": "person:chelsea_finn",
+   "rel": "authored",
+   "dst": "paper:2406.10454",
+   "source": "https://arxiv.org/abs/2406.10454"
+  },
+  {
+   "src": "paper:2406.08858",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2406.08858"
+  },
+  {
+   "src": "person:tairan_he",
+   "rel": "authored",
+   "dst": "paper:2406.08858",
+   "source": "https://arxiv.org/abs/2406.08858"
+  },
+  {
+   "src": "paper:2505.02833",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2505.02833"
+  },
+  {
+   "src": "person:xuebin_peng",
+   "rel": "authored",
+   "dst": "paper:2505.02833",
+   "source": "https://arxiv.org/abs/2505.02833"
+  },
+  {
+   "src": "person:karen_liu",
+   "rel": "authored",
+   "dst": "paper:2505.02833",
+   "source": "https://arxiv.org/abs/2505.02833"
+  },
+  {
+   "src": "paper:2510.02252",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2510.02252"
+  },
+  {
+   "src": "person:karen_liu",
+   "rel": "authored",
+   "dst": "paper:2510.02252",
+   "source": "https://arxiv.org/abs/2510.02252"
+  },
+  {
+   "src": "paper:2604.17335",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2604.17335"
+  },
+  {
+   "src": "person:marco_hutter",
+   "rel": "authored",
+   "dst": "paper:2604.17335",
+   "source": "https://arxiv.org/abs/2604.17335"
+  },
+  {
+   "src": "paper:2606.08548",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2606.08548"
+  },
+  {
+   "src": "paper:2309.14341",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2309.14341"
+  },
+  {
+   "src": "person:deepak_pathak",
+   "rel": "authored",
+   "dst": "paper:2309.14341",
+   "source": "https://arxiv.org/abs/2309.14341"
+  },
+  {
+   "src": "paper:2602.15827",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2602.15827"
+  },
+  {
+   "src": "person:pieter_abbeel",
+   "rel": "authored",
+   "dst": "paper:2602.15827",
+   "source": "https://arxiv.org/abs/2602.15827"
+  },
+  {
+   "src": "paper:2505.11420",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2505.11420"
+  },
+  {
+   "src": "person:byron_boots",
+   "rel": "authored",
+   "dst": "paper:2505.11420",
+   "source": "https://arxiv.org/abs/2505.11420"
+  },
+  {
+   "src": "paper:2602.09617",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2602.09617"
+  },
+  {
+   "src": "paper:2507.15062",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2507.15062"
+  },
+  {
+   "src": "person:yunzhu_li",
+   "rel": "authored",
+   "dst": "paper:2507.15062",
+   "source": "https://arxiv.org/abs/2507.15062"
+  },
+  {
+   "src": "paper:2603.15257",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2603.15257"
+  },
+  {
+   "src": "paper:2401.18084",
+   "rel": "in_domain",
+   "dst": "D3",
+   "source": "https://arxiv.org/abs/2401.18084"
+  },
+  {
+   "src": "method:diffusion_policy",
+   "rel": "method_is_a",
+   "dst": "meth:diffusion_flow_policy",
+   "source": "https://arxiv.org/abs/2303.04137"
+  },
+  {
+   "src": "paper:2303.04137",
+   "rel": "proposes",
+   "dst": "method:diffusion_policy",
+   "source": "https://arxiv.org/abs/2303.04137"
+  },
+  {
+   "src": "method:flow_matching_policy",
+   "rel": "method_is_a",
+   "dst": "meth:diffusion_flow_policy",
+   "source": "https://arxiv.org/abs/2410.24164"
+  },
+  {
+   "src": "paper:2410.24164",
+   "rel": "proposes",
+   "dst": "method:flow_matching_policy",
+   "source": "https://arxiv.org/abs/2410.24164"
+  },
+  {
+   "src": "method:action_chunking",
+   "rel": "method_is_a",
+   "dst": "meth:imitation_learning",
+   "source": "https://arxiv.org/abs/2304.13705"
+  },
+  {
+   "src": "paper:2304.13705",
+   "rel": "proposes",
+   "dst": "method:action_chunking",
+   "source": "https://arxiv.org/abs/2304.13705"
+  },
+  {
+   "src": "method:fast_tokenizer",
+   "rel": "method_is_a",
+   "dst": "meth:vla",
+   "source": "https://arxiv.org/abs/2501.09747"
+  },
+  {
+   "src": "paper:2501.09747",
+   "rel": "proposes",
+   "dst": "method:fast_tokenizer",
+   "source": "https://arxiv.org/abs/2501.09747"
+  },
+  {
+   "src": "method:dual_system_vla",
+   "rel": "method_is_a",
+   "dst": "meth:vla",
+   "source": "https://arxiv.org/abs/2503.14734"
+  },
+  {
+   "src": "paper:2503.14734",
+   "rel": "proposes",
+   "dst": "method:dual_system_vla",
+   "source": "https://arxiv.org/abs/2503.14734"
+  },
+  {
+   "src": "method:real_time_chunking",
+   "rel": "method_is_a",
+   "dst": "meth:realtime_control",
+   "source": "https://arxiv.org/abs/2506.07339"
+  },
+  {
+   "src": "paper:2506.07339",
+   "rel": "proposes",
+   "dst": "method:real_time_chunking",
+   "source": "https://arxiv.org/abs/2506.07339"
+  },
+  {
+   "src": "method:jepa_wm",
+   "rel": "method_is_a",
+   "dst": "meth:world_model_control",
+   "source": "https://arxiv.org/abs/2506.09985"
+  },
+  {
+   "src": "paper:2506.09985",
+   "rel": "proposes",
+   "dst": "method:jepa_wm",
+   "source": "https://arxiv.org/abs/2506.09985"
+  },
+  {
+   "src": "method:delta_action_sim2real",
+   "rel": "method_is_a",
+   "dst": "meth:sim2real",
+   "source": "https://arxiv.org/abs/2502.01143"
+  },
+  {
+   "src": "paper:2502.01143",
+   "rel": "proposes",
+   "dst": "method:delta_action_sim2real",
+   "source": "https://arxiv.org/abs/2502.01143"
+  },
+  {
+   "src": "method:domain_randomization",
+   "rel": "method_is_a",
+   "dst": "meth:sim2real",
+   "source": "https://arxiv.org/abs/1910.07113"
+  },
+  {
+   "src": "paper:1910.07113",
+   "rel": "proposes",
+   "dst": "method:domain_randomization",
+   "source": "https://arxiv.org/abs/1910.07113"
+  },
+  {
+   "src": "method:motion_tracking_wbc",
+   "rel": "method_is_a",
+   "dst": "meth:locomotion_wbc",
+   "source": "https://arxiv.org/abs/2506.14770"
+  },
+  {
+   "src": "paper:2506.14770",
+   "rel": "proposes",
+   "dst": "method:motion_tracking_wbc",
+   "source": "https://arxiv.org/abs/2506.14770"
+  },
+  {
+   "src": "method:tactile_foundation_model",
+   "rel": "method_is_a",
+   "dst": "meth:tactile_sensing",
+   "source": "https://arxiv.org/abs/2505.11420"
+  },
+  {
+   "src": "paper:2505.11420",
+   "rel": "proposes",
+   "dst": "method:tactile_foundation_model",
+   "source": "https://arxiv.org/abs/2505.11420"
+  },
+  {
+   "src": "method:one_step_flow",
+   "rel": "method_is_a",
+   "dst": "meth:diffusion_flow_policy",
+   "source": "https://arxiv.org/abs/2507.10543"
+  },
+  {
+   "src": "paper:2507.10543",
+   "rel": "proposes",
+   "dst": "method:one_step_flow",
+   "source": "https://arxiv.org/abs/2507.10543"
+  },
+  {
+   "src": "paper:2406.09246",
+   "rel": "proposes",
+   "dst": "model:openvla",
+   "source": "https://arxiv.org/abs/2406.09246"
+  },
+  {
+   "src": "paper:2410.24164",
+   "rel": "proposes",
+   "dst": "model:pi0",
+   "source": "https://arxiv.org/abs/2410.24164"
+  },
+  {
+   "src": "paper:2503.14734",
+   "rel": "proposes",
+   "dst": "model:groot_n1",
+   "source": "https://arxiv.org/abs/2503.14734"
+  },
+  {
+   "src": "paper:2503.20020",
+   "rel": "proposes",
+   "dst": "model:gemini_robotics",
+   "source": "https://arxiv.org/abs/2503.20020"
+  },
+  {
+   "src": "paper:2506.09985",
+   "rel": "proposes",
+   "dst": "model:vjepa2",
+   "source": "https://arxiv.org/abs/2506.09985"
+  },
+  {
+   "src": "paper:2501.03575",
+   "rel": "proposes",
+   "dst": "model:cosmos_wfm",
+   "source": "https://arxiv.org/abs/2501.03575"
+  },
+  {
+   "src": "paper:2405.12213",
+   "rel": "proposes",
+   "dst": "model:octo",
+   "source": "https://arxiv.org/abs/2405.12213"
+  },
+  {
+   "src": "paper:2506.01844",
+   "rel": "proposes",
+   "dst": "model:smolvla",
+   "source": "https://arxiv.org/abs/2506.01844"
+  },
+  {
+   "src": "paper:2601.16163",
+   "rel": "evaluated_on",
+   "dst": "bench:libero",
+   "source": "LIBERO 98.5% avg (SOTA)"
+  },
+  {
+   "src": "paper:2601.16163",
+   "rel": "evaluated_on",
+   "dst": "bench:robocasa",
+   "source": "RoboCasa 67.1% avg"
+  },
+  {
+   "src": "paper:2502.19645",
+   "rel": "evaluated_on",
+   "dst": "bench:libero",
+   "source": "OpenVLA-OFT LIBERO 76.5->97.1%, 26x throughput"
+  },
+  {
+   "src": "paper:2508.20072",
+   "rel": "evaluated_on",
+   "dst": "bench:libero",
+   "source": "Discrete Diffusion VLA LIBERO 96.4%"
+  },
+  {
+   "src": "paper:2508.20072",
+   "rel": "evaluated_on",
+   "dst": "bench:simplerenv",
+   "source": "SimplerEnv-Fractal 71.2% / Bridge 54.2%"
+  },
+  {
+   "src": "paper:2406.09246",
+   "rel": "evaluated_on",
+   "dst": "bench:libero",
+   "source": "OpenVLA beats RT-2-X (55B) by 16.5% abs"
+  },
+  {
+   "src": "paper:2506.01844",
+   "rel": "evaluated_on",
+   "dst": "bench:libero",
+   "source": "SmolVLA matches 10x-larger VLAs"
+  },
+  {
+   "src": "paper:2510.13054",
+   "rel": "evaluated_on",
+   "dst": "bench:libero",
+   "source": "VLA-0 (actions-as-text) beats pi0.5-KI/OpenVLA-OFT/SmolVLA"
+  },
+  {
+   "src": "model:vjepa2",
+   "rel": "evaluated_on",
+   "dst": "bench:droid",
+   "source": "V-JEPA 2-AC zero-shot Franka pick-place from 62h DROID video"
+  },
+  {
+   "src": "paper:2412.14803",
+   "rel": "evaluated_on",
+   "dst": "bench:calvin",
+   "source": "VPP +18.6% CALVIN ABC->D"
+  },
+  {
+   "src": "paper:2606.02800",
+   "rel": "evaluated_on",
+   "dst": "bench:roboarena",
+   "source": "Cosmos 3 best policy model on RoboArena (agent-sourced)"
+  },
+  {
+   "src": "concept:latent_vs_generative_wm",
+   "rel": "concept_relates_to",
+   "dst": "concept:latent_action",
+   "source": "ledger-synthesis"
+  },
+  {
+   "src": "concept:system1_system2",
+   "rel": "concept_relates_to",
+   "dst": "concept:async_inference",
+   "source": "ledger-synthesis"
+  },
+  {
+   "src": "concept:action_chunking",
+   "rel": "concept_relates_to",
+   "dst": "concept:async_inference",
+   "source": "ledger-synthesis"
+  },
+  {
+   "src": "concept:motion_retargeting",
+   "rel": "concept_relates_to",
+   "dst": "concept:sim2real_gap",
+   "source": "ledger-synthesis"
+  },
+  {
+   "src": "paper:2303.04137",
+   "rel": "asserts",
+   "dst": "claim:dp_46",
+   "source": "https://arxiv.org/abs/2303.04137"
+  },
+  {
+   "src": "paper:2406.09246",
+   "rel": "asserts",
+   "dst": "claim:openvla_beats_rt2x",
+   "source": "https://arxiv.org/abs/2406.09246"
+  },
+  {
+   "src": "paper:2501.09747",
+   "rel": "asserts",
+   "dst": "claim:fast_matches_flow",
+   "source": "https://arxiv.org/abs/2501.09747"
+  },
+  {
+   "src": "paper:2510.13054",
+   "rel": "asserts",
+   "dst": "claim:vla0_text_best",
+   "source": "https://arxiv.org/abs/2510.13054"
+  },
+  {
+   "src": "paper:2512.01809",
+   "rel": "asserts",
+   "dst": "claim:much_ado",
+   "source": "https://arxiv.org/abs/2512.01809"
+  },
+  {
+   "src": "paper:2506.09985",
+   "rel": "asserts",
+   "dst": "claim:vjepa2_zeroshot",
+   "source": "https://arxiv.org/abs/2506.09985"
+  },
+  {
+   "src": "paper:2512.24497",
+   "rel": "asserts",
+   "dst": "claim:jepawm_beats",
+   "source": "https://arxiv.org/abs/2512.24497"
+  },
+  {
+   "src": "paper:2606.02800",
+   "rel": "asserts",
+   "dst": "claim:cosmos3_beats_specialists",
+   "source": "https://arxiv.org/abs/2606.02800"
+  },
+  {
+   "src": "paper:2506.09930",
+   "rel": "asserts",
+   "dst": "claim:int_act_gap",
+   "source": "https://arxiv.org/abs/2506.09930"
+  },
+  {
+   "src": "paper:2502.01143",
+   "rel": "asserts",
+   "dst": "claim:asap_delta",
+   "source": "https://arxiv.org/abs/2502.01143"
+  },
+  {
+   "src": "paper:2606.08548",
+   "rel": "asserts",
+   "dst": "claim:oasis_sim_beats_real",
+   "source": "https://arxiv.org/abs/2606.08548"
+  },
+  {
+   "src": "paper:2510.02252",
+   "rel": "asserts",
+   "dst": "claim:gmr_retargeting",
+   "source": "https://arxiv.org/abs/2510.02252"
+  },
+  {
+   "src": "paper:2410.18647",
+   "rel": "asserts",
+   "dst": "claim:data_diversity",
+   "source": "https://arxiv.org/abs/2410.18647"
+  },
+  {
+   "src": "paper:2507.06219",
+   "rel": "asserts",
+   "dst": "claim:diversity_confound",
+   "source": "https://arxiv.org/abs/2507.06219"
+  },
+  {
+   "src": "paper:2506.07339",
+   "rel": "asserts",
+   "dst": "claim:rtc_latency",
+   "source": "https://arxiv.org/abs/2506.07339"
+  },
+  {
+   "src": "paper:2512.01996",
+   "rel": "asserts",
+   "dst": "claim:15min_humanoid",
+   "source": "https://arxiv.org/abs/2512.01996"
+  },
+  {
+   "src": "paper:2511.07820",
+   "rel": "asserts",
+   "dst": "claim:sonic_scaling",
+   "source": "https://arxiv.org/abs/2511.07820"
+  },
+  {
+   "src": "paper:2403.03954",
+   "rel": "extends",
+   "dst": "paper:2303.04137",
+   "source": "https://arxiv.org/abs/2403.03954 (lineage)"
+  },
+  {
+   "src": "paper:2405.07503",
+   "rel": "extends",
+   "dst": "paper:2303.04137",
+   "source": "https://arxiv.org/abs/2405.07503 (lineage)"
+  },
+  {
+   "src": "paper:2407.01812",
+   "rel": "extends",
+   "dst": "paper:2303.04137",
+   "source": "https://arxiv.org/abs/2407.01812 (lineage)"
+  },
+  {
+   "src": "paper:2410.21257",
+   "rel": "extends",
+   "dst": "paper:2303.04137",
+   "source": "https://arxiv.org/abs/2410.21257 (lineage)"
+  },
+  {
+   "src": "paper:2406.04806",
+   "rel": "extends",
+   "dst": "paper:2303.04137",
+   "source": "https://arxiv.org/abs/2406.04806 (lineage)"
+  },
+  {
+   "src": "paper:2410.10803",
+   "rel": "extends",
+   "dst": "paper:2403.03954",
+   "source": "https://arxiv.org/abs/2410.10803 (lineage)"
+  },
+  {
+   "src": "paper:2505.21851",
+   "rel": "extends",
+   "dst": "paper:2410.24164",
+   "source": "https://arxiv.org/abs/2505.21851 (lineage)"
+  },
+  {
+   "src": "paper:2509.01819",
+   "rel": "extends",
+   "dst": "paper:2410.24164",
+   "source": "https://arxiv.org/abs/2509.01819 (lineage)"
+  },
+  {
+   "src": "paper:2507.10543",
+   "rel": "extends",
+   "dst": "paper:2403.03954",
+   "source": "https://arxiv.org/abs/2507.10543 (lineage)"
+  },
+  {
+   "src": "paper:2601.16163",
+   "rel": "extends",
+   "dst": "paper:2303.04137",
+   "source": "https://arxiv.org/abs/2601.16163 (lineage)"
+  },
+  {
+   "src": "paper:2508.20072",
+   "rel": "extends",
+   "dst": "paper:2501.09747",
+   "source": "https://arxiv.org/abs/2508.20072 (lineage)"
+  },
+  {
+   "src": "paper:2307.15818",
+   "rel": "extends",
+   "dst": "paper:2212.06817",
+   "source": "https://arxiv.org/abs/2307.15818 (lineage)"
+  },
+  {
+   "src": "paper:2405.12213",
+   "rel": "extends",
+   "dst": "paper:2310.08864",
+   "source": "https://arxiv.org/abs/2405.12213 (lineage)"
+  },
+  {
+   "src": "paper:2406.09246",
+   "rel": "extends",
+   "dst": "paper:2405.12213",
+   "source": "https://arxiv.org/abs/2406.09246 (lineage)"
+  },
+  {
+   "src": "paper:2501.09747",
+   "rel": "extends",
+   "dst": "paper:2410.24164",
+   "source": "https://arxiv.org/abs/2501.09747 (lineage)"
+  },
+  {
+   "src": "paper:2502.19645",
+   "rel": "extends",
+   "dst": "paper:2406.09246",
+   "source": "https://arxiv.org/abs/2502.19645 (lineage)"
+  },
+  {
+   "src": "paper:2504.16054",
+   "rel": "extends",
+   "dst": "paper:2410.24164",
+   "source": "https://arxiv.org/abs/2504.16054 (lineage)"
+  },
+  {
+   "src": "paper:2604.15483",
+   "rel": "extends",
+   "dst": "paper:2504.16054",
+   "source": "https://arxiv.org/abs/2604.15483 (lineage)"
+  },
+  {
+   "src": "paper:2510.03342",
+   "rel": "extends",
+   "dst": "paper:2503.20020",
+   "source": "https://arxiv.org/abs/2510.03342 (lineage)"
+  },
+  {
+   "src": "paper:2602.03310",
+   "rel": "extends",
+   "dst": "paper:2402.10329",
+   "source": "https://arxiv.org/abs/2602.03310 (lineage)"
+  },
+  {
+   "src": "paper:2506.09985",
+   "rel": "extends",
+   "dst": "paper:2404.08471",
+   "source": "https://arxiv.org/abs/2506.09985 (lineage)"
+  },
+  {
+   "src": "paper:2603.14482",
+   "rel": "extends",
+   "dst": "paper:2506.09985",
+   "source": "https://arxiv.org/abs/2603.14482 (lineage)"
+  },
+  {
+   "src": "paper:2512.24497",
+   "rel": "extends",
+   "dst": "paper:2411.04983",
+   "source": "https://arxiv.org/abs/2512.24497 (lineage)"
+  },
+  {
+   "src": "paper:2509.24527",
+   "rel": "extends",
+   "dst": "paper:2301.04104",
+   "source": "https://arxiv.org/abs/2509.24527 (lineage)"
+  },
+  {
+   "src": "paper:2606.02800",
+   "rel": "extends",
+   "dst": "paper:2501.03575",
+   "source": "https://arxiv.org/abs/2606.02800 (lineage)"
+  },
+  {
+   "src": "paper:2512.05964",
+   "rel": "extends",
+   "dst": "paper:2506.07339",
+   "source": "https://arxiv.org/abs/2512.05964 (lineage)"
+  },
+  {
+   "src": "paper:2603.19199",
+   "rel": "extends",
+   "dst": "paper:2506.07339",
+   "source": "https://arxiv.org/abs/2603.19199 (lineage)"
+  },
+  {
+   "src": "paper:2601.20130",
+   "rel": "extends",
+   "dst": "paper:2506.07339",
+   "source": "https://arxiv.org/abs/2601.20130 (lineage)"
+  },
+  {
+   "src": "paper:2401.02117",
+   "rel": "extends",
+   "dst": "paper:2304.13705",
+   "source": "https://arxiv.org/abs/2401.02117 (lineage)"
+  },
+  {
+   "src": "paper:2503.02881",
+   "rel": "extends",
+   "dst": "paper:2303.04137",
+   "source": "https://arxiv.org/abs/2503.02881 (lineage)"
+  },
+  {
+   "src": "paper:2410.21229",
+   "rel": "extends",
+   "dst": "paper:2402.16796",
+   "source": "https://arxiv.org/abs/2410.21229 (lineage)"
+  },
+  {
+   "src": "paper:2506.14770",
+   "rel": "extends",
+   "dst": "paper:2402.16796",
+   "source": "https://arxiv.org/abs/2506.14770 (lineage)"
+  },
+  {
+   "src": "paper:2602.15827",
+   "rel": "extends",
+   "dst": "paper:2309.14341",
+   "source": "https://arxiv.org/abs/2602.15827 (lineage)"
+  },
+  {
+   "src": "paper:2502.01143",
+   "rel": "extends",
+   "dst": "paper:1910.07113",
+   "source": "https://arxiv.org/abs/2502.01143 (lineage)"
+  },
+  {
+   "src": "paper:2604.23073",
+   "rel": "extends",
+   "dst": "paper:2410.21845",
+   "source": "https://arxiv.org/abs/2604.23073 (lineage)"
+  },
+  {
+   "src": "paper:2604.17335",
+   "rel": "extends",
+   "dst": "paper:2506.14770",
+   "source": "https://arxiv.org/abs/2604.17335 (lineage)"
+  },
+  {
+   "src": "paper:2512.01809",
+   "rel": "contradicts",
+   "dst": "paper:2303.04137",
+   "source": "'Much Ado' disputes that Diffusion Policy's edge is multimodality; says it's iterative supervised compute"
+  },
+  {
+   "src": "paper:2510.13054",
+   "rel": "contradicts",
+   "dst": "paper:2501.09747",
+   "source": "VLA-0 (actions-as-text) argues no special action tokenizer/head needed vs FAST"
+  },
+  {
+   "src": "paper:2508.20072",
+   "rel": "contradicts",
+   "dst": "paper:2410.24164",
+   "source": "Discrete-diffusion action head argued more robust than continuous flow of pi0"
+  },
+  {
+   "src": "paper:2506.09985",
+   "rel": "contradicts",
+   "dst": "paper:2402.15391",
+   "source": "Latent JEPA world model (predict representations) vs generative-pixel Genie"
+  },
+  {
+   "src": "paper:2512.24497",
+   "rel": "contradicts",
+   "dst": "paper:2501.03575",
+   "source": "JEPA latent planning camp vs NVIDIA generative Cosmos world foundation models"
+  },
+  {
+   "src": "paper:2606.08548",
+   "rel": "contradicts",
+   "dst": "paper:2410.18647",
+   "source": "OASIS: sim data can beat real-teleop data, tension with real-data-scaling emphasis"
+  },
+  {
+   "src": "paper:2507.06219",
+   "rel": "contradicts",
+   "dst": "paper:2410.18647",
+   "source": "GO-1-Pro: diversity is NOT all you need, tension with data-scaling-laws diversity claim"
+  },
+  {
+   "src": "paper:2510.02252",
+   "rel": "contradicts",
+   "dst": "paper:2506.14770",
+   "source": "GMR: retargeting quality (not RL) drives much WBC robustness"
+  },
+  {
+   "src": "paper:2601.20130",
+   "rel": "contradicts",
+   "dst": "paper:2506.07339",
+   "source": "REMAC: intra-chunk inconsistency (not boundary discontinuity) is the main RTC failure"
+  },
+  {
+   "src": "paper:2506.09930",
+   "rel": "contradicts",
+   "dst": "paper:2406.09246",
+   "source": "INT-ACT: VLM pretraining gives intentions but action-finetuning erodes reasoning; generalization overstated"
+  }
+ ]
+}
