@@ -59,3 +59,34 @@ harm-fixed)가 가르친 규율과 정합한다.
 - **주장 아님**: "조립하면 AGI 완성" 아님 — 조립된 사회가 단일 강모델을 **측정가능하게** 이기는
   기질·방법을 EARN해야 한다(D7 모순 + keystone). naive 사회는 단일 모델에 지기도 한다(MedAgentBoard).
   flat이면 그대로 공개.
+
+---
+
+## D7 grounding (f2e8c4a) — 조립 테제는 *조건부*로 옳다 (측정가능한 규율로 확정)
+
+지식원장 D7(사회·조립, 149노드/14모순)이 창업자의 "사회를 만드느냐"에 정확히 답했다:
+
+> **조립된 사회가 단일 강모델을 이기는 것은 조건부다** — (a) 조각들이 *서로 다른* 입력에서 실패
+> (decorrelated errors) **AND** (b) 그 다양성을 착취할 query/step-level 라우팅·선택 신호가 있을 때만.
+> 둘 다 없으면 조각 추가는 공유-실패율 β↑·평균품질↓·weight-interference·조정/토큰세 → 전체 열화.
+
+- **WINS**: 이종 *강* 컴포넌트 + per-query selector (AB-MCTS·RouteLLM·MoA), open-ended orchestration
+  (Anthropic +90.2% @ ~15× 비용), decorrelation을 *제조*하는 coevolution (AC/DC 2604.14969).
+- **LOSES**: 상관된/약한 컴포넌트, naive 평균·투표, debate(martingale — 투표가 이득의 원천), auto-agent
+  bloat, over-capable-teacher distillation. **닫힌 단일정답 태스크에선 단일 강모델+CoT-SC를 사회가 자주 못 이김**
+  (MedAgentBoard·MAST·Self-MoA·Illusion-of-MA-Advantage).
+
+**AIOS 함의 (moat 재확정)**: moat는 **organ/agent를 더 늘리는 게 아니라 라우팅/선택 + 탈상관 층** —
+AIOS가 이미 앉은 자리. 이로써 "out-assemble"이 측정가능한 규율이 된다:
+
+> **Co-Failure-Ceiling 게이트 (2606.27288)**: 어떤 시민(organ/모델/방법)을 사회에 넣기 전에 —
+> ① 그것이 기존 시민과 *다른* 입력에서 실패하는가(탈상관) ② 그 다양성을 쓸 라우팅 신호가 있는가 —
+> 를 측정. 아니면 넣어도 못 돕는다. (S+1.1 인과-ablation 게이트 + absorption-probe와 같은 규율.)
+
+**흡수 top-3 (D7)**: ① AB-MCTS/TreeQuest (이미 흡수 — substrate_router를 static→adaptive로 승격 여지)
+② 진화적 model-merging (Sakana 2403.13187) + AC/DC coevolution — dual 5090에서 오픈웨이트로 소버린
+로컬 전문가를 *학습 없이* 조립·탈상관 ③ Routing-as-value (RouteLLM/FrugalGPT) + Co-Failure-Ceiling 게이트.
+
+**crystallization 갱신**: "조립=방법"은 **naive 조립이 아니라 탈상관 시민 + 라우팅 신호의 조립**일 때만
+정직하다. AIOS는 그 라우팅/탈상관 층 = 사회의 *선택 신경계*다. 다음 조립 실험은 Co-Failure-Ceiling +
+인과-ablation을 시민-편입 게이트로 써서 "언제 사회 > 단일모델"을 keystone 규율로 판정한다.
