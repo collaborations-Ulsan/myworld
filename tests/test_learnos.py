@@ -48,7 +48,10 @@ def test_visible_view_has_no_held_out_key():
     for t in tasks.load_visible_tasks():
         assert "held_out_tests" not in t
         assert set(tasks.REQUIRED_VISIBLE_FIELDS) <= set(t.keys())
-    assert len(tasks.load_visible_tasks()) == 18
+    # v0 shipped 18 tasks; S+1 (docs/AIOS_LEARNOS_S1_DESIGN_2026-07-17.md) expanded the
+    # set to 34 so the A(mine)/B(transfer-holdout)/sentinel split can each hold >=10
+    # disjoint tasks -- see experiments/learnos/data/task_split.json.
+    assert len(tasks.load_visible_tasks()) == 34
 
 
 def test_improver_source_never_references_held_out_path():

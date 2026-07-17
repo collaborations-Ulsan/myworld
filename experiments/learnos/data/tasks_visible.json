@@ -170,5 +170,165 @@
       "assert bounded(-5, 0, 10) == 0"
     ],
     "sentinel_check": "assert 0 <= bounded(5, 0, 10) <= 10"
+  },
+  {
+    "task_id": "off_by_one_last_n",
+    "description": "last_n(xs, n) should return the last n elements; buggy slices one too many",
+    "buggy_source": "def last_n(xs, n):\n    return xs[-n+1:]\n",
+    "visible_tests": [
+      "assert last_n([1, 2, 3, 4], 2) == [3, 4]",
+      "assert last_n([5, 6, 7], 1) == [7]"
+    ],
+    "sentinel_check": "assert last_n([9], 1) == [9]"
+  },
+  {
+    "task_id": "wrong_operator_inclusive_bounds",
+    "description": "in_bounds(x, lo, hi) should be inclusive on both ends; uses strict < instead of <=",
+    "buggy_source": "def in_bounds(x, lo, hi):\n    return lo < x < hi\n",
+    "visible_tests": [
+      "assert in_bounds(5, 0, 10) is True",
+      "assert in_bounds(0, 0, 10) is True"
+    ],
+    "sentinel_check": "assert in_bounds(15, 0, 10) is False"
+  },
+  {
+    "task_id": "accumulator_init_sum",
+    "description": "total_sum(xs) should sum all elements; accumulator starts at 1 instead of 0",
+    "buggy_source": "def total_sum(xs):\n    total = 1\n    for x in xs:\n        total += x\n    return total\n",
+    "visible_tests": [
+      "assert total_sum([1, 2, 3]) == 6",
+      "assert total_sum([10]) == 10"
+    ],
+    "sentinel_check": "assert total_sum([]) == 0"
+  },
+  {
+    "task_id": "condition_negation_is_positive",
+    "description": "is_positive(x) should be True for x > 0; condition is negated",
+    "buggy_source": "def is_positive(x):\n    return x <= 0\n",
+    "visible_tests": [
+      "assert is_positive(5) is True",
+      "assert is_positive(-3) is False"
+    ],
+    "sentinel_check": "assert is_positive(0) is False"
+  },
+  {
+    "task_id": "mutable_default_tally",
+    "description": "tally(label, store=None) should not leak state across calls via a mutable default dict",
+    "buggy_source": "def tally(label, store={}):\n    store[label] = store.get(label, 0) + 1\n    return store\n",
+    "visible_tests": [
+      "assert tally('a') == {'a': 1}",
+      "assert tally('b') == {'b': 1}"
+    ],
+    "sentinel_check": "assert tally('z', {'y': 1})['z'] == 1"
+  },
+  {
+    "task_id": "comparison_direction_find_max",
+    "description": "find_max(xs) should return the largest element; uses min() instead of max()",
+    "buggy_source": "def find_max(xs):\n    return min(xs)\n",
+    "visible_tests": [
+      "assert find_max([1, 5, 3]) == 5",
+      "assert find_max([-1, -5, -3]) == -1"
+    ],
+    "sentinel_check": "assert find_max([7]) == 7"
+  },
+  {
+    "task_id": "index_fencepost_first",
+    "description": "get_first(xs) should return the first element; indexes position 1 instead of 0",
+    "buggy_source": "def get_first(xs):\n    return xs[1]\n",
+    "visible_tests": [
+      "assert get_first([3, 4, 5]) == 3",
+      "assert get_first(['a', 'b']) == 'a'"
+    ],
+    "sentinel_check": "assert get_first([42]) == 42"
+  },
+  {
+    "task_id": "recursive_base_case_fib",
+    "description": "fib(n) recursive Fibonacci; base case for n==1 wrongly returns 0 (breaks the recurrence)",
+    "buggy_source": "def fib(n):\n    if n == 0:\n        return 0\n    if n == 1:\n        return 0\n    return fib(n - 1) + fib(n - 2)\n",
+    "visible_tests": [
+      "assert fib(2) == 1",
+      "assert fib(5) == 5"
+    ],
+    "sentinel_check": "assert fib(0) == 0"
+  },
+  {
+    "task_id": "sorting_comparator_by_length",
+    "description": "sort_by_length(xs) should sort strings by length ascending; forgets the key function",
+    "buggy_source": "def sort_by_length(xs):\n    return sorted(xs)\n",
+    "visible_tests": [
+      "assert sort_by_length(['ccc', 'a', 'bb']) == ['a', 'bb', 'ccc']",
+      "assert sort_by_length(['z', 'yy']) == ['z', 'yy']"
+    ],
+    "sentinel_check": "assert sort_by_length([]) == []"
+  },
+  {
+    "task_id": "dict_default_word_freq",
+    "description": "word_freq(words) should count occurrences of each word; raises KeyError on first occurrence",
+    "buggy_source": "def word_freq(words):\n    counts = {}\n    for w in words:\n        counts[w] += 1\n    return counts\n",
+    "visible_tests": [
+      "assert word_freq(['a', 'a', 'b']) == {'a': 2, 'b': 1}",
+      "assert word_freq(['x']) == {'x': 1}"
+    ],
+    "sentinel_check": "assert word_freq([]) == {}"
+  },
+  {
+    "task_id": "list_slicing_skip_first",
+    "description": "skip_first(xs, n) should drop the first n elements; slices one too many",
+    "buggy_source": "def skip_first(xs, n):\n    return xs[n + 1:]\n",
+    "visible_tests": [
+      "assert skip_first([1, 2, 3, 4], 2) == [3, 4]",
+      "assert skip_first([5, 6, 7], 0) == [5, 6, 7]"
+    ],
+    "sentinel_check": "assert skip_first([9], 1) == []"
+  },
+  {
+    "task_id": "early_return_first_even",
+    "description": "first_even(xs) should scan for the first even number; returns on the first element regardless of parity",
+    "buggy_source": "def first_even(xs):\n    for x in xs:\n        return x if x % 2 == 0 else None\n    return None\n",
+    "visible_tests": [
+      "assert first_even([1, 3, 4, 5]) == 4",
+      "assert first_even([2, 3]) == 2"
+    ],
+    "sentinel_check": "assert first_even([1, 3, 5]) is None"
+  },
+  {
+    "task_id": "swapped_args_percent_of",
+    "description": "percent_of(part, whole) should compute part/whole*100; args swapped in the division",
+    "buggy_source": "def percent_of(part, whole):\n    return whole / part * 100\n",
+    "visible_tests": [
+      "assert percent_of(50, 200) == 25.0",
+      "assert percent_of(1, 4) == 25.0"
+    ],
+    "sentinel_check": "assert percent_of(0, 10) == 0.0"
+  },
+  {
+    "task_id": "swapped_return_minmax",
+    "description": "min_and_max(xs) should return (min, max); the tuple is returned reversed",
+    "buggy_source": "def min_and_max(xs):\n    return (max(xs), min(xs))\n",
+    "visible_tests": [
+      "assert min_and_max([3, 1, 2]) == (1, 3)",
+      "assert min_and_max([5, 5]) == (5, 5)"
+    ],
+    "sentinel_check": "assert min_and_max([9]) == (9, 9)"
+  },
+  {
+    "task_id": "min_max_mixed_clamp",
+    "description": "clamp(x, lo, hi) should clamp x into [lo, hi]; the min/max nesting is swapped",
+    "buggy_source": "def clamp(x, lo, hi):\n    return min(lo, max(x, hi))\n",
+    "visible_tests": [
+      "assert clamp(5, 0, 10) == 5",
+      "assert clamp(-5, 0, 10) == 0"
+    ],
+    "sentinel_check": "assert clamp(3, 3, 3) == 3"
+  },
+  {
+    "task_id": "float_int_division_ratio",
+    "description": "ratio(a, b) should return true division a/b; uses integer floor division",
+    "buggy_source": "def ratio(a, b):\n    return a // b\n",
+    "visible_tests": [
+      "assert ratio(7, 2) == 3.5",
+      "assert ratio(9, 4) == 2.25"
+    ],
+    "sentinel_check": "assert ratio(4, 2) == 2.0"
   }
 ]

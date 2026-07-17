@@ -1,0 +1,57 @@
+{
+  "_comment": "LearnOS S+1 task split (docs/AIOS_LEARNOS_S1_DESIGN_2026-07-17.md). A = mining pool (skills/tools/scaffolds are extracted ONLY from A). B = transfer-holdout (never mined; compounding metric = held-out success rate on B per iteration). sentinel = separate regression pool (checks that library accumulation does not hurt tasks the system could already solve). Every A/B pair below shares the same underlying bug-kind but a different concrete function, so a scaffold/tool mined on the A member tests genuine transfer -- not memorization -- when evaluated against its B sibling.",
+  "pairs": [
+    ["off_by_one_range", "off_by_one_last_n"],
+    ["wrong_operator_and_or", "wrong_operator_inclusive_bounds"],
+    ["incorrect_accumulator_init", "accumulator_init_sum"],
+    ["wrong_condition_negation", "condition_negation_is_positive"],
+    ["mutable_default_arg", "mutable_default_tally"],
+    ["wrong_comparison_direction", "comparison_direction_find_max"],
+    ["wrong_index_fencepost", "index_fencepost_first"],
+    ["recursive_base_case_wrong", "recursive_base_case_fib"],
+    ["sorting_comparator_wrong", "sorting_comparator_by_length"],
+    ["list_slicing_off_by_one", "list_slicing_skip_first"],
+    ["early_return_wrong", "early_return_first_even"],
+    ["swapped_args_order", "swapped_args_percent_of"]
+  ],
+  "A": [
+    "off_by_one_range",
+    "wrong_operator_and_or",
+    "incorrect_accumulator_init",
+    "wrong_condition_negation",
+    "mutable_default_arg",
+    "wrong_comparison_direction",
+    "wrong_index_fencepost",
+    "recursive_base_case_wrong",
+    "sorting_comparator_wrong",
+    "list_slicing_off_by_one",
+    "early_return_wrong",
+    "swapped_args_order"
+  ],
+  "B": [
+    "off_by_one_last_n",
+    "wrong_operator_inclusive_bounds",
+    "accumulator_init_sum",
+    "condition_negation_is_positive",
+    "mutable_default_tally",
+    "comparison_direction_find_max",
+    "index_fencepost_first",
+    "recursive_base_case_fib",
+    "sorting_comparator_by_length",
+    "list_slicing_skip_first",
+    "early_return_first_even",
+    "swapped_args_percent_of"
+  ],
+  "sentinel": [
+    "boundary_empty_list",
+    "string_reverse_off_by_one",
+    "dict_default_missing",
+    "dict_default_word_freq",
+    "wrong_modulo_even_odd_check",
+    "swapped_return_minmax",
+    "min_max_mixed_up",
+    "min_max_mixed_clamp",
+    "float_int_division",
+    "float_int_division_ratio"
+  ]
+}
