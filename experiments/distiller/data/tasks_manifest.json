@@ -1,0 +1,2165 @@
+[
+  {
+    "adversarial_tests": [
+      "assert second_largest_distinct([-9, -17, 0, -5, -9]) == -5",
+      "assert second_largest_distinct([-12, 3, -6, -4, -18]) == -4",
+      "assert second_largest_distinct([-18, -13, -16, 17, 16, -8]) == 16"
+    ],
+    "buggy_source": "def second_largest_distinct(xs):\n    raise NotImplementedError('second_largest_distinct not implemented')\n",
+    "description": "Write second_largest_distinct(xs) that returns the second-largest DISTINCT value in the list xs, or None if xs has fewer than 2 distinct values.",
+    "entry_point": "second_largest_distinct",
+    "family": "second_largest_distinct",
+    "golden_solution": "def second_largest_distinct(xs):\n    u = sorted(set(xs), reverse=True)\n    return u[1] if len(u) >= 2 else None\n",
+    "held_out_tests": [
+      "assert second_largest_distinct([-10, 14]) == -10",
+      "assert second_largest_distinct([-16, -14, -15, -5, -20, -4]) == -5",
+      "assert second_largest_distinct([-7, 0]) == -7",
+      "assert second_largest_distinct([-1, 0, -17, -10, -4]) == -1"
+    ],
+    "sentinel_check": "assert second_largest_distinct([-12, -11, 8, 15, -12, -13, 5, 2]) == 8",
+    "split": "A",
+    "task_id": "second_largest_distinct__000",
+    "visible_tests": [
+      "assert second_largest_distinct([3, 1, 4, 1, 5, 9, 2, 6]) == 6"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert second_largest_distinct([1, 19, 15, 16]) == 16",
+      "assert second_largest_distinct([-12, 15, 19, 5, -7, 18, 12]) == 18",
+      "assert second_largest_distinct([7, -20]) == -20"
+    ],
+    "buggy_source": "def second_largest_distinct(xs):\n    raise NotImplementedError('second_largest_distinct not implemented')\n",
+    "description": "Write second_largest_distinct(xs) that returns the second-largest DISTINCT value in the list xs, or None if xs has fewer than 2 distinct values.",
+    "entry_point": "second_largest_distinct",
+    "family": "second_largest_distinct",
+    "golden_solution": "def second_largest_distinct(xs):\n    u = sorted(set(xs), reverse=True)\n    return u[1] if len(u) >= 2 else None\n",
+    "held_out_tests": [
+      "assert second_largest_distinct([-3, 12, 14, -19, 4, 15]) == 14",
+      "assert second_largest_distinct([11, 7, 5, 7, 11, 9]) == 9",
+      "assert second_largest_distinct([-7, 11, 14, 3, -2, 16]) == 14",
+      "assert second_largest_distinct([-19]) == None"
+    ],
+    "sentinel_check": "assert second_largest_distinct([8, 17]) == 8",
+    "split": "A",
+    "task_id": "second_largest_distinct__001",
+    "visible_tests": [
+      "assert second_largest_distinct([-2, 6]) == -2",
+      "assert second_largest_distinct([3, 1, 4, 1, 5, 9, 2, 6]) == 6"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert second_largest_distinct([2, 11, -3, 3, 14, -9, 8]) == 11",
+      "assert second_largest_distinct([-15, -20, 2, -13, -12, -12, 9, -9]) == 2",
+      "assert second_largest_distinct([1, 19, 11, 0, -17, -5, 18, -20]) == 18"
+    ],
+    "buggy_source": "def second_largest_distinct(xs):\n    raise NotImplementedError('second_largest_distinct not implemented')\n",
+    "description": "Write second_largest_distinct(xs) that returns the second-largest DISTINCT value in the list xs, or None if xs has fewer than 2 distinct values.",
+    "entry_point": "second_largest_distinct",
+    "family": "second_largest_distinct",
+    "golden_solution": "def second_largest_distinct(xs):\n    u = sorted(set(xs), reverse=True)\n    return u[1] if len(u) >= 2 else None\n",
+    "held_out_tests": [
+      "assert second_largest_distinct([-13, -19, 13, -7, -14, -6, 17, -6]) == 13",
+      "assert second_largest_distinct([-7, -12, 7, -20, -4, -20, 15, -10]) == 7",
+      "assert second_largest_distinct([-1, 11, 18, 17, -20, 17]) == 17",
+      "assert second_largest_distinct([13]) == None"
+    ],
+    "sentinel_check": "assert second_largest_distinct([-14, 7]) == -14",
+    "split": "A",
+    "task_id": "second_largest_distinct__002",
+    "visible_tests": [
+      "assert second_largest_distinct([2]) == None",
+      "assert second_largest_distinct([3, 1, 4, 1, 5, 9, 2, 6]) == 6"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert second_largest_distinct([10, 0, -5, 17, -19, -3, 1]) == 10",
+      "assert second_largest_distinct([13]) == None",
+      "assert second_largest_distinct([-7, -18, 5, 0]) == 0"
+    ],
+    "buggy_source": "def second_largest_distinct(xs):\n    raise NotImplementedError('second_largest_distinct not implemented')\n",
+    "description": "Write second_largest_distinct(xs) that returns the second-largest DISTINCT value in the list xs, or None if xs has fewer than 2 distinct values.",
+    "entry_point": "second_largest_distinct",
+    "family": "second_largest_distinct",
+    "golden_solution": "def second_largest_distinct(xs):\n    u = sorted(set(xs), reverse=True)\n    return u[1] if len(u) >= 2 else None\n",
+    "held_out_tests": [
+      "assert second_largest_distinct([-4, -1, -9, -1, 18, 0]) == 0",
+      "assert second_largest_distinct([-2, -12, -17, 5, 19, -13, -16]) == 5",
+      "assert second_largest_distinct([20, -20, -9, -3, -9, 18]) == 18",
+      "assert second_largest_distinct([8, 1, 3, -6, -12, 0, -14]) == 3"
+    ],
+    "sentinel_check": "assert second_largest_distinct([-15, -7, -12, 4, -8, 14, 8, 8]) == 8",
+    "split": "A",
+    "task_id": "second_largest_distinct__003",
+    "visible_tests": [
+      "assert second_largest_distinct([13, 9, 1, -8, -8, 2, 9, 9]) == 9",
+      "assert second_largest_distinct([3, 1, 4, 1, 5, 9, 2, 6]) == 6"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert second_largest_distinct([-15, 5]) == -15",
+      "assert second_largest_distinct([-18, 9, -20, -11, 1]) == 1",
+      "assert second_largest_distinct([16, 2]) == 2"
+    ],
+    "buggy_source": "def second_largest_distinct(xs):\n    raise NotImplementedError('second_largest_distinct not implemented')\n",
+    "description": "Write second_largest_distinct(xs) that returns the second-largest DISTINCT value in the list xs, or None if xs has fewer than 2 distinct values.",
+    "entry_point": "second_largest_distinct",
+    "family": "second_largest_distinct",
+    "golden_solution": "def second_largest_distinct(xs):\n    u = sorted(set(xs), reverse=True)\n    return u[1] if len(u) >= 2 else None\n",
+    "held_out_tests": [
+      "assert second_largest_distinct([5, 19, 19, 2, -8, -2, 9]) == 9",
+      "assert second_largest_distinct([6, -18, -5]) == -5",
+      "assert second_largest_distinct([20]) == None",
+      "assert second_largest_distinct([17, -5, 20, -20]) == 17"
+    ],
+    "sentinel_check": "assert second_largest_distinct([3, -1]) == -1",
+    "split": "A",
+    "task_id": "second_largest_distinct__004",
+    "visible_tests": [
+      "assert second_largest_distinct([16, -17]) == -17",
+      "assert second_largest_distinct([3, 1, 4, 1, 5, 9, 2, 6]) == 6"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert second_largest_distinct([11, 16, -19, 13, -5, -3, 13]) == 13",
+      "assert second_largest_distinct([-11]) == None",
+      "assert second_largest_distinct([11, -16, -16, -20, -8, 7, -10]) == 7"
+    ],
+    "buggy_source": "def second_largest_distinct(xs):\n    raise NotImplementedError('second_largest_distinct not implemented')\n",
+    "description": "Write second_largest_distinct(xs) that returns the second-largest DISTINCT value in the list xs, or None if xs has fewer than 2 distinct values.",
+    "entry_point": "second_largest_distinct",
+    "family": "second_largest_distinct",
+    "golden_solution": "def second_largest_distinct(xs):\n    u = sorted(set(xs), reverse=True)\n    return u[1] if len(u) >= 2 else None\n",
+    "held_out_tests": [
+      "assert second_largest_distinct([3, 6, 3, 10, 9, 14]) == 10",
+      "assert second_largest_distinct([20, 6, 5, 19, -12, -17, -8]) == 19",
+      "assert second_largest_distinct([-1, 18]) == -1",
+      "assert second_largest_distinct([-5, 18, -11, 6, 8, 7, -6]) == 8"
+    ],
+    "sentinel_check": "assert second_largest_distinct([6, 5, 14, -16]) == 6",
+    "split": "A",
+    "task_id": "second_largest_distinct__005",
+    "visible_tests": [
+      "assert second_largest_distinct([18, 12, 10, 16]) == 16",
+      "assert second_largest_distinct([3, 1, 4, 1, 5, 9, 2, 6]) == 6"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert run_length_encode('bbac') == [('b', 2), ('a', 1), ('c', 1)]",
+      "assert run_length_encode('cbabaac') == [('c', 1), ('b', 1), ('a', 1), ('b', 1), ('a', 2), ('c', 1)]",
+      "assert run_length_encode('aabcccab') == [('a', 2), ('b', 1), ('c', 3), ('a', 1), ('b', 1)]"
+    ],
+    "buggy_source": "def run_length_encode(s):\n    raise NotImplementedError('run_length_encode not implemented')\n",
+    "description": "Write run_length_encode(s) that run-length-encodes string s into a list of (char, count) tuples for consecutive runs, e.g. 'aaabcc' -> [('a',3),('b',1),('c',2)]. Empty string returns [].",
+    "entry_point": "run_length_encode",
+    "family": "run_length_encode",
+    "golden_solution": "def run_length_encode(s):\n    if not s:\n        return []\n    out = []\n    prev = s[0]\n    cnt = 1\n    for ch in s[1:]:\n        if ch == prev:\n            cnt += 1\n        else:\n            out.append((prev, cnt))\n            prev = ch\n            cnt = 1\n    out.append((prev, cnt))\n    return out\n",
+    "held_out_tests": [
+      "assert run_length_encode('baaaccab') == [('b', 1), ('a', 3), ('c', 2), ('a', 1), ('b', 1)]",
+      "assert run_length_encode('cbbcac') == [('c', 1), ('b', 2), ('c', 1), ('a', 1), ('c', 1)]",
+      "assert run_length_encode('cbccaa') == [('c', 1), ('b', 1), ('c', 2), ('a', 2)]",
+      "assert run_length_encode('a') == [('a', 1)]"
+    ],
+    "sentinel_check": "assert run_length_encode('cbaaa') == [('c', 1), ('b', 1), ('a', 3)]",
+    "split": "A",
+    "task_id": "run_length_encode__000",
+    "visible_tests": [
+      "assert run_length_encode('aaabcc') == [('a', 3), ('b', 1), ('c', 2)]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert run_length_encode('cbbcbc') == [('c', 1), ('b', 2), ('c', 1), ('b', 1), ('c', 1)]",
+      "assert run_length_encode('acb') == [('a', 1), ('c', 1), ('b', 1)]",
+      "assert run_length_encode('ccb') == [('c', 2), ('b', 1)]"
+    ],
+    "buggy_source": "def run_length_encode(s):\n    raise NotImplementedError('run_length_encode not implemented')\n",
+    "description": "Write run_length_encode(s) that run-length-encodes string s into a list of (char, count) tuples for consecutive runs, e.g. 'aaabcc' -> [('a',3),('b',1),('c',2)]. Empty string returns [].",
+    "entry_point": "run_length_encode",
+    "family": "run_length_encode",
+    "golden_solution": "def run_length_encode(s):\n    if not s:\n        return []\n    out = []\n    prev = s[0]\n    cnt = 1\n    for ch in s[1:]:\n        if ch == prev:\n            cnt += 1\n        else:\n            out.append((prev, cnt))\n            prev = ch\n            cnt = 1\n    out.append((prev, cnt))\n    return out\n",
+    "held_out_tests": [
+      "assert run_length_encode('c') == [('c', 1)]",
+      "assert run_length_encode('bbaaaabcca') == [('b', 2), ('a', 4), ('b', 1), ('c', 2), ('a', 1)]",
+      "assert run_length_encode('ababba') == [('a', 1), ('b', 1), ('a', 1), ('b', 2), ('a', 1)]",
+      "assert run_length_encode('babccccccc') == [('b', 1), ('a', 1), ('b', 1), ('c', 7)]"
+    ],
+    "sentinel_check": "assert run_length_encode('') == []",
+    "split": "A",
+    "task_id": "run_length_encode__001",
+    "visible_tests": [
+      "assert run_length_encode('cbcba') == [('c', 1), ('b', 1), ('c', 1), ('b', 1), ('a', 1)]",
+      "assert run_length_encode('aaabcc') == [('a', 3), ('b', 1), ('c', 2)]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert run_length_encode('acacbbaabc') == [('a', 1), ('c', 1), ('a', 1), ('c', 1), ('b', 2), ('a', 2), ('b', 1), ('c', 1)]",
+      "assert run_length_encode('bc') == [('b', 1), ('c', 1)]",
+      "assert run_length_encode('bbbbbaaa') == [('b', 5), ('a', 3)]"
+    ],
+    "buggy_source": "def run_length_encode(s):\n    raise NotImplementedError('run_length_encode not implemented')\n",
+    "description": "Write run_length_encode(s) that run-length-encodes string s into a list of (char, count) tuples for consecutive runs, e.g. 'aaabcc' -> [('a',3),('b',1),('c',2)]. Empty string returns [].",
+    "entry_point": "run_length_encode",
+    "family": "run_length_encode",
+    "golden_solution": "def run_length_encode(s):\n    if not s:\n        return []\n    out = []\n    prev = s[0]\n    cnt = 1\n    for ch in s[1:]:\n        if ch == prev:\n            cnt += 1\n        else:\n            out.append((prev, cnt))\n            prev = ch\n            cnt = 1\n    out.append((prev, cnt))\n    return out\n",
+    "held_out_tests": [
+      "assert run_length_encode('cacaa') == [('c', 1), ('a', 1), ('c', 1), ('a', 2)]",
+      "assert run_length_encode('bbb') == [('b', 3)]",
+      "assert run_length_encode('ac') == [('a', 1), ('c', 1)]",
+      "assert run_length_encode('a') == [('a', 1)]"
+    ],
+    "sentinel_check": "assert run_length_encode('aacccb') == [('a', 2), ('c', 3), ('b', 1)]",
+    "split": "A",
+    "task_id": "run_length_encode__002",
+    "visible_tests": [
+      "assert run_length_encode('cacccc') == [('c', 1), ('a', 1), ('c', 4)]",
+      "assert run_length_encode('aaabcc') == [('a', 3), ('b', 1), ('c', 2)]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert run_length_encode('cb') == [('c', 1), ('b', 1)]",
+      "assert run_length_encode('acccbc') == [('a', 1), ('c', 3), ('b', 1), ('c', 1)]",
+      "assert run_length_encode('bbbb') == [('b', 4)]"
+    ],
+    "buggy_source": "def run_length_encode(s):\n    raise NotImplementedError('run_length_encode not implemented')\n",
+    "description": "Write run_length_encode(s) that run-length-encodes string s into a list of (char, count) tuples for consecutive runs, e.g. 'aaabcc' -> [('a',3),('b',1),('c',2)]. Empty string returns [].",
+    "entry_point": "run_length_encode",
+    "family": "run_length_encode",
+    "golden_solution": "def run_length_encode(s):\n    if not s:\n        return []\n    out = []\n    prev = s[0]\n    cnt = 1\n    for ch in s[1:]:\n        if ch == prev:\n            cnt += 1\n        else:\n            out.append((prev, cnt))\n            prev = ch\n            cnt = 1\n    out.append((prev, cnt))\n    return out\n",
+    "held_out_tests": [
+      "assert run_length_encode('cbbab') == [('c', 1), ('b', 2), ('a', 1), ('b', 1)]",
+      "assert run_length_encode('abcaaabc') == [('a', 1), ('b', 1), ('c', 1), ('a', 3), ('b', 1), ('c', 1)]",
+      "assert run_length_encode('b') == [('b', 1)]",
+      "assert run_length_encode('a') == [('a', 1)]"
+    ],
+    "sentinel_check": "assert run_length_encode('bbc') == [('b', 2), ('c', 1)]",
+    "split": "A",
+    "task_id": "run_length_encode__003",
+    "visible_tests": [
+      "assert run_length_encode('') == []",
+      "assert run_length_encode('aaabcc') == [('a', 3), ('b', 1), ('c', 2)]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert run_length_encode('acaabbbcaa') == [('a', 1), ('c', 1), ('a', 2), ('b', 3), ('c', 1), ('a', 2)]",
+      "assert run_length_encode('bba') == [('b', 2), ('a', 1)]",
+      "assert run_length_encode('baacacbacb') == [('b', 1), ('a', 2), ('c', 1), ('a', 1), ('c', 1), ('b', 1), ('a', 1), ('c', 1), ('b', 1)]"
+    ],
+    "buggy_source": "def run_length_encode(s):\n    raise NotImplementedError('run_length_encode not implemented')\n",
+    "description": "Write run_length_encode(s) that run-length-encodes string s into a list of (char, count) tuples for consecutive runs, e.g. 'aaabcc' -> [('a',3),('b',1),('c',2)]. Empty string returns [].",
+    "entry_point": "run_length_encode",
+    "family": "run_length_encode",
+    "golden_solution": "def run_length_encode(s):\n    if not s:\n        return []\n    out = []\n    prev = s[0]\n    cnt = 1\n    for ch in s[1:]:\n        if ch == prev:\n            cnt += 1\n        else:\n            out.append((prev, cnt))\n            prev = ch\n            cnt = 1\n    out.append((prev, cnt))\n    return out\n",
+    "held_out_tests": [
+      "assert run_length_encode('caabcb') == [('c', 1), ('a', 2), ('b', 1), ('c', 1), ('b', 1)]",
+      "assert run_length_encode('abbbb') == [('a', 1), ('b', 4)]",
+      "assert run_length_encode('bbbb') == [('b', 4)]",
+      "assert run_length_encode('caacabacbb') == [('c', 1), ('a', 2), ('c', 1), ('a', 1), ('b', 1), ('a', 1), ('c', 1), ('b', 2)]"
+    ],
+    "sentinel_check": "assert run_length_encode('bba') == [('b', 2), ('a', 1)]",
+    "split": "A",
+    "task_id": "run_length_encode__004",
+    "visible_tests": [
+      "assert run_length_encode('cac') == [('c', 1), ('a', 1), ('c', 1)]",
+      "assert run_length_encode('aaabcc') == [('a', 3), ('b', 1), ('c', 2)]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert run_length_encode('acb') == [('a', 1), ('c', 1), ('b', 1)]",
+      "assert run_length_encode('cbc') == [('c', 1), ('b', 1), ('c', 1)]",
+      "assert run_length_encode('abca') == [('a', 1), ('b', 1), ('c', 1), ('a', 1)]"
+    ],
+    "buggy_source": "def run_length_encode(s):\n    raise NotImplementedError('run_length_encode not implemented')\n",
+    "description": "Write run_length_encode(s) that run-length-encodes string s into a list of (char, count) tuples for consecutive runs, e.g. 'aaabcc' -> [('a',3),('b',1),('c',2)]. Empty string returns [].",
+    "entry_point": "run_length_encode",
+    "family": "run_length_encode",
+    "golden_solution": "def run_length_encode(s):\n    if not s:\n        return []\n    out = []\n    prev = s[0]\n    cnt = 1\n    for ch in s[1:]:\n        if ch == prev:\n            cnt += 1\n        else:\n            out.append((prev, cnt))\n            prev = ch\n            cnt = 1\n    out.append((prev, cnt))\n    return out\n",
+    "held_out_tests": [
+      "assert run_length_encode('') == []",
+      "assert run_length_encode('aacabbbb') == [('a', 2), ('c', 1), ('a', 1), ('b', 4)]",
+      "assert run_length_encode('acbcaccca') == [('a', 1), ('c', 1), ('b', 1), ('c', 1), ('a', 1), ('c', 3), ('a', 1)]",
+      "assert run_length_encode('bac') == [('b', 1), ('a', 1), ('c', 1)]"
+    ],
+    "sentinel_check": "assert run_length_encode('c') == [('c', 1)]",
+    "split": "A",
+    "task_id": "run_length_encode__005",
+    "visible_tests": [
+      "assert run_length_encode('b') == [('b', 1)]",
+      "assert run_length_encode('aaabcc') == [('a', 3), ('b', 1), ('c', 2)]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert merge_overlapping_intervals([(0, 4), (4, 7), (12, 17), (26, 31)]) == [(0, 7), (12, 17), (26, 31)]",
+      "assert merge_overlapping_intervals([(3, 4)]) == [(3, 4)]",
+      "assert merge_overlapping_intervals([(9, 14), (13, 15), (17, 20), (23, 26), (25, 30)]) == [(9, 15), (17, 20), (23, 30)]"
+    ],
+    "buggy_source": "def merge_overlapping_intervals(intervals):\n    raise NotImplementedError('merge_overlapping_intervals not implemented')\n",
+    "description": "Write merge_overlapping_intervals(intervals) where intervals is a list of (start, end) tuples (possibly unsorted, possibly touching/overlapping). Return the sorted list of merged (start, end) tuples covering the same total range.",
+    "entry_point": "merge_overlapping_intervals",
+    "family": "merge_overlapping_intervals",
+    "golden_solution": "def merge_overlapping_intervals(intervals):\n    if not intervals:\n        return []\n    s = sorted(intervals, key=lambda p: p[0])\n    out = [list(s[0])]\n    for start, end in s[1:]:\n        if start <= out[-1][1]:\n            out[-1][1] = max(out[-1][1], end)\n        else:\n            out.append([start, end])\n    return [tuple(x) for x in out]\n",
+    "held_out_tests": [
+      "assert merge_overlapping_intervals([(0, 4), (1, 6), (3, 4), (13, 15), (20, 24)]) == [(0, 6), (13, 15), (20, 24)]",
+      "assert merge_overlapping_intervals([(28, 29)]) == [(28, 29)]",
+      "assert merge_overlapping_intervals([(12, 13), (17, 19), (19, 23)]) == [(12, 13), (17, 23)]",
+      "assert merge_overlapping_intervals([(9, 11), (15, 20), (21, 24)]) == [(9, 11), (15, 20), (21, 24)]"
+    ],
+    "sentinel_check": "assert merge_overlapping_intervals([(2, 4), (9, 11), (15, 19), (20, 22), (29, 33)]) == [(2, 4), (9, 11), (15, 19), (20, 22), (29, 33)]",
+    "split": "A",
+    "task_id": "merge_overlapping_intervals__000",
+    "visible_tests": [
+      "assert merge_overlapping_intervals([(1, 3), (2, 6), (8, 10)]) == [(1, 6), (8, 10)]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert merge_overlapping_intervals([(4, 5), (14, 16), (23, 28), (28, 32)]) == [(4, 5), (14, 16), (23, 32)]",
+      "assert merge_overlapping_intervals([(11, 12), (22, 25), (29, 32)]) == [(11, 12), (22, 25), (29, 32)]",
+      "assert merge_overlapping_intervals([(15, 17), (23, 28)]) == [(15, 17), (23, 28)]"
+    ],
+    "buggy_source": "def merge_overlapping_intervals(intervals):\n    raise NotImplementedError('merge_overlapping_intervals not implemented')\n",
+    "description": "Write merge_overlapping_intervals(intervals) where intervals is a list of (start, end) tuples (possibly unsorted, possibly touching/overlapping). Return the sorted list of merged (start, end) tuples covering the same total range.",
+    "entry_point": "merge_overlapping_intervals",
+    "family": "merge_overlapping_intervals",
+    "golden_solution": "def merge_overlapping_intervals(intervals):\n    if not intervals:\n        return []\n    s = sorted(intervals, key=lambda p: p[0])\n    out = [list(s[0])]\n    for start, end in s[1:]:\n        if start <= out[-1][1]:\n            out[-1][1] = max(out[-1][1], end)\n        else:\n            out.append([start, end])\n    return [tuple(x) for x in out]\n",
+    "held_out_tests": [
+      "assert merge_overlapping_intervals([(25, 30)]) == [(25, 30)]",
+      "assert merge_overlapping_intervals([(4, 8), (6, 9)]) == [(4, 9)]",
+      "assert merge_overlapping_intervals([(23, 28)]) == [(23, 28)]",
+      "assert merge_overlapping_intervals([(8, 9), (20, 22), (29, 32)]) == [(8, 9), (20, 22), (29, 32)]"
+    ],
+    "sentinel_check": "assert merge_overlapping_intervals([(3, 4), (4, 5), (9, 13), (15, 18), (23, 26)]) == [(3, 5), (9, 13), (15, 18), (23, 26)]",
+    "split": "A",
+    "task_id": "merge_overlapping_intervals__001",
+    "visible_tests": [
+      "assert merge_overlapping_intervals([(9, 10), (15, 19), (19, 24), (28, 33)]) == [(9, 10), (15, 24), (28, 33)]",
+      "assert merge_overlapping_intervals([(1, 3), (2, 6), (8, 10)]) == [(1, 6), (8, 10)]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert merge_overlapping_intervals([(19, 24)]) == [(19, 24)]",
+      "assert merge_overlapping_intervals([(1, 3), (4, 6), (12, 15), (13, 17)]) == [(1, 3), (4, 6), (12, 17)]",
+      "assert merge_overlapping_intervals([(9, 10)]) == [(9, 10)]"
+    ],
+    "buggy_source": "def merge_overlapping_intervals(intervals):\n    raise NotImplementedError('merge_overlapping_intervals not implemented')\n",
+    "description": "Write merge_overlapping_intervals(intervals) where intervals is a list of (start, end) tuples (possibly unsorted, possibly touching/overlapping). Return the sorted list of merged (start, end) tuples covering the same total range.",
+    "entry_point": "merge_overlapping_intervals",
+    "family": "merge_overlapping_intervals",
+    "golden_solution": "def merge_overlapping_intervals(intervals):\n    if not intervals:\n        return []\n    s = sorted(intervals, key=lambda p: p[0])\n    out = [list(s[0])]\n    for start, end in s[1:]:\n        if start <= out[-1][1]:\n            out[-1][1] = max(out[-1][1], end)\n        else:\n            out.append([start, end])\n    return [tuple(x) for x in out]\n",
+    "held_out_tests": [
+      "assert merge_overlapping_intervals([(8, 9), (16, 17), (18, 21), (19, 23), (22, 23)]) == [(8, 9), (16, 17), (18, 23)]",
+      "assert merge_overlapping_intervals([(15, 17)]) == [(15, 17)]",
+      "assert merge_overlapping_intervals([(23, 25), (26, 29)]) == [(23, 25), (26, 29)]",
+      "assert merge_overlapping_intervals([(10, 11), (11, 15), (12, 16)]) == [(10, 16)]"
+    ],
+    "sentinel_check": "assert merge_overlapping_intervals([(3, 8), (9, 13), (11, 12), (16, 21)]) == [(3, 8), (9, 13), (16, 21)]",
+    "split": "A",
+    "task_id": "merge_overlapping_intervals__002",
+    "visible_tests": [
+      "assert merge_overlapping_intervals([(11, 14)]) == [(11, 14)]",
+      "assert merge_overlapping_intervals([(1, 3), (2, 6), (8, 10)]) == [(1, 6), (8, 10)]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert merge_overlapping_intervals([(2, 7), (23, 25), (25, 28), (28, 30)]) == [(2, 7), (23, 30)]",
+      "assert merge_overlapping_intervals([(4, 8), (18, 22), (26, 31)]) == [(4, 8), (18, 22), (26, 31)]",
+      "assert merge_overlapping_intervals([(12, 15), (21, 23), (22, 25), (28, 29)]) == [(12, 15), (21, 25), (28, 29)]"
+    ],
+    "buggy_source": "def merge_overlapping_intervals(intervals):\n    raise NotImplementedError('merge_overlapping_intervals not implemented')\n",
+    "description": "Write merge_overlapping_intervals(intervals) where intervals is a list of (start, end) tuples (possibly unsorted, possibly touching/overlapping). Return the sorted list of merged (start, end) tuples covering the same total range.",
+    "entry_point": "merge_overlapping_intervals",
+    "family": "merge_overlapping_intervals",
+    "golden_solution": "def merge_overlapping_intervals(intervals):\n    if not intervals:\n        return []\n    s = sorted(intervals, key=lambda p: p[0])\n    out = [list(s[0])]\n    for start, end in s[1:]:\n        if start <= out[-1][1]:\n            out[-1][1] = max(out[-1][1], end)\n        else:\n            out.append([start, end])\n    return [tuple(x) for x in out]\n",
+    "held_out_tests": [
+      "assert merge_overlapping_intervals([(4, 8), (5, 9), (17, 21), (23, 26), (24, 25)]) == [(4, 9), (17, 21), (23, 26)]",
+      "assert merge_overlapping_intervals([(13, 18)]) == [(13, 18)]",
+      "assert merge_overlapping_intervals([(19, 23), (27, 30)]) == [(19, 23), (27, 30)]",
+      "assert merge_overlapping_intervals([(1, 2), (22, 27)]) == [(1, 2), (22, 27)]"
+    ],
+    "sentinel_check": "assert merge_overlapping_intervals([(6, 11), (8, 13), (20, 24)]) == [(6, 13), (20, 24)]",
+    "split": "A",
+    "task_id": "merge_overlapping_intervals__003",
+    "visible_tests": [
+      "assert merge_overlapping_intervals([(19, 24), (24, 25), (25, 26)]) == [(19, 26)]",
+      "assert merge_overlapping_intervals([(1, 3), (2, 6), (8, 10)]) == [(1, 6), (8, 10)]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert merge_overlapping_intervals([(11, 13), (15, 16), (20, 22), (22, 27), (29, 34)]) == [(11, 13), (15, 16), (20, 27), (29, 34)]",
+      "assert merge_overlapping_intervals([(8, 12), (9, 10), (11, 15), (17, 20), (25, 30)]) == [(8, 15), (17, 20), (25, 30)]",
+      "assert merge_overlapping_intervals([(1, 3), (10, 11), (11, 12), (13, 17), (15, 17)]) == [(1, 3), (10, 12), (13, 17)]"
+    ],
+    "buggy_source": "def merge_overlapping_intervals(intervals):\n    raise NotImplementedError('merge_overlapping_intervals not implemented')\n",
+    "description": "Write merge_overlapping_intervals(intervals) where intervals is a list of (start, end) tuples (possibly unsorted, possibly touching/overlapping). Return the sorted list of merged (start, end) tuples covering the same total range.",
+    "entry_point": "merge_overlapping_intervals",
+    "family": "merge_overlapping_intervals",
+    "golden_solution": "def merge_overlapping_intervals(intervals):\n    if not intervals:\n        return []\n    s = sorted(intervals, key=lambda p: p[0])\n    out = [list(s[0])]\n    for start, end in s[1:]:\n        if start <= out[-1][1]:\n            out[-1][1] = max(out[-1][1], end)\n        else:\n            out.append([start, end])\n    return [tuple(x) for x in out]\n",
+    "held_out_tests": [
+      "assert merge_overlapping_intervals([(14, 16), (20, 25)]) == [(14, 16), (20, 25)]",
+      "assert merge_overlapping_intervals([(1, 5), (8, 10), (14, 17)]) == [(1, 5), (8, 10), (14, 17)]",
+      "assert merge_overlapping_intervals([(8, 10), (17, 22), (26, 31)]) == [(8, 10), (17, 22), (26, 31)]",
+      "assert merge_overlapping_intervals([(8, 13), (10, 11), (22, 23), (27, 28)]) == [(8, 13), (22, 23), (27, 28)]"
+    ],
+    "sentinel_check": "assert merge_overlapping_intervals([(5, 9), (28, 32)]) == [(5, 9), (28, 32)]",
+    "split": "A",
+    "task_id": "merge_overlapping_intervals__004",
+    "visible_tests": [
+      "assert merge_overlapping_intervals([(11, 15), (15, 19), (16, 18), (17, 22), (26, 29)]) == [(11, 22), (26, 29)]",
+      "assert merge_overlapping_intervals([(1, 3), (2, 6), (8, 10)]) == [(1, 6), (8, 10)]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert merge_overlapping_intervals([(4, 9), (6, 11), (14, 17), (15, 19), (18, 22)]) == [(4, 11), (14, 22)]",
+      "assert merge_overlapping_intervals([(0, 3), (10, 12), (15, 19)]) == [(0, 3), (10, 12), (15, 19)]",
+      "assert merge_overlapping_intervals([(15, 20), (29, 31)]) == [(15, 20), (29, 31)]"
+    ],
+    "buggy_source": "def merge_overlapping_intervals(intervals):\n    raise NotImplementedError('merge_overlapping_intervals not implemented')\n",
+    "description": "Write merge_overlapping_intervals(intervals) where intervals is a list of (start, end) tuples (possibly unsorted, possibly touching/overlapping). Return the sorted list of merged (start, end) tuples covering the same total range.",
+    "entry_point": "merge_overlapping_intervals",
+    "family": "merge_overlapping_intervals",
+    "golden_solution": "def merge_overlapping_intervals(intervals):\n    if not intervals:\n        return []\n    s = sorted(intervals, key=lambda p: p[0])\n    out = [list(s[0])]\n    for start, end in s[1:]:\n        if start <= out[-1][1]:\n            out[-1][1] = max(out[-1][1], end)\n        else:\n            out.append([start, end])\n    return [tuple(x) for x in out]\n",
+    "held_out_tests": [
+      "assert merge_overlapping_intervals([(0, 3), (1, 2), (17, 19), (26, 27)]) == [(0, 3), (17, 19), (26, 27)]",
+      "assert merge_overlapping_intervals([(14, 15), (25, 27)]) == [(14, 15), (25, 27)]",
+      "assert merge_overlapping_intervals([(19, 20), (20, 23), (21, 24)]) == [(19, 24)]",
+      "assert merge_overlapping_intervals([(4, 7), (19, 23), (27, 30)]) == [(4, 7), (19, 23), (27, 30)]"
+    ],
+    "sentinel_check": "assert merge_overlapping_intervals([(27, 32)]) == [(27, 32)]",
+    "split": "A",
+    "task_id": "merge_overlapping_intervals__005",
+    "visible_tests": [
+      "assert merge_overlapping_intervals([(9, 10), (20, 23)]) == [(9, 10), (20, 23)]",
+      "assert merge_overlapping_intervals([(1, 3), (2, 6), (8, 10)]) == [(1, 6), (8, 10)]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert rotate_list_right([-13, 18, -13, -7, 19, 8], 3) == [-7, 19, 8, -13, 18, -13]",
+      "assert rotate_list_right([-9, -17, 2, 19], 6) == [2, 19, -9, -17]",
+      "assert rotate_list_right([-13], 6) == [-13]"
+    ],
+    "buggy_source": "def rotate_list_right(xs, k):\n    raise NotImplementedError('rotate_list_right not implemented')\n",
+    "description": "Write rotate_list_right(xs, k) that rotates list xs to the right by k positions (k may be 0 or exceed len(xs); empty xs returns []).",
+    "entry_point": "rotate_list_right",
+    "family": "rotate_list_right",
+    "golden_solution": "def rotate_list_right(xs, k):\n    if not xs:\n        return []\n    n = len(xs)\n    k = k % n\n    return xs[-k:] + xs[:-k] if k else list(xs)\n",
+    "held_out_tests": [
+      "assert rotate_list_right([14, 12, -4, -13, -13, 6], 9) == [-13, -13, 6, 14, 12, -4]",
+      "assert rotate_list_right([19, 20, -2, 0, -4], 9) == [20, -2, 0, -4, 19]",
+      "assert rotate_list_right([16, -9, -13, -17], 12) == [16, -9, -13, -17]",
+      "assert rotate_list_right([-20], 5) == [-20]"
+    ],
+    "sentinel_check": "assert rotate_list_right([-11, 12, 15, -5], 7) == [12, 15, -5, -11]",
+    "split": "A",
+    "task_id": "rotate_list_right__000",
+    "visible_tests": [
+      "assert rotate_list_right([1, 2, 3, 4, 5], 2) == [4, 5, 1, 2, 3]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert rotate_list_right([12, 14, -3], 6) == [12, 14, -3]",
+      "assert rotate_list_right([2, 3, 2, 7, 7], 3) == [2, 7, 7, 2, 3]",
+      "assert rotate_list_right([20, 8, -10, -9, -17], 0) == [20, 8, -10, -9, -17]"
+    ],
+    "buggy_source": "def rotate_list_right(xs, k):\n    raise NotImplementedError('rotate_list_right not implemented')\n",
+    "description": "Write rotate_list_right(xs, k) that rotates list xs to the right by k positions (k may be 0 or exceed len(xs); empty xs returns []).",
+    "entry_point": "rotate_list_right",
+    "family": "rotate_list_right",
+    "golden_solution": "def rotate_list_right(xs, k):\n    if not xs:\n        return []\n    n = len(xs)\n    k = k % n\n    return xs[-k:] + xs[:-k] if k else list(xs)\n",
+    "held_out_tests": [
+      "assert rotate_list_right([15], 8) == [15]",
+      "assert rotate_list_right([12, 5, 16, -14, 18, 11, 1], 6) == [5, 16, -14, 18, 11, 1, 12]",
+      "assert rotate_list_right([3, -3, 12, 5, -20, -20], 12) == [3, -3, 12, 5, -20, -20]",
+      "assert rotate_list_right([12], 10) == [12]"
+    ],
+    "sentinel_check": "assert rotate_list_right([-1, -16, 1], 6) == [-1, -16, 1]",
+    "split": "A",
+    "task_id": "rotate_list_right__001",
+    "visible_tests": [
+      "assert rotate_list_right([-11, 16, 18, -6], 6) == [18, -6, -11, 16]",
+      "assert rotate_list_right([1, 2, 3, 4, 5], 2) == [4, 5, 1, 2, 3]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert rotate_list_right([0, -20, 20, 6, 7], 11) == [7, 0, -20, 20, 6]",
+      "assert rotate_list_right([-12, 11], 10) == [-12, 11]",
+      "assert rotate_list_right([-15, 9, -9, 7, 6, -20], 1) == [-20, -15, 9, -9, 7, 6]"
+    ],
+    "buggy_source": "def rotate_list_right(xs, k):\n    raise NotImplementedError('rotate_list_right not implemented')\n",
+    "description": "Write rotate_list_right(xs, k) that rotates list xs to the right by k positions (k may be 0 or exceed len(xs); empty xs returns []).",
+    "entry_point": "rotate_list_right",
+    "family": "rotate_list_right",
+    "golden_solution": "def rotate_list_right(xs, k):\n    if not xs:\n        return []\n    n = len(xs)\n    k = k % n\n    return xs[-k:] + xs[:-k] if k else list(xs)\n",
+    "held_out_tests": [
+      "assert rotate_list_right([-16, 0, -6, 12, 15, 9], 1) == [9, -16, 0, -6, 12, 15]",
+      "assert rotate_list_right([-15, 0, -10, 1, -4], 1) == [-4, -15, 0, -10, 1]",
+      "assert rotate_list_right([-19, -9, 11, -7], 6) == [11, -7, -19, -9]",
+      "assert rotate_list_right([2, -13, 14, 0], 7) == [-13, 14, 0, 2]"
+    ],
+    "sentinel_check": "assert rotate_list_right([-4, 10], 2) == [-4, 10]",
+    "split": "A",
+    "task_id": "rotate_list_right__002",
+    "visible_tests": [
+      "assert rotate_list_right([-3, 4, -17, -2, -16, 16, -7], 9) == [16, -7, -3, 4, -17, -2, -16]",
+      "assert rotate_list_right([1, 2, 3, 4, 5], 2) == [4, 5, 1, 2, 3]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert rotate_list_right([11, -2, 14], 2) == [-2, 14, 11]",
+      "assert rotate_list_right([-6, 10, 7, -12, -2, 11, 1], 12) == [7, -12, -2, 11, 1, -6, 10]",
+      "assert rotate_list_right([-1, 9, 1, -11], 12) == [-1, 9, 1, -11]"
+    ],
+    "buggy_source": "def rotate_list_right(xs, k):\n    raise NotImplementedError('rotate_list_right not implemented')\n",
+    "description": "Write rotate_list_right(xs, k) that rotates list xs to the right by k positions (k may be 0 or exceed len(xs); empty xs returns []).",
+    "entry_point": "rotate_list_right",
+    "family": "rotate_list_right",
+    "golden_solution": "def rotate_list_right(xs, k):\n    if not xs:\n        return []\n    n = len(xs)\n    k = k % n\n    return xs[-k:] + xs[:-k] if k else list(xs)\n",
+    "held_out_tests": [
+      "assert rotate_list_right([-10, -2], 3) == [-2, -10]",
+      "assert rotate_list_right([16, -9, 2], 6) == [16, -9, 2]",
+      "assert rotate_list_right([7, -8, 14, 12, -8, -19], 3) == [12, -8, -19, 7, -8, 14]",
+      "assert rotate_list_right([-7, 15], 5) == [15, -7]"
+    ],
+    "sentinel_check": "assert rotate_list_right([3], 0) == [3]",
+    "split": "A",
+    "task_id": "rotate_list_right__003",
+    "visible_tests": [
+      "assert rotate_list_right([15], 11) == [15]",
+      "assert rotate_list_right([1, 2, 3, 4, 5], 2) == [4, 5, 1, 2, 3]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert rotate_list_right([14, -4, 2], 3) == [14, -4, 2]",
+      "assert rotate_list_right([13, 15, 12, -15, -13, 12, 14], 11) == [-15, -13, 12, 14, 13, 15, 12]",
+      "assert rotate_list_right([9], 10) == [9]"
+    ],
+    "buggy_source": "def rotate_list_right(xs, k):\n    raise NotImplementedError('rotate_list_right not implemented')\n",
+    "description": "Write rotate_list_right(xs, k) that rotates list xs to the right by k positions (k may be 0 or exceed len(xs); empty xs returns []).",
+    "entry_point": "rotate_list_right",
+    "family": "rotate_list_right",
+    "golden_solution": "def rotate_list_right(xs, k):\n    if not xs:\n        return []\n    n = len(xs)\n    k = k % n\n    return xs[-k:] + xs[:-k] if k else list(xs)\n",
+    "held_out_tests": [
+      "assert rotate_list_right([6, -16, -12], 10) == [-12, 6, -16]",
+      "assert rotate_list_right([15, 4, 10, 14, -18, -4], 5) == [4, 10, 14, -18, -4, 15]",
+      "assert rotate_list_right([9, 20], 9) == [20, 9]",
+      "assert rotate_list_right([-6], 7) == [-6]"
+    ],
+    "sentinel_check": "assert rotate_list_right([-18, -5, 5], 7) == [5, -18, -5]",
+    "split": "A",
+    "task_id": "rotate_list_right__004",
+    "visible_tests": [
+      "assert rotate_list_right([-3, 13, 8, 4, -8, 15, 9], 3) == [-8, 15, 9, -3, 13, 8, 4]",
+      "assert rotate_list_right([1, 2, 3, 4, 5], 2) == [4, 5, 1, 2, 3]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert rotate_list_right([0, -19, -12, -7], 2) == [-12, -7, 0, -19]",
+      "assert rotate_list_right([-16, 12], 2) == [-16, 12]",
+      "assert rotate_list_right([4, 8, 0, 3], 0) == [4, 8, 0, 3]"
+    ],
+    "buggy_source": "def rotate_list_right(xs, k):\n    raise NotImplementedError('rotate_list_right not implemented')\n",
+    "description": "Write rotate_list_right(xs, k) that rotates list xs to the right by k positions (k may be 0 or exceed len(xs); empty xs returns []).",
+    "entry_point": "rotate_list_right",
+    "family": "rotate_list_right",
+    "golden_solution": "def rotate_list_right(xs, k):\n    if not xs:\n        return []\n    n = len(xs)\n    k = k % n\n    return xs[-k:] + xs[:-k] if k else list(xs)\n",
+    "held_out_tests": [
+      "assert rotate_list_right([4, 16, -15, 14, 6], 1) == [6, 4, 16, -15, 14]",
+      "assert rotate_list_right([3], 12) == [3]",
+      "assert rotate_list_right([15], 6) == [15]",
+      "assert rotate_list_right([-10, -2, -7, 9, 8, 4, 19], 2) == [4, 19, -10, -2, -7, 9, 8]"
+    ],
+    "sentinel_check": "assert rotate_list_right([20, -20, -17], 7) == [-17, 20, -20]",
+    "split": "A",
+    "task_id": "rotate_list_right__005",
+    "visible_tests": [
+      "assert rotate_list_right([15], 10) == [15]",
+      "assert rotate_list_right([1, 2, 3, 4, 5], 2) == [4, 5, 1, 2, 3]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert top_n_frequent_words(['sea', 'a', 'sea'], 1) == ['sea']",
+      "assert top_n_frequent_words(['jump', 'jump', 'the'], 1) == ['jump']",
+      "assert top_n_frequent_words(['a', 'cat', 'dog', 'small'], 3) == ['a', 'cat', 'dog']"
+    ],
+    "buggy_source": "def top_n_frequent_words(words, n):\n    raise NotImplementedError('top_n_frequent_words not implemented')\n",
+    "description": "Write top_n_frequent_words(words, n) returning the n most frequent words (list of str), ties broken alphabetically ascending.",
+    "entry_point": "top_n_frequent_words",
+    "family": "top_n_frequent_words",
+    "golden_solution": "def top_n_frequent_words(words, n):\n    from collections import Counter\n    c = Counter(words)\n    ordered = sorted(c.items(), key=lambda kv: (-kv[1], kv[0]))\n    return [w for w, _ in ordered[:n]]\n",
+    "held_out_tests": [
+      "assert top_n_frequent_words(['a', 'a', 'run', 'sky'], 2) == ['a', 'run']",
+      "assert top_n_frequent_words(['a', 'big', 'a', 'jump', 'run', 'a'], 3) == ['a', 'big', 'jump']",
+      "assert top_n_frequent_words(['a', 'sky', 'big', 'sky'], 3) == ['sky', 'a', 'big']",
+      "assert top_n_frequent_words(['big', 'big', 'run', 'cat', 'jump', 'a'], 3) == ['big', 'a', 'cat']"
+    ],
+    "sentinel_check": "assert top_n_frequent_words(['blue', 'a', 'sea', 'the'], 3) == ['a', 'blue', 'sea']",
+    "split": "A",
+    "task_id": "top_n_frequent_words__000",
+    "visible_tests": [
+      "assert top_n_frequent_words(['a', 'b', 'a', 'c', 'b', 'a'], 2) == ['a', 'b']"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert top_n_frequent_words(['cat'], 1) == ['cat']",
+      "assert top_n_frequent_words(['the', 'red', 'the', 'dog', 'dog'], 3) == ['dog', 'the', 'red']",
+      "assert top_n_frequent_words(['red'], 1) == ['red']"
+    ],
+    "buggy_source": "def top_n_frequent_words(words, n):\n    raise NotImplementedError('top_n_frequent_words not implemented')\n",
+    "description": "Write top_n_frequent_words(words, n) returning the n most frequent words (list of str), ties broken alphabetically ascending.",
+    "entry_point": "top_n_frequent_words",
+    "family": "top_n_frequent_words",
+    "golden_solution": "def top_n_frequent_words(words, n):\n    from collections import Counter\n    c = Counter(words)\n    ordered = sorted(c.items(), key=lambda kv: (-kv[1], kv[0]))\n    return [w for w, _ in ordered[:n]]\n",
+    "held_out_tests": [
+      "assert top_n_frequent_words(['cat', 'jump'], 2) == ['cat', 'jump']",
+      "assert top_n_frequent_words(['jump'], 2) == ['jump']",
+      "assert top_n_frequent_words(['run', 'run', 'small', 'blue', 'blue', 'sky'], 2) == ['blue', 'run']",
+      "assert top_n_frequent_words(['big', 'big', 'big', 'cat'], 2) == ['big', 'cat']"
+    ],
+    "sentinel_check": "assert top_n_frequent_words(['red', 'run', 'big'], 1) == ['big']",
+    "split": "A",
+    "task_id": "top_n_frequent_words__001",
+    "visible_tests": [
+      "assert top_n_frequent_words(['the', 'jump', 'a', 'big', 'small', 'small'], 2) == ['small', 'a']",
+      "assert top_n_frequent_words(['a', 'b', 'a', 'c', 'b', 'a'], 2) == ['a', 'b']"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert top_n_frequent_words(['small', 'big'], 2) == ['big', 'small']",
+      "assert top_n_frequent_words(['jump', 'dog', 'the', 'blue', 'red'], 1) == ['blue']",
+      "assert top_n_frequent_words(['sky', 'sea', 'blue'], 2) == ['blue', 'sea']"
+    ],
+    "buggy_source": "def top_n_frequent_words(words, n):\n    raise NotImplementedError('top_n_frequent_words not implemented')\n",
+    "description": "Write top_n_frequent_words(words, n) returning the n most frequent words (list of str), ties broken alphabetically ascending.",
+    "entry_point": "top_n_frequent_words",
+    "family": "top_n_frequent_words",
+    "golden_solution": "def top_n_frequent_words(words, n):\n    from collections import Counter\n    c = Counter(words)\n    ordered = sorted(c.items(), key=lambda kv: (-kv[1], kv[0]))\n    return [w for w, _ in ordered[:n]]\n",
+    "held_out_tests": [
+      "assert top_n_frequent_words(['the', 'small', 'big'], 2) == ['big', 'small']",
+      "assert top_n_frequent_words(['run', 'cat', 'a', 'cat', 'jump'], 1) == ['cat']",
+      "assert top_n_frequent_words(['dog'], 3) == ['dog']",
+      "assert top_n_frequent_words(['sea', 'sea'], 1) == ['sea']"
+    ],
+    "sentinel_check": "assert top_n_frequent_words(['small', 'sea', 'cat', 'sea'], 3) == ['sea', 'cat', 'small']",
+    "split": "A",
+    "task_id": "top_n_frequent_words__002",
+    "visible_tests": [
+      "assert top_n_frequent_words(['dog', 'run', 'run'], 3) == ['run', 'dog']",
+      "assert top_n_frequent_words(['a', 'b', 'a', 'c', 'b', 'a'], 2) == ['a', 'b']"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert top_n_frequent_words(['the', 'red', 'blue'], 2) == ['blue', 'red']",
+      "assert top_n_frequent_words(['big', 'small', 'the'], 3) == ['big', 'small', 'the']",
+      "assert top_n_frequent_words(['sky', 'blue', 'cat', 'the', 'a', 'cat'], 1) == ['cat']"
+    ],
+    "buggy_source": "def top_n_frequent_words(words, n):\n    raise NotImplementedError('top_n_frequent_words not implemented')\n",
+    "description": "Write top_n_frequent_words(words, n) returning the n most frequent words (list of str), ties broken alphabetically ascending.",
+    "entry_point": "top_n_frequent_words",
+    "family": "top_n_frequent_words",
+    "golden_solution": "def top_n_frequent_words(words, n):\n    from collections import Counter\n    c = Counter(words)\n    ordered = sorted(c.items(), key=lambda kv: (-kv[1], kv[0]))\n    return [w for w, _ in ordered[:n]]\n",
+    "held_out_tests": [
+      "assert top_n_frequent_words(['a', 'sea', 'run', 'big', 'sky'], 2) == ['a', 'big']",
+      "assert top_n_frequent_words(['dog', 'dog', 'jump', 'big', 'run', 'red'], 3) == ['dog', 'big', 'jump']",
+      "assert top_n_frequent_words(['a', 'the', 'dog', 'cat', 'cat', 'sky'], 2) == ['cat', 'a']",
+      "assert top_n_frequent_words(['small', 'sky', 'jump'], 2) == ['jump', 'sky']"
+    ],
+    "sentinel_check": "assert top_n_frequent_words(['the'], 3) == ['the']",
+    "split": "A",
+    "task_id": "top_n_frequent_words__003",
+    "visible_tests": [
+      "assert top_n_frequent_words(['cat', 'a', 'the', 'blue'], 1) == ['a']",
+      "assert top_n_frequent_words(['a', 'b', 'a', 'c', 'b', 'a'], 2) == ['a', 'b']"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert top_n_frequent_words(['small', 'a', 'sea', 'small', 'red'], 1) == ['small']",
+      "assert top_n_frequent_words(['jump'], 1) == ['jump']",
+      "assert top_n_frequent_words(['big', 'small', 'the', 'run', 'dog', 'sea'], 1) == ['big']"
+    ],
+    "buggy_source": "def top_n_frequent_words(words, n):\n    raise NotImplementedError('top_n_frequent_words not implemented')\n",
+    "description": "Write top_n_frequent_words(words, n) returning the n most frequent words (list of str), ties broken alphabetically ascending.",
+    "entry_point": "top_n_frequent_words",
+    "family": "top_n_frequent_words",
+    "golden_solution": "def top_n_frequent_words(words, n):\n    from collections import Counter\n    c = Counter(words)\n    ordered = sorted(c.items(), key=lambda kv: (-kv[1], kv[0]))\n    return [w for w, _ in ordered[:n]]\n",
+    "held_out_tests": [
+      "assert top_n_frequent_words(['dog', 'a', 'jump', 'the', 'jump', 'the'], 3) == ['jump', 'the', 'a']",
+      "assert top_n_frequent_words(['blue', 'big', 'red', 'small', 'sky', 'red'], 2) == ['red', 'big']",
+      "assert top_n_frequent_words(['small'], 2) == ['small']",
+      "assert top_n_frequent_words(['small', 'sea', 'red', 'dog', 'jump', 'cat'], 2) == ['cat', 'dog']"
+    ],
+    "sentinel_check": "assert top_n_frequent_words(['blue', 'sea'], 2) == ['blue', 'sea']",
+    "split": "A",
+    "task_id": "top_n_frequent_words__004",
+    "visible_tests": [
+      "assert top_n_frequent_words(['red', 'run', 'big', 'run'], 3) == ['run', 'big', 'red']",
+      "assert top_n_frequent_words(['a', 'b', 'a', 'c', 'b', 'a'], 2) == ['a', 'b']"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert top_n_frequent_words(['the', 'sea'], 2) == ['sea', 'the']",
+      "assert top_n_frequent_words(['jump', 'sky'], 3) == ['jump', 'sky']",
+      "assert top_n_frequent_words(['sea', 'sea', 'dog', 'blue', 'small'], 2) == ['sea', 'blue']"
+    ],
+    "buggy_source": "def top_n_frequent_words(words, n):\n    raise NotImplementedError('top_n_frequent_words not implemented')\n",
+    "description": "Write top_n_frequent_words(words, n) returning the n most frequent words (list of str), ties broken alphabetically ascending.",
+    "entry_point": "top_n_frequent_words",
+    "family": "top_n_frequent_words",
+    "golden_solution": "def top_n_frequent_words(words, n):\n    from collections import Counter\n    c = Counter(words)\n    ordered = sorted(c.items(), key=lambda kv: (-kv[1], kv[0]))\n    return [w for w, _ in ordered[:n]]\n",
+    "held_out_tests": [
+      "assert top_n_frequent_words(['big'], 3) == ['big']",
+      "assert top_n_frequent_words(['a', 'the', 'the', 'red', 'red'], 3) == ['red', 'the', 'a']",
+      "assert top_n_frequent_words(['red', 'small', 'jump', 'a'], 2) == ['a', 'jump']",
+      "assert top_n_frequent_words(['run', 'big', 'jump'], 3) == ['big', 'jump', 'run']"
+    ],
+    "sentinel_check": "assert top_n_frequent_words(['the', 'a', 'red', 'blue', 'dog'], 1) == ['a']",
+    "split": "A",
+    "task_id": "top_n_frequent_words__005",
+    "visible_tests": [
+      "assert top_n_frequent_words(['red'], 3) == ['red']",
+      "assert top_n_frequent_words(['a', 'b', 'a', 'c', 'b', 'a'], 2) == ['a', 'b']"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert flatten_nested_list([3, [], -1, -2, [-8]]) == [3, -1, -2, -8]",
+      "assert flatten_nested_list([-3, -6]) == [-3, -6]",
+      "assert flatten_nested_list([[]]) == []"
+    ],
+    "buggy_source": "def flatten_nested_list(lst):\n    raise NotImplementedError('flatten_nested_list not implemented')\n",
+    "description": "Write flatten_nested_list(lst) that flattens an arbitrarily nested list of ints into one flat list, preserving left-to-right order.",
+    "entry_point": "flatten_nested_list",
+    "family": "flatten_nested_list",
+    "golden_solution": "def flatten_nested_list(lst):\n    out = []\n    for item in lst:\n        if isinstance(item, list):\n            out.extend(flatten_nested_list(item))\n        else:\n            out.append(item)\n    return out\n",
+    "held_out_tests": [
+      "assert flatten_nested_list([3, [], -9, 9, 4]) == [3, -9, 9, 4]",
+      "assert flatten_nested_list([2, [7, -2, 0], 3, [], [2]]) == [2, 7, -2, 0, 3, 2]",
+      "assert flatten_nested_list([]) == []",
+      "assert flatten_nested_list([[-2], 2]) == [-2, 2]"
+    ],
+    "sentinel_check": "assert flatten_nested_list([2, [-2, -3, -7], -9]) == [2, -2, -3, -7, -9]",
+    "split": "A",
+    "task_id": "flatten_nested_list__000",
+    "visible_tests": [
+      "assert flatten_nested_list([1, [2, 3], [4, [5, 6]]]) == [1, 2, 3, 4, 5, 6]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert flatten_nested_list([[2, 7, 1], 4, 6, -2]) == [2, 7, 1, 4, 6, -2]",
+      "assert flatten_nested_list([5]) == [5]",
+      "assert flatten_nested_list([0, -2, 2]) == [0, -2, 2]"
+    ],
+    "buggy_source": "def flatten_nested_list(lst):\n    raise NotImplementedError('flatten_nested_list not implemented')\n",
+    "description": "Write flatten_nested_list(lst) that flattens an arbitrarily nested list of ints into one flat list, preserving left-to-right order.",
+    "entry_point": "flatten_nested_list",
+    "family": "flatten_nested_list",
+    "golden_solution": "def flatten_nested_list(lst):\n    out = []\n    for item in lst:\n        if isinstance(item, list):\n            out.extend(flatten_nested_list(item))\n        else:\n            out.append(item)\n    return out\n",
+    "held_out_tests": [
+      "assert flatten_nested_list([-5, -1, [0, 4, 3], 9]) == [-5, -1, 0, 4, 3, 9]",
+      "assert flatten_nested_list([5, -4, [], 6]) == [5, -4, 6]",
+      "assert flatten_nested_list([-2, 1, 0]) == [-2, 1, 0]",
+      "assert flatten_nested_list([-5, [4, -2], -9, [0, 5, -7], 1]) == [-5, 4, -2, -9, 0, 5, -7, 1]"
+    ],
+    "sentinel_check": "assert flatten_nested_list([1, -4]) == [1, -4]",
+    "split": "A",
+    "task_id": "flatten_nested_list__001",
+    "visible_tests": [
+      "assert flatten_nested_list([[6, -7, 9]]) == [6, -7, 9]",
+      "assert flatten_nested_list([1, [2, 3], [4, [5, 6]]]) == [1, 2, 3, 4, 5, 6]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert flatten_nested_list([[-1, 0, 5], -6, [-8, -1, 7], -5, 4]) == [-1, 0, 5, -6, -8, -1, 7, -5, 4]",
+      "assert flatten_nested_list([-5, 3]) == [-5, 3]",
+      "assert flatten_nested_list([-8, [-9, -6], [3], 6, -6]) == [-8, -9, -6, 3, 6, -6]"
+    ],
+    "buggy_source": "def flatten_nested_list(lst):\n    raise NotImplementedError('flatten_nested_list not implemented')\n",
+    "description": "Write flatten_nested_list(lst) that flattens an arbitrarily nested list of ints into one flat list, preserving left-to-right order.",
+    "entry_point": "flatten_nested_list",
+    "family": "flatten_nested_list",
+    "golden_solution": "def flatten_nested_list(lst):\n    out = []\n    for item in lst:\n        if isinstance(item, list):\n            out.extend(flatten_nested_list(item))\n        else:\n            out.append(item)\n    return out\n",
+    "held_out_tests": [
+      "assert flatten_nested_list([-1, [], -9, -2]) == [-1, -9, -2]",
+      "assert flatten_nested_list([[-9, -2]]) == [-9, -2]",
+      "assert flatten_nested_list([-4, 3]) == [-4, 3]",
+      "assert flatten_nested_list([0, 2, 2]) == [0, 2, 2]"
+    ],
+    "sentinel_check": "assert flatten_nested_list([-6, [], 3]) == [-6, 3]",
+    "split": "A",
+    "task_id": "flatten_nested_list__002",
+    "visible_tests": [
+      "assert flatten_nested_list([]) == []",
+      "assert flatten_nested_list([1, [2, 3], [4, [5, 6]]]) == [1, 2, 3, 4, 5, 6]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert flatten_nested_list([[3], -4]) == [3, -4]",
+      "assert flatten_nested_list([]) == []",
+      "assert flatten_nested_list([3, -7, 8, -5]) == [3, -7, 8, -5]"
+    ],
+    "buggy_source": "def flatten_nested_list(lst):\n    raise NotImplementedError('flatten_nested_list not implemented')\n",
+    "description": "Write flatten_nested_list(lst) that flattens an arbitrarily nested list of ints into one flat list, preserving left-to-right order.",
+    "entry_point": "flatten_nested_list",
+    "family": "flatten_nested_list",
+    "golden_solution": "def flatten_nested_list(lst):\n    out = []\n    for item in lst:\n        if isinstance(item, list):\n            out.extend(flatten_nested_list(item))\n        else:\n            out.append(item)\n    return out\n",
+    "held_out_tests": [
+      "assert flatten_nested_list([-6, [7, 1], [-7], 4]) == [-6, 7, 1, -7, 4]",
+      "assert flatten_nested_list([[3, 6], -2]) == [3, 6, -2]",
+      "assert flatten_nested_list([6]) == [6]",
+      "assert flatten_nested_list([-4, 8, -1, -2]) == [-4, 8, -1, -2]"
+    ],
+    "sentinel_check": "assert flatten_nested_list([[5, -5], [], [], -6, [5]]) == [5, -5, -6, 5]",
+    "split": "A",
+    "task_id": "flatten_nested_list__003",
+    "visible_tests": [
+      "assert flatten_nested_list([-6, [6, -1, 8], [-6, -4, 7], -9, 9]) == [-6, 6, -1, 8, -6, -4, 7, -9, 9]",
+      "assert flatten_nested_list([1, [2, 3], [4, [5, 6]]]) == [1, 2, 3, 4, 5, 6]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert flatten_nested_list([5, 0]) == [5, 0]",
+      "assert flatten_nested_list([8, 7, [-4], -8]) == [8, 7, -4, -8]",
+      "assert flatten_nested_list([]) == []"
+    ],
+    "buggy_source": "def flatten_nested_list(lst):\n    raise NotImplementedError('flatten_nested_list not implemented')\n",
+    "description": "Write flatten_nested_list(lst) that flattens an arbitrarily nested list of ints into one flat list, preserving left-to-right order.",
+    "entry_point": "flatten_nested_list",
+    "family": "flatten_nested_list",
+    "golden_solution": "def flatten_nested_list(lst):\n    out = []\n    for item in lst:\n        if isinstance(item, list):\n            out.extend(flatten_nested_list(item))\n        else:\n            out.append(item)\n    return out\n",
+    "held_out_tests": [
+      "assert flatten_nested_list([[], 9, 4]) == [9, 4]",
+      "assert flatten_nested_list([-5, [], [9, -7, 0]]) == [-5, 9, -7, 0]",
+      "assert flatten_nested_list([0, -8]) == [0, -8]",
+      "assert flatten_nested_list([6, -9, [-2], -2]) == [6, -9, -2, -2]"
+    ],
+    "sentinel_check": "assert flatten_nested_list([[-3], -1]) == [-3, -1]",
+    "split": "A",
+    "task_id": "flatten_nested_list__004",
+    "visible_tests": [
+      "assert flatten_nested_list([[1, -8], [-9, 5]]) == [1, -8, -9, 5]",
+      "assert flatten_nested_list([1, [2, 3], [4, [5, 6]]]) == [1, 2, 3, 4, 5, 6]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert flatten_nested_list([[], [-5, 0]]) == [-5, 0]",
+      "assert flatten_nested_list([-9, 7, -8, [4, -1], 2]) == [-9, 7, -8, 4, -1, 2]",
+      "assert flatten_nested_list([7, 8, -8, -2, 0]) == [7, 8, -8, -2, 0]"
+    ],
+    "buggy_source": "def flatten_nested_list(lst):\n    raise NotImplementedError('flatten_nested_list not implemented')\n",
+    "description": "Write flatten_nested_list(lst) that flattens an arbitrarily nested list of ints into one flat list, preserving left-to-right order.",
+    "entry_point": "flatten_nested_list",
+    "family": "flatten_nested_list",
+    "golden_solution": "def flatten_nested_list(lst):\n    out = []\n    for item in lst:\n        if isinstance(item, list):\n            out.extend(flatten_nested_list(item))\n        else:\n            out.append(item)\n    return out\n",
+    "held_out_tests": [
+      "assert flatten_nested_list([[-6, 8, -2], -2]) == [-6, 8, -2, -2]",
+      "assert flatten_nested_list([]) == []",
+      "assert flatten_nested_list([-3]) == [-3]",
+      "assert flatten_nested_list([-1, 8, 8, 1, 5]) == [-1, 8, 8, 1, 5]"
+    ],
+    "sentinel_check": "assert flatten_nested_list([3, 3, 0, 2]) == [3, 3, 0, 2]",
+    "split": "A",
+    "task_id": "flatten_nested_list__005",
+    "visible_tests": [
+      "assert flatten_nested_list([-9, 5]) == [-9, 5]",
+      "assert flatten_nested_list([1, [2, 3], [4, [5, 6]]]) == [1, 2, 3, 4, 5, 6]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert caesar_cipher_shift('YbZ,a AcZ,,', 19) == 'RuS,t TvS,,'",
+      "assert caesar_cipher_shift(',a,zY aaY', 26) == ',a,zY aaY'",
+      "assert caesar_cipher_shift(' y', 10) == ' i'"
+    ],
+    "buggy_source": "def caesar_cipher_shift(s, shift):\n    raise NotImplementedError('caesar_cipher_shift not implemented')\n",
+    "description": "Write caesar_cipher_shift(s, shift) that shifts each letter of s by `shift` positions (wrapping within the same case, negative/large shift allowed), leaving non-letters unchanged.",
+    "entry_point": "caesar_cipher_shift",
+    "family": "caesar_cipher_shift",
+    "golden_solution": "def caesar_cipher_shift(s, shift):\n    out = []\n    for ch in s:\n        if ch.isalpha():\n            base = ord('A') if ch.isupper() else ord('a')\n            out.append(chr((ord(ch) - base + shift) % 26 + base))\n        else:\n            out.append(ch)\n    return ''.join(out)\n",
+    "held_out_tests": [
+      "assert caesar_cipher_shift('b', -15) == 'm'",
+      "assert caesar_cipher_shift('XbYzYYXxB!', -19) == 'EiFgFFEeI!'",
+      "assert caesar_cipher_shift('bcy', 26) == 'bcy'",
+      "assert caesar_cipher_shift(' yAZ', 15) == ' nPO'"
+    ],
+    "sentinel_check": "assert caesar_cipher_shift('AcBzaxy!X', 16) == 'QsRpqno!N'",
+    "split": "A",
+    "task_id": "caesar_cipher_shift__000",
+    "visible_tests": [
+      "assert caesar_cipher_shift('Hello, World!', 1) == 'Ifmmp, Xpsme!'"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert caesar_cipher_shift('BCZ,yYC', -10) == 'RSP,oOS'",
+      "assert caesar_cipher_shift('Z zBy a ,Y', 30) == 'D dFc e ,C'",
+      "assert caesar_cipher_shift('b,yBYZBcxB', 2) == 'd,aDABDezD'"
+    ],
+    "buggy_source": "def caesar_cipher_shift(s, shift):\n    raise NotImplementedError('caesar_cipher_shift not implemented')\n",
+    "description": "Write caesar_cipher_shift(s, shift) that shifts each letter of s by `shift` positions (wrapping within the same case, negative/large shift allowed), leaving non-letters unchanged.",
+    "entry_point": "caesar_cipher_shift",
+    "family": "caesar_cipher_shift",
+    "golden_solution": "def caesar_cipher_shift(s, shift):\n    out = []\n    for ch in s:\n        if ch.isalpha():\n            base = ord('A') if ch.isupper() else ord('a')\n            out.append(chr((ord(ch) - base + shift) % 26 + base))\n        else:\n            out.append(ch)\n    return ''.join(out)\n",
+    "held_out_tests": [
+      "assert caesar_cipher_shift('bYCczaYcb', -22) == 'fCGgdeCgf'",
+      "assert caesar_cipher_shift('ABycX', 9) == 'JKhlG'",
+      "assert caesar_cipher_shift('XAx XycZ', 24) == 'VYv VwaX'",
+      "assert caesar_cipher_shift('Axca!acZ', 28) == 'Czec!ceB'"
+    ],
+    "sentinel_check": "assert caesar_cipher_shift('z', 17) == 'q'",
+    "split": "A",
+    "task_id": "caesar_cipher_shift__001",
+    "visible_tests": [
+      "assert caesar_cipher_shift(',z', 17) == ',q'",
+      "assert caesar_cipher_shift('Hello, World!', 1) == 'Ifmmp, Xpsme!'"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert caesar_cipher_shift('CX,cAz', 3) == 'FA,fDc'",
+      "assert caesar_cipher_shift('ya', -28) == 'wy'",
+      "assert caesar_cipher_shift(' yZaAbcY', -26) == ' yZaAbcY'"
+    ],
+    "buggy_source": "def caesar_cipher_shift(s, shift):\n    raise NotImplementedError('caesar_cipher_shift not implemented')\n",
+    "description": "Write caesar_cipher_shift(s, shift) that shifts each letter of s by `shift` positions (wrapping within the same case, negative/large shift allowed), leaving non-letters unchanged.",
+    "entry_point": "caesar_cipher_shift",
+    "family": "caesar_cipher_shift",
+    "golden_solution": "def caesar_cipher_shift(s, shift):\n    out = []\n    for ch in s:\n        if ch.isalpha():\n            base = ord('A') if ch.isupper() else ord('a')\n            out.append(chr((ord(ch) - base + shift) % 26 + base))\n        else:\n            out.append(ch)\n    return ''.join(out)\n",
+    "held_out_tests": [
+      "assert caesar_cipher_shift('bAyb', 5) == 'gFdg'",
+      "assert caesar_cipher_shift('xCZxcB Zb!Y', -27) == 'wBYwbA Ya!X'",
+      "assert caesar_cipher_shift(' x!ZxXZxz', -26) == ' x!ZxXZxz'",
+      "assert caesar_cipher_shift('A cyZx', -8) == 'S uqRp'"
+    ],
+    "sentinel_check": "assert caesar_cipher_shift('Az,yAy', 3) == 'Dc,bDb'",
+    "split": "A",
+    "task_id": "caesar_cipher_shift__002",
+    "visible_tests": [
+      "assert caesar_cipher_shift('Cx!,xxX', 7) == 'Je!,eeE'",
+      "assert caesar_cipher_shift('Hello, World!', 1) == 'Ifmmp, Xpsme!'"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert caesar_cipher_shift('CYX,A', 25) == 'BXW,Z'",
+      "assert caesar_cipher_shift('BZBZyBaxc ', 2) == 'DBDBaDcze '",
+      "assert caesar_cipher_shift('ac x!yb Xb', 27) == 'bd y!zc Yc'"
+    ],
+    "buggy_source": "def caesar_cipher_shift(s, shift):\n    raise NotImplementedError('caesar_cipher_shift not implemented')\n",
+    "description": "Write caesar_cipher_shift(s, shift) that shifts each letter of s by `shift` positions (wrapping within the same case, negative/large shift allowed), leaving non-letters unchanged.",
+    "entry_point": "caesar_cipher_shift",
+    "family": "caesar_cipher_shift",
+    "golden_solution": "def caesar_cipher_shift(s, shift):\n    out = []\n    for ch in s:\n        if ch.isalpha():\n            base = ord('A') if ch.isupper() else ord('a')\n            out.append(chr((ord(ch) - base + shift) % 26 + base))\n        else:\n            out.append(ch)\n    return ''.join(out)\n",
+    "held_out_tests": [
+      "assert caesar_cipher_shift('z', -7) == 's'",
+      "assert caesar_cipher_shift('z C zYYab,Cx', -23) == 'c F cBBde,Fa'",
+      "assert caesar_cipher_shift('baAABY!B,Cac', 10) == 'lkKKLI!L,Mkm'",
+      "assert caesar_cipher_shift('AzZc,x xc ', 24) == 'YxXa,v va '"
+    ],
+    "sentinel_check": "assert caesar_cipher_shift('XX,X BZB', -19) == 'EE,E IGI'",
+    "split": "A",
+    "task_id": "caesar_cipher_shift__003",
+    "visible_tests": [
+      "assert caesar_cipher_shift('xCaX B', 17) == 'oTrO S'",
+      "assert caesar_cipher_shift('Hello, World!', 1) == 'Ifmmp, Xpsme!'"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert caesar_cipher_shift('zAyBCxYYyz', -12) == 'nOmPQlMMmn'",
+      "assert caesar_cipher_shift('!zZcCAba!zZ ', -18) == '!hHkKIji!hH '",
+      "assert caesar_cipher_shift('AAaZa, bc', -23) == 'DDdCd, ef'"
+    ],
+    "buggy_source": "def caesar_cipher_shift(s, shift):\n    raise NotImplementedError('caesar_cipher_shift not implemented')\n",
+    "description": "Write caesar_cipher_shift(s, shift) that shifts each letter of s by `shift` positions (wrapping within the same case, negative/large shift allowed), leaving non-letters unchanged.",
+    "entry_point": "caesar_cipher_shift",
+    "family": "caesar_cipher_shift",
+    "golden_solution": "def caesar_cipher_shift(s, shift):\n    out = []\n    for ch in s:\n        if ch.isalpha():\n            base = ord('A') if ch.isupper() else ord('a')\n            out.append(chr((ord(ch) - base + shift) % 26 + base))\n        else:\n            out.append(ch)\n    return ''.join(out)\n",
+    "held_out_tests": [
+      "assert caesar_cipher_shift('yc', 18) == 'qu'",
+      "assert caesar_cipher_shift('ZAXzZyAab', 7) == 'GHEgGfHhi'",
+      "assert caesar_cipher_shift('x!BY bx! AY', -29) == 'u!YV yu! XV'",
+      "assert caesar_cipher_shift('yaazy yaX', -23) == 'bddcb bdA'"
+    ],
+    "sentinel_check": "assert caesar_cipher_shift('z  bC', 21) == 'u  wX'",
+    "split": "A",
+    "task_id": "caesar_cipher_shift__004",
+    "visible_tests": [
+      "assert caesar_cipher_shift('Axb,Z', -11) == 'Pmq,O'",
+      "assert caesar_cipher_shift('Hello, World!', 1) == 'Ifmmp, Xpsme!'"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert caesar_cipher_shift('yZC Y ,!cbby', -28) == 'wXA W ,!azzw'",
+      "assert caesar_cipher_shift('cz,!ZBCxaz', -18) == 'kh,!HJKfih'",
+      "assert caesar_cipher_shift('!xxXBAb', 19) == '!qqQUTu'"
+    ],
+    "buggy_source": "def caesar_cipher_shift(s, shift):\n    raise NotImplementedError('caesar_cipher_shift not implemented')\n",
+    "description": "Write caesar_cipher_shift(s, shift) that shifts each letter of s by `shift` positions (wrapping within the same case, negative/large shift allowed), leaving non-letters unchanged.",
+    "entry_point": "caesar_cipher_shift",
+    "family": "caesar_cipher_shift",
+    "golden_solution": "def caesar_cipher_shift(s, shift):\n    out = []\n    for ch in s:\n        if ch.isalpha():\n            base = ord('A') if ch.isupper() else ord('a')\n            out.append(chr((ord(ch) - base + shift) % 26 + base))\n        else:\n            out.append(ch)\n    return ''.join(out)\n",
+    "held_out_tests": [
+      "assert caesar_cipher_shift('AbyaCxy', -18) == 'IjgiKfg'",
+      "assert caesar_cipher_shift(' bccx', -5) == ' wxxs'",
+      "assert caesar_cipher_shift(',az XCz,', -15) == ',lk INk,'",
+      "assert caesar_cipher_shift('Bb!yACaZyCx', -27) == 'Aa!xZBzYxBw'"
+    ],
+    "sentinel_check": "assert caesar_cipher_shift('aA!Y,x !', -16) == 'kK!I,h !'",
+    "split": "A",
+    "task_id": "caesar_cipher_shift__005",
+    "visible_tests": [
+      "assert caesar_cipher_shift('Z YaXyCy', -25) == 'A ZbYzDz'",
+      "assert caesar_cipher_shift('Hello, World!', 1) == 'Ifmmp, Xpsme!'"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert chunk_list_fixed_size([-3, 4, 11, -4, 12, -18], 1) == [[-3], [4], [11], [-4], [12], [-18]]",
+      "assert chunk_list_fixed_size([8, 17], 1) == [[8], [17]]",
+      "assert chunk_list_fixed_size([4, -18, 3, 10, -15], 3) == [[4, -18, 3], [10, -15]]"
+    ],
+    "buggy_source": "def chunk_list_fixed_size(xs, size):\n    raise NotImplementedError('chunk_list_fixed_size not implemented')\n",
+    "description": "Write chunk_list_fixed_size(xs, size) that splits list xs into consecutive chunks of length `size` (the last chunk may be shorter); size is always >= 1.",
+    "entry_point": "chunk_list_fixed_size",
+    "family": "chunk_list_fixed_size",
+    "golden_solution": "def chunk_list_fixed_size(xs, size):\n    return [xs[i:i + size] for i in range(0, len(xs), size)]\n",
+    "held_out_tests": [
+      "assert chunk_list_fixed_size([6, 2, -20, -16, 15, 8, -20], 1) == [[6], [2], [-20], [-16], [15], [8], [-20]]",
+      "assert chunk_list_fixed_size([], 1) == []",
+      "assert chunk_list_fixed_size([-14, -20, 19, 16, -19], 1) == [[-14], [-20], [19], [16], [-19]]",
+      "assert chunk_list_fixed_size([0, -17], 1) == [[0], [-17]]"
+    ],
+    "sentinel_check": "assert chunk_list_fixed_size([-12, -1, 2, 6, 18, 18, -10, 7, -7], 3) == [[-12, -1, 2], [6, 18, 18], [-10, 7, -7]]",
+    "split": "A",
+    "task_id": "chunk_list_fixed_size__000",
+    "visible_tests": [
+      "assert chunk_list_fixed_size([1, 2, 3, 4, 5], 2) == [[1, 2], [3, 4], [5]]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert chunk_list_fixed_size([-12, -17, -9, -8, -7, 7, -15], 3) == [[-12, -17, -9], [-8, -7, 7], [-15]]",
+      "assert chunk_list_fixed_size([1, -6, 7], 3) == [[1, -6, 7]]",
+      "assert chunk_list_fixed_size([-14, -11, 1, -7, 7, 9, 13], 2) == [[-14, -11], [1, -7], [7, 9], [13]]"
+    ],
+    "buggy_source": "def chunk_list_fixed_size(xs, size):\n    raise NotImplementedError('chunk_list_fixed_size not implemented')\n",
+    "description": "Write chunk_list_fixed_size(xs, size) that splits list xs into consecutive chunks of length `size` (the last chunk may be shorter); size is always >= 1.",
+    "entry_point": "chunk_list_fixed_size",
+    "family": "chunk_list_fixed_size",
+    "golden_solution": "def chunk_list_fixed_size(xs, size):\n    return [xs[i:i + size] for i in range(0, len(xs), size)]\n",
+    "held_out_tests": [
+      "assert chunk_list_fixed_size([-13, -20, 17, -11, -7, 17], 3) == [[-13, -20, 17], [-11, -7, 17]]",
+      "assert chunk_list_fixed_size([15, -3, 16], 2) == [[15, -3], [16]]",
+      "assert chunk_list_fixed_size([-17, 15, -15, 4, -10], 4) == [[-17, 15, -15, 4], [-10]]",
+      "assert chunk_list_fixed_size([-14, 9, 1, -16, -8, 18, -1, 11, 14], 4) == [[-14, 9, 1, -16], [-8, 18, -1, 11], [14]]"
+    ],
+    "sentinel_check": "assert chunk_list_fixed_size([-14, -7, 5, -2, -20, 13, -8], 3) == [[-14, -7, 5], [-2, -20, 13], [-8]]",
+    "split": "A",
+    "task_id": "chunk_list_fixed_size__001",
+    "visible_tests": [
+      "assert chunk_list_fixed_size([-18, 2, 20, 16, -4, 11, -2, 15], 3) == [[-18, 2, 20], [16, -4, 11], [-2, 15]]",
+      "assert chunk_list_fixed_size([1, 2, 3, 4, 5], 2) == [[1, 2], [3, 4], [5]]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert chunk_list_fixed_size([-14, -3, -1, 14, 18, 18], 2) == [[-14, -3], [-1, 14], [18, 18]]",
+      "assert chunk_list_fixed_size([17, -16, 11, 8, -13, 20, -19, -12, -19], 4) == [[17, -16, 11, 8], [-13, 20, -19, -12], [-19]]",
+      "assert chunk_list_fixed_size([16, -17], 3) == [[16, -17]]"
+    ],
+    "buggy_source": "def chunk_list_fixed_size(xs, size):\n    raise NotImplementedError('chunk_list_fixed_size not implemented')\n",
+    "description": "Write chunk_list_fixed_size(xs, size) that splits list xs into consecutive chunks of length `size` (the last chunk may be shorter); size is always >= 1.",
+    "entry_point": "chunk_list_fixed_size",
+    "family": "chunk_list_fixed_size",
+    "golden_solution": "def chunk_list_fixed_size(xs, size):\n    return [xs[i:i + size] for i in range(0, len(xs), size)]\n",
+    "held_out_tests": [
+      "assert chunk_list_fixed_size([-18, -4, -5, 4, 15], 2) == [[-18, -4], [-5, 4], [15]]",
+      "assert chunk_list_fixed_size([15, -17, -16, 10, -4], 3) == [[15, -17, -16], [10, -4]]",
+      "assert chunk_list_fixed_size([-4, -16, -9, 5, -18, -20, 2, -2], 1) == [[-4], [-16], [-9], [5], [-18], [-20], [2], [-2]]",
+      "assert chunk_list_fixed_size([13, 13], 3) == [[13, 13]]"
+    ],
+    "sentinel_check": "assert chunk_list_fixed_size([-1, -19, 17], 2) == [[-1, -19], [17]]",
+    "split": "A",
+    "task_id": "chunk_list_fixed_size__002",
+    "visible_tests": [
+      "assert chunk_list_fixed_size([13, -10, -18, -20, 1], 3) == [[13, -10, -18], [-20, 1]]",
+      "assert chunk_list_fixed_size([1, 2, 3, 4, 5], 2) == [[1, 2], [3, 4], [5]]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert chunk_list_fixed_size([-18, -2, -6, 11, -1, 6, 20], 3) == [[-18, -2, -6], [11, -1, 6], [20]]",
+      "assert chunk_list_fixed_size([-13, 13, 20, 3, 16, 1, 20], 1) == [[-13], [13], [20], [3], [16], [1], [20]]",
+      "assert chunk_list_fixed_size([-20, -10, -13, -16, 17, -16, -11], 3) == [[-20, -10, -13], [-16, 17, -16], [-11]]"
+    ],
+    "buggy_source": "def chunk_list_fixed_size(xs, size):\n    raise NotImplementedError('chunk_list_fixed_size not implemented')\n",
+    "description": "Write chunk_list_fixed_size(xs, size) that splits list xs into consecutive chunks of length `size` (the last chunk may be shorter); size is always >= 1.",
+    "entry_point": "chunk_list_fixed_size",
+    "family": "chunk_list_fixed_size",
+    "golden_solution": "def chunk_list_fixed_size(xs, size):\n    return [xs[i:i + size] for i in range(0, len(xs), size)]\n",
+    "held_out_tests": [
+      "assert chunk_list_fixed_size([-16, 2], 3) == [[-16, 2]]",
+      "assert chunk_list_fixed_size([-9, -2, 13, -9, -4, -2], 2) == [[-9, -2], [13, -9], [-4, -2]]",
+      "assert chunk_list_fixed_size([7, -20, 2, -16, 7, 14, -20], 4) == [[7, -20, 2, -16], [7, 14, -20]]",
+      "assert chunk_list_fixed_size([9], 1) == [[9]]"
+    ],
+    "sentinel_check": "assert chunk_list_fixed_size([-7, 9, -8, -6], 4) == [[-7, 9, -8, -6]]",
+    "split": "A",
+    "task_id": "chunk_list_fixed_size__003",
+    "visible_tests": [
+      "assert chunk_list_fixed_size([-8, -9, 3, 10, 20, 14, 3, -20, 18], 3) == [[-8, -9, 3], [10, 20, 14], [3, -20, 18]]",
+      "assert chunk_list_fixed_size([1, 2, 3, 4, 5], 2) == [[1, 2], [3, 4], [5]]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert chunk_list_fixed_size([-6, -5, 18, -8, -11, -8, 5], 1) == [[-6], [-5], [18], [-8], [-11], [-8], [5]]",
+      "assert chunk_list_fixed_size([0, -1, -14, 2, -13], 2) == [[0, -1], [-14, 2], [-13]]",
+      "assert chunk_list_fixed_size([-7], 3) == [[-7]]"
+    ],
+    "buggy_source": "def chunk_list_fixed_size(xs, size):\n    raise NotImplementedError('chunk_list_fixed_size not implemented')\n",
+    "description": "Write chunk_list_fixed_size(xs, size) that splits list xs into consecutive chunks of length `size` (the last chunk may be shorter); size is always >= 1.",
+    "entry_point": "chunk_list_fixed_size",
+    "family": "chunk_list_fixed_size",
+    "golden_solution": "def chunk_list_fixed_size(xs, size):\n    return [xs[i:i + size] for i in range(0, len(xs), size)]\n",
+    "held_out_tests": [
+      "assert chunk_list_fixed_size([-13, 18, -11, 16, -12, -15], 2) == [[-13, 18], [-11, 16], [-12, -15]]",
+      "assert chunk_list_fixed_size([], 2) == []",
+      "assert chunk_list_fixed_size([-13, 3, 4, 7, -18, 12, -3, 19], 3) == [[-13, 3, 4], [7, -18, 12], [-3, 19]]",
+      "assert chunk_list_fixed_size([-17, 16, -11, 13, -19, 14, -7, -7], 2) == [[-17, 16], [-11, 13], [-19, 14], [-7, -7]]"
+    ],
+    "sentinel_check": "assert chunk_list_fixed_size([-13, 8], 4) == [[-13, 8]]",
+    "split": "A",
+    "task_id": "chunk_list_fixed_size__004",
+    "visible_tests": [
+      "assert chunk_list_fixed_size([-13, -4, 19, -18, -15, -9, 1], 4) == [[-13, -4, 19, -18], [-15, -9, 1]]",
+      "assert chunk_list_fixed_size([1, 2, 3, 4, 5], 2) == [[1, 2], [3, 4], [5]]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert chunk_list_fixed_size([0, 11], 2) == [[0, 11]]",
+      "assert chunk_list_fixed_size([-16], 3) == [[-16]]",
+      "assert chunk_list_fixed_size([], 4) == []"
+    ],
+    "buggy_source": "def chunk_list_fixed_size(xs, size):\n    raise NotImplementedError('chunk_list_fixed_size not implemented')\n",
+    "description": "Write chunk_list_fixed_size(xs, size) that splits list xs into consecutive chunks of length `size` (the last chunk may be shorter); size is always >= 1.",
+    "entry_point": "chunk_list_fixed_size",
+    "family": "chunk_list_fixed_size",
+    "golden_solution": "def chunk_list_fixed_size(xs, size):\n    return [xs[i:i + size] for i in range(0, len(xs), size)]\n",
+    "held_out_tests": [
+      "assert chunk_list_fixed_size([-15, -6], 1) == [[-15], [-6]]",
+      "assert chunk_list_fixed_size([-19, 20, 19, 6, -14], 3) == [[-19, 20, 19], [6, -14]]",
+      "assert chunk_list_fixed_size([-5, 8, 1, -12, 17, 13, 8, 13, -12], 1) == [[-5], [8], [1], [-12], [17], [13], [8], [13], [-12]]",
+      "assert chunk_list_fixed_size([], 2) == []"
+    ],
+    "sentinel_check": "assert chunk_list_fixed_size([-20, -8, 11, 6, 15, 4, 14, 7, 16], 1) == [[-20], [-8], [11], [6], [15], [4], [14], [7], [16]]",
+    "split": "A",
+    "task_id": "chunk_list_fixed_size__005",
+    "visible_tests": [
+      "assert chunk_list_fixed_size([-20, 1, 11, 18, -15, -17, 18, 2, 6], 2) == [[-20, 1], [11, 18], [-15, -17], [18, 2], [6]]",
+      "assert chunk_list_fixed_size([1, 2, 3, 4, 5], 2) == [[1, 2], [3, 4], [5]]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert matrix_transpose([[5, -2, -2], [-7, 7, -7], [9, 2, 4], [0, -8, -1]]) == [[5, -7, 9, 0], [-2, 7, 2, -8], [-2, -7, 4, -1]]",
+      "assert matrix_transpose([[2, 5, -4, 0], [2, 4, 7, -1], [-3, -4, -6, 0], [-8, -7, -6, 4]]) == [[2, 2, -3, -8], [5, 4, -4, -7], [-4, 7, -6, -6], [0, -1, 0, 4]]",
+      "assert matrix_transpose([[4, -1], [3, -6], [-8, 5]]) == [[4, 3, -8], [-1, -6, 5]]"
+    ],
+    "buggy_source": "def matrix_transpose(m):\n    raise NotImplementedError('matrix_transpose not implemented')\n",
+    "description": "Write matrix_transpose(m) that returns the transpose of the 2D list m (list of equal-length rows); m may be empty (return []).",
+    "entry_point": "matrix_transpose",
+    "family": "matrix_transpose",
+    "golden_solution": "def matrix_transpose(m):\n    if not m:\n        return []\n    return [list(row) for row in zip(*m)]\n",
+    "held_out_tests": [
+      "assert matrix_transpose([]) == []",
+      "assert matrix_transpose([[-4], [-2], [-2], [3]]) == [[-4, -2, -2, 3]]",
+      "assert matrix_transpose([[-6, 5, 8, -3], [1, -2, 5, 5]]) == [[-6, 1], [5, -2], [8, 5], [-3, 5]]",
+      "assert matrix_transpose([[3, -6, 6, -2], [9, -5, 2, 6]]) == [[3, 9], [-6, -5], [6, 2], [-2, 6]]"
+    ],
+    "sentinel_check": "assert matrix_transpose([[-6, 3], [-9, -2], [6, 1]]) == [[-6, -9, 6], [3, -2, 1]]",
+    "split": "B",
+    "task_id": "matrix_transpose__000",
+    "visible_tests": [
+      "assert matrix_transpose([[1, 2, 3], [4, 5, 6]]) == [[1, 4], [2, 5], [3, 6]]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert matrix_transpose([[-2]]) == [[-2]]",
+      "assert matrix_transpose([[-1], [9], [-1], [5]]) == [[-1, 9, -1, 5]]",
+      "assert matrix_transpose([[0]]) == [[0]]"
+    ],
+    "buggy_source": "def matrix_transpose(m):\n    raise NotImplementedError('matrix_transpose not implemented')\n",
+    "description": "Write matrix_transpose(m) that returns the transpose of the 2D list m (list of equal-length rows); m may be empty (return []).",
+    "entry_point": "matrix_transpose",
+    "family": "matrix_transpose",
+    "golden_solution": "def matrix_transpose(m):\n    if not m:\n        return []\n    return [list(row) for row in zip(*m)]\n",
+    "held_out_tests": [
+      "assert matrix_transpose([[-8]]) == [[-8]]",
+      "assert matrix_transpose([[0, 2, -7], [-4, 0, -1], [3, -9, -5]]) == [[0, -4, 3], [2, 0, -9], [-7, -1, -5]]",
+      "assert matrix_transpose([[-8, 4], [-5, -5]]) == [[-8, -5], [4, -5]]",
+      "assert matrix_transpose([[6, 7, 9, 7], [-5, 0, 7, 6], [-1, 1, -5, -8], [-3, -3, -7, -7]]) == [[6, -5, -1, -3], [7, 0, 1, -3], [9, 7, -5, -7], [7, 6, -8, -7]]"
+    ],
+    "sentinel_check": "assert matrix_transpose([[5, -7], [-4, -2], [-5, -9]]) == [[5, -4, -5], [-7, -2, -9]]",
+    "split": "B",
+    "task_id": "matrix_transpose__001",
+    "visible_tests": [
+      "assert matrix_transpose([]) == []",
+      "assert matrix_transpose([[1, 2, 3], [4, 5, 6]]) == [[1, 4], [2, 5], [3, 6]]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert matrix_transpose([[-9, -3, -5, -9]]) == [[-9], [-3], [-5], [-9]]",
+      "assert matrix_transpose([[-1, -1], [9, -7], [-9, 1], [-7, 1]]) == [[-1, 9, -9, -7], [-1, -7, 1, 1]]",
+      "assert matrix_transpose([[-4, 4], [6, -7], [1, -1], [-5, 3]]) == [[-4, 6, 1, -5], [4, -7, -1, 3]]"
+    ],
+    "buggy_source": "def matrix_transpose(m):\n    raise NotImplementedError('matrix_transpose not implemented')\n",
+    "description": "Write matrix_transpose(m) that returns the transpose of the 2D list m (list of equal-length rows); m may be empty (return []).",
+    "entry_point": "matrix_transpose",
+    "family": "matrix_transpose",
+    "golden_solution": "def matrix_transpose(m):\n    if not m:\n        return []\n    return [list(row) for row in zip(*m)]\n",
+    "held_out_tests": [
+      "assert matrix_transpose([[4, 9, 5], [-9, 4, -7], [5, 5, 8]]) == [[4, -9, 5], [9, 4, 5], [5, -7, 8]]",
+      "assert matrix_transpose([[5, -9, 7, -8]]) == [[5], [-9], [7], [-8]]",
+      "assert matrix_transpose([[-9, -9, -1]]) == [[-9], [-9], [-1]]",
+      "assert matrix_transpose([]) == []"
+    ],
+    "sentinel_check": "assert matrix_transpose([[-2, -7], [-3, 2], [-7, 7]]) == [[-2, -3, -7], [-7, 2, 7]]",
+    "split": "B",
+    "task_id": "matrix_transpose__002",
+    "visible_tests": [
+      "assert matrix_transpose([[-8, -4], [-8, 5], [9, 2]]) == [[-8, -8, 9], [-4, 5, 2]]",
+      "assert matrix_transpose([[1, 2, 3], [4, 5, 6]]) == [[1, 4], [2, 5], [3, 6]]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert matrix_transpose([[8, -9, -1, -8]]) == [[8], [-9], [-1], [-8]]",
+      "assert matrix_transpose([[8, -7, -6]]) == [[8], [-7], [-6]]",
+      "assert matrix_transpose([]) == []"
+    ],
+    "buggy_source": "def matrix_transpose(m):\n    raise NotImplementedError('matrix_transpose not implemented')\n",
+    "description": "Write matrix_transpose(m) that returns the transpose of the 2D list m (list of equal-length rows); m may be empty (return []).",
+    "entry_point": "matrix_transpose",
+    "family": "matrix_transpose",
+    "golden_solution": "def matrix_transpose(m):\n    if not m:\n        return []\n    return [list(row) for row in zip(*m)]\n",
+    "held_out_tests": [
+      "assert matrix_transpose([[8]]) == [[8]]",
+      "assert matrix_transpose([[8], [-7], [7], [-2]]) == [[8, -7, 7, -2]]",
+      "assert matrix_transpose([[-5, 8, 2, 5]]) == [[-5], [8], [2], [5]]",
+      "assert matrix_transpose([[9, 1], [0, 5], [-7, 1], [6, 8]]) == [[9, 0, -7, 6], [1, 5, 1, 8]]"
+    ],
+    "sentinel_check": "assert matrix_transpose([[-8, -7], [-5, -8]]) == [[-8, -5], [-7, -8]]",
+    "split": "B",
+    "task_id": "matrix_transpose__003",
+    "visible_tests": [
+      "assert matrix_transpose([[8], [-8]]) == [[8, -8]]",
+      "assert matrix_transpose([[1, 2, 3], [4, 5, 6]]) == [[1, 4], [2, 5], [3, 6]]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert matrix_transpose([[5, -1, 6]]) == [[5], [-1], [6]]",
+      "assert matrix_transpose([[-2, 6, -8, 2], [2, 3, 2, -5]]) == [[-2, 2], [6, 3], [-8, 2], [2, -5]]",
+      "assert matrix_transpose([[9], [1]]) == [[9, 1]]"
+    ],
+    "buggy_source": "def matrix_transpose(m):\n    raise NotImplementedError('matrix_transpose not implemented')\n",
+    "description": "Write matrix_transpose(m) that returns the transpose of the 2D list m (list of equal-length rows); m may be empty (return []).",
+    "entry_point": "matrix_transpose",
+    "family": "matrix_transpose",
+    "golden_solution": "def matrix_transpose(m):\n    if not m:\n        return []\n    return [list(row) for row in zip(*m)]\n",
+    "held_out_tests": [
+      "assert matrix_transpose([[9, -5, -4, -8], [-8, -2, 3, -9]]) == [[9, -8], [-5, -2], [-4, 3], [-8, -9]]",
+      "assert matrix_transpose([[-2, 6], [7, -9], [0, 6], [-6, 3]]) == [[-2, 7, 0, -6], [6, -9, 6, 3]]",
+      "assert matrix_transpose([[5, -2, 7, 1], [0, 3, 7, 4], [-5, -5, -1, -4], [-6, 1, -5, 5]]) == [[5, 0, -5, -6], [-2, 3, -5, 1], [7, 7, -1, -5], [1, 4, -4, 5]]",
+      "assert matrix_transpose([[-1, 6, 1], [9, -5, -4], [5, -6, -1]]) == [[-1, 9, 5], [6, -5, -6], [1, -4, -1]]"
+    ],
+    "sentinel_check": "assert matrix_transpose([[-4, -5, -5, -6], [2, -9, -5, 9], [-3, 5, 4, 6]]) == [[-4, 2, -3], [-5, -9, 5], [-5, -5, 4], [-6, 9, 6]]",
+    "split": "B",
+    "task_id": "matrix_transpose__004",
+    "visible_tests": [
+      "assert matrix_transpose([]) == []",
+      "assert matrix_transpose([[1, 2, 3], [4, 5, 6]]) == [[1, 4], [2, 5], [3, 6]]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert matrix_transpose([[-1, 2, -3], [-9, -5, 9]]) == [[-1, -9], [2, -5], [-3, 9]]",
+      "assert matrix_transpose([[-6], [5], [-5]]) == [[-6, 5, -5]]",
+      "assert matrix_transpose([]) == []"
+    ],
+    "buggy_source": "def matrix_transpose(m):\n    raise NotImplementedError('matrix_transpose not implemented')\n",
+    "description": "Write matrix_transpose(m) that returns the transpose of the 2D list m (list of equal-length rows); m may be empty (return []).",
+    "entry_point": "matrix_transpose",
+    "family": "matrix_transpose",
+    "golden_solution": "def matrix_transpose(m):\n    if not m:\n        return []\n    return [list(row) for row in zip(*m)]\n",
+    "held_out_tests": [
+      "assert matrix_transpose([[-1, -9, 3, 6]]) == [[-1], [-9], [3], [6]]",
+      "assert matrix_transpose([[-7], [8], [7], [3]]) == [[-7, 8, 7, 3]]",
+      "assert matrix_transpose([[4], [-2], [4], [2]]) == [[4, -2, 4, 2]]",
+      "assert matrix_transpose([[4, -4, 9], [7, -7, 2], [4, -5, -7]]) == [[4, 7, 4], [-4, -7, -5], [9, 2, -7]]"
+    ],
+    "sentinel_check": "assert matrix_transpose([]) == []",
+    "split": "B",
+    "task_id": "matrix_transpose__005",
+    "visible_tests": [
+      "assert matrix_transpose([[5, -2]]) == [[5], [-2]]",
+      "assert matrix_transpose([[1, 2, 3], [4, 5, 6]]) == [[1, 4], [2, 5], [3, 6]]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert longest_increasing_run([1, -9, 7, 7, -3, 1, -5]) == 2",
+      "assert longest_increasing_run([3, -2, 2, 3, 9, 3, -6, 7]) == 4",
+      "assert longest_increasing_run([-1, 2, -3, -1, 4, -9, 5, -7]) == 3"
+    ],
+    "buggy_source": "def longest_increasing_run(xs):\n    raise NotImplementedError('longest_increasing_run not implemented')\n",
+    "description": "Write longest_increasing_run(xs) that returns the length of the longest STRICTLY increasing contiguous run in xs (0 for empty list, 1 for a single element).",
+    "entry_point": "longest_increasing_run",
+    "family": "longest_increasing_run",
+    "golden_solution": "def longest_increasing_run(xs):\n    if not xs:\n        return 0\n    best = cur = 1\n    for i in range(1, len(xs)):\n        if xs[i] > xs[i - 1]:\n            cur += 1\n            best = max(best, cur)\n        else:\n            cur = 1\n    return best\n",
+    "held_out_tests": [
+      "assert longest_increasing_run([]) == 0",
+      "assert longest_increasing_run([2, -9, 9, 1, -7, 5, -5, 0, -5]) == 2",
+      "assert longest_increasing_run([-6, 5, -3, -3]) == 2",
+      "assert longest_increasing_run([-5]) == 1"
+    ],
+    "sentinel_check": "assert longest_increasing_run([-1, 9]) == 2",
+    "split": "B",
+    "task_id": "longest_increasing_run__000",
+    "visible_tests": [
+      "assert longest_increasing_run([1, 2, 1, 2, 3, 4, 1]) == 4"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert longest_increasing_run([-4, 8, -3, -3, -9, 1]) == 2",
+      "assert longest_increasing_run([7, -2, 4, 6, -8, 8, -8, -9]) == 3",
+      "assert longest_increasing_run([4, 4, 7, 1, -7, -1, -9, -6, 0]) == 3"
+    ],
+    "buggy_source": "def longest_increasing_run(xs):\n    raise NotImplementedError('longest_increasing_run not implemented')\n",
+    "description": "Write longest_increasing_run(xs) that returns the length of the longest STRICTLY increasing contiguous run in xs (0 for empty list, 1 for a single element).",
+    "entry_point": "longest_increasing_run",
+    "family": "longest_increasing_run",
+    "golden_solution": "def longest_increasing_run(xs):\n    if not xs:\n        return 0\n    best = cur = 1\n    for i in range(1, len(xs)):\n        if xs[i] > xs[i - 1]:\n            cur += 1\n            best = max(best, cur)\n        else:\n            cur = 1\n    return best\n",
+    "held_out_tests": [
+      "assert longest_increasing_run([-5, 7, 0, 3, 3, 0]) == 2",
+      "assert longest_increasing_run([4]) == 1",
+      "assert longest_increasing_run([5, 2, -9, 9, -5, 5, -2, -6]) == 2",
+      "assert longest_increasing_run([7, 3, 3, 4, -4, -8, 2]) == 2"
+    ],
+    "sentinel_check": "assert longest_increasing_run([2, -5, 7, -5, 2, 7]) == 3",
+    "split": "B",
+    "task_id": "longest_increasing_run__001",
+    "visible_tests": [
+      "assert longest_increasing_run([-2]) == 1",
+      "assert longest_increasing_run([1, 2, 1, 2, 3, 4, 1]) == 4"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert longest_increasing_run([-1, 8, 5]) == 2",
+      "assert longest_increasing_run([-2, 3, -2]) == 2",
+      "assert longest_increasing_run([8, 7, -6, -3, -4, 8, -6, -2, -9]) == 2"
+    ],
+    "buggy_source": "def longest_increasing_run(xs):\n    raise NotImplementedError('longest_increasing_run not implemented')\n",
+    "description": "Write longest_increasing_run(xs) that returns the length of the longest STRICTLY increasing contiguous run in xs (0 for empty list, 1 for a single element).",
+    "entry_point": "longest_increasing_run",
+    "family": "longest_increasing_run",
+    "golden_solution": "def longest_increasing_run(xs):\n    if not xs:\n        return 0\n    best = cur = 1\n    for i in range(1, len(xs)):\n        if xs[i] > xs[i - 1]:\n            cur += 1\n            best = max(best, cur)\n        else:\n            cur = 1\n    return best\n",
+    "held_out_tests": [
+      "assert longest_increasing_run([7, -7, 0, 4, 5, 2, 0]) == 4",
+      "assert longest_increasing_run([3]) == 1",
+      "assert longest_increasing_run([4, -8, 5, 7, 7, 0, -3, 5]) == 3",
+      "assert longest_increasing_run([7, 3, -3, -5]) == 1"
+    ],
+    "sentinel_check": "assert longest_increasing_run([-9, -7, 6, 3, 1]) == 3",
+    "split": "B",
+    "task_id": "longest_increasing_run__002",
+    "visible_tests": [
+      "assert longest_increasing_run([5]) == 1",
+      "assert longest_increasing_run([1, 2, 1, 2, 3, 4, 1]) == 4"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert longest_increasing_run([4, 5, -5, 7, -2, 4]) == 2",
+      "assert longest_increasing_run([6]) == 1",
+      "assert longest_increasing_run([-4, -9, -6, -7, -7, -9, -1, -7, -4]) == 2"
+    ],
+    "buggy_source": "def longest_increasing_run(xs):\n    raise NotImplementedError('longest_increasing_run not implemented')\n",
+    "description": "Write longest_increasing_run(xs) that returns the length of the longest STRICTLY increasing contiguous run in xs (0 for empty list, 1 for a single element).",
+    "entry_point": "longest_increasing_run",
+    "family": "longest_increasing_run",
+    "golden_solution": "def longest_increasing_run(xs):\n    if not xs:\n        return 0\n    best = cur = 1\n    for i in range(1, len(xs)):\n        if xs[i] > xs[i - 1]:\n            cur += 1\n            best = max(best, cur)\n        else:\n            cur = 1\n    return best\n",
+    "held_out_tests": [
+      "assert longest_increasing_run([3, 3, -3]) == 1",
+      "assert longest_increasing_run([6, 1, -4, 6, 7, -2]) == 3",
+      "assert longest_increasing_run([-5, 1, -8, -5]) == 2",
+      "assert longest_increasing_run([4, 1, -5]) == 1"
+    ],
+    "sentinel_check": "assert longest_increasing_run([9, 1, -1, -9, -7, -2, 6]) == 4",
+    "split": "B",
+    "task_id": "longest_increasing_run__003",
+    "visible_tests": [
+      "assert longest_increasing_run([-6, 5, 8, 8, -5, 4, 5, 3, 1]) == 3",
+      "assert longest_increasing_run([1, 2, 1, 2, 3, 4, 1]) == 4"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert longest_increasing_run([4, -1]) == 1",
+      "assert longest_increasing_run([]) == 0",
+      "assert longest_increasing_run([-7, 4, 6, -1, 9, 1, 3, 0]) == 3"
+    ],
+    "buggy_source": "def longest_increasing_run(xs):\n    raise NotImplementedError('longest_increasing_run not implemented')\n",
+    "description": "Write longest_increasing_run(xs) that returns the length of the longest STRICTLY increasing contiguous run in xs (0 for empty list, 1 for a single element).",
+    "entry_point": "longest_increasing_run",
+    "family": "longest_increasing_run",
+    "golden_solution": "def longest_increasing_run(xs):\n    if not xs:\n        return 0\n    best = cur = 1\n    for i in range(1, len(xs)):\n        if xs[i] > xs[i - 1]:\n            cur += 1\n            best = max(best, cur)\n        else:\n            cur = 1\n    return best\n",
+    "held_out_tests": [
+      "assert longest_increasing_run([9, -9, -9, 4, 1, -6, 1, -6]) == 2",
+      "assert longest_increasing_run([2, 0, -8]) == 1",
+      "assert longest_increasing_run([-1, -7, 5, 6, -8, 8, 6]) == 3",
+      "assert longest_increasing_run([0, 0, 1, 2, 5, -2, 6]) == 4"
+    ],
+    "sentinel_check": "assert longest_increasing_run([2, 9, 4, 0, -8, -4, 9, 1]) == 3",
+    "split": "B",
+    "task_id": "longest_increasing_run__004",
+    "visible_tests": [
+      "assert longest_increasing_run([-5]) == 1",
+      "assert longest_increasing_run([1, 2, 1, 2, 3, 4, 1]) == 4"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert longest_increasing_run([1, 4, -9, -8, -8, -8]) == 2",
+      "assert longest_increasing_run([-8, -5, 2, -5]) == 3",
+      "assert longest_increasing_run([7]) == 1"
+    ],
+    "buggy_source": "def longest_increasing_run(xs):\n    raise NotImplementedError('longest_increasing_run not implemented')\n",
+    "description": "Write longest_increasing_run(xs) that returns the length of the longest STRICTLY increasing contiguous run in xs (0 for empty list, 1 for a single element).",
+    "entry_point": "longest_increasing_run",
+    "family": "longest_increasing_run",
+    "golden_solution": "def longest_increasing_run(xs):\n    if not xs:\n        return 0\n    best = cur = 1\n    for i in range(1, len(xs)):\n        if xs[i] > xs[i - 1]:\n            cur += 1\n            best = max(best, cur)\n        else:\n            cur = 1\n    return best\n",
+    "held_out_tests": [
+      "assert longest_increasing_run([2, -2, 0]) == 2",
+      "assert longest_increasing_run([]) == 0",
+      "assert longest_increasing_run([-7, 8]) == 2",
+      "assert longest_increasing_run([0, 0, -1, -9, -7, -1, 1, 3, -3]) == 5"
+    ],
+    "sentinel_check": "assert longest_increasing_run([1, 1, 7, -1, -7]) == 2",
+    "split": "B",
+    "task_id": "longest_increasing_run__005",
+    "visible_tests": [
+      "assert longest_increasing_run([-4, 3, 2, -6, -4, -9, 3, 3]) == 2",
+      "assert longest_increasing_run([1, 2, 1, 2, 3, 4, 1]) == 4"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert validate_password_rules('2C33a2B31') == True",
+      "assert validate_password_rules('!BAa!bCAC') == False",
+      "assert validate_password_rules('a!!!AC2ba!') == True"
+    ],
+    "buggy_source": "def validate_password_rules(s):\n    raise NotImplementedError('validate_password_rules not implemented')\n",
+    "description": "Write validate_password_rules(s) returning True iff s has length >= 8 AND contains at least one uppercase letter, one lowercase letter, and one digit.",
+    "entry_point": "validate_password_rules",
+    "family": "validate_password_rules",
+    "golden_solution": "def validate_password_rules(s):\n    return (len(s) >= 8 and any(c.isupper() for c in s)\n            and any(c.islower() for c in s) and any(c.isdigit() for c in s))\n",
+    "held_out_tests": [
+      "assert validate_password_rules('a2bb3a2') == False",
+      "assert validate_password_rules('3a1cC') == False",
+      "assert validate_password_rules('cbBA3112CCa3') == True",
+      "assert validate_password_rules('') == False"
+    ],
+    "sentinel_check": "assert validate_password_rules('33Cbac1!!') == True",
+    "split": "B",
+    "task_id": "validate_password_rules__000",
+    "visible_tests": [
+      "assert validate_password_rules('Abcdef12') == True"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert validate_password_rules('2!21bbb!') == False",
+      "assert validate_password_rules('3BbBbb22bb') == True",
+      "assert validate_password_rules('cCa2') == False"
+    ],
+    "buggy_source": "def validate_password_rules(s):\n    raise NotImplementedError('validate_password_rules not implemented')\n",
+    "description": "Write validate_password_rules(s) returning True iff s has length >= 8 AND contains at least one uppercase letter, one lowercase letter, and one digit.",
+    "entry_point": "validate_password_rules",
+    "family": "validate_password_rules",
+    "golden_solution": "def validate_password_rules(s):\n    return (len(s) >= 8 and any(c.isupper() for c in s)\n            and any(c.islower() for c in s) and any(c.isdigit() for c in s))\n",
+    "held_out_tests": [
+      "assert validate_password_rules('cACc1') == False",
+      "assert validate_password_rules('cBacbA33') == True",
+      "assert validate_password_rules('!AB1c') == False",
+      "assert validate_password_rules('aCB!3') == False"
+    ],
+    "sentinel_check": "assert validate_password_rules('c') == False",
+    "split": "B",
+    "task_id": "validate_password_rules__001",
+    "visible_tests": [
+      "assert validate_password_rules('C33ca') == False",
+      "assert validate_password_rules('Abcdef12') == True"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert validate_password_rules('Cba2aC!1B') == True",
+      "assert validate_password_rules('b23') == False",
+      "assert validate_password_rules('A!B!AaaBbC') == False"
+    ],
+    "buggy_source": "def validate_password_rules(s):\n    raise NotImplementedError('validate_password_rules not implemented')\n",
+    "description": "Write validate_password_rules(s) returning True iff s has length >= 8 AND contains at least one uppercase letter, one lowercase letter, and one digit.",
+    "entry_point": "validate_password_rules",
+    "family": "validate_password_rules",
+    "golden_solution": "def validate_password_rules(s):\n    return (len(s) >= 8 and any(c.isupper() for c in s)\n            and any(c.islower() for c in s) and any(c.isdigit() for c in s))\n",
+    "held_out_tests": [
+      "assert validate_password_rules('C3!') == False",
+      "assert validate_password_rules('12') == False",
+      "assert validate_password_rules('c1B22!3c13') == True",
+      "assert validate_password_rules('a1b2cbCB') == True"
+    ],
+    "sentinel_check": "assert validate_password_rules('a!B2A1Aab!') == True",
+    "split": "B",
+    "task_id": "validate_password_rules__002",
+    "visible_tests": [
+      "assert validate_password_rules('A!!B22133!3!') == False",
+      "assert validate_password_rules('Abcdef12') == True"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert validate_password_rules('1bABB2') == False",
+      "assert validate_password_rules('!B2A2bBcA211') == True",
+      "assert validate_password_rules('Aab22A2!!') == True"
+    ],
+    "buggy_source": "def validate_password_rules(s):\n    raise NotImplementedError('validate_password_rules not implemented')\n",
+    "description": "Write validate_password_rules(s) returning True iff s has length >= 8 AND contains at least one uppercase letter, one lowercase letter, and one digit.",
+    "entry_point": "validate_password_rules",
+    "family": "validate_password_rules",
+    "golden_solution": "def validate_password_rules(s):\n    return (len(s) >= 8 and any(c.isupper() for c in s)\n            and any(c.islower() for c in s) and any(c.isdigit() for c in s))\n",
+    "held_out_tests": [
+      "assert validate_password_rules('cA233B') == False",
+      "assert validate_password_rules('B') == False",
+      "assert validate_password_rules('acB!2!C!aAc1') == True",
+      "assert validate_password_rules('Ca1') == False"
+    ],
+    "sentinel_check": "assert validate_password_rules('B') == False",
+    "split": "B",
+    "task_id": "validate_password_rules__003",
+    "visible_tests": [
+      "assert validate_password_rules('2c!2B') == False",
+      "assert validate_password_rules('Abcdef12') == True"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert validate_password_rules('bCC!c') == False",
+      "assert validate_password_rules('BB1B2!2b2C!') == True",
+      "assert validate_password_rules('Bb1aAa3!aCc') == True"
+    ],
+    "buggy_source": "def validate_password_rules(s):\n    raise NotImplementedError('validate_password_rules not implemented')\n",
+    "description": "Write validate_password_rules(s) returning True iff s has length >= 8 AND contains at least one uppercase letter, one lowercase letter, and one digit.",
+    "entry_point": "validate_password_rules",
+    "family": "validate_password_rules",
+    "golden_solution": "def validate_password_rules(s):\n    return (len(s) >= 8 and any(c.isupper() for c in s)\n            and any(c.islower() for c in s) and any(c.isdigit() for c in s))\n",
+    "held_out_tests": [
+      "assert validate_password_rules('c') == False",
+      "assert validate_password_rules('CB') == False",
+      "assert validate_password_rules('b1b') == False",
+      "assert validate_password_rules('2!13b') == False"
+    ],
+    "sentinel_check": "assert validate_password_rules('cC1a3b21AB') == True",
+    "split": "B",
+    "task_id": "validate_password_rules__004",
+    "visible_tests": [
+      "assert validate_password_rules('abAA1B3C') == True",
+      "assert validate_password_rules('Abcdef12') == True"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert validate_password_rules('baB') == False",
+      "assert validate_password_rules('BB21cA32b') == True",
+      "assert validate_password_rules('B') == False"
+    ],
+    "buggy_source": "def validate_password_rules(s):\n    raise NotImplementedError('validate_password_rules not implemented')\n",
+    "description": "Write validate_password_rules(s) returning True iff s has length >= 8 AND contains at least one uppercase letter, one lowercase letter, and one digit.",
+    "entry_point": "validate_password_rules",
+    "family": "validate_password_rules",
+    "golden_solution": "def validate_password_rules(s):\n    return (len(s) >= 8 and any(c.isupper() for c in s)\n            and any(c.islower() for c in s) and any(c.isdigit() for c in s))\n",
+    "held_out_tests": [
+      "assert validate_password_rules('2B') == False",
+      "assert validate_password_rules('CbBC3') == False",
+      "assert validate_password_rules('a2C') == False",
+      "assert validate_password_rules('ca!11baaC!13') == True"
+    ],
+    "sentinel_check": "assert validate_password_rules('Bb3b2!CB2c1a') == True",
+    "split": "B",
+    "task_id": "validate_password_rules__005",
+    "visible_tests": [
+      "assert validate_password_rules('B1Abc') == False",
+      "assert validate_password_rules('Abcdef12') == True"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert most_common_char_tiebreak('abbaababab') == 'a'",
+      "assert most_common_char_tiebreak('abbbbbb') == 'b'",
+      "assert most_common_char_tiebreak('aa') == 'a'"
+    ],
+    "buggy_source": "def most_common_char_tiebreak(s):\n    raise NotImplementedError('most_common_char_tiebreak not implemented')\n",
+    "description": "Write most_common_char_tiebreak(s) returning the most frequent character in s; ties broken by first occurrence in s. Empty string returns None.",
+    "entry_point": "most_common_char_tiebreak",
+    "family": "most_common_char_tiebreak",
+    "golden_solution": "def most_common_char_tiebreak(s):\n    if not s:\n        return None\n    counts = {}\n    for ch in s:\n        counts[ch] = counts.get(ch, 0) + 1\n    best_ch, best_count = None, -1\n    for ch in s:\n        if counts[ch] > best_count:\n            best_count = counts[ch]\n            best_ch = ch\n    return best_ch\n",
+    "held_out_tests": [
+      "assert most_common_char_tiebreak('babababaab') == 'b'",
+      "assert most_common_char_tiebreak('bba') == 'b'",
+      "assert most_common_char_tiebreak('') == None",
+      "assert most_common_char_tiebreak('abaabbbab') == 'b'"
+    ],
+    "sentinel_check": "assert most_common_char_tiebreak('') == None",
+    "split": "B",
+    "task_id": "most_common_char_tiebreak__000",
+    "visible_tests": [
+      "assert most_common_char_tiebreak('aabbbcc') == 'b'"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert most_common_char_tiebreak('baabbaaaba') == 'a'",
+      "assert most_common_char_tiebreak('aabbbbaa') == 'a'",
+      "assert most_common_char_tiebreak('bbabba') == 'b'"
+    ],
+    "buggy_source": "def most_common_char_tiebreak(s):\n    raise NotImplementedError('most_common_char_tiebreak not implemented')\n",
+    "description": "Write most_common_char_tiebreak(s) returning the most frequent character in s; ties broken by first occurrence in s. Empty string returns None.",
+    "entry_point": "most_common_char_tiebreak",
+    "family": "most_common_char_tiebreak",
+    "golden_solution": "def most_common_char_tiebreak(s):\n    if not s:\n        return None\n    counts = {}\n    for ch in s:\n        counts[ch] = counts.get(ch, 0) + 1\n    best_ch, best_count = None, -1\n    for ch in s:\n        if counts[ch] > best_count:\n            best_count = counts[ch]\n            best_ch = ch\n    return best_ch\n",
+    "held_out_tests": [
+      "assert most_common_char_tiebreak('baaaaaaa') == 'a'",
+      "assert most_common_char_tiebreak('') == None",
+      "assert most_common_char_tiebreak('bbb') == 'b'",
+      "assert most_common_char_tiebreak('abaaba') == 'a'"
+    ],
+    "sentinel_check": "assert most_common_char_tiebreak('a') == 'a'",
+    "split": "B",
+    "task_id": "most_common_char_tiebreak__001",
+    "visible_tests": [
+      "assert most_common_char_tiebreak('bbbabba') == 'b'",
+      "assert most_common_char_tiebreak('aabbbcc') == 'b'"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert most_common_char_tiebreak('baaababbaa') == 'a'",
+      "assert most_common_char_tiebreak('bbbbbab') == 'b'",
+      "assert most_common_char_tiebreak('aabaaaa') == 'a'"
+    ],
+    "buggy_source": "def most_common_char_tiebreak(s):\n    raise NotImplementedError('most_common_char_tiebreak not implemented')\n",
+    "description": "Write most_common_char_tiebreak(s) returning the most frequent character in s; ties broken by first occurrence in s. Empty string returns None.",
+    "entry_point": "most_common_char_tiebreak",
+    "family": "most_common_char_tiebreak",
+    "golden_solution": "def most_common_char_tiebreak(s):\n    if not s:\n        return None\n    counts = {}\n    for ch in s:\n        counts[ch] = counts.get(ch, 0) + 1\n    best_ch, best_count = None, -1\n    for ch in s:\n        if counts[ch] > best_count:\n            best_count = counts[ch]\n            best_ch = ch\n    return best_ch\n",
+    "held_out_tests": [
+      "assert most_common_char_tiebreak('a') == 'a'",
+      "assert most_common_char_tiebreak('bbbaaabb') == 'b'",
+      "assert most_common_char_tiebreak('bbababbbbb') == 'b'",
+      "assert most_common_char_tiebreak('abaaaaab') == 'a'"
+    ],
+    "sentinel_check": "assert most_common_char_tiebreak('bbba') == 'b'",
+    "split": "B",
+    "task_id": "most_common_char_tiebreak__002",
+    "visible_tests": [
+      "assert most_common_char_tiebreak('bbababab') == 'b'",
+      "assert most_common_char_tiebreak('aabbbcc') == 'b'"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert most_common_char_tiebreak('aabaaa') == 'a'",
+      "assert most_common_char_tiebreak('aaaaabb') == 'a'",
+      "assert most_common_char_tiebreak('aabaaaab') == 'a'"
+    ],
+    "buggy_source": "def most_common_char_tiebreak(s):\n    raise NotImplementedError('most_common_char_tiebreak not implemented')\n",
+    "description": "Write most_common_char_tiebreak(s) returning the most frequent character in s; ties broken by first occurrence in s. Empty string returns None.",
+    "entry_point": "most_common_char_tiebreak",
+    "family": "most_common_char_tiebreak",
+    "golden_solution": "def most_common_char_tiebreak(s):\n    if not s:\n        return None\n    counts = {}\n    for ch in s:\n        counts[ch] = counts.get(ch, 0) + 1\n    best_ch, best_count = None, -1\n    for ch in s:\n        if counts[ch] > best_count:\n            best_count = counts[ch]\n            best_ch = ch\n    return best_ch\n",
+    "held_out_tests": [
+      "assert most_common_char_tiebreak('a') == 'a'",
+      "assert most_common_char_tiebreak('bba') == 'b'",
+      "assert most_common_char_tiebreak('babbbbaa') == 'b'",
+      "assert most_common_char_tiebreak('') == None"
+    ],
+    "sentinel_check": "assert most_common_char_tiebreak('baaaa') == 'a'",
+    "split": "B",
+    "task_id": "most_common_char_tiebreak__003",
+    "visible_tests": [
+      "assert most_common_char_tiebreak('abbaaab') == 'a'",
+      "assert most_common_char_tiebreak('aabbbcc') == 'b'"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert most_common_char_tiebreak('bba') == 'b'",
+      "assert most_common_char_tiebreak('a') == 'a'",
+      "assert most_common_char_tiebreak('aaa') == 'a'"
+    ],
+    "buggy_source": "def most_common_char_tiebreak(s):\n    raise NotImplementedError('most_common_char_tiebreak not implemented')\n",
+    "description": "Write most_common_char_tiebreak(s) returning the most frequent character in s; ties broken by first occurrence in s. Empty string returns None.",
+    "entry_point": "most_common_char_tiebreak",
+    "family": "most_common_char_tiebreak",
+    "golden_solution": "def most_common_char_tiebreak(s):\n    if not s:\n        return None\n    counts = {}\n    for ch in s:\n        counts[ch] = counts.get(ch, 0) + 1\n    best_ch, best_count = None, -1\n    for ch in s:\n        if counts[ch] > best_count:\n            best_count = counts[ch]\n            best_ch = ch\n    return best_ch\n",
+    "held_out_tests": [
+      "assert most_common_char_tiebreak('bbbabb') == 'b'",
+      "assert most_common_char_tiebreak('') == None",
+      "assert most_common_char_tiebreak('b') == 'b'",
+      "assert most_common_char_tiebreak('bb') == 'b'"
+    ],
+    "sentinel_check": "assert most_common_char_tiebreak('ba') == 'b'",
+    "split": "B",
+    "task_id": "most_common_char_tiebreak__004",
+    "visible_tests": [
+      "assert most_common_char_tiebreak('baabbbabba') == 'b'",
+      "assert most_common_char_tiebreak('aabbbcc') == 'b'"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert most_common_char_tiebreak('ab') == 'a'",
+      "assert most_common_char_tiebreak('abbbbababa') == 'b'",
+      "assert most_common_char_tiebreak('bbbbaaaa') == 'b'"
+    ],
+    "buggy_source": "def most_common_char_tiebreak(s):\n    raise NotImplementedError('most_common_char_tiebreak not implemented')\n",
+    "description": "Write most_common_char_tiebreak(s) returning the most frequent character in s; ties broken by first occurrence in s. Empty string returns None.",
+    "entry_point": "most_common_char_tiebreak",
+    "family": "most_common_char_tiebreak",
+    "golden_solution": "def most_common_char_tiebreak(s):\n    if not s:\n        return None\n    counts = {}\n    for ch in s:\n        counts[ch] = counts.get(ch, 0) + 1\n    best_ch, best_count = None, -1\n    for ch in s:\n        if counts[ch] > best_count:\n            best_count = counts[ch]\n            best_ch = ch\n    return best_ch\n",
+    "held_out_tests": [
+      "assert most_common_char_tiebreak('aabba') == 'a'",
+      "assert most_common_char_tiebreak('aabb') == 'a'",
+      "assert most_common_char_tiebreak('aaaaabba') == 'a'",
+      "assert most_common_char_tiebreak('bbbbbbbbbb') == 'b'"
+    ],
+    "sentinel_check": "assert most_common_char_tiebreak('bbaaba') == 'b'",
+    "split": "B",
+    "task_id": "most_common_char_tiebreak__005",
+    "visible_tests": [
+      "assert most_common_char_tiebreak('a') == 'a'",
+      "assert most_common_char_tiebreak('aabbbcc') == 'b'"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert zigzag_merge([7], [-3, -12, 8, 18, -5]) == [7, -3, -12, 8, 18, -5]",
+      "assert zigzag_merge([-14, -9], [-10, -3, 16, -5, -7, -2]) == [-14, -10, -9, -3, 16, -5, -7, -2]",
+      "assert zigzag_merge([-13, -6, 1], [12, -8, -12, -10]) == [-13, 12, -6, -8, 1, -12, -10]"
+    ],
+    "buggy_source": "def zigzag_merge(a, b):\n    raise NotImplementedError('zigzag_merge not implemented')\n",
+    "description": "Write zigzag_merge(a, b) that interleaves lists a and b alternately starting with a (a[0], b[0], a[1], b[1], ...), appending the leftover tail of whichever list is longer.",
+    "entry_point": "zigzag_merge",
+    "family": "zigzag_merge",
+    "golden_solution": "def zigzag_merge(a, b):\n    out = []\n    for i in range(max(len(a), len(b))):\n        if i < len(a):\n            out.append(a[i])\n        if i < len(b):\n            out.append(b[i])\n    return out\n",
+    "held_out_tests": [
+      "assert zigzag_merge([], [18, -2, 2, 15]) == [18, -2, 2, 15]",
+      "assert zigzag_merge([1, 18], [9, 18, 7, -14]) == [1, 9, 18, 18, 7, -14]",
+      "assert zigzag_merge([4], [0, -2]) == [4, 0, -2]",
+      "assert zigzag_merge([], [0, -12, -15]) == [0, -12, -15]"
+    ],
+    "sentinel_check": "assert zigzag_merge([-3, 20], [-6]) == [-3, -6, 20]",
+    "split": "B",
+    "task_id": "zigzag_merge__000",
+    "visible_tests": [
+      "assert zigzag_merge([1, 2, 3], [4, 5]) == [1, 4, 2, 5, 3]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert zigzag_merge([10], [16, 15, -8, -11]) == [10, 16, 15, -8, -11]",
+      "assert zigzag_merge([14, -19, -14, -6, 18, 14], [13, -8, 20, -6, 14]) == [14, 13, -19, -8, -14, 20, -6, -6, 18, 14, 14]",
+      "assert zigzag_merge([-1, 13], [-14, -5, 12, 19, 19, 19]) == [-1, -14, 13, -5, 12, 19, 19, 19]"
+    ],
+    "buggy_source": "def zigzag_merge(a, b):\n    raise NotImplementedError('zigzag_merge not implemented')\n",
+    "description": "Write zigzag_merge(a, b) that interleaves lists a and b alternately starting with a (a[0], b[0], a[1], b[1], ...), appending the leftover tail of whichever list is longer.",
+    "entry_point": "zigzag_merge",
+    "family": "zigzag_merge",
+    "golden_solution": "def zigzag_merge(a, b):\n    out = []\n    for i in range(max(len(a), len(b))):\n        if i < len(a):\n            out.append(a[i])\n        if i < len(b):\n            out.append(b[i])\n    return out\n",
+    "held_out_tests": [
+      "assert zigzag_merge([-15, -6, -1, 2], [3, -13, -16]) == [-15, 3, -6, -13, -1, -16, 2]",
+      "assert zigzag_merge([-9, -1, -3, -12, 6, 5], [6]) == [-9, 6, -1, -3, -12, 6, 5]",
+      "assert zigzag_merge([8, -18, 5, 14], [-17]) == [8, -17, -18, 5, 14]",
+      "assert zigzag_merge([18], [-12, -1, -6, 12]) == [18, -12, -1, -6, 12]"
+    ],
+    "sentinel_check": "assert zigzag_merge([-20, 15, 0, 17], [-2, 19]) == [-20, -2, 15, 19, 0, 17]",
+    "split": "B",
+    "task_id": "zigzag_merge__001",
+    "visible_tests": [
+      "assert zigzag_merge([14], [-3, -5, -10, 1, -3, 0]) == [14, -3, -5, -10, 1, -3, 0]",
+      "assert zigzag_merge([1, 2, 3], [4, 5]) == [1, 4, 2, 5, 3]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert zigzag_merge([17], [-1, -4, 13, 4, 0]) == [17, -1, -4, 13, 4, 0]",
+      "assert zigzag_merge([20], []) == [20]",
+      "assert zigzag_merge([], []) == []"
+    ],
+    "buggy_source": "def zigzag_merge(a, b):\n    raise NotImplementedError('zigzag_merge not implemented')\n",
+    "description": "Write zigzag_merge(a, b) that interleaves lists a and b alternately starting with a (a[0], b[0], a[1], b[1], ...), appending the leftover tail of whichever list is longer.",
+    "entry_point": "zigzag_merge",
+    "family": "zigzag_merge",
+    "golden_solution": "def zigzag_merge(a, b):\n    out = []\n    for i in range(max(len(a), len(b))):\n        if i < len(a):\n            out.append(a[i])\n        if i < len(b):\n            out.append(b[i])\n    return out\n",
+    "held_out_tests": [
+      "assert zigzag_merge([], [0, -8, 14, -6]) == [0, -8, 14, -6]",
+      "assert zigzag_merge([-8, 12, 16], [-5, -18]) == [-8, -5, 12, -18, 16]",
+      "assert zigzag_merge([19, -8], [-10, 17]) == [19, -10, -8, 17]",
+      "assert zigzag_merge([], [12, 13, -10, 10, 19]) == [12, 13, -10, 10, 19]"
+    ],
+    "sentinel_check": "assert zigzag_merge([17, -11, -18, -3], []) == [17, -11, -18, -3]",
+    "split": "B",
+    "task_id": "zigzag_merge__002",
+    "visible_tests": [
+      "assert zigzag_merge([6, 0, 10, -11], [-16, -6, 10, -17, -15]) == [6, -16, 0, -6, 10, 10, -11, -17, -15]",
+      "assert zigzag_merge([1, 2, 3], [4, 5]) == [1, 4, 2, 5, 3]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert zigzag_merge([20, 4, 2], [-16, -7]) == [20, -16, 4, -7, 2]",
+      "assert zigzag_merge([16, 14, -8], [-13, -3, -20, -15, -9, 13]) == [16, -13, 14, -3, -8, -20, -15, -9, 13]",
+      "assert zigzag_merge([-3, 14, -14, 12], [16, -20]) == [-3, 16, 14, -20, -14, 12]"
+    ],
+    "buggy_source": "def zigzag_merge(a, b):\n    raise NotImplementedError('zigzag_merge not implemented')\n",
+    "description": "Write zigzag_merge(a, b) that interleaves lists a and b alternately starting with a (a[0], b[0], a[1], b[1], ...), appending the leftover tail of whichever list is longer.",
+    "entry_point": "zigzag_merge",
+    "family": "zigzag_merge",
+    "golden_solution": "def zigzag_merge(a, b):\n    out = []\n    for i in range(max(len(a), len(b))):\n        if i < len(a):\n            out.append(a[i])\n        if i < len(b):\n            out.append(b[i])\n    return out\n",
+    "held_out_tests": [
+      "assert zigzag_merge([17], [-12, 4, 18]) == [17, -12, 4, 18]",
+      "assert zigzag_merge([9, -3, 17, 4, 14, -7], [-18, -16, 4, -9, -16]) == [9, -18, -3, -16, 17, 4, 4, -9, 14, -16, -7]",
+      "assert zigzag_merge([], [5, -18, 9]) == [5, -18, 9]",
+      "assert zigzag_merge([0, 17, 15, -19, 0, -2], [5, 4, 18]) == [0, 5, 17, 4, 15, 18, -19, 0, -2]"
+    ],
+    "sentinel_check": "assert zigzag_merge([-2, -7, 4, -16, 8], [6]) == [-2, 6, -7, 4, -16, 8]",
+    "split": "B",
+    "task_id": "zigzag_merge__003",
+    "visible_tests": [
+      "assert zigzag_merge([-7, 7, -6, -15, 0], [9, 16, -8, 4, -2, 3]) == [-7, 9, 7, 16, -6, -8, -15, 4, 0, -2, 3]",
+      "assert zigzag_merge([1, 2, 3], [4, 5]) == [1, 4, 2, 5, 3]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert zigzag_merge([3, -4, 16, -4], [10, -15, 16, 17, -9, -7]) == [3, 10, -4, -15, 16, 16, -4, 17, -9, -7]",
+      "assert zigzag_merge([-1, 7, 12, 12], [-5]) == [-1, -5, 7, 12, 12]",
+      "assert zigzag_merge([0, -2], [-19, -7, -20, 12, 16]) == [0, -19, -2, -7, -20, 12, 16]"
+    ],
+    "buggy_source": "def zigzag_merge(a, b):\n    raise NotImplementedError('zigzag_merge not implemented')\n",
+    "description": "Write zigzag_merge(a, b) that interleaves lists a and b alternately starting with a (a[0], b[0], a[1], b[1], ...), appending the leftover tail of whichever list is longer.",
+    "entry_point": "zigzag_merge",
+    "family": "zigzag_merge",
+    "golden_solution": "def zigzag_merge(a, b):\n    out = []\n    for i in range(max(len(a), len(b))):\n        if i < len(a):\n            out.append(a[i])\n        if i < len(b):\n            out.append(b[i])\n    return out\n",
+    "held_out_tests": [
+      "assert zigzag_merge([10, -10, -19, 9, -3, -18], [-2]) == [10, -2, -10, -19, 9, -3, -18]",
+      "assert zigzag_merge([-20, 16, 2, -2, 8], [4]) == [-20, 4, 16, 2, -2, 8]",
+      "assert zigzag_merge([0, -7, -3], []) == [0, -7, -3]",
+      "assert zigzag_merge([], [16]) == [16]"
+    ],
+    "sentinel_check": "assert zigzag_merge([14, 12], []) == [14, 12]",
+    "split": "B",
+    "task_id": "zigzag_merge__004",
+    "visible_tests": [
+      "assert zigzag_merge([-4, -16, 11], [-1, -5]) == [-4, -1, -16, -5, 11]",
+      "assert zigzag_merge([1, 2, 3], [4, 5]) == [1, 4, 2, 5, 3]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert zigzag_merge([-10], []) == [-10]",
+      "assert zigzag_merge([-13, -20, -15, 6, 8], []) == [-13, -20, -15, 6, 8]",
+      "assert zigzag_merge([-16, -13], [-15]) == [-16, -15, -13]"
+    ],
+    "buggy_source": "def zigzag_merge(a, b):\n    raise NotImplementedError('zigzag_merge not implemented')\n",
+    "description": "Write zigzag_merge(a, b) that interleaves lists a and b alternately starting with a (a[0], b[0], a[1], b[1], ...), appending the leftover tail of whichever list is longer.",
+    "entry_point": "zigzag_merge",
+    "family": "zigzag_merge",
+    "golden_solution": "def zigzag_merge(a, b):\n    out = []\n    for i in range(max(len(a), len(b))):\n        if i < len(a):\n            out.append(a[i])\n        if i < len(b):\n            out.append(b[i])\n    return out\n",
+    "held_out_tests": [
+      "assert zigzag_merge([12, -19], [3, -5, 18, -17, 0, -13]) == [12, 3, -19, -5, 18, -17, 0, -13]",
+      "assert zigzag_merge([13, 20, 0, 12], [-19, -3]) == [13, -19, 20, -3, 0, 12]",
+      "assert zigzag_merge([-4, -19, -8, -12, 18], [-3]) == [-4, -3, -19, -8, -12, 18]",
+      "assert zigzag_merge([], [5, -5, -18, -13, -9, 10]) == [5, -5, -18, -13, -9, 10]"
+    ],
+    "sentinel_check": "assert zigzag_merge([-1, 15, -18, 19, -3, -16], [3, -4, 3, 20, -13]) == [-1, 3, 15, -4, -18, 3, 19, 20, -3, -13, -16]",
+    "split": "B",
+    "task_id": "zigzag_merge__005",
+    "visible_tests": [
+      "assert zigzag_merge([4, 20, 18, -2], [7, -12]) == [4, 7, 20, -12, 18, -2]",
+      "assert zigzag_merge([1, 2, 3], [4, 5]) == [1, 4, 2, 5, 3]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert interval_gaps([(4, 5), (6, 7)], 0, 13) == [(0, 4), (5, 6), (7, 13)]",
+      "assert interval_gaps([(1, 4), (12, 13)], 0, 16) == [(0, 1), (4, 12), (13, 16)]",
+      "assert interval_gaps([(10, 11), (13, 14)], 0, 18) == [(0, 10), (11, 13), (14, 18)]"
+    ],
+    "buggy_source": "def interval_gaps(intervals, lo, hi):\n    raise NotImplementedError('interval_gaps not implemented')\n",
+    "description": "Write interval_gaps(intervals, lo, hi) where intervals is a sorted list of non-overlapping (start, end) tuples within [lo, hi]. Return the list of GAP (start, end) tuples in [lo, hi] not covered by any interval.",
+    "entry_point": "interval_gaps",
+    "family": "interval_gaps",
+    "golden_solution": "def interval_gaps(intervals, lo, hi):\n    out = []\n    cur = lo\n    for start, end in intervals:\n        if start > cur:\n            out.append((cur, start))\n        cur = max(cur, end)\n    if cur < hi:\n        out.append((cur, hi))\n    return out\n",
+    "held_out_tests": [
+      "assert interval_gaps([(1, 3), (9, 10)], 0, 15) == [(0, 1), (3, 9), (10, 15)]",
+      "assert interval_gaps([(10, 11), (15, 16)], 0, 20) == [(0, 10), (11, 15), (16, 20)]",
+      "assert interval_gaps([(0, 2), (6, 7)], 0, 19) == [(2, 6), (7, 19)]",
+      "assert interval_gaps([(1, 2), (4, 5)], 0, 6) == [(0, 1), (2, 4), (5, 6)]"
+    ],
+    "sentinel_check": "assert interval_gaps([(3, 4), (7, 8)], 0, 12) == [(0, 3), (4, 7), (8, 12)]",
+    "split": "B",
+    "task_id": "interval_gaps__000",
+    "visible_tests": [
+      "assert interval_gaps([(1, 3), (5, 7)], 0, 10) == [(0, 1), (3, 5), (7, 10)]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert interval_gaps([(1, 2), (4, 5)], 0, 6) == [(0, 1), (2, 4), (5, 6)]",
+      "assert interval_gaps([(3, 4), (6, 7)], 0, 11) == [(0, 3), (4, 6), (7, 11)]",
+      "assert interval_gaps([(1, 2), (10, 13)], 0, 20) == [(0, 1), (2, 10), (13, 20)]"
+    ],
+    "buggy_source": "def interval_gaps(intervals, lo, hi):\n    raise NotImplementedError('interval_gaps not implemented')\n",
+    "description": "Write interval_gaps(intervals, lo, hi) where intervals is a sorted list of non-overlapping (start, end) tuples within [lo, hi]. Return the list of GAP (start, end) tuples in [lo, hi] not covered by any interval.",
+    "entry_point": "interval_gaps",
+    "family": "interval_gaps",
+    "golden_solution": "def interval_gaps(intervals, lo, hi):\n    out = []\n    cur = lo\n    for start, end in intervals:\n        if start > cur:\n            out.append((cur, start))\n        cur = max(cur, end)\n    if cur < hi:\n        out.append((cur, hi))\n    return out\n",
+    "held_out_tests": [
+      "assert interval_gaps([(2, 3), (9, 12)], 0, 17) == [(0, 2), (3, 9), (12, 17)]",
+      "assert interval_gaps([(0, 1), (6, 7)], 0, 12) == [(1, 6), (7, 12)]",
+      "assert interval_gaps([(2, 5), (10, 11)], 0, 17) == [(0, 2), (5, 10), (11, 17)]",
+      "assert interval_gaps([(2, 3), (5, 6)], 0, 11) == [(0, 2), (3, 5), (6, 11)]"
+    ],
+    "sentinel_check": "assert interval_gaps([(2, 3), (5, 6)], 0, 13) == [(0, 2), (3, 5), (6, 13)]",
+    "split": "B",
+    "task_id": "interval_gaps__001",
+    "visible_tests": [
+      "assert interval_gaps([(4, 5), (10, 11)], 0, 15) == [(0, 4), (5, 10), (11, 15)]",
+      "assert interval_gaps([(1, 3), (5, 7)], 0, 10) == [(0, 1), (3, 5), (7, 10)]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert interval_gaps([(1, 2), (4, 7)], 0, 12) == [(0, 1), (2, 4), (7, 12)]",
+      "assert interval_gaps([(1, 2), (4, 5)], 0, 7) == [(0, 1), (2, 4), (5, 7)]",
+      "assert interval_gaps([(0, 1), (3, 4)], 0, 7) == [(1, 3), (4, 7)]"
+    ],
+    "buggy_source": "def interval_gaps(intervals, lo, hi):\n    raise NotImplementedError('interval_gaps not implemented')\n",
+    "description": "Write interval_gaps(intervals, lo, hi) where intervals is a sorted list of non-overlapping (start, end) tuples within [lo, hi]. Return the list of GAP (start, end) tuples in [lo, hi] not covered by any interval.",
+    "entry_point": "interval_gaps",
+    "family": "interval_gaps",
+    "golden_solution": "def interval_gaps(intervals, lo, hi):\n    out = []\n    cur = lo\n    for start, end in intervals:\n        if start > cur:\n            out.append((cur, start))\n        cur = max(cur, end)\n    if cur < hi:\n        out.append((cur, hi))\n    return out\n",
+    "held_out_tests": [
+      "assert interval_gaps([(0, 1), (5, 6)], 0, 9) == [(1, 5), (6, 9)]",
+      "assert interval_gaps([(0, 2), (7, 8)], 0, 12) == [(2, 7), (8, 12)]",
+      "assert interval_gaps([(0, 5), (12, 13)], 0, 15) == [(5, 12), (13, 15)]",
+      "assert interval_gaps([(1, 2), (6, 7)], 0, 16) == [(0, 1), (2, 6), (7, 16)]"
+    ],
+    "sentinel_check": "assert interval_gaps([(0, 1), (9, 10)], 0, 13) == [(1, 9), (10, 13)]",
+    "split": "B",
+    "task_id": "interval_gaps__002",
+    "visible_tests": [
+      "assert interval_gaps([(8, 9), (15, 16)], 0, 18) == [(0, 8), (9, 15), (16, 18)]",
+      "assert interval_gaps([(1, 3), (5, 7)], 0, 10) == [(0, 1), (3, 5), (7, 10)]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert interval_gaps([(0, 1), (3, 4)], 0, 12) == [(1, 3), (4, 12)]",
+      "assert interval_gaps([(0, 2), (6, 7)], 0, 16) == [(2, 6), (7, 16)]",
+      "assert interval_gaps([(6, 7), (8, 9)], 0, 19) == [(0, 6), (7, 8), (9, 19)]"
+    ],
+    "buggy_source": "def interval_gaps(intervals, lo, hi):\n    raise NotImplementedError('interval_gaps not implemented')\n",
+    "description": "Write interval_gaps(intervals, lo, hi) where intervals is a sorted list of non-overlapping (start, end) tuples within [lo, hi]. Return the list of GAP (start, end) tuples in [lo, hi] not covered by any interval.",
+    "entry_point": "interval_gaps",
+    "family": "interval_gaps",
+    "golden_solution": "def interval_gaps(intervals, lo, hi):\n    out = []\n    cur = lo\n    for start, end in intervals:\n        if start > cur:\n            out.append((cur, start))\n        cur = max(cur, end)\n    if cur < hi:\n        out.append((cur, hi))\n    return out\n",
+    "held_out_tests": [
+      "assert interval_gaps([(0, 1), (2, 3)], 0, 6) == [(1, 2), (3, 6)]",
+      "assert interval_gaps([(9, 10), (13, 14)], 0, 15) == [(0, 9), (10, 13), (14, 15)]",
+      "assert interval_gaps([(2, 3), (7, 8)], 0, 18) == [(0, 2), (3, 7), (8, 18)]",
+      "assert interval_gaps([(2, 5), (13, 14)], 0, 17) == [(0, 2), (5, 13), (14, 17)]"
+    ],
+    "sentinel_check": "assert interval_gaps([(1, 2), (6, 7)], 0, 12) == [(0, 1), (2, 6), (7, 12)]",
+    "split": "B",
+    "task_id": "interval_gaps__003",
+    "visible_tests": [
+      "assert interval_gaps([(1, 3), (14, 15)], 0, 17) == [(0, 1), (3, 14), (15, 17)]",
+      "assert interval_gaps([(1, 3), (5, 7)], 0, 10) == [(0, 1), (3, 5), (7, 10)]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert interval_gaps([(1, 2), (12, 13)], 0, 14) == [(0, 1), (2, 12), (13, 14)]",
+      "assert interval_gaps([(1, 2), (5, 9)], 0, 14) == [(0, 1), (2, 5), (9, 14)]",
+      "assert interval_gaps([(2, 3), (5, 6)], 0, 11) == [(0, 2), (3, 5), (6, 11)]"
+    ],
+    "buggy_source": "def interval_gaps(intervals, lo, hi):\n    raise NotImplementedError('interval_gaps not implemented')\n",
+    "description": "Write interval_gaps(intervals, lo, hi) where intervals is a sorted list of non-overlapping (start, end) tuples within [lo, hi]. Return the list of GAP (start, end) tuples in [lo, hi] not covered by any interval.",
+    "entry_point": "interval_gaps",
+    "family": "interval_gaps",
+    "golden_solution": "def interval_gaps(intervals, lo, hi):\n    out = []\n    cur = lo\n    for start, end in intervals:\n        if start > cur:\n            out.append((cur, start))\n        cur = max(cur, end)\n    if cur < hi:\n        out.append((cur, hi))\n    return out\n",
+    "held_out_tests": [
+      "assert interval_gaps([(0, 1), (2, 3)], 0, 8) == [(1, 2), (3, 8)]",
+      "assert interval_gaps([(3, 6), (11, 13)], 0, 17) == [(0, 3), (6, 11), (13, 17)]",
+      "assert interval_gaps([(0, 1), (4, 5)], 0, 8) == [(1, 4), (5, 8)]",
+      "assert interval_gaps([(3, 4), (6, 7)], 0, 13) == [(0, 3), (4, 6), (7, 13)]"
+    ],
+    "sentinel_check": "assert interval_gaps([(2, 3), (8, 9)], 0, 10) == [(0, 2), (3, 8), (9, 10)]",
+    "split": "B",
+    "task_id": "interval_gaps__004",
+    "visible_tests": [
+      "assert interval_gaps([(0, 1), (6, 7)], 0, 13) == [(1, 6), (7, 13)]",
+      "assert interval_gaps([(1, 3), (5, 7)], 0, 10) == [(0, 1), (3, 5), (7, 10)]"
+    ]
+  },
+  {
+    "adversarial_tests": [
+      "assert interval_gaps([(0, 1), (4, 5)], 0, 8) == [(1, 4), (5, 8)]",
+      "assert interval_gaps([(0, 3), (8, 9)], 0, 12) == [(3, 8), (9, 12)]",
+      "assert interval_gaps([(2, 3), (4, 6)], 0, 9) == [(0, 2), (3, 4), (6, 9)]"
+    ],
+    "buggy_source": "def interval_gaps(intervals, lo, hi):\n    raise NotImplementedError('interval_gaps not implemented')\n",
+    "description": "Write interval_gaps(intervals, lo, hi) where intervals is a sorted list of non-overlapping (start, end) tuples within [lo, hi]. Return the list of GAP (start, end) tuples in [lo, hi] not covered by any interval.",
+    "entry_point": "interval_gaps",
+    "family": "interval_gaps",
+    "golden_solution": "def interval_gaps(intervals, lo, hi):\n    out = []\n    cur = lo\n    for start, end in intervals:\n        if start > cur:\n            out.append((cur, start))\n        cur = max(cur, end)\n    if cur < hi:\n        out.append((cur, hi))\n    return out\n",
+    "held_out_tests": [
+      "assert interval_gaps([(0, 1), (3, 4)], 0, 7) == [(1, 3), (4, 7)]",
+      "assert interval_gaps([(1, 2), (3, 4)], 0, 7) == [(0, 1), (2, 3), (4, 7)]",
+      "assert interval_gaps([(0, 1), (3, 4)], 0, 6) == [(1, 3), (4, 6)]",
+      "assert interval_gaps([(3, 4), (6, 8)], 0, 14) == [(0, 3), (4, 6), (8, 14)]"
+    ],
+    "sentinel_check": "assert interval_gaps([(0, 1), (2, 3)], 0, 7) == [(1, 2), (3, 7)]",
+    "split": "B",
+    "task_id": "interval_gaps__005",
+    "visible_tests": [
+      "assert interval_gaps([(3, 4), (9, 10)], 0, 15) == [(0, 3), (4, 9), (10, 15)]",
+      "assert interval_gaps([(1, 3), (5, 7)], 0, 10) == [(0, 1), (3, 5), (7, 10)]"
+    ]
+  },
+  {
+    "adversarial_tests": [],
+    "buggy_source": "def add_two_numbers(a, b):\n    raise NotImplementedError('add_two_numbers not implemented')\n",
+    "description": "Write add_two_numbers(a, b) that returns a + b.",
+    "entry_point": "add_two_numbers",
+    "family": "add_two_numbers",
+    "golden_solution": "def add_two_numbers(a, b):\n    return a + b\n",
+    "held_out_tests": [],
+    "sentinel_check": "assert add_two_numbers(2, 3) == 5",
+    "split": "sentinel",
+    "task_id": "add_two_numbers__000",
+    "visible_tests": [
+      "assert add_two_numbers(2, 3) == 5"
+    ]
+  },
+  {
+    "adversarial_tests": [],
+    "buggy_source": "def is_even(n):\n    raise NotImplementedError('is_even not implemented')\n",
+    "description": "Write is_even(n) that returns True iff n is even.",
+    "entry_point": "is_even",
+    "family": "is_even",
+    "golden_solution": "def is_even(n):\n    return n % 2 == 0\n",
+    "held_out_tests": [],
+    "sentinel_check": "assert is_even(4) == True",
+    "split": "sentinel",
+    "task_id": "is_even__000",
+    "visible_tests": [
+      "assert is_even(4) == True"
+    ]
+  },
+  {
+    "adversarial_tests": [],
+    "buggy_source": "def string_to_upper(s):\n    raise NotImplementedError('string_to_upper not implemented')\n",
+    "description": "Write string_to_upper(s) that returns s uppercased.",
+    "entry_point": "string_to_upper",
+    "family": "string_to_upper",
+    "golden_solution": "def string_to_upper(s):\n    return s.upper()\n",
+    "held_out_tests": [],
+    "sentinel_check": "assert string_to_upper('abc') == 'ABC'",
+    "split": "sentinel",
+    "task_id": "string_to_upper__000",
+    "visible_tests": [
+      "assert string_to_upper('abc') == 'ABC'"
+    ]
+  },
+  {
+    "adversarial_tests": [],
+    "buggy_source": "def list_sum(xs):\n    raise NotImplementedError('list_sum not implemented')\n",
+    "description": "Write list_sum(xs) that returns the sum of list xs (0 for empty list).",
+    "entry_point": "list_sum",
+    "family": "list_sum",
+    "golden_solution": "def list_sum(xs):\n    return sum(xs)\n",
+    "held_out_tests": [],
+    "sentinel_check": "assert list_sum([1, 2, 3]) == 6",
+    "split": "sentinel",
+    "task_id": "list_sum__000",
+    "visible_tests": [
+      "assert list_sum([1, 2, 3]) == 6"
+    ]
+  },
+  {
+    "adversarial_tests": [],
+    "buggy_source": "def list_max(xs):\n    raise NotImplementedError('list_max not implemented')\n",
+    "description": "Write list_max(xs) that returns the maximum value in non-empty list xs.",
+    "entry_point": "list_max",
+    "family": "list_max",
+    "golden_solution": "def list_max(xs):\n    return max(xs)\n",
+    "held_out_tests": [
+      "assert list_max([5, 5, 2]) == 5"
+    ],
+    "sentinel_check": "assert list_max([3, 1, 2]) == 3",
+    "split": "sentinel",
+    "task_id": "list_max__000",
+    "visible_tests": [
+      "assert list_max([3, 1, 2]) == 3"
+    ]
+  }
+]
