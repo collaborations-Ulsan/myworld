@@ -1,21 +1,21 @@
 {
-  "banner": "PILOT ONLY (N_verified=4 < 250)",
+  "banner": "PILOT ONLY (N_verified=25 < 250)",
   "blind_curator": {
     "false_pass_rate": 0.0,
     "false_passes": 0,
     "freeze_promotion": false,
-    "n_trials": 60,
+    "n_trials": 95,
     "threshold": 0.05
   },
-  "elapsed_s": 914.6391940228641,
+  "elapsed_s": 563.3614055360667,
   "freeze_promotion": false,
-  "n_a_attempted": 30,
-  "n_escalated": 4,
+  "n_a_attempted": 48,
+  "n_escalated": 25,
   "n_infra_errors": 0,
   "n_privacy_blocked": 0,
-  "n_student_solved": 26,
+  "n_student_solved": 23,
   "n_teacher_visible_fail": 0,
   "n_unverified_only": 0,
-  "n_verified": 4,
+  "n_verified": 25,
   "stopped_reason": "completed"
 }
