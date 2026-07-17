@@ -1,0 +1,5299 @@
+{
+  "_meta": {
+    "domain_id": "D6",
+    "domain_name": "Learning methods (beyond frozen pretrained models)",
+    "schema": "docs/ontology/FRONTIER_KNOWLEDGE_LEDGER_2026-07-17.md §1 (unified, CANONICAL flat-entity + {src_id,rel,dst_id} edge format)",
+    "generated": "2026-07-17",
+    "generated_by": "claude@myworld (D6 deep-populate; founder brief: 3 learning-method families beyond frozen LLMs; grounded via 3 parallel research agents + own WebSearch/HF/WebFetch)",
+    "status": "draft-first (append; not accepted — DNA #2)",
+    "format_note": "CANONICAL format (flat entities {id,type,name,attrs,source,domain}; edges {src_id,rel,dst_id,source,domain}). D1/D2/D3 diverged (relations {type,from,to}); this file matches _merged.json ingestion and REUSES shared ids (person:richard_s_sutton, person:jeff_clune, person:danijar_hafner, org:sakana_ai, lab:oak_lab, methodology:evolutionary_genetic_scaffold_search, concept:loss_of_plasticity_plasticity_preservation, paper:2505.22954 DGM, paper:2507.19457 GEPA, paper:title:loss_of_plasticity_in_deep_continual_learning) so cross-domain edges resolve.",
+    "coverage": "70 papers, 23 people, 8 orgs/labs, 29 concepts, 40 methods, 3 methodologies, 11 benchmarks, 35 claims. 11 contradicts edges. Bound target ~55-70 papers / 3 families deep: MET.",
+    "hypothesis_grade_note": "attrs.grade=hypothesis => aggregator/blog/pre-QD-era foundational cited via review OR arxiv-number-not-directly-fetched; grade=primary => arxiv/venue/first-party abstract fetched or high-confidence. Future-dated arxiv ids (26MM.xxxxx) are 2026 submissions surfaced this session via HF paper_search / WebSearch and cross-checked to resolve to real papers.",
+    "deferred": "Honest gaps: (1) exact numbers for QDAIF coverage/agreement, DéjàQ, AC/DC full benchmark tables NOT machine-extracted (flagged hypothesis where numeric); (2) diploid-GA / classic-niching foundational papers (1987-2002) cited via reviews, not original PDFs (grade:hypothesis); (3) POET independent large-scale replication absent (absence-of-evidence, not disproof); (4) empowerment sub-thread thin (2 nodes); (5) neuro-symbolic / developmental-robotics (Oudeyer) camp only lightly touched."
+  },
+  "entities": [
+    {
+      "id": "D6",
+      "type": "Domain",
+      "name": "Learning methods",
+      "attrs": {
+        "scope": "Methods that learn BEYOND frozen pretrained models — learn at run-time from experience (Sutton/OaK). Three founder-named families: (F1) developmental/from-scratch; (F2) quality-diversity gene-pool + recessive-trait recovery; (F3) open-ended/speciating evolution into specialists. Plus device-runnability on dual RTX 5090 and the LearnOS evolutionary-engine implication.",
+        "grade": "primary"
+      },
+      "source": "docs/ontology/FRONTIER_KNOWLEDGE_LEDGER_2026-07-17.md §2 (D6)",
+      "domain": "D6"
+    },
+    {
+      "id": "methodology:developmental_from_scratch_learning",
+      "type": "Methodology",
+      "name": "Developmental / from-scratch learning",
+      "attrs": {
+        "kind": "learn-at-runtime",
+        "family": "F1 (learn like a baby)",
+        "definition": "Learn without (or minimally on) pretraining: continual/streaming RL from interaction, automatic curricula, intrinsic motivation, world-models from raw experience, plasticity preservation, test-time training. Aligned with Sutton's OaK 'era of experience'.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "methodology:quality_diversity",
+      "type": "Methodology",
+      "name": "Quality-Diversity (QD) / gene-pool evolution",
+      "attrs": {
+        "kind": "search/optimization",
+        "family": "F2 (leave genes behind, recover recessive traits)",
+        "definition": "Archive/population methods (MAP-Elites, CMA-ME/MAE, novelty search, diploid GAs) that PRESERVE diverse non-champion solutions as a gene pool so latent/'recessive' building blocks can be recombined/recovered later — unlike hill-climbing which discards them.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "methodology:open_ended_evolution",
+      "type": "Methodology",
+      "name": "Open-ended evolution / speciation",
+      "attrs": {
+        "kind": "search/optimization",
+        "family": "F3 (differentiate evolutionarily)",
+        "definition": "Endless generation of novel+learnable challenges & solutions (POET/OMNI lineage) plus niching/speciation (NEAT species, minimal-criterion coevolution, MAP-Elites niches) that maintain multiple specialist lineages and prevent collapse to one champion.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "person:kenneth_o_stanley",
+      "type": "Person",
+      "name": "Kenneth O. Stanley",
+      "attrs": {
+        "affiliation": "Lila Sciences (ex-OpenAI/Uber AI/UCF); NEAT, novelty search, open-endedness, Picbreeder",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "person:joel_lehman",
+      "type": "Person",
+      "name": "Joel Lehman",
+      "attrs": {
+        "affiliation": "ex-OpenAI/Uber AI; novelty search, ELM, QDAIF, open-endedness",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "person:jean_baptiste_mouret",
+      "type": "Person",
+      "name": "Jean-Baptiste Mouret",
+      "attrs": {
+        "affiliation": "Inria; MAP-Elites, QD, damage recovery",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "person:antoine_cully",
+      "type": "Person",
+      "name": "Antoine Cully",
+      "attrs": {
+        "affiliation": "Imperial College (AIRL); MAP-Elites, QDax, Robots-that-adapt-like-animals",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "person:matthew_c_fontaine",
+      "type": "Person",
+      "name": "Matthew C. Fontaine",
+      "attrs": {
+        "affiliation": "USC ICAROS; CMA-ME, CMA-MAE, DQD, pyribs",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "person:stefanos_nikolaidis",
+      "type": "Person",
+      "name": "Stefanos Nikolaidis",
+      "attrs": {
+        "affiliation": "USC ICAROS; CMA-MAE, pyribs, QD-for-HRI",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "person:jenny_zhang",
+      "type": "Person",
+      "name": "Jenny Zhang",
+      "attrs": {
+        "affiliation": "UBC/Vector (Clune lab); OMNI, DGM, QDAIF",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "person:maxence_faldor",
+      "type": "Person",
+      "name": "Maxence Faldor",
+      "attrs": {
+        "affiliation": "Imperial (Cully lab); OMNI-EPIC, DiCode, In-context QD",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "person:tim_rocktaschel",
+      "type": "Person",
+      "name": "Tim Rocktäschel",
+      "attrs": {
+        "affiliation": "Google DeepMind/UCL; open-endedness, UED, DéjàQ",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "person:edward_hughes",
+      "type": "Person",
+      "name": "Edward Hughes",
+      "attrs": {
+        "affiliation": "Google DeepMind; 'Open-Endedness Essential for ASI'",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "person:michael_dennis",
+      "type": "Person",
+      "name": "Michael Dennis",
+      "attrs": {
+        "affiliation": "Google DeepMind/UC Berkeley; PAIRED, UED",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "person:jack_parker_holder",
+      "type": "Person",
+      "name": "Jack Parker-Holder",
+      "attrs": {
+        "affiliation": "Google DeepMind; ACCEL, Genie, UED",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "person:risto_miikkulainen",
+      "type": "Person",
+      "name": "Risto Miikkulainen",
+      "attrs": {
+        "affiliation": "UT Austin/Cognizant; NEAT, CoDeepNEAT",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "person:david_e_goldberg",
+      "type": "Person",
+      "name": "David E. Goldberg",
+      "attrs": {
+        "affiliation": "UIUC (emeritus); diploidy/dominance GAs, fitness sharing",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "person:khurram_javed",
+      "type": "Person",
+      "name": "Khurram Javed",
+      "attrs": {
+        "affiliation": "Oak Lab (ex-Alberta/Keen); continual learning, streaming, OaK",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "person:mohamed_elsayed",
+      "type": "Person",
+      "name": "Mohamed Elsayed",
+      "attrs": {
+        "affiliation": "U. Alberta (RLAI); streaming deep RL (stream-x)",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "person:robert_tjarko_lange",
+      "type": "Person",
+      "name": "Robert Tjarko Lange",
+      "attrs": {
+        "affiliation": "Sakana AI; ShinkaEvolve, evosax",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "person:herbie_bradley",
+      "type": "Person",
+      "name": "Herbie Bradley",
+      "attrs": {
+        "affiliation": "ex-CarperAI/EleutherAI; QDAIF",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "person:akarsh_kumar",
+      "type": "Person",
+      "name": "Akarsh Kumar",
+      "attrs": {
+        "affiliation": "MIT (with Clune/Lehman/Stanley); FER hypothesis, ASAL",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "person:chao_qian",
+      "type": "Person",
+      "name": "Chao Qian",
+      "attrs": {
+        "affiliation": "Nanjing University; QD theory (provably helpful)",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "person:andrew_zhao",
+      "type": "Person",
+      "name": "Andrew Zhao",
+      "attrs": {
+        "affiliation": "Tsinghua; Absolute Zero self-play reasoning",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "person:jonathan_c_brant",
+      "type": "Person",
+      "name": "Jonathan C. Brant",
+      "attrs": {
+        "affiliation": "ex-UCF (Stanley lab); Minimal Criterion Coevolution",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "person:tim_salimans",
+      "type": "Person",
+      "name": "Tim Salimans",
+      "attrs": {
+        "affiliation": "ex-OpenAI/Google; Evolution Strategies (OpenAI-ES)",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "org:openai",
+      "type": "Org",
+      "name": "OpenAI",
+      "attrs": {
+        "kind": "lab",
+        "note": "RND, ELM, Evolution Strategies, Absolute Zero base",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "org:uber_ai_labs",
+      "type": "Org",
+      "name": "Uber AI Labs",
+      "attrs": {
+        "kind": "lab",
+        "note": "POET / Enhanced POET (now defunct; Stanley/Lehman/Clune)",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "lab:icaros_usc",
+      "type": "Org",
+      "name": "ICAROS (USC)",
+      "attrs": {
+        "kind": "lab",
+        "note": "Interactive & Collaborative Autonomous Robotic Systems — CMA-ME/MAE, pyribs",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "lab:airl_imperial",
+      "type": "Org",
+      "name": "AIRL (Imperial College)",
+      "attrs": {
+        "kind": "lab",
+        "note": "Adaptive & Intelligent Robotics Lab — MAP-Elites, QDax, OMNI-EPIC (Cully)",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "org:inria",
+      "type": "Org",
+      "name": "Inria",
+      "attrs": {
+        "kind": "lab",
+        "note": "MAP-Elites, damage recovery (Mouret)",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "org:university_of_alberta",
+      "type": "Org",
+      "name": "University of Alberta / Amii (RLAI)",
+      "attrs": {
+        "kind": "lab",
+        "note": "continual backprop, plasticity, streaming RL, OaK lineage",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "org:meta_fair",
+      "type": "Org",
+      "name": "Meta FAIR",
+      "attrs": {
+        "kind": "lab",
+        "note": "V-JEPA world models (LeCun)",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "org:ucf",
+      "type": "Org",
+      "name": "University of Central Florida",
+      "attrs": {
+        "kind": "academia",
+        "note": "original NEAT/novelty/MCC (Stanley lab, historical)",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "concept:learn_from_experience_runtime",
+      "type": "Concept",
+      "name": "Learning from experience at run-time",
+      "attrs": {
+        "definition": "Silver & Sutton 'Era of Experience': agents learn continually from their own grounded experience streams rather than frozen human-data pretraining. The organizing thesis behind D6.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "concept:tabula_rasa_vs_reincarnation",
+      "type": "Concept",
+      "name": "Tabula-rasa vs reincarnation",
+      "attrs": {
+        "definition": "From-random-init learning vs reusing prior weights/data. Pure tabula-rasa is compute-brutal (~1000+ GPU-days for 50 Atari); reincarnating RL reuses prior computation.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "concept:intrinsic_motivation",
+      "type": "Concept",
+      "name": "Intrinsic motivation",
+      "attrs": {
+        "definition": "Internally-generated reward driving exploration in the absence of (or to augment) extrinsic reward: curiosity, novelty, empowerment, learning-progress.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "concept:curiosity_prediction_error",
+      "type": "Concept",
+      "name": "Curiosity / prediction-error novelty",
+      "attrs": {
+        "definition": "Intrinsic reward = prediction error of a learned model (ICM inverse-dynamics features; RND fixed-random-target). Drives exploration of unfamiliar states.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "concept:empowerment",
+      "type": "Concept",
+      "name": "Empowerment",
+      "attrs": {
+        "definition": "Information-theoretic drive to maximize the agent's control over future states (mutual info between actions and future outcomes).",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "concept:learning_progress",
+      "type": "Concept",
+      "name": "Learning-progress signal",
+      "attrs": {
+        "definition": "Reward the IMPROVEMENT in prediction error (not raw error) — fixes the noisy-TV pathology of curiosity/RND.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "concept:automatic_curriculum_learning",
+      "type": "Concept",
+      "name": "Automatic curriculum learning",
+      "attrs": {
+        "definition": "Auto-generate a sequence of tasks/environments matched to the agent's current frontier so goals stay learnable-but-not-trivial.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "concept:unsupervised_environment_design",
+      "type": "Concept",
+      "name": "Unsupervised Environment Design (UED)",
+      "attrs": {
+        "definition": "Co-evolve a teacher that proposes environments maximizing student regret/learning-potential; yields robust zero-shot transfer.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "concept:regret_based_curriculum",
+      "type": "Concept",
+      "name": "Regret-based curriculum",
+      "attrs": {
+        "definition": "Select/mutate levels by estimated regret (PLR/PAIRED/ACCEL/SFL), steering toward solvable-but-hard levels and away from trivial/impossible collapse.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "concept:streaming_online_rl",
+      "type": "Concept",
+      "name": "Streaming / online RL",
+      "attrs": {
+        "definition": "Learn moment-by-moment from a single interaction stream with no replay buffer and no target networks (batch-size-one). Closest to OaK's operating regime.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "concept:test_time_training",
+      "type": "Concept",
+      "name": "Test-time training (TTT)",
+      "attrs": {
+        "definition": "Update (fast) weights at inference per instance/chunk — turns in-context adaptation into real gradient updates; an LLM-native path to run-time learning.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "concept:novelty_search",
+      "type": "Concept",
+      "name": "Novelty search",
+      "attrs": {
+        "definition": "Abandon the objective; reward behavioral novelty alone. Novelty is a proxy for stepping stones toward the objective on deceptive problems.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "concept:local_competition",
+      "type": "Concept",
+      "name": "Local competition",
+      "attrs": {
+        "definition": "Compete only against phenotypically-similar peers so locally-optimal but globally-weak individuals survive as stepping stones (NSLC; Dominated Novelty Search).",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "concept:stepping_stones",
+      "type": "Concept",
+      "name": "Stepping stones",
+      "attrs": {
+        "definition": "Sub-optimal intermediate solutions that are building blocks for later breakthroughs; objective-only search fails to reward them, archives preserve them.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "concept:archive_as_gene_pool",
+      "type": "Concept",
+      "name": "Archive-as-gene-pool",
+      "attrs": {
+        "definition": "A QD archive/repertoire retains diverse high-performers across a behavior space; that retained set IS a preserved gene pool from which latent traits can be recombined — hill-climbing discards it.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "concept:recessive_latent_trait_recovery",
+      "type": "Concept",
+      "name": "Recessive / latent trait recovery",
+      "attrs": {
+        "definition": "Non-expressed (recessive) or non-champion traits held in abeyance can be re-expressed/recombined when useful. Diploid GAs (Goldberg-Smith) give the literal genotypic form; QD archives the scalable form.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "concept:diploidy_dominance",
+      "type": "Concept",
+      "name": "Diploidy & dominance",
+      "attrs": {
+        "definition": "Two-allele genome where recessive alleles are a latent memory of past-optimal traits; adaptive dominance re-expresses them in non-stationary environments (Goldberg & Smith 1987).",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "concept:elite_recombination_crossover",
+      "type": "Concept",
+      "name": "Elite recombination / crossover in QD",
+      "attrs": {
+        "definition": "Recombine genetic material across archive niches: isoline/directional variation, discrete gene-level (meiosis-like) crossover, LLM in-context recombination of many elites.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "concept:qd_score",
+      "type": "Concept",
+      "name": "QD-score",
+      "attrs": {
+        "definition": "Sum of fitness over all archive cells — captures quality AND diversity; discarding non-champions directly lowers it. The metric that rewards keeping the whole pool.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "concept:speciation_niching",
+      "type": "Concept",
+      "name": "Speciation / niching",
+      "attrs": {
+        "definition": "Intra-population diversity-maintenance (fitness sharing, crowding, RTS, NEAT species) that protects sub-lineages so specialists survive and premature convergence is avoided.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "concept:fitness_sharing",
+      "type": "Concept",
+      "name": "Fitness sharing",
+      "attrs": {
+        "definition": "De-rate an individual's fitness by neighborhood crowding, forcing the population to spread across multiple peaks (Goldberg & Richardson 1987; used within NEAT species).",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "concept:map_elites_niches",
+      "type": "Concept",
+      "name": "MAP-Elites niches",
+      "attrs": {
+        "definition": "Partition a behavior space into cells; keep one elite per cell — an archive of specialists by construction (differentiation by behavior-space partition).",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "concept:minimal_criterion",
+      "type": "Concept",
+      "name": "Minimal criterion",
+      "attrs": {
+        "definition": "Reproduction gated only by a survival threshold (e.g. 'solved a maze'/'was solved once'), with no objective/novelty/descriptor — yet two coupled populations differentiate (MCC).",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "concept:open_endedness",
+      "type": "Concept",
+      "name": "Open-endedness (novelty + learnability)",
+      "attrs": {
+        "definition": "A system endlessly produces artifacts that are novel (raise uncertainty about the future) AND learnable (improve prediction of the future). Argued essential for ASI.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "concept:annecs",
+      "type": "Concept",
+      "name": "ANNECS metric",
+      "attrs": {
+        "definition": "Accumulated Number of Novel Environments Created and Solved — measures whether open-ended generation keeps innovating or stagnates (encoding-dependent).",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "concept:diversity_collapse",
+      "type": "Concept",
+      "name": "Diversity / mode collapse",
+      "attrs": {
+        "definition": "Populations (esp. LLM-mutated) converge to structural homogeneity / one champion; the failure mode that gene-pool preservation and speciation exist to prevent.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "concept:coevolution",
+      "type": "Concept",
+      "name": "Coevolution",
+      "attrs": {
+        "definition": "Two (or more) populations evolve against each other (environments↔agents, tasks↔models), generating auto-curricula and driving differentiation.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "concept:llm_as_mutation_operator",
+      "type": "Concept",
+      "name": "LLM-as-mutation-operator",
+      "attrs": {
+        "definition": "Use an LLM to generate variation (and sometimes evaluate) inside an evolutionary/QD loop — sample-efficient and semantically valid, but biased toward low structural diversity.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "concept:external_heldout_verifier",
+      "type": "Concept",
+      "name": "External held-out verifier",
+      "attrs": {
+        "definition": "Score candidates on a sealed/held-out signal computed by deterministic code (not the mutating LLM's self-report), to catch overfitting/measurement-artifact 'improvements'.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "benchmark:continual_imagenet",
+      "type": "Benchmark",
+      "name": "Continual-ImageNet (binary task stream)",
+      "attrs": {
+        "measures": "plasticity loss over long task sequences",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "benchmark:montezumas_revenge",
+      "type": "Benchmark",
+      "name": "Montezuma's Revenge (Atari)",
+      "attrs": {
+        "measures": "hard-exploration / intrinsic-motivation testbed",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "benchmark:minecraft_diamond",
+      "type": "Benchmark",
+      "name": "Minecraft diamond (from pixels, sparse reward)",
+      "attrs": {
+        "measures": "long-horizon exploration from scratch (Dreamer line)",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "benchmark:dm_control_dog",
+      "type": "Benchmark",
+      "name": "DM-Control Dog",
+      "attrs": {
+        "measures": "high-dim continuous control (streaming RL)",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "benchmark:brax_locomotion_qd",
+      "type": "Benchmark",
+      "name": "Brax locomotion QD (Walker/Ant/Halfcheetah)",
+      "attrs": {
+        "measures": "QD-score & coverage of gait repertoires",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "benchmark:craftax",
+      "type": "Benchmark",
+      "name": "Craftax",
+      "attrs": {
+        "measures": "lightning-fast open-ended RL benchmark (JAX)",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "benchmark:kinetix_holdout",
+      "type": "Benchmark",
+      "name": "Kinetix human-designed holdout",
+      "attrs": {
+        "measures": "zero-shot generalization of open-ended-trained agents",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "benchmark:circle_packing",
+      "type": "Benchmark",
+      "name": "Circle packing",
+      "attrs": {
+        "measures": "program-evolution sample-efficiency (ShinkaEvolve)",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "benchmark:swe_bench",
+      "type": "Benchmark",
+      "name": "SWE-bench",
+      "attrs": {
+        "measures": "real GitHub issue resolution (self-improving agents)",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "benchmark:polyglot",
+      "type": "Benchmark",
+      "name": "Polyglot",
+      "attrs": {
+        "measures": "multi-language coding benchmark (DGM)",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "benchmark:sealed_test_harness_7dom",
+      "type": "Benchmark",
+      "name": "Sealed 7-domain harness test",
+      "attrs": {
+        "measures": "held-out generalization of evolved agent harnesses (GSME)",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2410.14606",
+      "type": "Paper",
+      "name": "Streaming Deep Reinforcement Learning Finally Works (stream-x)",
+      "attrs": {
+        "authors": "Elsayed, Vasan, Mahmood",
+        "date": "2024-10",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2410.14606",
+        "family": "F1",
+        "grade": "primary"
+      },
+      "source": "agent:family1_developmental (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2301.04104",
+      "type": "Paper",
+      "name": "Mastering Diverse Domains through World Models (DreamerV3)",
+      "attrs": {
+        "authors": "Hafner, Pasukonis, Ba, Lillicrap",
+        "date": "2023-01",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2301.04104",
+        "family": "F1",
+        "grade": "primary"
+      },
+      "source": "agent:family1_developmental (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2509.24527",
+      "type": "Paper",
+      "name": "Training Agents Inside of Scalable World Models (Dreamer 4)",
+      "attrs": {
+        "authors": "Hafner, Yan, Lillicrap",
+        "date": "2025-09",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2509.24527",
+        "family": "F1",
+        "grade": "primary"
+      },
+      "source": "agent:family1_developmental (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2310.16828",
+      "type": "Paper",
+      "name": "TD-MPC2: Scalable, Robust World Models for Continuous Control",
+      "attrs": {
+        "authors": "Hansen, Su, Wang",
+        "date": "2023-10",
+        "venue": "arXiv/ICLR2024",
+        "url": "https://arxiv.org/abs/2310.16828",
+        "family": "F1",
+        "grade": "primary"
+      },
+      "source": "agent:family1_developmental (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:1810.12894",
+      "type": "Paper",
+      "name": "Exploration by Random Network Distillation (RND)",
+      "attrs": {
+        "authors": "Burda, Edwards, Storkey, Klimov",
+        "date": "2018-10",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/1810.12894",
+        "family": "F1",
+        "grade": "primary"
+      },
+      "source": "agent:family1_developmental (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:1705.05363",
+      "type": "Paper",
+      "name": "Curiosity-driven Exploration by Self-supervised Prediction (ICM)",
+      "attrs": {
+        "authors": "Pathak, Agrawal, Efros, Darrell",
+        "date": "2017-05",
+        "venue": "arXiv/ICML",
+        "url": "https://arxiv.org/abs/1705.05363",
+        "family": "F1",
+        "grade": "primary"
+      },
+      "source": "agent:family1_developmental (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2505.11044",
+      "type": "Paper",
+      "name": "Exploration by Random Distribution Distillation (RDD)",
+      "attrs": {
+        "authors": "(RDD authors)",
+        "date": "2025-05",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2505.11044",
+        "family": "F1",
+        "grade": "primary"
+      },
+      "source": "agent:family1_developmental (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2509.25438",
+      "type": "Paper",
+      "name": "Beyond Noisy-TVs: Noise-Robust Exploration via Learning-Progress Monitoring",
+      "attrs": {
+        "authors": "(2025)",
+        "date": "2025-09",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2509.25438",
+        "family": "F1",
+        "grade": "primary"
+      },
+      "source": "agent:family1_developmental (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2510.05996",
+      "type": "Paper",
+      "name": "Information-Theoretic Policy Pre-Training with Empowerment",
+      "attrs": {
+        "authors": "(2025)",
+        "date": "2025-10",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2510.05996",
+        "family": "F1",
+        "grade": "primary"
+      },
+      "source": "agent:family1_developmental (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2405.15568",
+      "type": "Paper",
+      "name": "OMNI-EPIC: Open-endedness via Models of human Notions of Interestingness with Environments Programmed in Code",
+      "attrs": {
+        "authors": "Faldor, Zhang, Cully, Clune",
+        "date": "2024-05",
+        "venue": "arXiv/ICLR2025",
+        "url": "https://arxiv.org/abs/2405.15568",
+        "family": "F1",
+        "grade": "primary"
+      },
+      "source": "agent:family1_developmental (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2306.01711",
+      "type": "Paper",
+      "name": "OMNI: Open-endedness via Models of human Notions of Interestingness",
+      "attrs": {
+        "authors": "Zhang, Lehman, Stanley, Clune",
+        "date": "2023-06",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2306.01711",
+        "family": "F1",
+        "grade": "primary"
+      },
+      "source": "agent:family1_developmental (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2110.02439",
+      "type": "Paper",
+      "name": "Replay-Guided Adversarial Environment Design (Robust PLR)",
+      "attrs": {
+        "authors": "Jiang, Dennis, Grefenstette, Rocktäschel et al.",
+        "date": "2021-10",
+        "venue": "arXiv/NeurIPS",
+        "url": "https://arxiv.org/abs/2110.02439",
+        "family": "F1",
+        "grade": "primary"
+      },
+      "source": "agent:family1_developmental (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2203.01302",
+      "type": "Paper",
+      "name": "Evolving Curricula with Regret-Based Environment Design (ACCEL)",
+      "attrs": {
+        "authors": "Parker-Holder, Jiang, Dennis, Samvelyan, Foerster, Grefenstette, Rocktäschel",
+        "date": "2022-03",
+        "venue": "arXiv/ICML",
+        "url": "https://arxiv.org/abs/2203.01302",
+        "family": "F1",
+        "grade": "primary"
+      },
+      "source": "agent:family1_developmental (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2411.04832",
+      "type": "Paper",
+      "name": "Plasticity Loss in Deep Reinforcement Learning: A Survey",
+      "attrs": {
+        "authors": "Klein, Luther, McAuliffe, Miklautz, Plant, Tschiatschek",
+        "date": "2026-04",
+        "venue": "arXiv v3",
+        "url": "https://arxiv.org/abs/2411.04832",
+        "family": "F1",
+        "grade": "primary"
+      },
+      "source": "agent:family1_developmental (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2606.24752",
+      "type": "Paper",
+      "name": "Can Scale Save Us From Plasticity Loss in Large Language Models?",
+      "attrs": {
+        "authors": "Hernandez-Garcia, Figliolia, Millidge",
+        "date": "2026-06",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2606.24752",
+        "family": "F1",
+        "grade": "primary"
+      },
+      "source": "agent:family1_developmental (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2302.12902",
+      "type": "Paper",
+      "name": "The Dormant Neuron Phenomenon in Deep RL (ReDo)",
+      "attrs": {
+        "authors": "Sokar, Agarwal, Castro, Evci",
+        "date": "2023-02",
+        "venue": "arXiv/ICML",
+        "url": "https://arxiv.org/abs/2302.12902",
+        "family": "F1",
+        "grade": "primary"
+      },
+      "source": "agent:family1_developmental (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2504.17490",
+      "type": "Paper",
+      "name": "Plasticine: Accelerating Research in Plasticity-Motivated Deep RL",
+      "attrs": {
+        "authors": "(2025)",
+        "date": "2025-04",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2504.17490",
+        "family": "F1",
+        "grade": "primary"
+      },
+      "source": "agent:family1_developmental (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2505.03335",
+      "type": "Paper",
+      "name": "Absolute Zero: Reinforced Self-play Reasoning with Zero Data",
+      "attrs": {
+        "authors": "Zhao et al.",
+        "date": "2025-05",
+        "venue": "arXiv/NeurIPS2025",
+        "url": "https://arxiv.org/abs/2505.03335",
+        "family": "F1",
+        "grade": "primary"
+      },
+      "source": "agent:family1_developmental (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2506.09985",
+      "type": "Paper",
+      "name": "V-JEPA 2: Self-Supervised Video World Model",
+      "attrs": {
+        "authors": "Meta FAIR (Bardes et al.)",
+        "date": "2025-06",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2506.09985",
+        "family": "F1",
+        "grade": "primary"
+      },
+      "source": "agent:family1_developmental (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2503.11842",
+      "type": "Paper",
+      "name": "Test-Time Training Provably Improves Transformers as In-context Learners",
+      "attrs": {
+        "authors": "(2026)",
+        "date": "2026-02",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2503.11842",
+        "family": "F1",
+        "grade": "primary"
+      },
+      "source": "agent:family1_developmental (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2604.06169",
+      "type": "Paper",
+      "name": "In-Place Test-Time Training",
+      "attrs": {
+        "authors": "(2026)",
+        "date": "2026-04",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2604.06169",
+        "family": "F1",
+        "grade": "primary"
+      },
+      "source": "agent:family1_developmental (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2512.23675",
+      "type": "Paper",
+      "name": "End-to-End Test-Time Training for Long Context",
+      "attrs": {
+        "authors": "(2025)",
+        "date": "2025-12",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2512.23675",
+        "family": "F1",
+        "grade": "primary"
+      },
+      "source": "agent:family1_developmental (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2506.21872",
+      "type": "Paper",
+      "name": "A Survey of Continual Reinforcement Learning",
+      "attrs": {
+        "authors": "Pan, Yang, Li, Wei, Li, An, Liang",
+        "date": "2025-06",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2506.21872",
+        "family": "F1",
+        "grade": "primary"
+      },
+      "source": "agent:family1_developmental (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2202.03466",
+      "type": "Paper",
+      "name": "Reward-Respecting Subtasks for Model-Based Reinforcement Learning",
+      "attrs": {
+        "authors": "Sutton, Machado, Holland, Timbers, Tanner, White",
+        "date": "2022-02",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2202.03466",
+        "family": "F1",
+        "grade": "primary"
+      },
+      "source": "agent:family1_developmental (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:title:goldberg_smith_1987_diploidy",
+      "type": "Paper",
+      "name": "Nonstationary function optimization using genetic algorithms with dominance and diploidy",
+      "attrs": {
+        "authors": "Goldberg, Smith",
+        "date": "1987",
+        "venue": "ICGA",
+        "url": "https://content.wolfram.com/sites/13/2018/02/06-3-4.pdf",
+        "family": "F2",
+        "grade": "hypothesis"
+      },
+      "source": "agent:family2_quality_diversity (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:title:lehman_stanley_2011_novelty",
+      "type": "Paper",
+      "name": "Abandoning Objectives: Evolution Through the Search for Novelty Alone",
+      "attrs": {
+        "authors": "Lehman, Stanley",
+        "date": "2011",
+        "venue": "Evolutionary Computation 19(2)",
+        "url": "https://dl.acm.org/doi/abs/10.1162/evco_a_00025",
+        "family": "F2",
+        "grade": "hypothesis"
+      },
+      "source": "agent:family2_quality_diversity (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:title:lehman_stanley_2011_nslc",
+      "type": "Paper",
+      "name": "Evolving a Diversity of Creatures through Novelty Search and Local Competition (NSLC)",
+      "attrs": {
+        "authors": "Lehman, Stanley",
+        "date": "2011",
+        "venue": "GECCO",
+        "url": "https://dl.acm.org/doi/10.1145/2001576.2001606",
+        "family": "F2",
+        "grade": "hypothesis"
+      },
+      "source": "agent:family2_quality_diversity (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:1504.04909",
+      "type": "Paper",
+      "name": "Illuminating search spaces by mapping elites (MAP-Elites)",
+      "attrs": {
+        "authors": "Mouret, Clune",
+        "date": "2015-04",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/1504.04909",
+        "family": "F2",
+        "grade": "primary"
+      },
+      "source": "agent:family2_quality_diversity (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:title:cully_2015_nature",
+      "type": "Paper",
+      "name": "Robots that can adapt like animals",
+      "attrs": {
+        "authors": "Cully, Clune, Tarapore, Mouret",
+        "date": "2015",
+        "venue": "Nature 521:503-507",
+        "url": "https://www.nature.com/articles/nature14422",
+        "family": "F2",
+        "grade": "primary"
+      },
+      "source": "agent:family2_quality_diversity (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:title:pugh_2016_qd_frontier",
+      "type": "Paper",
+      "name": "Quality Diversity: A New Frontier for Evolutionary Computation",
+      "attrs": {
+        "authors": "Pugh, Soros, Stanley",
+        "date": "2016",
+        "venue": "Frontiers in Robotics & AI",
+        "url": "https://www.frontiersin.org/articles/10.3389/frobt.2016.00040/full",
+        "family": "F2",
+        "grade": "hypothesis"
+      },
+      "source": "agent:family2_quality_diversity (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:1912.02400",
+      "type": "Paper",
+      "name": "Covariance Matrix Adaptation for the Rapid Illumination of Behavior Space (CMA-ME)",
+      "attrs": {
+        "authors": "Fontaine, Togelius, Nikolaidis, Hoover",
+        "date": "2019-12",
+        "venue": "arXiv/GECCO2020",
+        "url": "https://arxiv.org/abs/1912.02400",
+        "family": "F2",
+        "grade": "primary"
+      },
+      "source": "agent:family2_quality_diversity (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2205.10752",
+      "type": "Paper",
+      "name": "Covariance Matrix Adaptation MAP-Annealing (CMA-MAE)",
+      "attrs": {
+        "authors": "Fontaine, Nikolaidis",
+        "date": "2022-05",
+        "venue": "arXiv/GECCO2023/TELO",
+        "url": "https://arxiv.org/abs/2205.10752",
+        "family": "F2",
+        "grade": "primary"
+      },
+      "source": "agent:family2_quality_diversity (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2303.00191",
+      "type": "Paper",
+      "name": "pyribs: A Bare-Bones Python Library for Quality Diversity Optimization",
+      "attrs": {
+        "authors": "Tjanaka, Fontaine, Nikolaidis et al.",
+        "date": "2023-03",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2303.00191",
+        "family": "F2",
+        "grade": "primary"
+      },
+      "source": "agent:family2_quality_diversity (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2308.03665",
+      "type": "Paper",
+      "name": "QDax: A Library for Quality-Diversity and Population-based Algorithms with Hardware Acceleration",
+      "attrs": {
+        "authors": "Chalumeau, Lim, Cully et al.",
+        "date": "2023-08",
+        "venue": "arXiv/JMLR25",
+        "url": "https://arxiv.org/abs/2308.03665",
+        "family": "F2",
+        "grade": "primary"
+      },
+      "source": "agent:family2_quality_diversity (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2202.01258",
+      "type": "Paper",
+      "name": "Accelerated Quality-Diversity through Massive Parallelism",
+      "attrs": {
+        "authors": "Lim, Allard, Grillotti, Cully",
+        "date": "2022-02",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2202.01258",
+        "family": "F2",
+        "grade": "primary"
+      },
+      "source": "agent:family2_quality_diversity (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2404.01817",
+      "type": "Paper",
+      "name": "Tensorized NeuroEvolution of Augmenting Topologies for GPU Acceleration (TensorNEAT)",
+      "attrs": {
+        "authors": "Wang, Zhang, Wei et al.",
+        "date": "2024-04",
+        "venue": "arXiv/GECCO",
+        "url": "https://arxiv.org/abs/2404.01817",
+        "family": "F2",
+        "grade": "primary"
+      },
+      "source": "agent:family2_quality_diversity (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2504.08339",
+      "type": "Paper",
+      "name": "TensorNEAT: A GPU-accelerated Library for NeuroEvolution of Augmenting Topologies",
+      "attrs": {
+        "authors": "Wang, Zhang, Wei et al.",
+        "date": "2025-04",
+        "venue": "arXiv/ACM TELO",
+        "url": "https://arxiv.org/abs/2504.08339",
+        "family": "F2",
+        "grade": "primary"
+      },
+      "source": "agent:family2_quality_diversity (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:1703.03864",
+      "type": "Paper",
+      "name": "Evolution Strategies as a Scalable Alternative to Reinforcement Learning (OpenAI-ES)",
+      "attrs": {
+        "authors": "Salimans, Ho, Chen, Sidor, Sutskever",
+        "date": "2017-03",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/1703.03864",
+        "family": "F2",
+        "grade": "primary"
+      },
+      "source": "agent:family2_quality_diversity (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:1703.00548",
+      "type": "Paper",
+      "name": "Evolving Deep Neural Networks (CoDeepNEAT)",
+      "attrs": {
+        "authors": "Miikkulainen et al.",
+        "date": "2017-03",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/1703.00548",
+        "family": "F2",
+        "grade": "primary"
+      },
+      "source": "agent:family2_quality_diversity (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2206.08896",
+      "type": "Paper",
+      "name": "Evolution through Large Models (ELM)",
+      "attrs": {
+        "authors": "Lehman, Gordon, Jain, Ndousse, Yeh, Stanley",
+        "date": "2022-06",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2206.08896",
+        "family": "F2",
+        "grade": "primary"
+      },
+      "source": "agent:family2_quality_diversity (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2310.13032",
+      "type": "Paper",
+      "name": "Quality-Diversity through AI Feedback (QDAIF)",
+      "attrs": {
+        "authors": "Bradley, Dai, Teufel, Zhang, Clune, Stanley, Lehman et al.",
+        "date": "2023-10",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2310.13032",
+        "family": "F2",
+        "grade": "primary"
+      },
+      "source": "agent:family2_quality_diversity (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2310.12103",
+      "type": "Paper",
+      "name": "Quality Diversity through Human Feedback (QDHF)",
+      "attrs": {
+        "authors": "Ding, Zhang, Clune, Spector, Lehman",
+        "date": "2023-10",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2310.12103",
+        "family": "F2",
+        "grade": "primary"
+      },
+      "source": "agent:family2_quality_diversity (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2404.15794",
+      "type": "Paper",
+      "name": "Large Language Models as In-context AI Generators for Quality-Diversity (In-context QD)",
+      "attrs": {
+        "authors": "Lim, Flageat, Cully",
+        "date": "2024-04",
+        "venue": "arXiv/ALIFE2024",
+        "url": "https://arxiv.org/abs/2404.15794",
+        "family": "F2",
+        "grade": "primary"
+      },
+      "source": "agent:family2_quality_diversity (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2602.13730",
+      "type": "Paper",
+      "name": "Discrete Gene Crossover Accelerates Solution Discovery in Quality-Diversity Algorithms",
+      "attrs": {
+        "authors": "Hutchinson, Herrmann, Smith",
+        "date": "2026-02",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2602.13730",
+        "family": "F2",
+        "grade": "primary"
+      },
+      "source": "agent:family2_quality_diversity (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2502.00593",
+      "type": "Paper",
+      "name": "Dominated Novelty Search: Rethinking Local Competition in Quality-Diversity",
+      "attrs": {
+        "authors": "Bahlous-Boldi, Faldor, Grillotti, Janmohamed, Coiffard, Spector, Cully",
+        "date": "2025-01",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2502.00593",
+        "family": "F2",
+        "grade": "primary"
+      },
+      "source": "agent:family2_quality_diversity (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2401.10539",
+      "type": "Paper",
+      "name": "Quality-Diversity Algorithms Can Provably Be Helpful for Optimization",
+      "attrs": {
+        "authors": "Qian, Xue, Wang",
+        "date": "2024-01",
+        "venue": "arXiv/IJCAI2024",
+        "url": "https://arxiv.org/abs/2401.10539",
+        "family": "F2",
+        "grade": "primary"
+      },
+      "source": "agent:family2_quality_diversity (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2606.05408",
+      "type": "Paper",
+      "name": "Mutation Without Variation: Convergence Dynamics in LLM-Driven Program Evolution",
+      "attrs": {
+        "authors": "Gurkan, Stonedahl, Wilensky",
+        "date": "2026-06",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2606.05408",
+        "family": "F2",
+        "grade": "primary"
+      },
+      "source": "agent:family2_quality_diversity (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2509.19349",
+      "type": "Paper",
+      "name": "ShinkaEvolve: Towards Open-Ended and Sample-Efficient Program Evolution",
+      "attrs": {
+        "authors": "Lange et al. (Sakana AI)",
+        "date": "2025-09",
+        "venue": "arXiv/ICLR2026",
+        "url": "https://arxiv.org/abs/2509.19349",
+        "family": "F2",
+        "grade": "primary"
+      },
+      "source": "agent:family2_quality_diversity (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2605.27130",
+      "type": "Paper",
+      "name": "DEI: Diversity in Evolutionary Inference for Quality-Diversity Search",
+      "attrs": {
+        "authors": "Donaghy, Rastogi",
+        "date": "2026-05",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2605.27130",
+        "family": "F2",
+        "grade": "primary"
+      },
+      "source": "agent:family2_quality_diversity (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2311.02283",
+      "type": "Paper",
+      "name": "Objectives Are All You Need: Solving Deceptive Problems Without Explicit Diversity Maintenance",
+      "attrs": {
+        "authors": "(2023)",
+        "date": "2023-11",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2311.02283",
+        "family": "F2",
+        "grade": "primary"
+      },
+      "source": "agent:family2_quality_diversity (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2504.01915",
+      "type": "Paper",
+      "name": "Overcoming Deceptiveness in Fitness Optimization with Unsupervised Quality-Diversity (AURORA-XCon)",
+      "attrs": {
+        "authors": "(2025)",
+        "date": "2025-04",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2504.01915",
+        "family": "F2",
+        "grade": "primary"
+      },
+      "source": "agent:family2_quality_diversity (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:1901.01753",
+      "type": "Paper",
+      "name": "Paired Open-Ended Trailblazer (POET)",
+      "attrs": {
+        "authors": "Wang, Lehman, Clune, Stanley",
+        "date": "2019-01",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/1901.01753",
+        "family": "F3",
+        "grade": "primary"
+      },
+      "source": "agent:family3_open_ended (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2003.08536",
+      "type": "Paper",
+      "name": "Enhanced POET: Open-Ended RL through Unbounded Invention of Learning Challenges and their Solutions",
+      "attrs": {
+        "authors": "Wang, Lehman, Rawal, Zhi, Li, Clune, Stanley",
+        "date": "2020-03",
+        "venue": "arXiv/ICML2020",
+        "url": "https://arxiv.org/abs/2003.08536",
+        "family": "F3",
+        "grade": "primary"
+      },
+      "source": "agent:family3_open_ended (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:title:brant_stanley_2017_mcc",
+      "type": "Paper",
+      "name": "Minimal Criterion Coevolution: A New Approach to Open-Ended Search",
+      "attrs": {
+        "authors": "Brant, Stanley",
+        "date": "2017",
+        "venue": "GECCO",
+        "url": "https://dl.acm.org/doi/10.1145/3071178.3071186",
+        "family": "F3",
+        "grade": "hypothesis"
+      },
+      "source": "agent:family3_open_ended (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:title:mcc_resource_2020",
+      "type": "Paper",
+      "name": "Diversity preservation in minimal criterion coevolution through resource limitation",
+      "attrs": {
+        "authors": "(Stanley lab)",
+        "date": "2020",
+        "venue": "GECCO",
+        "url": "https://dl.acm.org/doi/10.1145/3377930.3389809",
+        "family": "F3",
+        "grade": "hypothesis"
+      },
+      "source": "agent:family3_open_ended (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:title:stanley_neat_2002",
+      "type": "Paper",
+      "name": "Evolving Neural Networks through Augmenting Topologies (NEAT)",
+      "attrs": {
+        "authors": "Stanley, Miikkulainen",
+        "date": "2002",
+        "venue": "Evolutionary Computation 10(2)",
+        "url": "https://dl.acm.org/doi/10.1162/106365602320169811",
+        "family": "F3",
+        "grade": "primary"
+      },
+      "source": "agent:family3_open_ended (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2406.04268",
+      "type": "Paper",
+      "name": "Open-Endedness is Essential for Artificial Superhuman Intelligence",
+      "attrs": {
+        "authors": "Hughes, Dennis, Parker-Holder, Behbahani, Mavalankar, Shi, Schaul, Rocktäschel",
+        "date": "2024-06",
+        "venue": "arXiv/ICML2024",
+        "url": "https://arxiv.org/abs/2406.04268",
+        "family": "F3",
+        "grade": "primary"
+      },
+      "source": "agent:family3_open_ended (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2602.08194",
+      "type": "Paper",
+      "name": "Dreaming in Code (DiCode): FM-synthesized intermediate environment code for open-ended curricula",
+      "attrs": {
+        "authors": "Mitsides, Faldor, Cully",
+        "date": "2026-02",
+        "venue": "arXiv/ICML2026",
+        "url": "https://arxiv.org/abs/2602.08194",
+        "family": "F3",
+        "grade": "primary"
+      },
+      "source": "agent:family3_open_ended (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2601.01931",
+      "type": "Paper",
+      "name": "DéjàQ: Open-Ended Evolution of Diverse, Learnable and Verifiable Problems",
+      "attrs": {
+        "authors": "Röpke, Coward, Lupu, Foster, Rocktäschel, Foerster",
+        "date": "2026-01",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2601.01931",
+        "family": "F3",
+        "grade": "primary"
+      },
+      "source": "agent:family3_open_ended (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2604.14969",
+      "type": "Paper",
+      "name": "Discovering Novel LLM Experts via Task-Capability Coevolution (AC/DC)",
+      "attrs": {
+        "authors": "Dai, Meinardus, Regan, Tian, Tang",
+        "date": "2026-04",
+        "venue": "arXiv/ICLR2026",
+        "url": "https://arxiv.org/abs/2604.14969",
+        "family": "F3",
+        "grade": "primary"
+      },
+      "source": "agent:family3_open_ended (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2410.23208",
+      "type": "Paper",
+      "name": "Kinetix: Investigating the Training of General Agents through Open-Ended Physics-Based Control Tasks",
+      "attrs": {
+        "authors": "Matthews, Beukman, Lu, Foerster",
+        "date": "2024-10",
+        "venue": "arXiv/ICLR2025",
+        "url": "https://arxiv.org/abs/2410.23208",
+        "family": "F3",
+        "grade": "primary"
+      },
+      "source": "agent:family3_open_ended (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2507.06466",
+      "type": "Paper",
+      "name": "Foundation Model Self-Play (FMSP): Open-Ended Strategy Innovation via Foundation Models",
+      "attrs": {
+        "authors": "Dharna, Lu, Clune",
+        "date": "2025-07",
+        "venue": "arXiv/RLC2025",
+        "url": "https://arxiv.org/abs/2507.06466",
+        "family": "F3",
+        "grade": "primary"
+      },
+      "source": "agent:family3_open_ended (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2606.08369",
+      "type": "Paper",
+      "name": "An Information-Theoretic Definition for Open-Ended Learning",
+      "attrs": {
+        "authors": "Xu, Zhu, Van Roy",
+        "date": "2026-06",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2606.08369",
+        "family": "F3",
+        "grade": "primary"
+      },
+      "source": "agent:family3_open_ended (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2505.11581",
+      "type": "Paper",
+      "name": "Questioning Representational Optimism in Deep Learning: The Fractured Entangled Representation Hypothesis",
+      "attrs": {
+        "authors": "Kumar, Clune, Lehman, Stanley",
+        "date": "2025-05",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2505.11581",
+        "family": "F3",
+        "grade": "primary"
+      },
+      "source": "agent:family3_open_ended (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2412.17799",
+      "type": "Paper",
+      "name": "Automating the Search for Artificial Life with Foundation Models (ASAL)",
+      "attrs": {
+        "authors": "Kumar, Lu, Faldor, Clune, Stanley et al.",
+        "date": "2024-12",
+        "venue": "arXiv/Artificial Life 2025",
+        "url": "https://arxiv.org/abs/2412.17799",
+        "family": "F3",
+        "grade": "primary"
+      },
+      "source": "agent:family3_open_ended (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2604.01658",
+      "type": "Paper",
+      "name": "CORAL: Towards Autonomous Multi-Agent Evolution for Open-Ended Discovery",
+      "attrs": {
+        "authors": "Qu et al.",
+        "date": "2026-04",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2604.01658",
+        "family": "F3",
+        "grade": "primary"
+      },
+      "source": "agent:family3_open_ended (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2511.12869",
+      "type": "Paper",
+      "name": "On the Fundamental Limits of LLMs at Scale",
+      "attrs": {
+        "authors": "(2025)",
+        "date": "2025-11",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2511.12869",
+        "family": "F3",
+        "grade": "primary"
+      },
+      "source": "agent:family3_open_ended (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2605.23908",
+      "type": "Paper",
+      "name": "In Search of the Ingredients of Open-Endedness: Replicating Picbreeder with Large VLMs",
+      "attrs": {
+        "authors": "Earle, Arulkumaran, Dai, Kumar, Togelius, Risi",
+        "date": "2026-05",
+        "venue": "arXiv/GECCO2026",
+        "url": "https://arxiv.org/abs/2605.23908",
+        "family": "F3",
+        "grade": "primary"
+      },
+      "source": "agent:family3_open_ended (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2502.07577",
+      "type": "Paper",
+      "name": "Automated Capability Discovery via Model Self-Exploration",
+      "attrs": {
+        "authors": "Lu, Hu, Clune",
+        "date": "2025-02",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2502.07577",
+        "family": "F3",
+        "grade": "primary"
+      },
+      "source": "agent:family3_open_ended (grounded WebSearch, 2026-07-17)",
+      "domain": "D6"
+    },
+    {
+      "id": "paper:2607.13683",
+      "type": "Paper",
+      "name": "Self-Evolving Agent Harnesses via Gated Semantic Quality-Diversity (GSME)",
+      "attrs": {
+        "authors": "Luo, Wang, Hu, Xue, Deng",
+        "date": "2026-07",
+        "venue": "arXiv",
+        "url": "https://arxiv.org/abs/2607.13683",
+        "family": "LearnOS",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "method:continual_backpropagation",
+      "type": "Method",
+      "name": "Continual backpropagation",
+      "attrs": {
+        "methodology": "methodology:developmental_from_scratch_learning",
+        "definition": "Selectively re-initialize a small fraction of low-utility units each step to inject continual variability; maintains plasticity indefinitely.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "method:redo",
+      "type": "Method",
+      "name": "ReDo (dormant-neuron recycling)",
+      "attrs": {
+        "methodology": "methodology:developmental_from_scratch_learning",
+        "definition": "Periodically recycle dormant neurons (reinit incoming, zero outgoing) to restore plasticity in deep RL.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "method:stream_x",
+      "type": "Method",
+      "name": "stream-x (stream Q / AC / TD)",
+      "attrs": {
+        "methodology": "methodology:developmental_from_scratch_learning",
+        "definition": "Streaming deep RL with NO replay buffer and NO target networks; layer-norm + step-size adaptation + observation/reward scaling overcome the 'stream barrier'.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "method:dreamerv3",
+      "type": "Method",
+      "name": "DreamerV3",
+      "attrs": {
+        "methodology": "methodology:developmental_from_scratch_learning",
+        "definition": "General model-based RL learning a world model from experience; imagines rollouts; one config across 150+ tasks; single GPU.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "method:dreamer4",
+      "type": "Method",
+      "name": "Dreamer 4",
+      "attrs": {
+        "methodology": "methodology:developmental_from_scratch_learning",
+        "definition": "2B-param agent that learns a scalable transformer world model from OFFLINE video and does RL-in-imagination; ~21 FPS single GPU.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "method:tdmpc2",
+      "type": "Method",
+      "name": "TD-MPC2",
+      "attrs": {
+        "methodology": "methodology:developmental_from_scratch_learning",
+        "definition": "Decoder-free latent world model + local trajectory optimization; one hyperparameter set across 104 continuous-control tasks.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "method:rnd",
+      "type": "Method",
+      "name": "Random Network Distillation (RND)",
+      "attrs": {
+        "methodology": "methodology:developmental_from_scratch_learning",
+        "definition": "Intrinsic reward = prediction error of a predictor net vs a fixed random target net; novelty bonus for unfamiliar states.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "method:icm",
+      "type": "Method",
+      "name": "Intrinsic Curiosity Module (ICM)",
+      "attrs": {
+        "methodology": "methodology:developmental_from_scratch_learning",
+        "definition": "Curiosity = prediction error in an inverse-dynamics feature space; drives exploration under sparse reward.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "method:rdd",
+      "type": "Method",
+      "name": "Random Distribution Distillation (RDD)",
+      "attrs": {
+        "methodology": "methodology:developmental_from_scratch_learning",
+        "definition": "RND successor: samples the target from a normal distribution; intrinsic reward bounded by a pseudo-count term for proper exploration decay.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "method:omni_epic",
+      "type": "Method",
+      "name": "OMNI-EPIC",
+      "attrs": {
+        "methodology": "methodology:open_ended_evolution",
+        "definition": "A foundation model writes environment+reward CODE for the next learnable-AND-interesting task; unbounded curriculum via code generation.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "method:paired",
+      "type": "Method",
+      "name": "PAIRED (UED)",
+      "attrs": {
+        "methodology": "methodology:developmental_from_scratch_learning",
+        "definition": "Protagonist-Antagonist Induced Regret Environment Design: train a teacher to maximize regret between two students → solvable-but-hard levels.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "method:accel",
+      "type": "Method",
+      "name": "ACCEL",
+      "attrs": {
+        "methodology": "methodology:developmental_from_scratch_learning",
+        "definition": "Regret-based UED with evolution: edit-and-replay high-regret levels for rapid complexity escalation and zero-shot transfer.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "method:ttt_in_place",
+      "type": "Method",
+      "name": "In-Place Test-Time Training",
+      "attrs": {
+        "methodology": "methodology:developmental_from_scratch_learning",
+        "definition": "Update a subset of fast weights at inference (chunk-wise); a 4B model handles contexts up to 128k — a step toward continual learning in LLMs.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "method:absolute_zero",
+      "type": "Method",
+      "name": "Absolute Zero (self-play reasoning)",
+      "attrs": {
+        "methodology": "methodology:developmental_from_scratch_learning",
+        "definition": "One LLM is both proposer (invents tasks to maximize learning progress) and solver, verified by a code executor; zero external data (but pretrained base).",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "method:map_elites",
+      "type": "Method",
+      "name": "MAP-Elites",
+      "attrs": {
+        "methodology": "methodology:quality_diversity",
+        "definition": "Discretize a behavior space into cells; keep the single best elite per cell — an illuminating archive of specialists.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "method:cma_me",
+      "type": "Method",
+      "name": "CMA-ME",
+      "attrs": {
+        "methodology": "methodology:quality_diversity",
+        "definition": "CMA-ES self-adaptation driving a MAP-Elites archive; higher quality + broader diversity than CMA-ES or MAP-Elites alone.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "method:cma_mae",
+      "type": "Method",
+      "name": "CMA-MAE",
+      "attrs": {
+        "methodology": "methodology:quality_diversity",
+        "definition": "Soft-archive annealing fixes CMA-ME's three failure modes (premature exploration, flat objectives, low-res archives).",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "method:novelty_search_nslc",
+      "type": "Method",
+      "name": "Novelty Search + Local Competition (NSLC)",
+      "attrs": {
+        "methodology": "methodology:quality_diversity",
+        "definition": "Combine a novelty objective with local competition so locally-optimal but globally-weak individuals survive as stepping stones — direct QD ancestor.",
+        "grade": "hypothesis"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "method:dominated_novelty_search",
+      "type": "Method",
+      "name": "Dominated Novelty Search",
+      "attrs": {
+        "methodology": "methodology:quality_diversity",
+        "definition": "Local competition as a fitness transform: competition fitness = distance to k-nearest FITTER solutions; niche-champions preserved with no grid/threshold.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "method:discrete_gene_crossover",
+      "type": "Method",
+      "name": "Discrete gene crossover (IsoLineCross)",
+      "attrs": {
+        "methodology": "methodology:quality_diversity",
+        "definition": "Meiosis-like gene-level crossover recombining elite genetic material across archive niches; strongest gains late, once building blocks are established.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "method:isoline_variation",
+      "type": "Method",
+      "name": "Isoline / directional variation operator",
+      "attrs": {
+        "methodology": "methodology:quality_diversity",
+        "definition": "Perturb along the line between two archive elites — the workhorse recombination operator exploiting inter-niche (inter-'species') correlation.",
+        "grade": "hypothesis"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "method:in_context_qd",
+      "type": "Method",
+      "name": "In-context QD (LLM AI-generator)",
+      "attrs": {
+        "methodology": "methodology:quality_diversity",
+        "definition": "LLM reads MANY archive elites as context and recombines them, beyond the usual 1-2-parent recombination — more innovative solutions from the pool.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "method:diploid_ga_dominance",
+      "type": "Method",
+      "name": "Diploid GA with dominance",
+      "attrs": {
+        "methodology": "methodology:quality_diversity",
+        "definition": "Two-allele genome where recessive alleles are latent memory of past-optimal traits; adaptive dominance re-expresses them under non-stationarity.",
+        "grade": "hypothesis"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "method:neat",
+      "type": "Method",
+      "name": "NEAT",
+      "attrs": {
+        "methodology": "methodology:open_ended_evolution",
+        "definition": "Evolve topology+weights, protecting innovation via speciation (fitness sharing within species); historical markings align crossover.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "method:codeepneat",
+      "type": "Method",
+      "name": "CoDeepNEAT",
+      "attrs": {
+        "methodology": "methodology:open_ended_evolution",
+        "definition": "Coevolve modules + blueprints for deep nets (NEAT for deep architectures).",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "method:openai_es",
+      "type": "Method",
+      "name": "Evolution Strategies (OpenAI-ES)",
+      "attrs": {
+        "methodology": "methodology:evolutionary_genetic_scaffold_search",
+        "definition": "Black-box ES scaling to 1000+ parallel workers (seeds + scalar returns only), competitive with policy-gradient RL, no backprop.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "method:elm",
+      "type": "Method",
+      "name": "Evolution through Large Models (ELM)",
+      "attrs": {
+        "methodology": "methodology:quality_diversity",
+        "definition": "LLM diff-model as the mutation operator inside MAP-Elites; generated 100k+ working programs in an unseen domain, then bootstrapped a new model.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "method:qdaif",
+      "type": "Method",
+      "name": "QDAIF",
+      "attrs": {
+        "methodology": "methodology:quality_diversity",
+        "definition": "LLM both generates variation AND judges quality+diversity — extends QD to qualitative domains (creative writing).",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "method:shinkaevolve",
+      "type": "Method",
+      "name": "ShinkaEvolve",
+      "attrs": {
+        "methodology": "methodology:quality_diversity",
+        "definition": "LLM-driven program evolution over an ISLAND archive of subpopulations with parent+inspiration sampling, code-novelty rejection, bandit LLM-ensemble; ~150 evals to SoTA.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "method:dei",
+      "type": "Method",
+      "name": "DEI (heterogeneous LLM operators)",
+      "attrs": {
+        "methodology": "methodology:quality_diversity",
+        "definition": "Distributed QD where heterogeneous LLMs are the mutation operators exchanging best-local solutions ('Digital Red Queen'); model diversity drives QD-score.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "method:darwin_godel_machine",
+      "type": "Method",
+      "name": "Darwin Gödel Machine (DGM)",
+      "attrs": {
+        "methodology": "methodology:evolutionary_genetic_scaffold_search",
+        "definition": "Maintains an open-ended ARCHIVE of self-modifying coding agents and breeds from it (not greedy hill-climbing).",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "method:poet",
+      "type": "Method",
+      "name": "POET",
+      "attrs": {
+        "methodology": "methodology:open_ended_evolution",
+        "definition": "Paired Open-Ended Trailblazer: co-generate environments + optimize paired agents; inter-niche TRANSFER finds stepping stones direct optimization cannot.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "method:enhanced_poet",
+      "type": "Method",
+      "name": "Enhanced POET",
+      "attrs": {
+        "methodology": "methodology:open_ended_evolution",
+        "definition": "CPPN-encoded unbounded environments + the ANNECS metric; near-linear (non-plateauing) innovation vs original POET's ~20k-iteration stagnation.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "method:omni",
+      "type": "Method",
+      "name": "OMNI (Model of Interestingness)",
+      "attrs": {
+        "methodology": "methodology:open_ended_evolution",
+        "definition": "Use a foundation model as a model of human interestingness to prioritize tasks that are learnable AND interesting.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "method:minimal_criterion_coevolution",
+      "type": "Method",
+      "name": "Minimal Criterion Coevolution (MCC)",
+      "attrs": {
+        "methodology": "methodology:open_ended_evolution",
+        "definition": "Coevolve mazes + solvers gated only by a minimal survival criterion; differentiation with NO objective/novelty/descriptor. Resource cap prevents collapse.",
+        "grade": "hypothesis"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "method:acdc",
+      "type": "Method",
+      "name": "AC/DC (task-capability coevolution)",
+      "attrs": {
+        "methodology": "methodology:open_ended_evolution",
+        "definition": "Coevolve an LLM archive (via model-merge crossover + weight-noise mutation) with a synthetic-task archive → growing set of specialist LLMs with broad coverage.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "method:kinetix_sfl",
+      "type": "Method",
+      "name": "Kinetix + SFL",
+      "attrs": {
+        "methodology": "methodology:open_ended_evolution",
+        "definition": "Open-ended procedurally-generated physics task space (Jax2D) trained with Scheduled Filtered-Learnability UED; general agent beats specialists on holdout.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "method:fmsp_qdsp",
+      "type": "Method",
+      "name": "FMSP / QDSP (FM self-play)",
+      "attrs": {
+        "methodology": "methodology:open_ended_evolution",
+        "definition": "Foundation models write code to leap across policy-space local optima; QDSP balances quality+diversity to avoid converging to one strategy.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "method:gsme_harness",
+      "type": "Method",
+      "name": "GSME — Gated Semantic QD harness evolver",
+      "attrs": {
+        "methodology": "methodology:quality_diversity",
+        "definition": "Self-evolves an agent HARNESS: an LLM diagnoses failures/proposes patches while deterministic code does all sampling/measurement/stat-testing; QD archive indexed by (WHERE x WHY) pathology as anti-overfitting; scored on a SEALED test.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "method:asal",
+      "type": "Method",
+      "name": "ASAL (FM-driven ALife search)",
+      "attrs": {
+        "methodology": "methodology:open_ended_evolution",
+        "definition": "Vision-language FMs (CLIP) find target phenomena, discover temporally open-ended novelty, and illuminate a diverse space of ALife simulations.",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "claim:d6_continual_backprop_overcomes_plasticity",
+      "type": "Claim",
+      "name": "Standard deep nets lose plasticity under continual learning (Continual-ImageNet binary tasks drop from ~89% to ~77% ≈ linear-net level by the 2000th task); continual backpropagation (+L2) 'fully overcame' plasticity loss in the Nature setup.",
+      "attrs": {
+        "asserted_by": "paper:title:loss_of_plasticity_in_deep_continual_learning",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "claim:d6_scale_does_not_solve_plasticity_llm",
+      "type": "Claim",
+      "name": "Scale ALONE does not reliably solve plasticity loss in LLMs — it persists across sizes and needs optimization/regularization/weight-management interventions.",
+      "attrs": {
+        "asserted_by": "paper:2606.24752",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "claim:d6_no_dominant_plasticity_method",
+      "type": "Claim",
+      "name": "Across ~50 mitigation methods, NO single plasticity intervention dominates; general-purpose regularization (e.g. L2, weight-norm) often OUTPERFORMS specialized plasticity methods. Loss of plasticity is mitigated in controlled benchmarks but NOT solved in general.",
+      "attrs": {
+        "asserted_by": "paper:2411.04832",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "claim:d6_streamx_matches_batch",
+      "type": "Claim",
+      "name": "Streaming deep RL (stream-x) matches the sample efficiency of batch RL with NO replay buffer and NO target networks, using one hyperparameter set; best model-free result on DM-Control Dog.",
+      "attrs": {
+        "asserted_by": "paper:2410.14606",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "claim:d6_dreamerv3_diamonds",
+      "type": "Claim",
+      "name": "DreamerV3 is the first algorithm to collect diamonds in Minecraft from scratch (no human data / no curriculum), with one configuration across 150+ tasks, trainable on a single GPU.",
+      "attrs": {
+        "asserted_by": "paper:2301.04104",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "claim:d6_dreamer4_offline_diamonds",
+      "type": "Claim",
+      "name": "Dreamer 4 (2B params) is the first to obtain Minecraft diamonds PURELY from a fixed offline dataset — RL happens inside the learned world model — with real-time interactive inference (~21 FPS) on a single GPU.",
+      "attrs": {
+        "asserted_by": "paper:2509.24527",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "claim:d6_absolute_zero_zero_data",
+      "type": "Claim",
+      "name": "Absolute Zero reaches SOTA on coding+math reasoning with ZERO external data via proposer/solver self-play verified by a code executor — but from a PRETRAINED base (zero data, not zero pretraining): a hybrid, not from-random-init.",
+      "attrs": {
+        "asserted_by": "paper:2505.03335",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "claim:d6_vjepa2_zeroshot_but_pretrained",
+      "type": "Claim",
+      "name": "V-JEPA 2-AC does zero-shot Franka pick-and-place from image goals after post-training on <62h unlabeled robot video — but the >1B encoder is frontier-scale video-PRETRAINED (not from-scratch), the compromise OaK argues against.",
+      "attrs": {
+        "asserted_by": "paper:2506.09985",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "claim:d6_tabula_rasa_expensive",
+      "type": "Claim",
+      "name": "Pure tabula-rasa RL is compute-brutal (~1000+ GPU-days for 50 Atari games) and failed at Dota/StarCraft scale without shaping+imitation+curriculum; 'learn from experience' has momentum but 'beat pretrained from random init at scale' is undemonstrated.",
+      "attrs": {
+        "asserted_by": "paper:title:pugh_2016_qd_frontier",
+        "grade": "hypothesis"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "claim:d6_rnd_degrades_noisy_tv",
+      "type": "Claim",
+      "name": "RND remains a useful novelty baseline but degrades with a real noisy-TV and suffers detachment/derailment; 2025-26 successors move to learning-progress signals and distributional targets (RDD).",
+      "attrs": {
+        "asserted_by": "paper:2509.25438",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "claim:d6_ttt_provable",
+      "type": "Claim",
+      "name": "Test-time training (updating weights per test instance) provably reduces the sample size needed for in-context learning, contingent on pretrain↔target alignment.",
+      "attrs": {
+        "asserted_by": "paper:2503.11842",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "claim:d6_diploidy_recessive_memory",
+      "type": "Claim",
+      "name": "Diploidy with dominance helps non-stationary optimization because recessive alleles hold past-optimal traits in abeyance as a latent memory, re-expressible when the environment swings back — the literal 'recessive trait recovery' the founder's metaphor names.",
+      "attrs": {
+        "asserted_by": "paper:title:goldberg_smith_1987_diploidy",
+        "grade": "hypothesis"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "claim:d6_mapelites_damage_recovery",
+      "type": "Claim",
+      "name": "A precomputed MAP-Elites behavior-performance repertoire (~13k gaits) lets a damaged robot recover a working gait in <2 minutes / ~a dozen trials (Intelligent Trial & Error) — a preserved archive enabling later recovery of latent capabilities.",
+      "attrs": {
+        "asserted_by": "paper:title:cully_2015_nature",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "claim:d6_novelty_beats_objective",
+      "type": "Claim",
+      "name": "Novelty search (abandoning the objective) beats objective-based search on deceptive maze/biped tasks because objectives fail to reward the stepping stones that lead to them.",
+      "attrs": {
+        "asserted_by": "paper:title:lehman_stanley_2011_novelty",
+        "grade": "hypothesis"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "claim:d6_qd_provably_helpful",
+      "type": "Claim",
+      "name": "QD (MAP-Elites) provably outperforms (μ+1)-EA on two NP-hard classes (monotone approximately-submodular maximization under a size constraint; set cover) — the first rigorous runtime proof QD helps optimization.",
+      "attrs": {
+        "asserted_by": "paper:2401.10539",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "claim:d6_discrete_crossover_recombines",
+      "type": "Claim",
+      "name": "Discrete gene-level crossover ('mirroring meiosis') recombines elite genetic material across the archive, improving QD-score, coverage, and max-fitness — with strongest gains LATE, once building blocks are established in the archive.",
+      "attrs": {
+        "asserted_by": "paper:2602.13730",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "claim:d6_dominated_novelty_beats_mapelites",
+      "type": "Claim",
+      "name": "Dominated Novelty Search (local competition as a fitness transform, no grid/bounds/thresholds) significantly beats MAP-Elites (p<1e-3) and Threshold-Elites (p<1e-9) on MuJoCo QD-score and coverage.",
+      "attrs": {
+        "asserted_by": "paper:2502.00593",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "claim:d6_incontext_qd_many_elites",
+      "type": "Claim",
+      "name": "Combining a LARGE diversity of archive solutions (not just 1-2 parents) via an LLM in-context generator yields more innovative solutions — recombining latent traits from the whole pool.",
+      "attrs": {
+        "asserted_by": "paper:2404.15794",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "claim:d6_dgm_archive_beats_greedy",
+      "type": "Claim",
+      "name": "The Darwin Gödel Machine's open-ended AGENT ARCHIVE (not greedy hill-climbing) improves SWE-bench 20.0%→50.0% and Polyglot 14.2%→30.7%; ablating open-ended exploration makes it plateau/regress — keeping the diverse archive is causally necessary.",
+      "attrs": {
+        "asserted_by": "paper:2505.22954",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "claim:d6_dei_model_diversity",
+      "type": "Claim",
+      "name": "Heterogeneous LLM mutation operators beat single/homogeneous ensembles: a 4-model GPT+Claude ensemble gave +124% merged-archive QD-score (45.90 vs 20.46) and +28% coverage — 'model diversity, not merely parallelism, is the key driver.'",
+      "attrs": {
+        "asserted_by": "paper:2605.27130",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "claim:d6_llm_mutation_collapses",
+      "type": "Claim",
+      "name": "LLM-driven mutation collapses structural diversity: 87% of chains revisited seen forms in >93% of mutations; median ~10 unique structural templates vs ~270 unique programs / 143 skeletons for classical GP subtree mutation — semantic-aware mutation carries a systematic bias toward structural homogeneity.",
+      "attrs": {
+        "asserted_by": "paper:2606.05408",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "claim:d6_shinka_sample_efficient",
+      "type": "Claim",
+      "name": "ShinkaEvolve reaches circle-packing SoTA in ~150 evaluations (vs thousands) via an island archive + code-novelty rejection + bandit LLM-ensemble; strong on AIME-2024 scaffolds and ALE-Bench.",
+      "attrs": {
+        "asserted_by": "paper:2509.19349",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "claim:d6_objectives_enough_counter",
+      "type": "Claim",
+      "name": "COUNTER: some deceptive problems are solved by objective-only methods WITHOUT explicit diversity maintenance — QD's advantage is problem-dependent, and QD is sometimes benchmarked unfairly against single-objective baselines.",
+      "attrs": {
+        "asserted_by": "paper:2311.02283",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "claim:d6_mcc_diff_without_pressure",
+      "type": "Claim",
+      "name": "Minimal Criterion Coevolution produces a broad range of specialists (maze topologies + solution trajectories) with NO fitness function, novelty archive, or behavior descriptor — differentiation needs neither an objective nor an explicit diversity pressure, only a survival gate on two coupled populations.",
+      "attrs": {
+        "asserted_by": "paper:title:brant_stanley_2017_mcc",
+        "grade": "hypothesis"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "claim:d6_mcc_resource_cap",
+      "type": "Claim",
+      "name": "MCC needs a RESOURCE CAP (each problem consumable by a bounded number of solvers) to prevent the 'everyone farms the easiest maze' collapse — the mechanism that keeps differentiation alive.",
+      "attrs": {
+        "asserted_by": "paper:title:mcc_resource_2020",
+        "grade": "hypothesis"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "claim:d6_neat_species_protect",
+      "type": "Claim",
+      "name": "NEAT speciation (fitness sharing within species) protects topological innovation long enough to optimize, so an initially-weak new structure is not immediately killed by the current champion — the canonical anti-collapse mechanism.",
+      "attrs": {
+        "asserted_by": "paper:title:stanley_neat_2002",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "claim:d6_poet_encoding_dependent",
+      "type": "Claim",
+      "name": "Original POET's ANNECS plateaus after ~20,000 iterations (fixed encoding exhausts obstacle variety) while Enhanced POET's grows near-linearly — open-endedness is REAL but encoding-dependent: a bounded generator stagnates.",
+      "attrs": {
+        "asserted_by": "paper:2003.08536",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "claim:d6_openendedness_essential_asi",
+      "type": "Claim",
+      "name": "Open-endedness — endlessly producing artifacts that are NOVEL (raise future uncertainty) AND LEARNABLE (improve future prediction), observer-relative — is an essential property of any artificial superhuman intelligence.",
+      "attrs": {
+        "asserted_by": "paper:2406.04268",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "claim:d6_dicode_gains",
+      "type": "Claim",
+      "name": "Dreaming-in-Code (FM writes intermediate environment code to scaffold curricula) gives +16% mean return vs the strongest baseline and non-zero success on late-game combat tasks where prior methods scored 0.",
+      "attrs": {
+        "asserted_by": "paper:2602.08194",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "claim:d6_acdc_specialists",
+      "type": "Claim",
+      "name": "AC/DC coevolves an LLM archive (model-merge crossover + weight-noise mutation) with a task archive, producing specialist LLMs that surpass larger models at LESS GPU memory and with broader capability Coverage, without explicit benchmark optimization.",
+      "attrs": {
+        "asserted_by": "paper:2604.14969",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "claim:d6_kinetix_beats_specialists",
+      "type": "Claim",
+      "name": "An open-ended-curriculum general agent (Kinetix + SFL) zero-shot-generalizes to unseen human-designed levels and solves some tasks that SPECIALIST agents could not — open-ended curricula can beat specialists.",
+      "attrs": {
+        "asserted_by": "paper:2410.23208",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "claim:d6_infotheoretic_openendedness",
+      "type": "Claim",
+      "name": "An information-theoretic definition (bit-equivalent B_ρ growing linearly, ΩT) critiques novelty+learnability for not indicating capability IMPROVEMENT; classical bandits are provably non-open-ended, infinite-dim linear-Gaussian bandits can be.",
+      "attrs": {
+        "asserted_by": "paper:2606.08369",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "claim:d6_fer_evolved_vs_sgd",
+      "type": "Claim",
+      "name": "Open-endedly EVOLVED networks largely lack the Fractured Entangled Representation that SGD-trained networks exhibit (approaching a unified factored representation); FER may degrade generalization, creativity, and continual learning in large models.",
+      "attrs": {
+        "asserted_by": "paper:2505.11581",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "claim:d6_llm_novelty_bounded",
+      "type": "Claim",
+      "name": "SKEPTIC: an LLM constrained to outputs supported by its training data could never generate truly novel text; hallucination is inevitable (finite information capacity) — FM-driven 'open-endedness' may be bounded by the training distribution unless a generate→train→re-generate loop is closed.",
+      "attrs": {
+        "asserted_by": "paper:2511.12869",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    },
+    {
+      "id": "claim:d6_gsme_harness_heldout",
+      "type": "Claim",
+      "name": "A self-evolving agent HARNESS via Gated Semantic QD — LLM diagnoses failures while deterministic code does all sampling/measurement/stat-testing, archive indexed by (WHERE x WHY) pathology as anti-overfitting bias — gains +9 to +15.5 pp across 7 domains on a SEALED test with 86-147% generalization retention on a frozen open-weight model; the diagnostic/credit methodology transfers across model families.",
+      "attrs": {
+        "asserted_by": "paper:2607.13683",
+        "grade": "primary"
+      },
+      "source": "search:2026-07-17 (WebSearch+HF paper_search+WebFetch)",
+      "domain": "D6"
+    }
+  ],
+  "relations": [
+    {
+      "src_id": "D6",
+      "rel": "domain_has_methodology",
+      "dst_id": "methodology:developmental_from_scratch_learning",
+      "source": "schema §3 (D6 families)",
+      "domain": "D6"
+    },
+    {
+      "src_id": "D6",
+      "rel": "domain_has_methodology",
+      "dst_id": "methodology:quality_diversity",
+      "source": "schema §3 (D6 families)",
+      "domain": "D6"
+    },
+    {
+      "src_id": "D6",
+      "rel": "domain_has_methodology",
+      "dst_id": "methodology:open_ended_evolution",
+      "source": "schema §3 (D6 families)",
+      "domain": "D6"
+    },
+    {
+      "src_id": "D6",
+      "rel": "domain_has_methodology",
+      "dst_id": "methodology:evolutionary_genetic_scaffold_search",
+      "source": "cross-domain reuse of D1 evolutionary methodology",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:continual_backpropagation",
+      "rel": "method_is_a",
+      "dst_id": "methodology:developmental_from_scratch_learning",
+      "source": "D6 method→methodology",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:title:loss_of_plasticity_in_deep_continual_learning",
+      "rel": "proposes",
+      "dst_id": "method:continual_backpropagation",
+      "source": "proposing paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:redo",
+      "rel": "method_is_a",
+      "dst_id": "methodology:developmental_from_scratch_learning",
+      "source": "D6 method→methodology",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2302.12902",
+      "rel": "proposes",
+      "dst_id": "method:redo",
+      "source": "proposing paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:stream_x",
+      "rel": "method_is_a",
+      "dst_id": "methodology:developmental_from_scratch_learning",
+      "source": "D6 method→methodology",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2410.14606",
+      "rel": "proposes",
+      "dst_id": "method:stream_x",
+      "source": "proposing paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:dreamerv3",
+      "rel": "method_is_a",
+      "dst_id": "methodology:developmental_from_scratch_learning",
+      "source": "D6 method→methodology",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2301.04104",
+      "rel": "proposes",
+      "dst_id": "method:dreamerv3",
+      "source": "proposing paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:dreamer4",
+      "rel": "method_is_a",
+      "dst_id": "methodology:developmental_from_scratch_learning",
+      "source": "D6 method→methodology",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2509.24527",
+      "rel": "proposes",
+      "dst_id": "method:dreamer4",
+      "source": "proposing paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:tdmpc2",
+      "rel": "method_is_a",
+      "dst_id": "methodology:developmental_from_scratch_learning",
+      "source": "D6 method→methodology",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2310.16828",
+      "rel": "proposes",
+      "dst_id": "method:tdmpc2",
+      "source": "proposing paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:rnd",
+      "rel": "method_is_a",
+      "dst_id": "methodology:developmental_from_scratch_learning",
+      "source": "D6 method→methodology",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:1810.12894",
+      "rel": "proposes",
+      "dst_id": "method:rnd",
+      "source": "proposing paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:icm",
+      "rel": "method_is_a",
+      "dst_id": "methodology:developmental_from_scratch_learning",
+      "source": "D6 method→methodology",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:1705.05363",
+      "rel": "proposes",
+      "dst_id": "method:icm",
+      "source": "proposing paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:rdd",
+      "rel": "method_is_a",
+      "dst_id": "methodology:developmental_from_scratch_learning",
+      "source": "D6 method→methodology",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2505.11044",
+      "rel": "proposes",
+      "dst_id": "method:rdd",
+      "source": "proposing paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:omni_epic",
+      "rel": "method_is_a",
+      "dst_id": "methodology:open_ended_evolution",
+      "source": "D6 method→methodology",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2405.15568",
+      "rel": "proposes",
+      "dst_id": "method:omni_epic",
+      "source": "proposing paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:paired",
+      "rel": "method_is_a",
+      "dst_id": "methodology:developmental_from_scratch_learning",
+      "source": "D6 method→methodology",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2110.02439",
+      "rel": "proposes",
+      "dst_id": "method:paired",
+      "source": "proposing paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:accel",
+      "rel": "method_is_a",
+      "dst_id": "methodology:developmental_from_scratch_learning",
+      "source": "D6 method→methodology",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2203.01302",
+      "rel": "proposes",
+      "dst_id": "method:accel",
+      "source": "proposing paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:ttt_in_place",
+      "rel": "method_is_a",
+      "dst_id": "methodology:developmental_from_scratch_learning",
+      "source": "D6 method→methodology",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2604.06169",
+      "rel": "proposes",
+      "dst_id": "method:ttt_in_place",
+      "source": "proposing paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:absolute_zero",
+      "rel": "method_is_a",
+      "dst_id": "methodology:developmental_from_scratch_learning",
+      "source": "D6 method→methodology",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2505.03335",
+      "rel": "proposes",
+      "dst_id": "method:absolute_zero",
+      "source": "proposing paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:map_elites",
+      "rel": "method_is_a",
+      "dst_id": "methodology:quality_diversity",
+      "source": "D6 method→methodology",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:1504.04909",
+      "rel": "proposes",
+      "dst_id": "method:map_elites",
+      "source": "proposing paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:cma_me",
+      "rel": "method_is_a",
+      "dst_id": "methodology:quality_diversity",
+      "source": "D6 method→methodology",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:1912.02400",
+      "rel": "proposes",
+      "dst_id": "method:cma_me",
+      "source": "proposing paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:cma_mae",
+      "rel": "method_is_a",
+      "dst_id": "methodology:quality_diversity",
+      "source": "D6 method→methodology",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2205.10752",
+      "rel": "proposes",
+      "dst_id": "method:cma_mae",
+      "source": "proposing paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:novelty_search_nslc",
+      "rel": "method_is_a",
+      "dst_id": "methodology:quality_diversity",
+      "source": "D6 method→methodology",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:title:lehman_stanley_2011_nslc",
+      "rel": "proposes",
+      "dst_id": "method:novelty_search_nslc",
+      "source": "proposing paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:dominated_novelty_search",
+      "rel": "method_is_a",
+      "dst_id": "methodology:quality_diversity",
+      "source": "D6 method→methodology",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2502.00593",
+      "rel": "proposes",
+      "dst_id": "method:dominated_novelty_search",
+      "source": "proposing paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:discrete_gene_crossover",
+      "rel": "method_is_a",
+      "dst_id": "methodology:quality_diversity",
+      "source": "D6 method→methodology",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2602.13730",
+      "rel": "proposes",
+      "dst_id": "method:discrete_gene_crossover",
+      "source": "proposing paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:isoline_variation",
+      "rel": "method_is_a",
+      "dst_id": "methodology:quality_diversity",
+      "source": "D6 method→methodology",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:1504.04909",
+      "rel": "proposes",
+      "dst_id": "method:isoline_variation",
+      "source": "proposing paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:in_context_qd",
+      "rel": "method_is_a",
+      "dst_id": "methodology:quality_diversity",
+      "source": "D6 method→methodology",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2404.15794",
+      "rel": "proposes",
+      "dst_id": "method:in_context_qd",
+      "source": "proposing paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:diploid_ga_dominance",
+      "rel": "method_is_a",
+      "dst_id": "methodology:quality_diversity",
+      "source": "D6 method→methodology",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:title:goldberg_smith_1987_diploidy",
+      "rel": "proposes",
+      "dst_id": "method:diploid_ga_dominance",
+      "source": "proposing paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:neat",
+      "rel": "method_is_a",
+      "dst_id": "methodology:open_ended_evolution",
+      "source": "D6 method→methodology",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:title:stanley_neat_2002",
+      "rel": "proposes",
+      "dst_id": "method:neat",
+      "source": "proposing paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:codeepneat",
+      "rel": "method_is_a",
+      "dst_id": "methodology:open_ended_evolution",
+      "source": "D6 method→methodology",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:1703.00548",
+      "rel": "proposes",
+      "dst_id": "method:codeepneat",
+      "source": "proposing paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:openai_es",
+      "rel": "method_is_a",
+      "dst_id": "methodology:evolutionary_genetic_scaffold_search",
+      "source": "D6 method→methodology",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:1703.03864",
+      "rel": "proposes",
+      "dst_id": "method:openai_es",
+      "source": "proposing paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:elm",
+      "rel": "method_is_a",
+      "dst_id": "methodology:quality_diversity",
+      "source": "D6 method→methodology",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2206.08896",
+      "rel": "proposes",
+      "dst_id": "method:elm",
+      "source": "proposing paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:qdaif",
+      "rel": "method_is_a",
+      "dst_id": "methodology:quality_diversity",
+      "source": "D6 method→methodology",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2310.13032",
+      "rel": "proposes",
+      "dst_id": "method:qdaif",
+      "source": "proposing paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:shinkaevolve",
+      "rel": "method_is_a",
+      "dst_id": "methodology:quality_diversity",
+      "source": "D6 method→methodology",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2509.19349",
+      "rel": "proposes",
+      "dst_id": "method:shinkaevolve",
+      "source": "proposing paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:dei",
+      "rel": "method_is_a",
+      "dst_id": "methodology:quality_diversity",
+      "source": "D6 method→methodology",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2605.27130",
+      "rel": "proposes",
+      "dst_id": "method:dei",
+      "source": "proposing paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:darwin_godel_machine",
+      "rel": "method_is_a",
+      "dst_id": "methodology:evolutionary_genetic_scaffold_search",
+      "source": "D6 method→methodology",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2505.22954",
+      "rel": "proposes",
+      "dst_id": "method:darwin_godel_machine",
+      "source": "proposing paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:poet",
+      "rel": "method_is_a",
+      "dst_id": "methodology:open_ended_evolution",
+      "source": "D6 method→methodology",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:1901.01753",
+      "rel": "proposes",
+      "dst_id": "method:poet",
+      "source": "proposing paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:enhanced_poet",
+      "rel": "method_is_a",
+      "dst_id": "methodology:open_ended_evolution",
+      "source": "D6 method→methodology",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2003.08536",
+      "rel": "proposes",
+      "dst_id": "method:enhanced_poet",
+      "source": "proposing paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:omni",
+      "rel": "method_is_a",
+      "dst_id": "methodology:open_ended_evolution",
+      "source": "D6 method→methodology",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2306.01711",
+      "rel": "proposes",
+      "dst_id": "method:omni",
+      "source": "proposing paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:minimal_criterion_coevolution",
+      "rel": "method_is_a",
+      "dst_id": "methodology:open_ended_evolution",
+      "source": "D6 method→methodology",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:title:brant_stanley_2017_mcc",
+      "rel": "proposes",
+      "dst_id": "method:minimal_criterion_coevolution",
+      "source": "proposing paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:acdc",
+      "rel": "method_is_a",
+      "dst_id": "methodology:open_ended_evolution",
+      "source": "D6 method→methodology",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2604.14969",
+      "rel": "proposes",
+      "dst_id": "method:acdc",
+      "source": "proposing paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:kinetix_sfl",
+      "rel": "method_is_a",
+      "dst_id": "methodology:open_ended_evolution",
+      "source": "D6 method→methodology",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2410.23208",
+      "rel": "proposes",
+      "dst_id": "method:kinetix_sfl",
+      "source": "proposing paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:fmsp_qdsp",
+      "rel": "method_is_a",
+      "dst_id": "methodology:open_ended_evolution",
+      "source": "D6 method→methodology",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2507.06466",
+      "rel": "proposes",
+      "dst_id": "method:fmsp_qdsp",
+      "source": "proposing paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:gsme_harness",
+      "rel": "method_is_a",
+      "dst_id": "methodology:quality_diversity",
+      "source": "D6 method→methodology",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2607.13683",
+      "rel": "proposes",
+      "dst_id": "method:gsme_harness",
+      "source": "proposing paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:asal",
+      "rel": "method_is_a",
+      "dst_id": "methodology:open_ended_evolution",
+      "source": "D6 method→methodology",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2412.17799",
+      "rel": "proposes",
+      "dst_id": "method:asal",
+      "source": "proposing paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:title:loss_of_plasticity_in_deep_continual_learning",
+      "rel": "asserts",
+      "dst_id": "claim:d6_continual_backprop_overcomes_plasticity",
+      "source": "asserting paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2606.24752",
+      "rel": "asserts",
+      "dst_id": "claim:d6_scale_does_not_solve_plasticity_llm",
+      "source": "asserting paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2411.04832",
+      "rel": "asserts",
+      "dst_id": "claim:d6_no_dominant_plasticity_method",
+      "source": "asserting paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2410.14606",
+      "rel": "asserts",
+      "dst_id": "claim:d6_streamx_matches_batch",
+      "source": "asserting paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2301.04104",
+      "rel": "asserts",
+      "dst_id": "claim:d6_dreamerv3_diamonds",
+      "source": "asserting paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2509.24527",
+      "rel": "asserts",
+      "dst_id": "claim:d6_dreamer4_offline_diamonds",
+      "source": "asserting paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2505.03335",
+      "rel": "asserts",
+      "dst_id": "claim:d6_absolute_zero_zero_data",
+      "source": "asserting paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2506.09985",
+      "rel": "asserts",
+      "dst_id": "claim:d6_vjepa2_zeroshot_but_pretrained",
+      "source": "asserting paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:title:pugh_2016_qd_frontier",
+      "rel": "asserts",
+      "dst_id": "claim:d6_tabula_rasa_expensive",
+      "source": "asserting paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2509.25438",
+      "rel": "asserts",
+      "dst_id": "claim:d6_rnd_degrades_noisy_tv",
+      "source": "asserting paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2503.11842",
+      "rel": "asserts",
+      "dst_id": "claim:d6_ttt_provable",
+      "source": "asserting paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:title:goldberg_smith_1987_diploidy",
+      "rel": "asserts",
+      "dst_id": "claim:d6_diploidy_recessive_memory",
+      "source": "asserting paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:title:cully_2015_nature",
+      "rel": "asserts",
+      "dst_id": "claim:d6_mapelites_damage_recovery",
+      "source": "asserting paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:title:lehman_stanley_2011_novelty",
+      "rel": "asserts",
+      "dst_id": "claim:d6_novelty_beats_objective",
+      "source": "asserting paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2401.10539",
+      "rel": "asserts",
+      "dst_id": "claim:d6_qd_provably_helpful",
+      "source": "asserting paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2602.13730",
+      "rel": "asserts",
+      "dst_id": "claim:d6_discrete_crossover_recombines",
+      "source": "asserting paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2502.00593",
+      "rel": "asserts",
+      "dst_id": "claim:d6_dominated_novelty_beats_mapelites",
+      "source": "asserting paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2404.15794",
+      "rel": "asserts",
+      "dst_id": "claim:d6_incontext_qd_many_elites",
+      "source": "asserting paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2505.22954",
+      "rel": "asserts",
+      "dst_id": "claim:d6_dgm_archive_beats_greedy",
+      "source": "asserting paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2605.27130",
+      "rel": "asserts",
+      "dst_id": "claim:d6_dei_model_diversity",
+      "source": "asserting paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2606.05408",
+      "rel": "asserts",
+      "dst_id": "claim:d6_llm_mutation_collapses",
+      "source": "asserting paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2509.19349",
+      "rel": "asserts",
+      "dst_id": "claim:d6_shinka_sample_efficient",
+      "source": "asserting paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2311.02283",
+      "rel": "asserts",
+      "dst_id": "claim:d6_objectives_enough_counter",
+      "source": "asserting paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:title:brant_stanley_2017_mcc",
+      "rel": "asserts",
+      "dst_id": "claim:d6_mcc_diff_without_pressure",
+      "source": "asserting paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:title:mcc_resource_2020",
+      "rel": "asserts",
+      "dst_id": "claim:d6_mcc_resource_cap",
+      "source": "asserting paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:title:stanley_neat_2002",
+      "rel": "asserts",
+      "dst_id": "claim:d6_neat_species_protect",
+      "source": "asserting paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2003.08536",
+      "rel": "asserts",
+      "dst_id": "claim:d6_poet_encoding_dependent",
+      "source": "asserting paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2406.04268",
+      "rel": "asserts",
+      "dst_id": "claim:d6_openendedness_essential_asi",
+      "source": "asserting paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2602.08194",
+      "rel": "asserts",
+      "dst_id": "claim:d6_dicode_gains",
+      "source": "asserting paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2604.14969",
+      "rel": "asserts",
+      "dst_id": "claim:d6_acdc_specialists",
+      "source": "asserting paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2410.23208",
+      "rel": "asserts",
+      "dst_id": "claim:d6_kinetix_beats_specialists",
+      "source": "asserting paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2606.08369",
+      "rel": "asserts",
+      "dst_id": "claim:d6_infotheoretic_openendedness",
+      "source": "asserting paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2505.11581",
+      "rel": "asserts",
+      "dst_id": "claim:d6_fer_evolved_vs_sgd",
+      "source": "asserting paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2511.12869",
+      "rel": "asserts",
+      "dst_id": "claim:d6_llm_novelty_bounded",
+      "source": "asserting paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2607.13683",
+      "rel": "asserts",
+      "dst_id": "claim:d6_gsme_harness_heldout",
+      "source": "asserting paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2410.14606",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2301.04104",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2509.24527",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2310.16828",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:1810.12894",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:1705.05363",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2505.11044",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2509.25438",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2510.05996",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2405.15568",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2306.01711",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2110.02439",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2203.01302",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2411.04832",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2606.24752",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2302.12902",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2504.17490",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2505.03335",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2506.09985",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2503.11842",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2604.06169",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2512.23675",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2506.21872",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2202.03466",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:title:goldberg_smith_1987_diploidy",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:title:lehman_stanley_2011_novelty",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:title:lehman_stanley_2011_nslc",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:1504.04909",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:title:cully_2015_nature",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:title:pugh_2016_qd_frontier",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:1912.02400",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2205.10752",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2303.00191",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2308.03665",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2202.01258",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2404.01817",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2504.08339",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:1703.03864",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:1703.00548",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2206.08896",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2310.13032",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2310.12103",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2404.15794",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2602.13730",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2502.00593",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2401.10539",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2606.05408",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2509.19349",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2605.27130",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2311.02283",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2504.01915",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:1901.01753",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2003.08536",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:title:brant_stanley_2017_mcc",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:title:mcc_resource_2020",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:title:stanley_neat_2002",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2406.04268",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2602.08194",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2601.01931",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2604.14969",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2410.23208",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2507.06466",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2606.08369",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2505.11581",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2412.17799",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2604.01658",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2511.12869",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2605.23908",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2502.07577",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2607.13683",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "D6 paper",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:richard_s_sutton",
+      "rel": "authored",
+      "dst_id": "paper:2202.03466",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:david_silver",
+      "rel": "authored",
+      "dst_id": "paper:2202.03466",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:a_rupam_mahmood",
+      "rel": "authored",
+      "dst_id": "paper:2410.14606",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:mohamed_elsayed",
+      "rel": "authored",
+      "dst_id": "paper:2410.14606",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:danijar_hafner",
+      "rel": "authored",
+      "dst_id": "paper:2301.04104",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:danijar_hafner",
+      "rel": "authored",
+      "dst_id": "paper:2509.24527",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:deepak_pathak",
+      "rel": "authored",
+      "dst_id": "paper:1705.05363",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:andrew_zhao",
+      "rel": "authored",
+      "dst_id": "paper:2505.03335",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:jenny_zhang",
+      "rel": "authored",
+      "dst_id": "paper:2306.01711",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:maxence_faldor",
+      "rel": "authored",
+      "dst_id": "paper:2405.15568",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:jeff_clune",
+      "rel": "authored",
+      "dst_id": "paper:2405.15568",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:jeff_clune",
+      "rel": "authored",
+      "dst_id": "paper:2306.01711",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:michael_dennis",
+      "rel": "authored",
+      "dst_id": "paper:2110.02439",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:jack_parker_holder",
+      "rel": "authored",
+      "dst_id": "paper:2203.01302",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:tim_rocktaschel",
+      "rel": "authored",
+      "dst_id": "paper:2203.01302",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:tim_rocktaschel",
+      "rel": "authored",
+      "dst_id": "paper:2406.04268",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:edward_hughes",
+      "rel": "authored",
+      "dst_id": "paper:2406.04268",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:michael_dennis",
+      "rel": "authored",
+      "dst_id": "paper:2406.04268",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:shibhansh_dohare",
+      "rel": "authored",
+      "dst_id": "paper:title:loss_of_plasticity_in_deep_continual_learning",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:a_rupam_mahmood",
+      "rel": "authored",
+      "dst_id": "paper:title:loss_of_plasticity_in_deep_continual_learning",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:richard_s_sutton",
+      "rel": "authored",
+      "dst_id": "paper:title:loss_of_plasticity_in_deep_continual_learning",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:david_e_goldberg",
+      "rel": "authored",
+      "dst_id": "paper:title:goldberg_smith_1987_diploidy",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:joel_lehman",
+      "rel": "authored",
+      "dst_id": "paper:title:lehman_stanley_2011_novelty",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:kenneth_o_stanley",
+      "rel": "authored",
+      "dst_id": "paper:title:lehman_stanley_2011_novelty",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:joel_lehman",
+      "rel": "authored",
+      "dst_id": "paper:title:lehman_stanley_2011_nslc",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:kenneth_o_stanley",
+      "rel": "authored",
+      "dst_id": "paper:title:lehman_stanley_2011_nslc",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:jean_baptiste_mouret",
+      "rel": "authored",
+      "dst_id": "paper:1504.04909",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:jeff_clune",
+      "rel": "authored",
+      "dst_id": "paper:1504.04909",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:antoine_cully",
+      "rel": "authored",
+      "dst_id": "paper:title:cully_2015_nature",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:jeff_clune",
+      "rel": "authored",
+      "dst_id": "paper:title:cully_2015_nature",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:jean_baptiste_mouret",
+      "rel": "authored",
+      "dst_id": "paper:title:cully_2015_nature",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:kenneth_o_stanley",
+      "rel": "authored",
+      "dst_id": "paper:title:pugh_2016_qd_frontier",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:matthew_c_fontaine",
+      "rel": "authored",
+      "dst_id": "paper:1912.02400",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:stefanos_nikolaidis",
+      "rel": "authored",
+      "dst_id": "paper:1912.02400",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:matthew_c_fontaine",
+      "rel": "authored",
+      "dst_id": "paper:2205.10752",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:stefanos_nikolaidis",
+      "rel": "authored",
+      "dst_id": "paper:2205.10752",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:antoine_cully",
+      "rel": "authored",
+      "dst_id": "paper:2308.03665",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:antoine_cully",
+      "rel": "authored",
+      "dst_id": "paper:2404.15794",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:maxence_faldor",
+      "rel": "authored",
+      "dst_id": "paper:2404.15794",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:tim_salimans",
+      "rel": "authored",
+      "dst_id": "paper:1703.03864",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:risto_miikkulainen",
+      "rel": "authored",
+      "dst_id": "paper:1703.00548",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:joel_lehman",
+      "rel": "authored",
+      "dst_id": "paper:2206.08896",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:kenneth_o_stanley",
+      "rel": "authored",
+      "dst_id": "paper:2206.08896",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:herbie_bradley",
+      "rel": "authored",
+      "dst_id": "paper:2310.13032",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:joel_lehman",
+      "rel": "authored",
+      "dst_id": "paper:2310.13032",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:jeff_clune",
+      "rel": "authored",
+      "dst_id": "paper:2310.13032",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:jeff_clune",
+      "rel": "authored",
+      "dst_id": "paper:2310.12103",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:joel_lehman",
+      "rel": "authored",
+      "dst_id": "paper:2310.12103",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:chao_qian",
+      "rel": "authored",
+      "dst_id": "paper:2401.10539",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:robert_tjarko_lange",
+      "rel": "authored",
+      "dst_id": "paper:2509.19349",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:kenneth_o_stanley",
+      "rel": "authored",
+      "dst_id": "paper:1901.01753",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:joel_lehman",
+      "rel": "authored",
+      "dst_id": "paper:1901.01753",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:jeff_clune",
+      "rel": "authored",
+      "dst_id": "paper:1901.01753",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:kenneth_o_stanley",
+      "rel": "authored",
+      "dst_id": "paper:2003.08536",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:joel_lehman",
+      "rel": "authored",
+      "dst_id": "paper:2003.08536",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:jeff_clune",
+      "rel": "authored",
+      "dst_id": "paper:2003.08536",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:jonathan_c_brant",
+      "rel": "authored",
+      "dst_id": "paper:title:brant_stanley_2017_mcc",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:kenneth_o_stanley",
+      "rel": "authored",
+      "dst_id": "paper:title:brant_stanley_2017_mcc",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:kenneth_o_stanley",
+      "rel": "authored",
+      "dst_id": "paper:title:stanley_neat_2002",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:risto_miikkulainen",
+      "rel": "authored",
+      "dst_id": "paper:title:stanley_neat_2002",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:maxence_faldor",
+      "rel": "authored",
+      "dst_id": "paper:2602.08194",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:antoine_cully",
+      "rel": "authored",
+      "dst_id": "paper:2602.08194",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:tim_rocktaschel",
+      "rel": "authored",
+      "dst_id": "paper:2601.01931",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:jack_parker_holder",
+      "rel": "authored",
+      "dst_id": "paper:2410.23208",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:jeff_clune",
+      "rel": "authored",
+      "dst_id": "paper:2507.06466",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:akarsh_kumar",
+      "rel": "authored",
+      "dst_id": "paper:2505.11581",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:jeff_clune",
+      "rel": "authored",
+      "dst_id": "paper:2505.11581",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:joel_lehman",
+      "rel": "authored",
+      "dst_id": "paper:2505.11581",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:kenneth_o_stanley",
+      "rel": "authored",
+      "dst_id": "paper:2505.11581",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:akarsh_kumar",
+      "rel": "authored",
+      "dst_id": "paper:2412.17799",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:jeff_clune",
+      "rel": "authored",
+      "dst_id": "paper:2502.07577",
+      "source": "authorship",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:kenneth_o_stanley",
+      "rel": "affiliated_with",
+      "dst_id": "org:ucf",
+      "source": "affiliation (approx, 2026)",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:joel_lehman",
+      "rel": "affiliated_with",
+      "dst_id": "org:openai",
+      "source": "affiliation (approx, 2026)",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:jean_baptiste_mouret",
+      "rel": "affiliated_with",
+      "dst_id": "org:inria",
+      "source": "affiliation (approx, 2026)",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:antoine_cully",
+      "rel": "affiliated_with",
+      "dst_id": "lab:airl_imperial",
+      "source": "affiliation (approx, 2026)",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:maxence_faldor",
+      "rel": "affiliated_with",
+      "dst_id": "lab:airl_imperial",
+      "source": "affiliation (approx, 2026)",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:matthew_c_fontaine",
+      "rel": "affiliated_with",
+      "dst_id": "lab:icaros_usc",
+      "source": "affiliation (approx, 2026)",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:stefanos_nikolaidis",
+      "rel": "affiliated_with",
+      "dst_id": "lab:icaros_usc",
+      "source": "affiliation (approx, 2026)",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:jenny_zhang",
+      "rel": "affiliated_with",
+      "dst_id": "org:google_deepmind",
+      "source": "affiliation (approx, 2026)",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:tim_rocktaschel",
+      "rel": "affiliated_with",
+      "dst_id": "org:google_deepmind",
+      "source": "affiliation (approx, 2026)",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:edward_hughes",
+      "rel": "affiliated_with",
+      "dst_id": "org:google_deepmind",
+      "source": "affiliation (approx, 2026)",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:michael_dennis",
+      "rel": "affiliated_with",
+      "dst_id": "org:google_deepmind",
+      "source": "affiliation (approx, 2026)",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:jack_parker_holder",
+      "rel": "affiliated_with",
+      "dst_id": "org:google_deepmind",
+      "source": "affiliation (approx, 2026)",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:robert_tjarko_lange",
+      "rel": "affiliated_with",
+      "dst_id": "org:sakana_ai",
+      "source": "affiliation (approx, 2026)",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:khurram_javed",
+      "rel": "affiliated_with",
+      "dst_id": "lab:oak_lab",
+      "source": "affiliation (approx, 2026)",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:mohamed_elsayed",
+      "rel": "affiliated_with",
+      "dst_id": "org:university_of_alberta",
+      "source": "affiliation (approx, 2026)",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:shibhansh_dohare",
+      "rel": "affiliated_with",
+      "dst_id": "org:university_of_alberta",
+      "source": "affiliation (approx, 2026)",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:a_rupam_mahmood",
+      "rel": "affiliated_with",
+      "dst_id": "org:university_of_alberta",
+      "source": "affiliation (approx, 2026)",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:risto_miikkulainen",
+      "rel": "affiliated_with",
+      "dst_id": "org:ucf",
+      "source": "affiliation (approx, 2026)",
+      "domain": "D6"
+    },
+    {
+      "src_id": "person:akarsh_kumar",
+      "rel": "affiliated_with",
+      "dst_id": "org:sakana_ai",
+      "source": "affiliation (approx, 2026)",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2003.08536",
+      "rel": "extends",
+      "dst_id": "paper:1901.01753",
+      "source": "lineage",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2306.01711",
+      "rel": "extends",
+      "dst_id": "paper:1901.01753",
+      "source": "lineage",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2405.15568",
+      "rel": "extends",
+      "dst_id": "paper:2306.01711",
+      "source": "lineage",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2602.08194",
+      "rel": "extends",
+      "dst_id": "paper:2405.15568",
+      "source": "lineage",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2203.01302",
+      "rel": "extends",
+      "dst_id": "paper:2110.02439",
+      "source": "lineage",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:title:lehman_stanley_2011_nslc",
+      "rel": "extends",
+      "dst_id": "paper:title:lehman_stanley_2011_novelty",
+      "source": "lineage",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:1504.04909",
+      "rel": "extends",
+      "dst_id": "paper:title:lehman_stanley_2011_nslc",
+      "source": "lineage",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:1912.02400",
+      "rel": "extends",
+      "dst_id": "paper:1504.04909",
+      "source": "lineage",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2205.10752",
+      "rel": "extends",
+      "dst_id": "paper:1912.02400",
+      "source": "lineage",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2502.00593",
+      "rel": "extends",
+      "dst_id": "paper:title:lehman_stanley_2011_nslc",
+      "source": "lineage",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2602.13730",
+      "rel": "extends",
+      "dst_id": "paper:1504.04909",
+      "source": "lineage",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2404.15794",
+      "rel": "extends",
+      "dst_id": "paper:2206.08896",
+      "source": "lineage",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2310.13032",
+      "rel": "extends",
+      "dst_id": "paper:2206.08896",
+      "source": "lineage",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2509.19349",
+      "rel": "extends",
+      "dst_id": "paper:2206.08896",
+      "source": "lineage",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2605.27130",
+      "rel": "extends",
+      "dst_id": "paper:2509.19349",
+      "source": "lineage",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2505.22954",
+      "rel": "extends",
+      "dst_id": "paper:2206.08896",
+      "source": "lineage",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2505.11044",
+      "rel": "extends",
+      "dst_id": "paper:1810.12894",
+      "source": "lineage",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2509.25438",
+      "rel": "extends",
+      "dst_id": "paper:1810.12894",
+      "source": "lineage",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2509.24527",
+      "rel": "extends",
+      "dst_id": "paper:2301.04104",
+      "source": "lineage",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2604.14969",
+      "rel": "extends",
+      "dst_id": "paper:title:brant_stanley_2017_mcc",
+      "source": "lineage",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2606.08369",
+      "rel": "extends",
+      "dst_id": "paper:2406.04268",
+      "source": "lineage",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2607.13683",
+      "rel": "extends",
+      "dst_id": "paper:2205.10752",
+      "source": "lineage",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:title:mcc_resource_2020",
+      "rel": "extends",
+      "dst_id": "paper:title:brant_stanley_2017_mcc",
+      "source": "lineage",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:continual_backpropagation",
+      "rel": "evaluated_on",
+      "dst_id": "benchmark:continual_imagenet",
+      "source": "reported evaluation",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:rnd",
+      "rel": "evaluated_on",
+      "dst_id": "benchmark:montezumas_revenge",
+      "source": "reported evaluation",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:dreamerv3",
+      "rel": "evaluated_on",
+      "dst_id": "benchmark:minecraft_diamond",
+      "source": "reported evaluation",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:dreamer4",
+      "rel": "evaluated_on",
+      "dst_id": "benchmark:minecraft_diamond",
+      "source": "reported evaluation",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:stream_x",
+      "rel": "evaluated_on",
+      "dst_id": "benchmark:dm_control_dog",
+      "source": "reported evaluation",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:map_elites",
+      "rel": "evaluated_on",
+      "dst_id": "benchmark:brax_locomotion_qd",
+      "source": "reported evaluation",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:discrete_gene_crossover",
+      "rel": "evaluated_on",
+      "dst_id": "benchmark:brax_locomotion_qd",
+      "source": "reported evaluation",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:dominated_novelty_search",
+      "rel": "evaluated_on",
+      "dst_id": "benchmark:brax_locomotion_qd",
+      "source": "reported evaluation",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:shinkaevolve",
+      "rel": "evaluated_on",
+      "dst_id": "benchmark:circle_packing",
+      "source": "reported evaluation",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:darwin_godel_machine",
+      "rel": "evaluated_on",
+      "dst_id": "benchmark:swe_bench",
+      "source": "reported evaluation",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:darwin_godel_machine",
+      "rel": "evaluated_on",
+      "dst_id": "benchmark:polyglot",
+      "source": "reported evaluation",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:kinetix_sfl",
+      "rel": "evaluated_on",
+      "dst_id": "benchmark:kinetix_holdout",
+      "source": "reported evaluation",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:omni_epic",
+      "rel": "evaluated_on",
+      "dst_id": "benchmark:craftax",
+      "source": "reported evaluation",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:gsme_harness",
+      "rel": "evaluated_on",
+      "dst_id": "benchmark:sealed_test_harness_7dom",
+      "source": "reported evaluation",
+      "domain": "D6"
+    },
+    {
+      "src_id": "concept:archive_as_gene_pool",
+      "rel": "concept_relates_to",
+      "dst_id": "concept:recessive_latent_trait_recovery",
+      "source": "conceptual link",
+      "domain": "D6"
+    },
+    {
+      "src_id": "concept:recessive_latent_trait_recovery",
+      "rel": "concept_relates_to",
+      "dst_id": "concept:diploidy_dominance",
+      "source": "conceptual link",
+      "domain": "D6"
+    },
+    {
+      "src_id": "concept:archive_as_gene_pool",
+      "rel": "concept_relates_to",
+      "dst_id": "concept:stepping_stones",
+      "source": "conceptual link",
+      "domain": "D6"
+    },
+    {
+      "src_id": "concept:archive_as_gene_pool",
+      "rel": "concept_relates_to",
+      "dst_id": "concept:qd_score",
+      "source": "conceptual link",
+      "domain": "D6"
+    },
+    {
+      "src_id": "concept:elite_recombination_crossover",
+      "rel": "concept_relates_to",
+      "dst_id": "concept:archive_as_gene_pool",
+      "source": "conceptual link",
+      "domain": "D6"
+    },
+    {
+      "src_id": "concept:novelty_search",
+      "rel": "concept_relates_to",
+      "dst_id": "concept:stepping_stones",
+      "source": "conceptual link",
+      "domain": "D6"
+    },
+    {
+      "src_id": "concept:local_competition",
+      "rel": "concept_relates_to",
+      "dst_id": "concept:speciation_niching",
+      "source": "conceptual link",
+      "domain": "D6"
+    },
+    {
+      "src_id": "concept:speciation_niching",
+      "rel": "concept_relates_to",
+      "dst_id": "concept:fitness_sharing",
+      "source": "conceptual link",
+      "domain": "D6"
+    },
+    {
+      "src_id": "concept:speciation_niching",
+      "rel": "concept_relates_to",
+      "dst_id": "concept:map_elites_niches",
+      "source": "conceptual link",
+      "domain": "D6"
+    },
+    {
+      "src_id": "concept:map_elites_niches",
+      "rel": "concept_relates_to",
+      "dst_id": "concept:archive_as_gene_pool",
+      "source": "conceptual link",
+      "domain": "D6"
+    },
+    {
+      "src_id": "concept:minimal_criterion",
+      "rel": "concept_relates_to",
+      "dst_id": "concept:coevolution",
+      "source": "conceptual link",
+      "domain": "D6"
+    },
+    {
+      "src_id": "concept:open_endedness",
+      "rel": "concept_relates_to",
+      "dst_id": "concept:annecs",
+      "source": "conceptual link",
+      "domain": "D6"
+    },
+    {
+      "src_id": "concept:open_endedness",
+      "rel": "concept_relates_to",
+      "dst_id": "concept:coevolution",
+      "source": "conceptual link",
+      "domain": "D6"
+    },
+    {
+      "src_id": "concept:llm_as_mutation_operator",
+      "rel": "concept_relates_to",
+      "dst_id": "concept:diversity_collapse",
+      "source": "conceptual link",
+      "domain": "D6"
+    },
+    {
+      "src_id": "concept:diversity_collapse",
+      "rel": "concept_relates_to",
+      "dst_id": "concept:speciation_niching",
+      "source": "conceptual link",
+      "domain": "D6"
+    },
+    {
+      "src_id": "concept:external_heldout_verifier",
+      "rel": "concept_relates_to",
+      "dst_id": "concept:llm_as_mutation_operator",
+      "source": "conceptual link",
+      "domain": "D6"
+    },
+    {
+      "src_id": "concept:learn_from_experience_runtime",
+      "rel": "concept_relates_to",
+      "dst_id": "concept:streaming_online_rl",
+      "source": "conceptual link",
+      "domain": "D6"
+    },
+    {
+      "src_id": "concept:learn_from_experience_runtime",
+      "rel": "concept_relates_to",
+      "dst_id": "concept:continual_learning",
+      "source": "conceptual link",
+      "domain": "D6"
+    },
+    {
+      "src_id": "concept:streaming_online_rl",
+      "rel": "concept_relates_to",
+      "dst_id": "concept:loss_of_plasticity_plasticity_preservation",
+      "source": "conceptual link",
+      "domain": "D6"
+    },
+    {
+      "src_id": "concept:intrinsic_motivation",
+      "rel": "concept_relates_to",
+      "dst_id": "concept:curiosity_prediction_error",
+      "source": "conceptual link",
+      "domain": "D6"
+    },
+    {
+      "src_id": "concept:intrinsic_motivation",
+      "rel": "concept_relates_to",
+      "dst_id": "concept:empowerment",
+      "source": "conceptual link",
+      "domain": "D6"
+    },
+    {
+      "src_id": "concept:curiosity_prediction_error",
+      "rel": "concept_relates_to",
+      "dst_id": "concept:learning_progress",
+      "source": "conceptual link",
+      "domain": "D6"
+    },
+    {
+      "src_id": "concept:automatic_curriculum_learning",
+      "rel": "concept_relates_to",
+      "dst_id": "concept:unsupervised_environment_design",
+      "source": "conceptual link",
+      "domain": "D6"
+    },
+    {
+      "src_id": "concept:unsupervised_environment_design",
+      "rel": "concept_relates_to",
+      "dst_id": "concept:regret_based_curriculum",
+      "source": "conceptual link",
+      "domain": "D6"
+    },
+    {
+      "src_id": "concept:test_time_training",
+      "rel": "concept_relates_to",
+      "dst_id": "concept:continual_learning",
+      "source": "conceptual link",
+      "domain": "D6"
+    },
+    {
+      "src_id": "concept:tabula_rasa_vs_reincarnation",
+      "rel": "concept_relates_to",
+      "dst_id": "concept:learn_from_experience_runtime",
+      "source": "conceptual link",
+      "domain": "D6"
+    },
+    {
+      "src_id": "claim:d6_scale_does_not_solve_plasticity_llm",
+      "rel": "contradicts",
+      "dst_id": "claim:d6_continual_backprop_overcomes_plasticity",
+      "source": "frontier disagreement: scale-vs-algorithm; and 'solved in controlled bench' vs 'not solved in general' (no dominant method)",
+      "domain": "D6"
+    },
+    {
+      "src_id": "claim:d6_no_dominant_plasticity_method",
+      "rel": "contradicts",
+      "dst_id": "claim:d6_continual_backprop_overcomes_plasticity",
+      "source": "frontier disagreement: general regularization often beats specialized continual-backprop-style methods",
+      "domain": "D6"
+    },
+    {
+      "src_id": "claim:d6_llm_mutation_collapses",
+      "rel": "contradicts",
+      "dst_id": "claim:d6_shinka_sample_efficient",
+      "source": "frontier disagreement: LLM mutation buys sample-efficiency but costs structural diversity — the sharpest 2026 QD debate",
+      "domain": "D6"
+    },
+    {
+      "src_id": "claim:d6_llm_mutation_collapses",
+      "rel": "contradicts",
+      "dst_id": "claim:d6_dei_model_diversity",
+      "source": "frontier disagreement: collapse-by-default vs diversity-recoverable-via-heterogeneous-operators",
+      "domain": "D6"
+    },
+    {
+      "src_id": "claim:d6_objectives_enough_counter",
+      "rel": "contradicts",
+      "dst_id": "claim:d6_novelty_beats_objective",
+      "source": "frontier disagreement: objective-only vs diversity-preserving on deceptive problems",
+      "domain": "D6"
+    },
+    {
+      "src_id": "claim:d6_objectives_enough_counter",
+      "rel": "contradicts",
+      "dst_id": "claim:d6_qd_provably_helpful",
+      "source": "frontier disagreement: when is QD's diversity machinery actually necessary",
+      "domain": "D6"
+    },
+    {
+      "src_id": "claim:d6_infotheoretic_openendedness",
+      "rel": "contradicts",
+      "dst_id": "claim:d6_openendedness_essential_asi",
+      "source": "frontier disagreement: novelty+learnability does NOT indicate capability improvement (bit-equivalent critique of Hughes et al.)",
+      "domain": "D6"
+    },
+    {
+      "src_id": "claim:d6_llm_novelty_bounded",
+      "rel": "contradicts",
+      "dst_id": "claim:d6_openendedness_essential_asi",
+      "source": "frontier disagreement: is FM-driven open-endedness genuine or bounded by the training distribution",
+      "domain": "D6"
+    },
+    {
+      "src_id": "claim:d6_absolute_zero_zero_data",
+      "rel": "contradicts",
+      "dst_id": "claim:d6_tabula_rasa_expensive",
+      "source": "frontier disagreement: 'zero data' self-play vs the difficulty of from-scratch — but AZR is still pretrained (hybrid), not from random init",
+      "domain": "D6"
+    },
+    {
+      "src_id": "claim:d6_vjepa2_zeroshot_but_pretrained",
+      "rel": "contradicts",
+      "dst_id": "claim:d6_dreamerv3_diamonds",
+      "source": "frontier disagreement: experience-on-a-pretrained-prior vs genuinely-from-scratch world models",
+      "domain": "D6"
+    },
+    {
+      "src_id": "claim:d6_fer_evolved_vs_sgd",
+      "rel": "contradicts",
+      "dst_id": "claim:d6_ttt_provable",
+      "source": "frontier disagreement: evolution yields cleaner representations than gradient descent (SGD-optimism critique)",
+      "domain": "D6"
+    },
+    {
+      "src_id": "methodology:developmental_from_scratch_learning",
+      "rel": "concept_relates_to",
+      "dst_id": "concept:oak_architecture_options_and_knowledge",
+      "source": "F1 realizes OaK ingredients (cross-domain D1)",
+      "domain": "D6"
+    },
+    {
+      "src_id": "methodology:developmental_from_scratch_learning",
+      "rel": "concept_relates_to",
+      "dst_id": "concept:loss_of_plasticity_plasticity_preservation",
+      "source": "plasticity is the F1 enabling substrate (D1)",
+      "domain": "D6"
+    },
+    {
+      "src_id": "methodology:quality_diversity",
+      "rel": "concept_relates_to",
+      "dst_id": "concept:archive_as_gene_pool",
+      "source": "QD == preserved gene pool",
+      "domain": "D6"
+    },
+    {
+      "src_id": "methodology:open_ended_evolution",
+      "rel": "concept_relates_to",
+      "dst_id": "concept:open_endedness",
+      "source": "F3 core concept",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2505.22954",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "DGM is archive-based open-ended evolution (shared with D1)",
+      "domain": "D6"
+    },
+    {
+      "src_id": "paper:2507.19457",
+      "rel": "in_domain",
+      "dst_id": "D6",
+      "source": "GEPA reflective evolutionary prompt search (shared with D1)",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:gsme_harness",
+      "rel": "concept_relates_to",
+      "dst_id": "concept:external_heldout_verifier",
+      "source": "GSME's sealed-test verifier = LearnOS held-out verifier",
+      "domain": "D6"
+    },
+    {
+      "src_id": "method:gsme_harness",
+      "rel": "concept_relates_to",
+      "dst_id": "concept:archive_as_gene_pool",
+      "source": "GSME's (WHERE x WHY) pathology archive = a gene pool of fixes",
+      "domain": "D6"
+    }
+  ]
+}
