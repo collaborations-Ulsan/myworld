@@ -10,9 +10,10 @@ STRUCTURAL A/B SEPARATION (prereg S6 false-positive guard #1 -- "B는 별도 생
 변형 + 히든 시드로, A와 문법 공유 금지"):
   * A_FAMILIES and B_FAMILIES are two DISJOINT name sets (asserted disjoint at import time below).
     Each family is its own hand-written golden implementation over its own domain shape -- A is
-    string/list/cipher manipulation, B is matrix/validation/merge-adjacent-but-DIFFERENT-operation
-    problems (e.g. A merges overlapping intervals; B computes the GAPS between them -- related
-    domain, opposite operation, so a model cannot succeed on B by pattern-matching A's template).
+    string/list/cipher manipulation (no interval/matrix/date structure at all), B is
+    matrix/validation/interval-merge-adjacent-but-DIFFERENT-operation problems -- disjoint
+    operation classes in a related domain, so a model cannot succeed on B by pattern-matching A's
+    template.
   * "MUTATING family" / metamorphic variants: each family is a FamilySpec with an `arg_sampler`
     that draws fresh, differentially-tested instances (expected values come from actually RUNNING
     the hand-verified golden_solution on the sampled input, never hand-computed) -- so a family
@@ -122,196 +123,277 @@ def _assert_expr(entry_point: str, args: tuple, expected) -> str:
 
 
 # ---------------------------------------------------------------------------------------------
-# A families (train) -- string/list/cipher manipulation, medium-hard-for-1.7b (edge cases matter:
-# empty input, ties, wraparound, negative numbers).
+# A families (train) -- string/list/cipher manipulation, HARDENED for headroom
+# (docs/AIOS_DISTILLER_PILOT_RESULTS_2026-07-18.md substrate-calibration pass). The original 8
+# families here (second_largest_distinct, run_length_encode, merge_overlapping_intervals,
+# rotate_list_right, top_n_frequent_words, flatten_nested_list, caesar_cipher_shift,
+# chunk_list_fixed_size) were single-concept "cookbook" problems qwen3:1.7b solved 26/30 (87%)
+# live in the 2026-07-17 pilot collect -- no headroom, only N_verified=4. Replaced with genuinely
+# multi-step / classically error-prone problems (nested-bracket decode, subtractive-notation
+# numerals, bijective base-26, two-pointer dedup, deque-style windowing, index-not-boolean bracket
+# matching, key-cycling cipher) in the SAME string/list/cipher domain shape, live-calibrated
+# against qwen3:1.7b to land pass-rate in the ~30-70% band (see calibrate.py and
+# data/calibration_report.json for the measured numbers).
 # ---------------------------------------------------------------------------------------------
 
 def _sample_int_list(rng: random.Random, lo=-20, hi=20, n_lo=1, n_hi=8) -> list:
     return [rng.randint(lo, hi) for _ in range(rng.randint(n_lo, n_hi))]
 
 
-def _sample_word_list(rng: random.Random, n_lo=1, n_hi=6) -> list:
-    vocab = ["a", "the", "cat", "dog", "run", "jump", "big", "small", "red", "blue", "sky", "sea"]
-    return [rng.choice(vocab) for _ in range(rng.randint(n_lo, n_hi))]
-
-
 def _sample_string(rng: random.Random, alphabet="abc", n_lo=0, n_hi=10) -> str:
     return "".join(rng.choice(alphabet) for _ in range(rng.randint(n_lo, n_hi)))
 
 
+def _gen_nested_rle(rng: random.Random, depth: int = 0, max_depth: int = 2) -> str:
+    """A well-formed nested run-length-encoded string, e.g. 'ab3[c2[d]]e' -- used only to build
+    decode_nested_run_length instances. Outer-level repeat counts may run to 2 digits (occasional
+    multi-digit-count coverage); nested counts stay small so decoded length never blows up."""
+    parts = []
+    for _ in range(rng.randint(1, 3)):
+        if depth < max_depth and rng.random() < 0.5:
+            inner = _gen_nested_rle(rng, depth + 1, max_depth)
+            k = rng.randint(1, 12) if depth == 0 else rng.randint(1, 4)
+            parts.append(f"{k}[{inner}]")
+        else:
+            parts.append("".join(rng.choice("abc") for _ in range(rng.randint(1, 3))))
+    return "".join(parts)
+
+
 A_FAMILIES: list[FamilySpec] = [
     FamilySpec(
-        name="second_largest_distinct", split="A", entry_point="second_largest_distinct",
-        params="xs",
-        golden_body=(
-            "def second_largest_distinct(xs):\n"
-            "    u = sorted(set(xs), reverse=True)\n"
-            "    return u[1] if len(u) >= 2 else None\n"
-        ),
-        description=(
-            "Write second_largest_distinct(xs) that returns the second-largest DISTINCT value in "
-            "the list xs, or None if xs has fewer than 2 distinct values."
-        ),
-        example_args=([3, 1, 4, 1, 5, 9, 2, 6],),
-        arg_sampler=lambda rng: (_sample_int_list(rng),),
-    ),
-    FamilySpec(
-        name="run_length_encode", split="A", entry_point="run_length_encode",
+        name="decode_nested_run_length", split="A", entry_point="decode_nested_run_length",
         params="s",
         golden_body=(
-            "def run_length_encode(s):\n"
-            "    if not s:\n"
-            "        return []\n"
-            "    out = []\n"
-            "    prev = s[0]\n"
-            "    cnt = 1\n"
-            "    for ch in s[1:]:\n"
-            "        if ch == prev:\n"
-            "            cnt += 1\n"
+            "def decode_nested_run_length(s):\n"
+            "    stack = []\n"
+            "    cur_str = ''\n"
+            "    cur_num = 0\n"
+            "    for ch in s:\n"
+            "        if ch.isdigit():\n"
+            "            cur_num = cur_num * 10 + int(ch)\n"
+            "        elif ch == '[':\n"
+            "            stack.append((cur_str, cur_num))\n"
+            "            cur_str = ''\n"
+            "            cur_num = 0\n"
+            "        elif ch == ']':\n"
+            "            prev_str, num = stack.pop()\n"
+            "            cur_str = prev_str + cur_str * num\n"
             "        else:\n"
-            "            out.append((prev, cnt))\n"
-            "            prev = ch\n"
-            "            cnt = 1\n"
-            "    out.append((prev, cnt))\n"
-            "    return out\n"
+            "            cur_str += ch\n"
+            "    return cur_str\n"
         ),
         description=(
-            "Write run_length_encode(s) that run-length-encodes string s into a list of "
-            "(char, count) tuples for consecutive runs, e.g. 'aaabcc' -> [('a',3),('b',1),('c',2)]. "
-            "Empty string returns []."
+            "Write decode_nested_run_length(s) that decodes a run-length-encoded string where "
+            "k[substring] means substring repeated k (a positive integer, possibly multi-digit) "
+            "times. Encodings may NEST arbitrarily deep, e.g. '2[3[a]b]' -> 'aaabaaab'. Plain "
+            "lowercase letters outside any bracket pass through unchanged. The input is always a "
+            "validly-encoded string."
         ),
-        example_args=("aaabcc",),
-        arg_sampler=lambda rng: (_sample_string(rng, alphabet="abc", n_lo=0, n_hi=10),),
+        example_args=("3[a]2[bc]",),
+        arg_sampler=lambda rng: (_gen_nested_rle(rng),),
     ),
     FamilySpec(
-        name="merge_overlapping_intervals", split="A", entry_point="merge_overlapping_intervals",
-        params="intervals",
+        name="int_to_roman", split="A", entry_point="int_to_roman",
+        params="num",
         golden_body=(
-            "def merge_overlapping_intervals(intervals):\n"
-            "    if not intervals:\n"
-            "        return []\n"
-            "    s = sorted(intervals, key=lambda p: p[0])\n"
-            "    out = [list(s[0])]\n"
-            "    for start, end in s[1:]:\n"
-            "        if start <= out[-1][1]:\n"
-            "            out[-1][1] = max(out[-1][1], end)\n"
-            "        else:\n"
-            "            out.append([start, end])\n"
-            "    return [tuple(x) for x in out]\n"
+            "def int_to_roman(num):\n"
+            "    vals = [\n"
+            "        (1000, 'M'), (900, 'CM'), (500, 'D'), (400, 'CD'),\n"
+            "        (100, 'C'), (90, 'XC'), (50, 'L'), (40, 'XL'),\n"
+            "        (10, 'X'), (9, 'IX'), (5, 'V'), (4, 'IV'), (1, 'I'),\n"
+            "    ]\n"
+            "    out = []\n"
+            "    for v, sym in vals:\n"
+            "        while num >= v:\n"
+            "            out.append(sym)\n"
+            "            num -= v\n"
+            "    return ''.join(out)\n"
         ),
         description=(
-            "Write merge_overlapping_intervals(intervals) where intervals is a list of (start, end) "
-            "tuples (possibly unsorted, possibly touching/overlapping). Return the sorted list of "
-            "merged (start, end) tuples covering the same total range."
+            "Write int_to_roman(num) that converts an integer num (1 <= num <= 3999) to its Roman "
+            "numeral string using standard subtractive notation (e.g. 4 -> 'IV', 9 -> 'IX', "
+            "1994 -> 'MCMXCIV')."
         ),
-        example_args=([(1, 3), (2, 6), (8, 10)],),
-        arg_sampler=lambda rng: (
-            sorted(
-                [(a, a + rng.randint(1, 5)) for a in sorted(rng.sample(range(0, 30), rng.randint(1, 5)))]
-            ),
-        ),
+        example_args=(1994,),
+        arg_sampler=lambda rng: (rng.randint(1, 3999),),
     ),
     FamilySpec(
-        name="rotate_list_right", split="A", entry_point="rotate_list_right",
+        name="zigzag_convert", split="A", entry_point="zigzag_convert",
+        params="s, n",
+        golden_body=(
+            "def zigzag_convert(s, n):\n"
+            "    if n <= 1 or n >= len(s):\n"
+            "        return s\n"
+            "    rows = [''] * n\n"
+            "    cur, step = 0, 1\n"
+            "    for ch in s:\n"
+            "        rows[cur] += ch\n"
+            "        if cur == 0:\n"
+            "            step = 1\n"
+            "        elif cur == n - 1:\n"
+            "            step = -1\n"
+            "        cur += step\n"
+            "    return ''.join(rows)\n"
+        ),
+        description=(
+            "Write zigzag_convert(s, n) that arranges string s in a zigzag pattern across n rows "
+            "(down then diagonally up, repeating) and returns the characters read row by row, e.g. "
+            "zigzag_convert('PAYPALISHIRING', 3) -> 'PAHNAPLSIIGYIR'. If n <= 1 or n >= len(s), "
+            "return s unchanged."
+        ),
+        example_args=("PAYPALISHIRING", 3),
+        arg_sampler=lambda rng: (_sample_string(rng, alphabet="ABCDEFGH", n_lo=1, n_hi=12), rng.randint(1, 5)),
+    ),
+    FamilySpec(
+        name="three_sum_zero_triplets", split="A", entry_point="three_sum_zero_triplets",
+        params="xs",
+        golden_body=(
+            "def three_sum_zero_triplets(xs):\n"
+            "    xs = sorted(xs)\n"
+            "    n = len(xs)\n"
+            "    res = set()\n"
+            "    for i in range(n - 2):\n"
+            "        if i > 0 and xs[i] == xs[i - 1]:\n"
+            "            continue\n"
+            "        lo, hi = i + 1, n - 1\n"
+            "        while lo < hi:\n"
+            "            s = xs[i] + xs[lo] + xs[hi]\n"
+            "            if s == 0:\n"
+            "                res.add((xs[i], xs[lo], xs[hi]))\n"
+            "                lo += 1\n"
+            "                hi -= 1\n"
+            "            elif s < 0:\n"
+            "                lo += 1\n"
+            "            else:\n"
+            "                hi -= 1\n"
+            "    return sorted(res)\n"
+        ),
+        description=(
+            "Write three_sum_zero_triplets(xs) that returns a sorted list of all UNIQUE triplets "
+            "(as ascending (a, b, c) tuples) drawn from list xs whose values sum to zero. No "
+            "duplicate triplets (by value, not position); [] if none exist."
+        ),
+        example_args=([-1, 0, 1, 2, -1, -4],),
+        arg_sampler=lambda rng: (_sample_int_list(rng, lo=-8, hi=8, n_lo=3, n_hi=9),),
+    ),
+    FamilySpec(
+        name="number_to_excel_column", split="A", entry_point="number_to_excel_column",
+        params="n",
+        golden_body=(
+            "def number_to_excel_column(n):\n"
+            "    out = []\n"
+            "    while n > 0:\n"
+            "        n, rem = divmod(n - 1, 26)\n"
+            "        out.append(chr(ord('A') + rem))\n"
+            "    return ''.join(reversed(out))\n"
+        ),
+        description=(
+            "Write number_to_excel_column(n) that converts a positive integer n (1-indexed) into "
+            "a spreadsheet-style column title: 1 -> 'A', 26 -> 'Z', 27 -> 'AA', 28 -> 'AB', "
+            "703 -> 'AAA' (bijective base-26 -- there is no digit for zero)."
+        ),
+        example_args=(28,),
+        arg_sampler=lambda rng: (rng.randint(1, 18278),),
+    ),
+    FamilySpec(
+        name="first_unbalanced_bracket_index", split="A", entry_point="first_unbalanced_bracket_index",
+        params="s",
+        golden_body=(
+            "def first_unbalanced_bracket_index(s):\n"
+            "    opens = set('([{')\n"
+            "    closes = {')': '(', ']': '[', '}': '{'}\n"
+            "    stack = []\n"
+            "    for i, ch in enumerate(s):\n"
+            "        if ch in opens:\n"
+            "            stack.append((ch, i))\n"
+            "        elif ch in closes:\n"
+            "            if not stack or stack[-1][0] != closes[ch]:\n"
+            "                return i\n"
+            "            stack.pop()\n"
+            "    if stack:\n"
+            "        return stack[0][1]\n"
+            "    return -1\n"
+        ),
+        description=(
+            "Write first_unbalanced_bracket_index(s) where s may contain '()[]{}' plus other "
+            "characters (ignored). Return the index of the first closing bracket that has no "
+            "matching open (empty stack, or wrong type); if every bracket matches but some opens "
+            "are never closed, return the index of the EARLIEST unclosed opening bracket; return "
+            "-1 if s is fully balanced."
+        ),
+        example_args=("(a[b)c]",),
+        arg_sampler=lambda rng: (_sample_string(rng, alphabet="()[]{}abc", n_lo=0, n_hi=12),),
+    ),
+    FamilySpec(
+        name="sliding_window_maximum", split="A", entry_point="sliding_window_maximum",
         params="xs, k",
         golden_body=(
-            "def rotate_list_right(xs, k):\n"
-            "    if not xs:\n"
-            "        return []\n"
+            "def sliding_window_maximum(xs, k):\n"
             "    n = len(xs)\n"
-            "    k = k % n\n"
-            "    return xs[-k:] + xs[:-k] if k else list(xs)\n"
-        ),
-        description=(
-            "Write rotate_list_right(xs, k) that rotates list xs to the right by k positions "
-            "(k may be 0 or exceed len(xs); empty xs returns [])."
-        ),
-        example_args=([1, 2, 3, 4, 5], 2),
-        arg_sampler=lambda rng: (_sample_int_list(rng, n_lo=1, n_hi=7), rng.randint(0, 12)),
-    ),
-    FamilySpec(
-        name="top_n_frequent_words", split="A", entry_point="top_n_frequent_words",
-        params="words, n",
-        golden_body=(
-            "def top_n_frequent_words(words, n):\n"
-            "    from collections import Counter\n"
-            "    c = Counter(words)\n"
-            "    ordered = sorted(c.items(), key=lambda kv: (-kv[1], kv[0]))\n"
-            "    return [w for w, _ in ordered[:n]]\n"
-        ),
-        description=(
-            "Write top_n_frequent_words(words, n) returning the n most frequent words (list of "
-            "str), ties broken alphabetically ascending."
-        ),
-        example_args=(["a", "b", "a", "c", "b", "a"], 2),
-        arg_sampler=lambda rng: (_sample_word_list(rng), rng.randint(1, 3)),
-    ),
-    FamilySpec(
-        name="flatten_nested_list", split="A", entry_point="flatten_nested_list",
-        params="lst",
-        golden_body=(
-            "def flatten_nested_list(lst):\n"
+            "    if n == 0 or k <= 0 or k > n:\n"
+            "        return []\n"
+            "    from collections import deque\n"
+            "    dq = deque()\n"
             "    out = []\n"
-            "    for item in lst:\n"
-            "        if isinstance(item, list):\n"
-            "            out.extend(flatten_nested_list(item))\n"
-            "        else:\n"
-            "            out.append(item)\n"
+            "    for i, x in enumerate(xs):\n"
+            "        while dq and xs[dq[-1]] <= x:\n"
+            "            dq.pop()\n"
+            "        dq.append(i)\n"
+            "        if dq[0] <= i - k:\n"
+            "            dq.popleft()\n"
+            "        if i >= k - 1:\n"
+            "            out.append(xs[dq[0]])\n"
             "    return out\n"
         ),
         description=(
-            "Write flatten_nested_list(lst) that flattens an arbitrarily nested list of ints into "
-            "one flat list, preserving left-to-right order."
+            "Write sliding_window_maximum(xs, k) that returns a list containing the maximum value "
+            "of every contiguous window of size k as it slides left-to-right across xs (length "
+            "len(xs) - k + 1). Return [] if xs is empty, k <= 0, or k > len(xs)."
         ),
-        example_args=([1, [2, 3], [4, [5, 6]]],),
-        arg_sampler=lambda rng: (
-            [rng.randint(-9, 9) if rng.random() > 0.3 else [rng.randint(-9, 9) for _ in range(rng.randint(0, 3))]
-             for _ in range(rng.randint(0, 5))],
-        ),
+        example_args=([1, 3, -1, -3, 5, 3, 6, 7], 3),
+        arg_sampler=lambda rng: (_sample_int_list(rng, lo=-9, hi=9, n_lo=0, n_hi=10), rng.randint(1, 5)),
     ),
     FamilySpec(
-        name="caesar_cipher_shift", split="A", entry_point="caesar_cipher_shift",
-        params="s, shift",
+        name="vigenere_cipher_encode", split="A", entry_point="vigenere_cipher_encode",
+        params="s, key",
         golden_body=(
-            "def caesar_cipher_shift(s, shift):\n"
+            "def vigenere_cipher_encode(s, key):\n"
+            "    if not key:\n"
+            "        return s\n"
             "    out = []\n"
+            "    key = key.lower()\n"
+            "    ki = 0\n"
             "    for ch in s:\n"
             "        if ch.isalpha():\n"
+            "            shift = ord(key[ki % len(key)]) - ord('a')\n"
             "            base = ord('A') if ch.isupper() else ord('a')\n"
             "            out.append(chr((ord(ch) - base + shift) % 26 + base))\n"
+            "            ki += 1\n"
             "        else:\n"
             "            out.append(ch)\n"
             "    return ''.join(out)\n"
         ),
         description=(
-            "Write caesar_cipher_shift(s, shift) that shifts each letter of s by `shift` positions "
-            "(wrapping within the same case, negative/large shift allowed), leaving non-letters "
-            "unchanged."
+            "Write vigenere_cipher_encode(s, key) that Vigenere-encodes s using repeating "
+            "lowercase `key`: each ALPHABETIC character of s is shifted by the alphabet position "
+            "(A=0) of the next key letter (case of the output letter matches the input letter; "
+            "the key only advances on alphabetic input characters -- non-letters are copied "
+            "through unchanged and do not consume a key position). key is always non-empty "
+            "lowercase letters."
         ),
-        example_args=("Hello, World!", 1),
+        example_args=("Hello, World!", "key"),
         arg_sampler=lambda rng: (
-            _sample_string(rng, alphabet="AaBbCcXxYyZz, !", n_lo=1, n_hi=12), rng.randint(-30, 30),
+            _sample_string(rng, alphabet="AaBbCcXxYyZz, !", n_lo=1, n_hi=12),
+            _sample_string(rng, alphabet="abcxyz", n_lo=1, n_hi=5),
         ),
-    ),
-    FamilySpec(
-        name="chunk_list_fixed_size", split="A", entry_point="chunk_list_fixed_size",
-        params="xs, size",
-        golden_body=(
-            "def chunk_list_fixed_size(xs, size):\n"
-            "    return [xs[i:i + size] for i in range(0, len(xs), size)]\n"
-        ),
-        description=(
-            "Write chunk_list_fixed_size(xs, size) that splits list xs into consecutive chunks of "
-            "length `size` (the last chunk may be shorter); size is always >= 1."
-        ),
-        example_args=([1, 2, 3, 4, 5], 2),
-        arg_sampler=lambda rng: (_sample_int_list(rng, n_lo=0, n_hi=9), rng.randint(1, 4)),
     ),
 ]
 
 # ---------------------------------------------------------------------------------------------
-# B families (held-out) -- matrix/validation/merge-adjacent-BUT-different-op domain shapes.
-# Structurally DISJOINT from A_FAMILIES (asserted below); no template is shared with A.
+# B families (held-out) -- matrix/validation/interval-merge-adjacent-BUT-different-op domain
+# shapes. Structurally DISJOINT from A_FAMILIES (asserted below); no template is shared with A.
+# HARDENED alongside A (see A_FAMILIES comment above) so held-out headroom is comparable, not
+# just A's escalation-generating headroom.
 # ---------------------------------------------------------------------------------------------
 
 
@@ -321,113 +403,206 @@ def _sample_matrix(rng: random.Random) -> list:
     return [[rng.randint(-9, 9) for _ in range(cols)] for _ in range(rows)]
 
 
+def _sample_iso_date_like(rng: random.Random) -> str:
+    """Mostly plausible YYYY-MM-DD strings (biased toward day-31 and Feb-29 edge cases, so both
+    True and False outcomes are common), occasionally outright malformed junk."""
+    if rng.random() < 0.15:
+        return "".join(rng.choice("0123456789-abc") for _ in range(rng.randint(0, 10)))
+    year = rng.randint(1900, 2100)
+    month = rng.randint(1, 12)
+    day = rng.randint(1, 31)
+    return f"{year:04d}-{month:02d}-{day:02d}"
+
+
+def _sample_intervals_for_rooms(rng: random.Random) -> list:
+    out = []
+    for _ in range(rng.randint(0, 6)):
+        start = rng.randint(0, 20)
+        out.append((start, start + rng.randint(1, 10)))
+    return out
+
+
+def _sample_unsorted_overlapping_intervals(rng: random.Random) -> tuple:
+    hi = rng.randint(6, 20)
+    raw = []
+    for _ in range(rng.randint(0, 5)):
+        start = rng.randint(0, hi - 1)
+        raw.append((start, start + rng.randint(1, max(1, hi - start))))
+    rng.shuffle(raw)
+    return raw, 0, hi
+
+
 B_FAMILIES: list[FamilySpec] = [
     FamilySpec(
-        name="matrix_transpose", split="B", entry_point="matrix_transpose",
+        name="matrix_spiral_order", split="B", entry_point="matrix_spiral_order",
         params="m",
         golden_body=(
-            "def matrix_transpose(m):\n"
-            "    if not m:\n"
+            "def matrix_spiral_order(m):\n"
+            "    if not m or not m[0]:\n"
             "        return []\n"
-            "    return [list(row) for row in zip(*m)]\n"
-        ),
-        description=(
-            "Write matrix_transpose(m) that returns the transpose of the 2D list m (list of equal-"
-            "length rows); m may be empty (return [])."
-        ),
-        example_args=([[1, 2, 3], [4, 5, 6]],),
-        arg_sampler=lambda rng: (_sample_matrix(rng),),
-    ),
-    FamilySpec(
-        name="longest_increasing_run", split="B", entry_point="longest_increasing_run",
-        params="xs",
-        golden_body=(
-            "def longest_increasing_run(xs):\n"
-            "    if not xs:\n"
-            "        return 0\n"
-            "    best = cur = 1\n"
-            "    for i in range(1, len(xs)):\n"
-            "        if xs[i] > xs[i - 1]:\n"
-            "            cur += 1\n"
-            "            best = max(best, cur)\n"
-            "        else:\n"
-            "            cur = 1\n"
-            "    return best\n"
-        ),
-        description=(
-            "Write longest_increasing_run(xs) that returns the length of the longest STRICTLY "
-            "increasing contiguous run in xs (0 for empty list, 1 for a single element)."
-        ),
-        example_args=([1, 2, 1, 2, 3, 4, 1],),
-        arg_sampler=lambda rng: (_sample_int_list(rng, lo=-9, hi=9, n_lo=0, n_hi=9),),
-    ),
-    FamilySpec(
-        name="validate_password_rules", split="B", entry_point="validate_password_rules",
-        params="s",
-        golden_body=(
-            "def validate_password_rules(s):\n"
-            "    return (len(s) >= 8 and any(c.isupper() for c in s)\n"
-            "            and any(c.islower() for c in s) and any(c.isdigit() for c in s))\n"
-        ),
-        description=(
-            "Write validate_password_rules(s) returning True iff s has length >= 8 AND contains "
-            "at least one uppercase letter, one lowercase letter, and one digit."
-        ),
-        example_args=("Abcdef12",),
-        arg_sampler=lambda rng: (_sample_string(rng, alphabet="Aa1bB2cC3!", n_lo=0, n_hi=12),),
-    ),
-    FamilySpec(
-        name="most_common_char_tiebreak", split="B", entry_point="most_common_char_tiebreak",
-        params="s",
-        golden_body=(
-            "def most_common_char_tiebreak(s):\n"
-            "    if not s:\n"
-            "        return None\n"
-            "    counts = {}\n"
-            "    for ch in s:\n"
-            "        counts[ch] = counts.get(ch, 0) + 1\n"
-            "    best_ch, best_count = None, -1\n"
-            "    for ch in s:\n"
-            "        if counts[ch] > best_count:\n"
-            "            best_count = counts[ch]\n"
-            "            best_ch = ch\n"
-            "    return best_ch\n"
-        ),
-        description=(
-            "Write most_common_char_tiebreak(s) returning the most frequent character in s; ties "
-            "broken by first occurrence in s. Empty string returns None."
-        ),
-        example_args=("aabbbcc",),
-        arg_sampler=lambda rng: (_sample_string(rng, alphabet="ab", n_lo=0, n_hi=10),),
-    ),
-    FamilySpec(
-        name="zigzag_merge", split="B", entry_point="zigzag_merge",
-        params="a, b",
-        golden_body=(
-            "def zigzag_merge(a, b):\n"
             "    out = []\n"
-            "    for i in range(max(len(a), len(b))):\n"
-            "        if i < len(a):\n"
-            "            out.append(a[i])\n"
-            "        if i < len(b):\n"
-            "            out.append(b[i])\n"
+            "    top, bottom = 0, len(m) - 1\n"
+            "    left, right = 0, len(m[0]) - 1\n"
+            "    while top <= bottom and left <= right:\n"
+            "        for c in range(left, right + 1):\n"
+            "            out.append(m[top][c])\n"
+            "        top += 1\n"
+            "        for r in range(top, bottom + 1):\n"
+            "            out.append(m[r][right])\n"
+            "        right -= 1\n"
+            "        if top <= bottom:\n"
+            "            for c in range(right, left - 1, -1):\n"
+            "                out.append(m[bottom][c])\n"
+            "            bottom -= 1\n"
+            "        if left <= right:\n"
+            "            for r in range(bottom, top - 1, -1):\n"
+            "                out.append(m[r][left])\n"
+            "            left += 1\n"
             "    return out\n"
         ),
         description=(
-            "Write zigzag_merge(a, b) that interleaves lists a and b alternately starting with a "
-            "(a[0], b[0], a[1], b[1], ...), appending the leftover tail of whichever list is longer."
+            "Write matrix_spiral_order(m) that returns all elements of the 2D list m (rectangular, "
+            "equal-length rows, possibly empty) visited in clockwise spiral order starting from "
+            "the top-left element."
         ),
-        example_args=([1, 2, 3], [4, 5]),
-        arg_sampler=lambda rng: (_sample_int_list(rng, n_lo=0, n_hi=6), _sample_int_list(rng, n_lo=0, n_hi=6)),
+        example_args=([[1, 2, 3], [4, 5, 6], [7, 8, 9]],),
+        arg_sampler=lambda rng: (_sample_matrix(rng),),
     ),
     FamilySpec(
-        name="interval_gaps", split="B", entry_point="interval_gaps",
+        name="longest_bitonic_subarray", split="B", entry_point="longest_bitonic_subarray",
+        params="xs",
+        golden_body=(
+            "def longest_bitonic_subarray(xs):\n"
+            "    n = len(xs)\n"
+            "    if n == 0:\n"
+            "        return 0\n"
+            "    inc = [1] * n\n"
+            "    for i in range(1, n):\n"
+            "        if xs[i] > xs[i - 1]:\n"
+            "            inc[i] = inc[i - 1] + 1\n"
+            "    dec = [1] * n\n"
+            "    for i in range(n - 2, -1, -1):\n"
+            "        if xs[i] > xs[i + 1]:\n"
+            "            dec[i] = dec[i + 1] + 1\n"
+            "    return max(inc[i] + dec[i] - 1 for i in range(n))\n"
+        ),
+        description=(
+            "Write longest_bitonic_subarray(xs) that returns the length of the longest contiguous "
+            "subarray that STRICTLY increases to a peak and then STRICTLY decreases (a purely "
+            "increasing or purely decreasing run also counts, with an empty far side). 0 for an "
+            "empty list, 1 for a single element."
+        ),
+        example_args=([1, 3, 5, 4, 2],),
+        arg_sampler=lambda rng: (_sample_int_list(rng, lo=-9, hi=9, n_lo=0, n_hi=9),),
+    ),
+    FamilySpec(
+        name="validate_iso_date_leapyear", split="B", entry_point="validate_iso_date_leapyear",
+        params="s",
+        golden_body=(
+            "def validate_iso_date_leapyear(s):\n"
+            "    parts = s.split('-')\n"
+            "    if len(parts) != 3:\n"
+            "        return False\n"
+            "    y_str, mo_str, d_str = parts\n"
+            "    if len(y_str) != 4 or len(mo_str) != 2 or len(d_str) != 2:\n"
+            "        return False\n"
+            "    if not (y_str.isdigit() and mo_str.isdigit() and d_str.isdigit()):\n"
+            "        return False\n"
+            "    year, month, day = int(y_str), int(mo_str), int(d_str)\n"
+            "    if month < 1 or month > 12:\n"
+            "        return False\n"
+            "    days_in_month = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]\n"
+            "    if month == 2 and (year % 4 == 0 and (year % 100 != 0 or year % 400 == 0)):\n"
+            "        max_day = 29\n"
+            "    else:\n"
+            "        max_day = days_in_month[month - 1]\n"
+            "    return 1 <= day <= max_day\n"
+        ),
+        description=(
+            "Write validate_iso_date_leapyear(s) returning True iff s is EXACTLY 'YYYY-MM-DD' "
+            "(4-digit year, 2-digit month, 2-digit day, dash-separated) AND represents a real "
+            "calendar date: month in 1..12, day within that month's actual length, with the "
+            "Gregorian leap-year rule for February (divisible by 4, except century years unless "
+            "divisible by 400)."
+        ),
+        example_args=("2024-02-29",),
+        arg_sampler=lambda rng: (_sample_iso_date_like(rng),),
+    ),
+    FamilySpec(
+        name="kth_most_common_char", split="B", entry_point="kth_most_common_char",
+        params="s, k",
+        golden_body=(
+            "def kth_most_common_char(s, k):\n"
+            "    if not s or k < 1:\n"
+            "        return None\n"
+            "    counts = {}\n"
+            "    first_seen = {}\n"
+            "    for i, ch in enumerate(s):\n"
+            "        counts[ch] = counts.get(ch, 0) + 1\n"
+            "        if ch not in first_seen:\n"
+            "            first_seen[ch] = i\n"
+            "    ordered = sorted(counts.keys(), key=lambda c: (-counts[c], first_seen[c]))\n"
+            "    if k > len(ordered):\n"
+            "        return None\n"
+            "    return ordered[k - 1]\n"
+        ),
+        description=(
+            "Write kth_most_common_char(s, k) returning the k-th most frequent character in s "
+            "(1-indexed; ties broken by first occurrence in s). Return None if s is empty, k < 1, "
+            "or k exceeds the number of distinct characters in s."
+        ),
+        example_args=("aabbbcc", 2),
+        arg_sampler=lambda rng: (_sample_string(rng, alphabet="abcd", n_lo=0, n_hi=12), rng.randint(1, 5)),
+    ),
+    FamilySpec(
+        name="minimum_meeting_rooms", split="B", entry_point="minimum_meeting_rooms",
+        params="intervals",
+        golden_body=(
+            "def minimum_meeting_rooms(intervals):\n"
+            "    if not intervals:\n"
+            "        return 0\n"
+            "    starts = sorted(s for s, e in intervals)\n"
+            "    ends = sorted(e for s, e in intervals)\n"
+            "    rooms = 0\n"
+            "    max_rooms = 0\n"
+            "    si = ei = 0\n"
+            "    n = len(intervals)\n"
+            "    while si < n:\n"
+            "        if starts[si] < ends[ei]:\n"
+            "            rooms += 1\n"
+            "            si += 1\n"
+            "            max_rooms = max(max_rooms, rooms)\n"
+            "        else:\n"
+            "            rooms -= 1\n"
+            "            ei += 1\n"
+            "    return max_rooms\n"
+        ),
+        description=(
+            "Write minimum_meeting_rooms(intervals) where intervals is a list of (start, end) "
+            "meeting tuples (possibly overlapping, any order). Return the minimum number of rooms "
+            "needed so no two overlapping meetings share a room."
+        ),
+        example_args=([(0, 30), (5, 10), (15, 20)],),
+        arg_sampler=lambda rng: (_sample_intervals_for_rooms(rng),),
+    ),
+    FamilySpec(
+        name="interval_gaps_after_merge", split="B", entry_point="interval_gaps_after_merge",
         params="intervals, lo, hi",
         golden_body=(
-            "def interval_gaps(intervals, lo, hi):\n"
+            "def interval_gaps_after_merge(intervals, lo, hi):\n"
+            "    if not intervals:\n"
+            "        merged = []\n"
+            "    else:\n"
+            "        s = sorted(intervals, key=lambda p: p[0])\n"
+            "        merged = [list(s[0])]\n"
+            "        for start, end in s[1:]:\n"
+            "            if start <= merged[-1][1]:\n"
+            "                merged[-1][1] = max(merged[-1][1], end)\n"
+            "            else:\n"
+            "                merged.append([start, end])\n"
             "    out = []\n"
             "    cur = lo\n"
-            "    for start, end in intervals:\n"
+            "    for start, end in merged:\n"
             "        if start > cur:\n"
             "            out.append((cur, start))\n"
             "        cur = max(cur, end)\n"
@@ -436,21 +611,13 @@ B_FAMILIES: list[FamilySpec] = [
             "    return out\n"
         ),
         description=(
-            "Write interval_gaps(intervals, lo, hi) where intervals is a sorted list of "
-            "non-overlapping (start, end) tuples within [lo, hi]. Return the list of GAP "
-            "(start, end) tuples in [lo, hi] not covered by any interval."
+            "Write interval_gaps_after_merge(intervals, lo, hi) where intervals is a list of "
+            "(start, end) tuples within [lo, hi] that may be UNSORTED and OVERLAPPING. First merge "
+            "any overlapping/touching intervals, then return the list of GAP (start, end) tuples "
+            "in [lo, hi] not covered by any (merged) interval."
         ),
-        example_args=([(1, 3), (5, 7)], 0, 10),
-        arg_sampler=lambda rng: (
-            (lambda lo, hi: (
-                lambda cuts: (
-                    [(cuts[i], cuts[i] + rng.randint(1, max(1, (cuts[i + 1] - cuts[i]) // 2 or 1)))
-                     for i in range(0, len(cuts) - 1, 2)],
-                    lo, hi,
-                )
-            )(sorted(rng.sample(range(lo, hi), min(4, hi - lo)))) if hi - lo >= 2 else ([], lo, hi)
-            )(0, rng.randint(6, 20))
-        ),
+        example_args=([(5, 7), (1, 3)], 0, 10),
+        arg_sampler=lambda rng: _sample_unsorted_overlapping_intervals(rng),
     ),
 ]
 

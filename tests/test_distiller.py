@@ -100,11 +100,11 @@ class CausalGateTest(unittest.TestCase):
         self.assertIn(result["reason"], ("holdout_fail", "sentinel_regressed"))
 
     def test_degenerate_identity_function_is_rejected_before_running_any_tests(self):
-        # second_largest_distinct(xs) takes exactly one positional arg -- an identity
+        # three_sum_zero_triplets(xs) takes exactly one positional arg -- an identity
         # `return xs` is a structurally degenerate stand-in a teacher could emit that happens
         # to slip past a weak grader; is_degenerate_tool must catch it before any test runs.
-        one_arg_task = next(t for t in self.built if t["entry_point"] == "second_largest_distinct")
-        identity_src = "def second_largest_distinct(xs):\n    return xs\n"
+        one_arg_task = next(t for t in self.built if t["entry_point"] == "three_sum_zero_triplets")
+        identity_src = "def three_sum_zero_triplets(xs):\n    return xs\n"
         result = collect.verify_solution(one_arg_task, identity_src)
         self.assertEqual(result["decision"], "rejected")
         self.assertTrue(result["reason"].startswith("degenerate"))
