@@ -1,0 +1,174 @@
+[
+  {
+    "task_id": "off_by_one_range",
+    "description": "sum_range(n) should sum 1..n inclusive; loop excludes n",
+    "buggy_source": "def sum_range(n):\n    total = 0\n    for i in range(1, n):\n        total += i\n    return total\n",
+    "visible_tests": [
+      "assert sum_range(1) == 1",
+      "assert sum_range(3) == 6"
+    ],
+    "sentinel_check": "assert sum_range(0) == 0"
+  },
+  {
+    "task_id": "wrong_operator_and_or",
+    "description": "is_valid_age(age) should require 0<=age<=120; uses `or` instead of `and`",
+    "buggy_source": "def is_valid_age(age):\n    return age >= 0 or age <= 120\n",
+    "visible_tests": [
+      "assert is_valid_age(30) is True",
+      "assert is_valid_age(-5) is False"
+    ],
+    "sentinel_check": "assert is_valid_age(0) is True"
+  },
+  {
+    "task_id": "boundary_empty_list",
+    "description": "average(xs) should return 0 for empty list; crashes with ZeroDivisionError",
+    "buggy_source": "def average(xs):\n    return sum(xs) / len(xs)\n",
+    "visible_tests": [
+      "assert average([2, 4, 6]) == 4",
+      "assert average([]) == 0"
+    ],
+    "sentinel_check": "assert average([5]) == 5"
+  },
+  {
+    "task_id": "mutable_default_arg",
+    "description": "append_item(x, lst=[]) leaks state across calls via a mutable default",
+    "buggy_source": "def append_item(x, lst=[]):\n    lst.append(x)\n    return lst\n",
+    "visible_tests": [
+      "assert append_item(1) == [1]",
+      "assert append_item(2) == [2]"
+    ],
+    "sentinel_check": "assert append_item(9, [1, 2]) == [1, 2, 9]"
+  },
+  {
+    "task_id": "wrong_comparison_direction",
+    "description": "clamp_min(x, lo) should return max(x, lo); uses min instead",
+    "buggy_source": "def clamp_min(x, lo):\n    return min(x, lo)\n",
+    "visible_tests": [
+      "assert clamp_min(5, 2) == 5",
+      "assert clamp_min(1, 2) == 2"
+    ],
+    "sentinel_check": "assert clamp_min(2, 2) == 2"
+  },
+  {
+    "task_id": "string_reverse_off_by_one",
+    "description": "reverse_str(s) should reverse the whole string; drops the last char",
+    "buggy_source": "def reverse_str(s):\n    return s[-2::-1]\n",
+    "visible_tests": [
+      "assert reverse_str('ab') == 'ba'"
+    ],
+    "sentinel_check": "assert reverse_str('') == ''"
+  },
+  {
+    "task_id": "wrong_index_fencepost",
+    "description": "get_last(xs) should return the last element; indexes one past the end",
+    "buggy_source": "def get_last(xs):\n    return xs[len(xs)]\n",
+    "visible_tests": [
+      "assert get_last([1, 2, 3]) == 3"
+    ],
+    "sentinel_check": "assert get_last([9]) == 9"
+  },
+  {
+    "task_id": "incorrect_accumulator_init",
+    "description": "product(xs) should multiply all elements; accumulator starts at 0",
+    "buggy_source": "def product(xs):\n    total = 0\n    for x in xs:\n        total *= x\n    return total\n",
+    "visible_tests": [
+      "assert product([2, 3, 4]) == 24"
+    ],
+    "sentinel_check": "assert product([]) == 1"
+  },
+  {
+    "task_id": "wrong_condition_negation",
+    "description": "is_even(n) should be True for even n; condition is negated",
+    "buggy_source": "def is_even(n):\n    return n % 2 == 1\n",
+    "visible_tests": [
+      "assert is_even(4) is True",
+      "assert is_even(3) is False"
+    ],
+    "sentinel_check": "assert is_even(0) is True"
+  },
+  {
+    "task_id": "float_int_division",
+    "description": "half(n) should return true division (n/2); uses integer floor division",
+    "buggy_source": "def half(n):\n    return n // 2\n",
+    "visible_tests": [
+      "assert half(3) == 1.5",
+      "assert half(5) == 2.5"
+    ],
+    "sentinel_check": "assert half(4) == 2.0"
+  },
+  {
+    "task_id": "recursive_base_case_wrong",
+    "description": "factorial(n) recursive; base case returns 0 instead of 1, zeroing every result",
+    "buggy_source": "def factorial(n):\n    if n <= 1:\n        return 0\n    return n * factorial(n - 1)\n",
+    "visible_tests": [
+      "assert factorial(3) == 6",
+      "assert factorial(1) == 1"
+    ],
+    "sentinel_check": "assert factorial(0) == 1"
+  },
+  {
+    "task_id": "sorting_comparator_wrong",
+    "description": "sort_desc(xs) should sort descending; forgets reverse=True",
+    "buggy_source": "def sort_desc(xs):\n    return sorted(xs)\n",
+    "visible_tests": [
+      "assert sort_desc([3, 1, 2]) == [3, 2, 1]"
+    ],
+    "sentinel_check": "assert sort_desc([]) == []"
+  },
+  {
+    "task_id": "dict_default_missing",
+    "description": "char_count(s) should count characters; raises KeyError on first occurrence",
+    "buggy_source": "def char_count(s):\n    counts = {}\n    for ch in s:\n        counts[ch] += 1\n    return counts\n",
+    "visible_tests": [
+      "assert char_count('aab') == {'a': 2, 'b': 1}"
+    ],
+    "sentinel_check": "assert char_count('') == {}"
+  },
+  {
+    "task_id": "list_slicing_off_by_one",
+    "description": "first_n(xs, n) should return the first n elements; slices to n-1",
+    "buggy_source": "def first_n(xs, n):\n    return xs[:n - 1]\n",
+    "visible_tests": [
+      "assert first_n([1, 2, 3, 4], 2) == [1, 2]"
+    ],
+    "sentinel_check": "assert first_n([1, 2, 3], 0) == []"
+  },
+  {
+    "task_id": "early_return_wrong",
+    "description": "find_first_negative(xs) should scan for the first negative; returns on turn 1 regardless of sign",
+    "buggy_source": "def find_first_negative(xs):\n    for x in xs:\n        return x if x < 0 else None\n    return None\n",
+    "visible_tests": [
+      "assert find_first_negative([1, 2, -3, 4]) == -3"
+    ],
+    "sentinel_check": "assert find_first_negative([1, 2, 3]) is None"
+  },
+  {
+    "task_id": "swapped_args_order",
+    "description": "subtract_from(total, amount) should compute total-amount; args swapped in the body",
+    "buggy_source": "def subtract_from(total, amount):\n    return amount - total\n",
+    "visible_tests": [
+      "assert subtract_from(10, 3) == 7"
+    ],
+    "sentinel_check": "assert subtract_from(5, 5) == 0"
+  },
+  {
+    "task_id": "wrong_modulo_even_odd_check",
+    "description": "classify_parity(n) should label even/odd; the two branches' strings are swapped",
+    "buggy_source": "def classify_parity(n):\n    if n % 2 == 0:\n        return 'odd'\n    return 'even'\n",
+    "visible_tests": [
+      "assert classify_parity(4) == 'even'",
+      "assert classify_parity(3) == 'odd'"
+    ],
+    "sentinel_check": "assert classify_parity(0) == 'even'"
+  },
+  {
+    "task_id": "min_max_mixed_up",
+    "description": "bounded(x, lo, hi) should clamp x into [lo, hi]; min/max args are swapped",
+    "buggy_source": "def bounded(x, lo, hi):\n    return min(max(x, hi), lo)\n",
+    "visible_tests": [
+      "assert bounded(5, 0, 10) == 5",
+      "assert bounded(-5, 0, 10) == 0"
+    ],
+    "sentinel_check": "assert 0 <= bounded(5, 0, 10) <= 10"
+  }
+]
