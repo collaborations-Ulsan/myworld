@@ -39,6 +39,10 @@ SOURCES = [
     # so the shape-detecting load_and_normalize handles them directly.
     ("learning_methods", REPO_ROOT / "docs" / "ontology" / "ledger" / "learning_methods.json",
      lambda p: normalize.load_and_normalize(p, "D6")),
+    ("reasoning_verification_rl", REPO_ROOT / "docs" / "ontology" / "ledger" / "reasoning_verification_rl.json",
+     lambda p: normalize.load_and_normalize(p, "D5")),
+    ("society_assembly", REPO_ROOT / "docs" / "ontology" / "ledger" / "society_assembly.json",
+     lambda p: normalize.load_and_normalize(p, "D7")),
 ]
 DEFAULT_OUT = REPO_ROOT / "docs" / "ontology" / "ledger" / "_merged.json"
 
