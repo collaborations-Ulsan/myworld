@@ -130,6 +130,36 @@ class AiosLauncherTest(unittest.TestCase):
         self.assertEqual(command[1], (ROOT / "scripts" / "aios_project_discovery.py").as_posix())
         self.assertEqual(command[2:5], ["--control-root", ROOT.as_posix(), "scan"])
 
+    def test_head_command_constructs_aios_head_delegation(self) -> None:
+        """`aios head <goal> ...` must dispatch to scripts/aios_head.py — the
+        goal-first head, exposed through the canonical entrypoint so sovereign
+        mode (founder directive 2026-07-17) is reachable as `aios head "<goal>"
+        --provider sovereign`."""
+        import importlib.util
+
+        spec = importlib.util.spec_from_file_location("aios_launcher", SCRIPT)
+        module = importlib.util.module_from_spec(spec)
+        assert spec and spec.loader
+        spec.loader.exec_module(module)
+
+        command = module.head_command(ROOT, ["a goal", "--provider", "sovereign"])
+
+        self.assertEqual(command[0], sys.executable)
+        self.assertEqual(command[1], (ROOT / "scripts" / "aios_head.py").as_posix())
+        self.assertEqual(command[2:4], ["--root", ROOT.as_posix()])
+        self.assertEqual(command[-2:], ["--provider", "sovereign"])
+        self.assertIn("a goal", command)
+
+    def test_head_is_a_registered_command(self) -> None:
+        import importlib.util
+
+        spec = importlib.util.spec_from_file_location("aios_launcher", SCRIPT)
+        module = importlib.util.module_from_spec(spec)
+        assert spec and spec.loader
+        spec.loader.exec_module(module)
+
+        self.assertIn("head", module._ALL_COMMANDS)
+
     def test_install_command_constructs_aios_install_delegation(self) -> None:
         import importlib.util
 

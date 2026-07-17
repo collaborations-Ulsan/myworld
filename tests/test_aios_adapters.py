@@ -362,5 +362,165 @@ class AnthropicRestAdapterTest(unittest.TestCase):
                 self.assertNotIn("anthropic_rest", reg)
 
 
+class _FakeChatResult:
+    """Minimal stand-in for aios_llm_client.ChatResult — only the fields
+    make_sovereign_adapter reads."""
+    def __init__(self, ok, text="", provider_used="", error=None, fallback_reason=None):
+        self.ok = ok
+        self.text = text
+        self.provider_used = provider_used
+        self.error = error
+        self.fallback_reason = fallback_reason
+
+
+class _FakeLLMClient:
+    """DI stand-in for aios_llm_client.LLMClient — records every prompt sent."""
+    def __init__(self, result: "_FakeChatResult"):
+        self._result = result
+        self.calls: list[list[dict]] = []
+
+    def chat(self, messages, tools=None):
+        self.calls.append(messages)
+        return self._result
+
+
+class SovereignAdapterTest(unittest.TestCase):
+    """make_sovereign_adapter (founder directive 2026-07-17): local/NIM first,
+    claude/codex/gemini CLI escalation only on hard/failed/rejected — no real
+    network or subprocess is ever invoked; every substrate is DI'd."""
+
+    def setUp(self):
+        self.a = _load("aios_adapters")
+
+    def test_default_local_success_no_escalation(self):
+        client = _FakeLLMClient(_FakeChatResult(ok=True, text="local answer",
+                                                 provider_used="local_ollama"))
+        adapter = self.a.make_sovereign_adapter(
+            goal="what is 2+2", client=client, which=lambda b: None)
+        out = adapter("what is 2+2")
+        self.assertEqual(out, "local answer")
+        self.assertEqual(len(client.calls), 1)
+        self.assertEqual(adapter.provenance, [
+            {"substrate": "local_ollama", "role": "primary", "reason": "local_ok", "ok": True},
+        ])
+
+    def test_local_failure_escalates_to_available_frontier_cli(self):
+        client = _FakeLLMClient(_FakeChatResult(ok=False, error="both endpoints down",
+                                                 fallback_reason="local_ollama: down; nvidia_nim: no api key"))
+        calls = []
+
+        def fake_runner(argv, stdin_text, timeout):
+            calls.append(argv)
+            return 0, "CLAUDE ANSWER", ""
+
+        adapter = self.a.make_sovereign_adapter(
+            goal="summarize this repo", client=client, runner=fake_runner,
+            which=lambda b: "/usr/bin/claude" if b == "claude" else None)
+        out = adapter("summarize this repo")
+        self.assertEqual(out, "CLAUDE ANSWER")
+        self.assertEqual(len(client.calls), 1)          # local was tried first
+        self.assertEqual(len(calls), 1)                 # exactly one CLI subprocess
+        self.assertEqual([p["substrate"] for p in adapter.provenance], ["local/nim", "claude"])
+        self.assertFalse(adapter.provenance[0]["ok"])
+        self.assertTrue(adapter.provenance[1]["ok"])
+        self.assertEqual(adapter.provenance[1]["role"], "escalation")
+
+    def test_hard_flag_true_skips_local_entirely(self):
+        client = _FakeLLMClient(_FakeChatResult(ok=True, text="should never be used"))
+        adapter = self.a.make_sovereign_adapter(
+            goal="a trivial goal", client=client, hard=True,
+            runner=lambda argv, s, t: (0, "FRONTIER ANSWER", ""),
+            which=lambda b: "/usr/bin/codex" if b == "codex" else None)
+        out = adapter("a trivial goal")
+        self.assertEqual(out, "FRONTIER ANSWER")
+        self.assertEqual(client.calls, [])               # local never invoked
+        self.assertEqual(adapter.provenance, [
+            {"substrate": "codex", "role": "escalation", "reason": "hard_task", "ok": True},
+        ])
+
+    def test_long_horizon_goal_autoescalates_without_explicit_hard_flag(self):
+        client = _FakeLLMClient(_FakeChatResult(ok=True, text="should never be used"))
+        long_goal = (
+            "first read every python file under scripts/, then refactor the "
+            "provider routing, then migrate the tests, then implement a new "
+            "pipeline, then debug and integrate the result, then build and "
+            "design the final report"
+        )
+        adapter = self.a.make_sovereign_adapter(
+            goal=long_goal, client=client,
+            runner=lambda argv, s, t: (0, "FRONTIER ANSWER", ""),
+            which=lambda b: "/usr/bin/claude" if b == "claude" else None)
+        out = adapter(long_goal)
+        self.assertEqual(out, "FRONTIER ANSWER")
+        self.assertEqual(client.calls, [])
+        self.assertEqual(adapter.provenance[0]["substrate"], "claude")
+
+    def test_verify_fn_rejection_triggers_escalation(self):
+        client = _FakeLLMClient(_FakeChatResult(ok=True, text="weak local answer",
+                                                 provider_used="local_ollama"))
+        adapter = self.a.make_sovereign_adapter(
+            goal="a hard verification task", client=client,
+            verify_fn=lambda text: False,
+            runner=lambda argv, s, t: (0, "BETTER ANSWER", ""),
+            which=lambda b: "/usr/bin/codex" if b == "codex" else None)
+        out = adapter("a hard verification task")
+        self.assertEqual(out, "BETTER ANSWER")
+        self.assertEqual(len(client.calls), 1)
+        reasons = [p["reason"] for p in adapter.provenance]
+        self.assertIn("verifier_rejected", reasons)
+        self.assertEqual(adapter.provenance[-1]["substrate"], "codex")
+
+    def test_no_frontier_cli_available_raises_honest_runtime_error(self):
+        client = _FakeLLMClient(_FakeChatResult(ok=False, error="down"))
+        adapter = self.a.make_sovereign_adapter(
+            goal="goal", client=client, which=lambda b: None)
+        with self.assertRaises(RuntimeError) as ctx:
+            adapter("goal")
+        self.assertIn("sovereign", str(ctx.exception))
+
+    def test_escalation_order_falls_through_to_next_frontier_cli_on_failure(self):
+        client = _FakeLLMClient(_FakeChatResult(ok=False, error="down"))
+
+        def fake_runner(argv, stdin_text, timeout):
+            if argv[0] == "claude":
+                return 1, "", "claude auth expired"
+            return 0, "CODEX ANSWER", ""
+
+        adapter = self.a.make_sovereign_adapter(
+            goal="goal", client=client, runner=fake_runner,
+            which=lambda b: "/usr/bin/" + b if b in ("claude", "codex") else None)
+        out = adapter("goal")
+        self.assertEqual(out, "CODEX ANSWER")
+        escalation_entries = [p for p in adapter.provenance if p["role"] == "escalation"]
+        self.assertEqual([e["substrate"] for e in escalation_entries], ["claude", "codex"])
+        self.assertFalse(escalation_entries[0]["ok"])
+        self.assertTrue(escalation_entries[1]["ok"])
+
+    def test_build_adapters_registers_sovereign_regardless_of_presence(self):
+        reg = self.a.build_adapters(
+            providers=["sovereign"], goal="g",
+            runner=lambda argv, s, t: (0, "ok", ""),
+            which=lambda b: None,
+            require_present=True,
+        )
+        self.assertIn("sovereign", reg)
+
+    def test_build_adapters_binds_goal_for_hard_classification(self):
+        """A short prompt at call time must still classify as hard when the
+        bound goal (from build_adapters(goal=...)) is long-horizon."""
+        long_goal = (
+            "first read every python file, then refactor, then migrate, "
+            "then implement, then debug, then build and design the report"
+        )
+        reg = self.a.build_adapters(
+            providers=["sovereign"], goal=long_goal,
+            runner=lambda argv, s, t: (0, "FRONTIER ANSWER", ""),
+            which=lambda b: "/usr/bin/claude" if b == "claude" else None,
+        )
+        out = reg["sovereign"]("short prompt")   # prompt itself is short/clean
+        self.assertEqual(out, "FRONTIER ANSWER")
+        self.assertEqual(reg["sovereign"].provenance[0]["substrate"], "claude")
+
+
 if __name__ == "__main__":
     unittest.main()

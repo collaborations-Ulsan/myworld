@@ -275,5 +275,161 @@ class GoalFilesystemDetectionTest(unittest.TestCase):
         self.assertNotEqual(early_exit_hint, '')
 
 
+class SovereignHeadTest(unittest.TestCase):
+    """Sovereign mode wiring (founder directive 2026-07-17): --provider sovereign
+    / AIOS_SOVEREIGN=1 is additive — every other invocation is unchanged — and
+    the goal-first head can complete a full compile->execute cycle with local
+    as the default substrate and a DI'd frontier CLI as an escalation tool,
+    with provenance surfaced in the run summary. No live network/CLI here."""
+
+    def setUp(self):
+        self.head = _load("aios_head")
+        self._td = tempfile.TemporaryDirectory()
+        self.root = Path(self._td.name)
+
+    def tearDown(self):
+        self._td.cleanup()
+
+    def test_default_adapters_registers_sovereign_and_threads_goal(self):
+        # Construction only (no adapter call) — safe without mocking network.
+        adapters = self.head._default_adapters("sovereign", goal="inspect the repo")
+        self.assertIn("sovereign", adapters)
+
+    def test_default_adapters_non_sovereign_provider_unaffected(self):
+        # Regression: adding the `goal` kwarg must not change existing providers.
+        adapters = self.head._default_adapters("ollama_local")
+        self.assertIn("ollama_local", adapters)
+
+    def test_env_aios_sovereign_selects_sovereign_without_explicit_flag(self):
+        import os
+        import unittest.mock as mock
+
+        captured = {}
+
+        def fake_default_adapters(provider, goal=""):
+            captured["provider"] = provider
+            captured["goal"] = goal
+            return {"sovereign": lambda p: "[]"}
+
+        with mock.patch.dict(os.environ, {"AIOS_SOVEREIGN": "1"}):
+            with mock.patch.object(self.head, "_default_adapters", side_effect=fake_default_adapters):
+                rc = self.head.main(["a goal", "--plan-only", "--no-memory", "--root", str(self.root)])
+        self.assertEqual(captured["provider"], "sovereign")
+        self.assertEqual(captured["goal"], "a goal")
+        self.assertEqual(rc, 0)
+
+    def test_no_env_no_flag_does_not_select_sovereign(self):
+        """Regression: default provider resolution (role_router) is unchanged
+        when AIOS_SOVEREIGN is unset and --provider is not given."""
+        import os
+        import unittest.mock as mock
+
+        captured = {}
+
+        def fake_default_adapters(provider, goal=""):
+            captured["provider"] = provider
+            return {provider: lambda p: "[]"}
+
+        env = {k: v for k, v in os.environ.items() if k != "AIOS_SOVEREIGN"}
+        with mock.patch.dict(os.environ, env, clear=True):
+            with mock.patch.object(self.head, "_default_adapters", side_effect=fake_default_adapters):
+                self.head.main(["a goal", "--plan-only", "--no-memory", "--root", str(self.root)])
+        self.assertNotEqual(captured.get("provider"), "sovereign")
+
+    def test_explicit_provider_flag_overrides_env(self):
+        import os
+        import unittest.mock as mock
+
+        captured = {}
+
+        def fake_default_adapters(provider, goal=""):
+            captured["provider"] = provider
+            return {provider: lambda p: "[]"}
+
+        with mock.patch.dict(os.environ, {"AIOS_SOVEREIGN": "1"}):
+            with mock.patch.object(self.head, "_default_adapters", side_effect=fake_default_adapters):
+                self.head.main(["a goal", "--provider", "ollama_rest", "--plan-only",
+                                "--no-memory", "--root", str(self.root)])
+        self.assertEqual(captured["provider"], "ollama_rest")
+
+    def test_compile_goal_with_sovereign_adapter_end_to_end(self):
+        """Independence smoke proof: goal -> sovereign adapter (local fails,
+        a DI'd frontier CLI escalates as a subprocess tool) -> contract ->
+        executed plan, with provenance showing which substrate answered.
+        Every substrate is dependency-injected — no live network or CLI."""
+        adapters_mod = self.head._load("aios_adapters")
+
+        class _FakeChatResult:
+            def __init__(self):
+                self.ok = False
+                self.text = ""
+                self.provider_used = ""
+                self.error = "local endpoint unreachable"
+                self.fallback_reason = None
+
+        class _FakeClient:
+            def __init__(self):
+                self.calls = 0
+
+            def chat(self, messages, tools=None):
+                self.calls += 1
+                return _FakeChatResult()
+
+        (self.root / "a.txt").write_text("hi")
+        plan = [{"id": "s1", "description": "read a", "tool": "fs.read",
+                 "inputs": {"path": str(self.root / "a.txt")}}]
+
+        def fake_cli_runner(argv, stdin_text, timeout):
+            return 0, json.dumps(plan), ""
+
+        fake_client = _FakeClient()
+        sovereign_adapter = adapters_mod.make_sovereign_adapter(
+            goal="read the file", client=fake_client, runner=fake_cli_runner,
+            which=lambda b: "/usr/bin/claude" if b == "claude" else None)
+
+        c, errors = self.head.compile_goal(
+            "read the file", workspace_root=str(self.root),
+            planner=self.head.make_provider_planner("sovereign", {"sovereign": sovereign_adapter}),
+            planner_label="sovereign")
+        self.assertEqual(errors, [], errors)
+        self.assertEqual(len(c.steps), 1)
+        self.assertEqual(fake_client.calls, 1)  # local (a) was attempted first — default substrate
+        self.assertEqual(sovereign_adapter.provenance[-1]["substrate"], "claude")
+        self.assertEqual(sovereign_adapter.provenance[-1]["role"], "escalation")
+
+        summary = self.head.runner.run_contract(c)
+        self.assertEqual(summary["status"], "closed", summary)
+
+    def test_sovereign_provenance_surfaced_in_run_summary(self):
+        """The printed run summary must carry sovereign_provenance so
+        escalation is auditable end-to-end, not just inside the adapter."""
+        import contextlib
+        import io
+        import unittest.mock as mock
+
+        (self.root / "a.txt").write_text("hi")
+        plan = [{"id": "s1", "description": "read a", "tool": "fs.read",
+                 "inputs": {"path": str(self.root / "a.txt")}}]
+
+        def fake_adapter(prompt):
+            return json.dumps(plan)
+        fake_adapter.provenance = [
+            {"substrate": "local_ollama", "role": "primary", "reason": "local_ok", "ok": True},
+        ]
+
+        def fake_default_adapters(provider, goal=""):
+            return {"sovereign": fake_adapter}
+
+        buf = io.StringIO()
+        with mock.patch.object(self.head, "_default_adapters", side_effect=fake_default_adapters):
+            with contextlib.redirect_stdout(buf):
+                rc = self.head.main(["read the file", "--provider", "sovereign",
+                                    "--no-memory", "--root", str(self.root)])
+        self.assertEqual(rc, 0)
+        summary = json.loads(buf.getvalue())
+        self.assertEqual(summary["status"], "closed", summary)
+        self.assertEqual(summary["sovereign_provenance"], fake_adapter.provenance)
+
+
 if __name__ == "__main__":
     unittest.main()

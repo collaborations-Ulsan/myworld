@@ -152,6 +152,16 @@ def helper_command(root: Path, argv: list[str]) -> list[str]:
     return [sys.executable, script_path(root, "aios_helper.py").as_posix(), "--root", root.as_posix(), *argv]
 
 
+def head_command(root: Path, argv: list[str]) -> list[str]:
+    """`aios head <goal> [--provider sovereign|...] [--loop|--organic] ...` —
+    the goal-first head (scripts/aios_head.py), exposed through the canonical
+    entrypoint. Sovereign mode (founder directive 2026-07-17): AIOS runs
+    standalone with local/NIM as the default substrate and claude/codex/gemini
+    CLIs invoked only as escalation power-tools — `aios head "<goal>"
+    --provider sovereign` (or AIOS_SOVEREIGN=1) is the canonical way to run it."""
+    return [sys.executable, script_path(root, "aios_head.py").as_posix(), "--root", root.as_posix(), *argv]
+
+
 def dream_command(root: Path, argv: list[str]) -> list[str]:
     return [sys.executable, script_path(root, "aios_dream.py").as_posix(), "--root", root.as_posix(), *argv]
 
@@ -393,7 +403,7 @@ _MEMORY_COMMANDS = [
 # Operator / advanced — functional but not front-of-house for new users.
 _ADVANCED_COMMANDS = [
     "run", "submit-goal", "sprint-loop", "provider-loop", "step", "discover",
-    "init", "workbench", "emit-recap", "helper", "research-fetch", "mcp",
+    "init", "workbench", "emit-recap", "helper", "head", "research-fetch", "mcp",
     "sovereignty", "local-operator", "self-evolve", "verify", "complete",
     "ingest-conversations", "agent", "harness", "librarian", "capability-feedback",
     "device-profile", "dispatch-reconcile", "jobs", "hooks", "install",
@@ -531,6 +541,9 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.cmd == "helper":
         return run_delegate(helper_command(root, args.args), cwd=root)
+
+    if args.cmd == "head":
+        return run_delegate(head_command(root, args.args), cwd=root)
 
     if args.cmd == "dream":
         return run_delegate(dream_command(root, args.args), cwd=root)

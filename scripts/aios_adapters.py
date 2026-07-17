@@ -19,6 +19,9 @@ Design:
 Adapters intentionally cover the four substrates from the kernel audit:
   claude / codex / gemini  -> frontier planners & hard reasoning
   ollama_local             -> cheap always-on background cognition (qwen3 etc.)
+  sovereign                -> local/NIM-first, claude/codex/gemini CLI escalation
+                               on hard/failed tasks (founder directive 2026-07-17,
+                               docs/AIOS_SOVEREIGN_SOCIETY_ASSEMBLER_2026-07-17.md)
 """
 from __future__ import annotations
 
@@ -325,6 +328,109 @@ def make_openai_compat_adapter(
     return adapter
 
 
+def make_sovereign_adapter(
+    *,
+    goal: str = "",
+    client: "object | None" = None,
+    frontier_order: "list[str] | None" = None,
+    runner: Runner = _real_runner,
+    which: Callable[[str], "str | None"] = shutil.which,
+    hard: "bool | None" = None,
+    verify_fn: "Callable[[str], bool] | None" = None,
+) -> "Callable[[str], str]":
+    """Local-first, CLI-as-power-tool adapter (founder directive 2026-07-17,
+    docs/AIOS_SOVEREIGN_SOCIETY_ASSEMBLER_2026-07-17.md Directive 1): AIOS is
+    the independent BASE; claude/codex/gemini are power-tools it WIELDS as
+    subprocess escalations, not the host running it.
+
+    Default substrate for every call (unless flagged hard): local ollama with
+    NVIDIA NIM failover — reuses aios_llm_client.LLMClient exactly as the
+    existing "auto_local_nim" provider does, so this sits on the SAME
+    local/NIM tier, with an escalation path layered on top.
+
+    Escalates to a frontier CLI (claude -p / codex exec / gemini -p, tried in
+    `frontier_order`, via the existing subprocess AdapterSpec machinery) as a
+    TOOL call — one subprocess invocation, not a host switch — when, and ONLY
+    when:
+      (a) `hard` is True, or (if `hard` is None) the goal classifies as
+          long-horizon via aios_routing.classify_horizon — a hard task routes
+          straight to the frontier CLI power-tool instead of burning a local
+          attempt first;
+      (b) the local/NIM attempt fails (LLMClient.chat returns ok=False —
+          covers both endpoints down or both exhausting their timeout); or
+      (c) `verify_fn(local_answer)` is given and returns False.
+
+    Every attempt (local or escalation) appends one record to the returned
+    callable's `.provenance` list — {"substrate", "role", "reason", "ok"} —
+    so which substrate handled a given call is always auditable afterward,
+    never invisible.
+
+    Raises RuntimeError (the same honest-failure contract as every other
+    adapter in this module) when local fails/is skipped AND every configured
+    frontier CLI is unavailable or itself fails.
+    """
+    import aios_llm_client as _llm  # local import: sibling script, lazy on purpose (see make_openai_compat_adapter)
+
+    _client = client if client is not None else _llm.LLMClient()
+    _order = list(frontier_order) if frontier_order is not None else ["claude", "codex", "gemini"]
+    _provenance: list[dict] = []
+
+    def _is_hard(prompt: str) -> bool:
+        if hard is not None:
+            return hard
+        try:
+            import aios_routing as _routing  # local import: sibling script, lazy on purpose
+            return _routing.classify_horizon(goal or prompt) == "long"
+        except Exception:  # noqa: BLE001 — routing is best-effort; default to not-hard
+            return False
+
+    def _escalate(prompt: str, reason: str) -> str:
+        for name in _order:
+            spec = SPECS.get(name)
+            if spec is None or which(spec.binary) is None:
+                continue
+            try:
+                text = make_adapter(spec, runner)(prompt)
+                _provenance.append({"substrate": name, "role": "escalation",
+                                    "reason": reason, "ok": True})
+                return text
+            except Exception as exc:  # noqa: BLE001 — try the next frontier CLI
+                _provenance.append({"substrate": name, "role": "escalation",
+                                    "reason": reason, "ok": False, "error": str(exc)[:150]})
+                continue
+        raise RuntimeError(
+            f"sovereign: local unavailable ({reason}) and no frontier CLI "
+            f"present/succeeded (tried {_order})")
+
+    def adapter(prompt: str) -> str:
+        if _is_hard(prompt):
+            return _escalate(prompt, reason="hard_task")
+
+        result = _client.chat([{"role": "user", "content": prompt}])
+        if not result.ok:
+            _provenance.append({"substrate": "local/nim", "role": "primary",
+                                "reason": result.fallback_reason or "local_failed", "ok": False})
+            return _escalate(prompt, reason=f"local_failed:{(result.error or '')[:80]}")
+
+        if verify_fn is not None:
+            try:
+                accepted = bool(verify_fn(result.text))
+            except Exception:  # noqa: BLE001 — a broken verifier must never block a good local answer
+                accepted = True
+            if not accepted:
+                _provenance.append({"substrate": result.provider_used or "local", "role": "primary",
+                                    "reason": "verifier_rejected", "ok": True})
+                return _escalate(prompt, reason="verifier_rejected")
+
+        _provenance.append({"substrate": result.provider_used or "local", "role": "primary",
+                            "reason": "local_ok", "ok": True})
+        return result.text
+
+    adapter.__name__ = "adapter_sovereign"
+    adapter.provenance = _provenance  # type: ignore[attr-defined] — caller-inspectable audit trail
+    return adapter
+
+
 @dataclass
 class AdapterResult:
     ok: bool
@@ -361,6 +467,7 @@ def build_adapters(
     which: Callable[[str], str | None] = shutil.which,
     require_present: bool = True,
     rest_available: "Callable[[], bool] | None" = None,
+    goal: str = "",
 ) -> dict[str, Callable[[str], str]]:
     """Construct the adapter registry the runner consumes.
 
@@ -369,6 +476,9 @@ def build_adapters(
     Pass require_present=False to build regardless (e.g. with a fake runner).
     Also auto-registers ollama_rest if the Ollama HTTP endpoint is reachable.
     Pass rest_available=lambda: False to suppress auto-registration in tests.
+    `goal` is forwarded to make_sovereign_adapter() when "sovereign" is
+    requested, so hard-task classification runs on the real goal text instead
+    of a padded planner/sampler prompt (unused by every other provider).
     """
     _rest_ok = rest_available if rest_available is not None else _ollama_rest_available
     names = providers if providers is not None else list(SPECS)
@@ -399,6 +509,12 @@ def build_adapters(
             # own chat() does the local<->NIM failover (and honest failure) at
             # call time, so there is no presence check to gate on here.
             registry["auto_local_nim"] = make_openai_compat_adapter()
+            continue
+        if name == "sovereign":
+            # Always registers when explicitly requested by name (same pattern
+            # as auto_local_nim) — hard/failure escalation is decided per-call
+            # inside make_sovereign_adapter, not gated on presence here.
+            registry["sovereign"] = make_sovereign_adapter(goal=goal, runner=runner, which=which)
             continue
         spec = SPECS.get(name)
         if spec is None:

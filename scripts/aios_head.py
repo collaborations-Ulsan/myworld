@@ -1243,14 +1243,17 @@ def _auto_provider(goal: str) -> str:
     return "ollama_rest"
 
 
-def _default_adapters(authorized_provider: str) -> dict[str, Callable[[str], str]]:
+def _default_adapters(authorized_provider: str, goal: str = "") -> dict[str, Callable[[str], str]]:
     adapters_mod = _load("aios_adapters")
     if authorized_provider == "auto":
         # NVIDIA NIM (strong hosted, key-gated) → Ollama (fast local) →
         # Gemini REST (free cloud) → Anthropic REST (paid cloud)
         providers = ["nvidia_nim", "ollama_rest", "ollama_rest_8b", "gemini_rest", "anthropic_rest"]
         return adapters_mod.build_adapters(providers=providers)
-    return adapters_mod.build_adapters(providers=[authorized_provider])
+    # `goal` is only consumed by the "sovereign" provider (hard-task
+    # classification runs on the real goal text, not a padded prompt); every
+    # other provider ignores the extra kwarg, so this is safe to pass always.
+    return adapters_mod.build_adapters(providers=[authorized_provider], goal=goal)
 
 
 def default_fetcher(inputs: dict[str, Any]) -> str:
@@ -1397,6 +1400,15 @@ def main(argv: list[str] | None = None) -> int:
         }, ensure_ascii=False, indent=2))
         return 0 if result.exit_reason == "completed" else 1
 
+    # Sovereign mode (founder directive 2026-07-17, docs/AIOS_SOVEREIGN_SOCIETY_
+    # ASSEMBLER_2026-07-17.md Directive 1): AIOS as the independent base, wielding
+    # frontier CLIs as escalation power-tools rather than being hosted by one.
+    # ADDITIVE — only engages when the caller opts in via --provider sovereign or
+    # AIOS_SOVEREIGN=1 with no explicit --provider; every other invocation (the
+    # overwhelming default) is byte-for-byte unchanged.
+    if args.provider is None and os.environ.get("AIOS_SOVEREIGN"):
+        args.provider = "sovereign"
+
     # Auto-route provider via role_router when --provider is not set
     routed_role = None
     if args.provider is None or args.provider == "auto":
@@ -1407,11 +1419,15 @@ def main(argv: list[str] | None = None) -> int:
             routed_role = route_result.role
         except Exception:
             args.provider = "claude"
-    adapters = _default_adapters(args.provider)
+    adapters = _default_adapters(args.provider, goal=args.goal)
     if args.provider not in adapters:
         print(json.dumps({"status": "no_planner",
                           "detail": f"provider '{args.provider}' CLI not available"}, indent=2))
         return 1
+    # Sovereign escalation provenance — which substrate (local/nim vs a frontier
+    # CLI) actually answered each call — is attached to the final output below so
+    # escalation is always auditable, never invisible (founder requirement).
+    sovereign_adapter = adapters.get("sovereign") if args.provider == "sovereign" else None
 
     if args.organic:
         sampler = _make_sampler_for(args.provider, adapters, args.goal)
@@ -1419,6 +1435,8 @@ def main(argv: list[str] | None = None) -> int:
         outcome = run_organic_goal(args.goal, agent_id=args.agent, sampler=sampler,
                                    root=root_path, max_turns=args.max_turns,
                                    epistemic_gate=_resolve_epistemic_gate(args.gate, args.gate_disable))
+        if sovereign_adapter is not None:
+            outcome["sovereign_provenance"] = list(getattr(sovereign_adapter, "provenance", []))
         print(json.dumps(outcome, ensure_ascii=False, indent=2))
         return 0 if outcome.get("exit") in ("model_finished", "needs_approval") else 1
 
@@ -1429,6 +1447,8 @@ def main(argv: list[str] | None = None) -> int:
         outcome = run_organic_goal(args.goal, agent_id=args.agent, sampler=sampler,
                                    root=root_path, max_turns=args.max_turns,
                                    epistemic_gate=_resolve_epistemic_gate(args.gate, args.gate_disable))
+        if sovereign_adapter is not None:
+            outcome["sovereign_provenance"] = list(getattr(sovereign_adapter, "provenance", []))
         print(json.dumps(outcome, ensure_ascii=False, indent=2))
         return 0 if outcome.get("exit") in ("model_finished", "needs_approval") else 1
 
@@ -1479,6 +1499,8 @@ def main(argv: list[str] | None = None) -> int:
                                   approve_checkpoints=args.approve_checkpoints)
     if args.save:
         Path(args.save).write_text(contract.to_json(), encoding="utf-8")
+    if sovereign_adapter is not None:
+        summary["sovereign_provenance"] = list(getattr(sovereign_adapter, "provenance", []))
     print(json.dumps(summary, ensure_ascii=False, indent=2))
     return 0 if summary.get("status") in ("closed", "waiting_user") else 1
 
