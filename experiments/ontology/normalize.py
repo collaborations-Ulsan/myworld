@@ -48,8 +48,8 @@ ARXIV_RE = re.compile(r"(\d{4}\.\d{4,5})")
 SOURCE_KEYS = ("source", "sources", "url", "provenance", "ref")
 # Structural keys on a raw entity that are NOT free-form attrs data.
 _ENTITY_RESERVED = {"id", "type", "name", "title", "statement", "attributes", "attrs", "domain"}
-_RELATION_SRC_ALIASES = ("src", "from")
-_RELATION_DST_ALIASES = ("dst", "to")
+_RELATION_SRC_ALIASES = ("src_id", "src", "from")
+_RELATION_DST_ALIASES = ("dst_id", "dst", "to")
 _RELATION_REL_ALIASES = ("rel", "type")
 
 _SLUG_LIMIT = 80

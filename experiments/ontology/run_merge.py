@@ -35,6 +35,10 @@ SOURCES = [
     ("agi", REPO_ROOT / "docs" / "ontology" / "ledger" / "agi.json", normalize.normalize_agi),
     ("physical_ai", REPO_ROOT / "docs" / "ontology" / "ledger" / "physical_ai.json", normalize.normalize_physical_ai),
     ("medical", REPO_ROOT / "docs" / "ontology" / "ledger" / "medical.json", normalize.normalize_medical),
+    # D6+ domain files use the CANONICAL format ({src_id,rel,dst_id}, flat entities)
+    # so the shape-detecting load_and_normalize handles them directly.
+    ("learning_methods", REPO_ROOT / "docs" / "ontology" / "ledger" / "learning_methods.json",
+     lambda p: normalize.load_and_normalize(p, "D6")),
 ]
 DEFAULT_OUT = REPO_ROOT / "docs" / "ontology" / "ledger" / "_merged.json"
 
