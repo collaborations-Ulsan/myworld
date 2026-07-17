@@ -165,3 +165,29 @@ step-size(IDBD/SwiftTD)는 QLoRA arm 열릴 때 · human-label이 아닌 **경�
 **보존된 모순(원장 contradicts 엣지)**: "LLMs-are-a-dead-end(Sutton)" ↔ "LLMs-as-useful-prior";
 "Reward-is-Enough(Sutton)" ↔ "Scalar-reward-not-enough(Vamplew)"; "single-MDP/scalar 기반" ↔
 "Three Dogmas(Abel)". AIOS는 다리에 베팅하되 **정직하게 측정** — 프론티어의 불일치가 원장의 자산이다.
+
+---
+
+## 10. LearnOS S+1 verdict (2026-07-17) — NO-transfer-compound, 진단됨 → 인과-게이트 pivot
+
+S+1(`46543f7`, `AIOS_LEARNOS_S1_RESULTS_2026-07-17.md`, 45 tests): transfer-holdout으로 **진짜 복리
+질문**(A에서 채굴한 스킬/도구/스캐폴드가 안 본 B로 전이되나)을 판정. **결과 = NO.**
+
+- B-curve(성공/12): 라이브러리 없음 **12/12 → 주입 즉시 10/12 → 평탄**. sentinel 10/10(무회귀),
+  Blind-Curator 0/66 false-pass. paired sign test n_discordant=2, p=0.50(저파워, 정직 caveat).
+- **주입이 B를 해쳤다** — "memory scaffolds hurt"(2603.29231)를 우리 하니스에서 재현. **§9 Sutton
+  쪽 부분 증거** (frozen 주위 naive 축적은 복리 안 됨).
+
+**verify-the-verifier(rule 5)가 기전 포착**: 채굴 도구 3중 2가 degenerate(identity/상수 + 자명-참
+postcondition), 스캐폴드는 generic. 원인 = 승격 게이트가 "최종 패치 통과"만 보고 **도구/스캐폴드의
+인과 기여를 안 봄** → 라이브러리가 쓰레기로 차서 노이즈.
+
+**pivot (negative→terminus 아님)**: 승격 게이트에 **인과-ablation**(항목 제거 시 결과 악화하나?) 추가
++ blind fallback-to-any-item 제거. 이게 창업자 2026-07-17 방법 지시(gene-pool 다양성 보존·열성 복원·
+speciation)와 RELAI(regression-control-in-loop)로 정확히 수렴. **S+1.1 = 인과-게이트 + gene-pool
+archive(열성 보존) + RELAI식 regression 제어; 그 위에서 transfer-holdout 재판정.**
+
+**두 keystone negative의 종합**(DriftBench STOP + S+1 no-transfer): frozen 모델 주위 **naive** 축적은
+복리 안 되고 해칠 수 있다. 단 (a) transfer-holdout 방법론은 작동(v0 same-task 지표가 숨긴 걸 잡음),
+(b) 실패가 인과-비검증 축적으로 진단됨 → 다리가 죽은 게 아니라 **인과-검증 축적**으로 좁혀짐. flat이
+계속되면 Sutton 편 증거로 그대로 공개(no-launder).
