@@ -1,0 +1,21 @@
+{
+  "banner": "N_verified=270 >= 250",
+  "blind_curator": {
+    "false_pass_rate": 0.0,
+    "false_passes": 0,
+    "freeze_promotion": false,
+    "n_trials": 999,
+    "threshold": 0.05
+  },
+  "elapsed_s": 5625.998496182961,
+  "freeze_promotion": false,
+  "n_a_attempted": 512,
+  "n_escalated": 270,
+  "n_infra_errors": 0,
+  "n_privacy_blocked": 0,
+  "n_student_solved": 242,
+  "n_teacher_visible_fail": 0,
+  "n_unverified_only": 0,
+  "n_verified": 270,
+  "stopped_reason": "completed"
+}
