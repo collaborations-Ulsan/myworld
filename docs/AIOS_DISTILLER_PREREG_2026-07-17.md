@@ -89,4 +89,10 @@ held-out 구조 격리 · 인과-게이트 · sentinel · Blind-Curator 검증�
   base / verified-LoRA / unverified-LoRA / **soft-weight-LoRA**(hard filter 대신 인과-신뢰도 가중) —
   게이트의 진짜 값어치를 "질이 양을 이기는 구간"에서 판정. 교사 캐스케이드는 **local/NIM 우선**(frontier
   CLI quota 최소화). GPU 학습·평가(cu128). 나머지 v1.1 가드 전부 승계.
+- **2026-07-18 confirmatory 런 START (핀)**: founder GO. collect `--seed 42 --a-instances 64`
+  (8 A-family × 64 = 512 A-태스크) `--time-budget-s 21600`(6h) `--out-dir data/confirmatory`,
+  detached(PID 657299, 세션-생존). 학생 = qwen3:1.7b(ollama), 교사 = 소버린 캐스케이드(local
+  qwen3-coder:30b→NIM→frontier CLI, local/NIM 우선). 목표 N_verified≥250. 학습·평가는 torch
+  2.11+cu128 GPU(cu124 블로커 해소됨). arms(계획): base/verified/unverified/soft-weight.
+  결과 도착 시 이 Errata에 N_verified·B pass·게이트 판정 append.
 - (첫 confirmatory 런 전 핀 기록 예정: 학생/교사 모델 ID, 시드, 프롬프트 해시, 학습 스크립트 해시, N_train 실측.)
