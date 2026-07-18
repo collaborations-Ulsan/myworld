@@ -146,6 +146,25 @@ def documented_train_command(arm: str, out_dir: Path, base_model_id: str) -> str
     )
 
 
+def _cuda_kernels_usable() -> bool:
+    """True iff a CUDA device is visible AND this torch build actually has a compiled kernel for
+    its compute capability. `torch.cuda.is_available()` alone is NOT sufficient -- live-verified
+    2026-07-18 on this box: torch 2.6.0+cu124 enumerates the RTX 5090 fine (is_available()=True,
+    device count/name all correct) but ships no compiled kernel for its sm_120 (Blackwell,
+    compute capability (12, 0)) architecture -- `torch.cuda.get_arch_list()` tops out at sm_90 --
+    so a real kernel launch (peft's adapter dtype cast, the first op that isn't pure allocation)
+    raises 'CUDA error: no kernel image is available for execution on the device', well after
+    model loading has already spent GPU time/memory. Checked live rather than assumed."""
+    import torch  # noqa: PLC0415 -- local import: heavy optional dependency
+    if not torch.cuda.is_available():
+        return False
+    try:
+        major, minor = torch.cuda.get_device_capability(0)
+        return f"sm_{major}{minor}" in torch.cuda.get_arch_list()
+    except Exception:  # noqa: BLE001 -- any probe failure means "don't trust this device"
+        return False
+
+
 def _run_real_training(arm: str, dataset_path: Path, output_dir: Path, base_model_id: str, epochs: int) -> dict:
     """Actual peft/transformers LoRA SFT loop. Only ever called when trainer_available() is True
     (gated in main()) -- never imported/executed otherwise, so this module still loads cleanly
@@ -175,7 +194,18 @@ def _run_real_training(arm: str, dataset_path: Path, output_dir: Path, base_mode
     train_ds = Dataset.from_list(train_examples).map(_tokenize, batched=True, remove_columns=["prompt", "target", "source"])
     eval_ds = Dataset.from_list(eval_examples).map(_tokenize, batched=True, remove_columns=["prompt", "target", "source"])
 
-    model = AutoModelForCausalLM.from_pretrained(base_model_id, torch_dtype=torch.bfloat16, device_map="auto")
+    use_cuda = _cuda_kernels_usable()
+    if not use_cuda:
+        arch_list = torch.cuda.get_arch_list() if torch.cuda.is_available() else []
+        print(
+            f"[train_lora]   GPU present but no compiled kernel for its compute capability "
+            f"(torch arch_list={arch_list}) -- falling back to CPU training (slower, but a real "
+            f"trained adapter, not a faked/skipped one)."
+        )
+    device_map = "auto" if use_cuda else {"": "cpu"}
+    dtype = torch.bfloat16 if use_cuda else torch.float32
+
+    model = AutoModelForCausalLM.from_pretrained(base_model_id, torch_dtype=dtype, device_map=device_map)
     lora_config = LoraConfig(
         r=16, lora_alpha=32, lora_dropout=0.05, bias="none", task_type="CAUSAL_LM",
         target_modules=["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"],
@@ -186,7 +216,7 @@ def _run_real_training(arm: str, dataset_path: Path, output_dir: Path, base_mode
         output_dir=str(output_dir), num_train_epochs=epochs, per_device_train_batch_size=2,
         gradient_accumulation_steps=8, learning_rate=2e-4, logging_steps=10,
         eval_strategy="epoch", save_strategy="epoch", load_best_model_at_end=True,
-        metric_for_best_model="eval_loss", report_to=[],
+        metric_for_best_model="eval_loss", report_to=[], use_cpu=not use_cuda,
     )
     trainer = Trainer(
         model=model, args=args, train_dataset=train_ds, eval_dataset=eval_ds,

@@ -39,6 +39,7 @@ sys.path.insert(0, str(_DISTILLER_DIR))
 
 import collect  # noqa: E402 -- experiments/distiller/collect.py (call_student, extract_code, sys.path setup)
 import verify  # noqa: E402 -- experiments/learnos/verify.py (path added by collect.py's import above)
+import train_lora  # noqa: E402 -- experiments/distiller/train_lora.py (_cuda_kernels_usable -- see _hf_lora_caller)
 
 # reuse collect.py's already-loaded tasks module rather than a second `import tasks` -- see
 # collect.py's own comment: experiments/learnos/ ALSO ships a module literally named tasks.py,
@@ -122,8 +123,21 @@ def _hf_lora_caller(arm_name: str, out_dir: Path, base_model_id: str):
     from peft import PeftModel
     from transformers import AutoModelForCausalLM, AutoTokenizer
 
+    # same live-verified sm_120 (RTX 5090) kernel gap train_lora.py's _run_real_training hit --
+    # see that function's docstring. Reusing train_lora._cuda_kernels_usable() rather than a
+    # second copy of the same probe.
+    use_cuda = train_lora._cuda_kernels_usable()
+    if not use_cuda:
+        arch_list = torch.cuda.get_arch_list() if torch.cuda.is_available() else []
+        print(
+            f"[evaluate]   GPU present but no compiled kernel for its compute capability "
+            f"(torch arch_list={arch_list}) -- loading {arm_name} on CPU (slower, but real)."
+        )
+    device_map = "auto" if use_cuda else {"": "cpu"}
+    dtype = torch.bfloat16 if use_cuda else torch.float32
+
     tok = AutoTokenizer.from_pretrained(base_model_id)
-    base = AutoModelForCausalLM.from_pretrained(base_model_id, torch_dtype=torch.bfloat16, device_map="auto")
+    base = AutoModelForCausalLM.from_pretrained(base_model_id, torch_dtype=dtype, device_map=device_map)
     model = PeftModel.from_pretrained(base, str(lora_adapter_dir(arm_name, out_dir)))
     model.eval()
 

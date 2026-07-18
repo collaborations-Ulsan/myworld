@@ -6,14 +6,14 @@
   ],
   "arms_skipped": {},
   "banner": "PILOT ONLY (N_verified=25 < 250)",
-  "generated_at": 1784306883.7126994,
+  "generated_at": 1784308646.3087552,
   "n_b_tasks": 36,
   "n_sentinel_tasks": 5,
   "n_verified_from_collect": 25,
   "per_arm": {
     "base": {
-      "b_pass_rate": 0.3888888888888889,
-      "escalation_rate": 0.6111111111111112,
+      "b_pass_rate": 0.4444444444444444,
+      "escalation_rate": 0.5555555555555556,
       "sentinel": {
         "arm_rate": 1.0,
         "base_rate": 1.0,
@@ -21,14 +21,14 @@
       }
     },
     "lora_unverified_trajectory": {
-      "b_pass_rate": 0.75,
-      "escalation_rate": 0.25,
+      "b_pass_rate": 0.6666666666666666,
+      "escalation_rate": 0.33333333333333337,
       "paired_vs_base": {
-        "n01_base_fail_variant_pass": 14,
-        "n10_base_pass_variant_fail": 1,
-        "n_discordant": 15,
+        "n01_base_fail_variant_pass": 10,
+        "n10_base_pass_variant_fail": 2,
+        "n_discordant": 12,
         "n_pairs": 36,
-        "p_value_one_sided": 0.00048828125,
+        "p_value_one_sided": 0.019287109375,
         "significant_at_0.05": true
       },
       "sentinel": {
@@ -38,14 +38,14 @@
       }
     },
     "lora_verified_trajectory": {
-      "b_pass_rate": 0.6944444444444444,
-      "escalation_rate": 0.3055555555555556,
+      "b_pass_rate": 0.7222222222222222,
+      "escalation_rate": 0.2777777777777778,
       "paired_vs_base": {
-        "n01_base_fail_variant_pass": 13,
-        "n10_base_pass_variant_fail": 2,
-        "n_discordant": 15,
+        "n01_base_fail_variant_pass": 11,
+        "n10_base_pass_variant_fail": 1,
+        "n_discordant": 12,
         "n_pairs": 36,
-        "p_value_one_sided": 0.003692626953125,
+        "p_value_one_sided": 0.003173828125,
         "significant_at_0.05": true
       },
       "sentinel": {

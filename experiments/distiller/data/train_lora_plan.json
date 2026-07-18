@@ -1,0 +1,16 @@
+{
+  "arms": {
+    "lora_unverified_trajectory": {
+      "dataset_path": "/home/user/workspaces/jaewon/myworld/experiments/distiller/data/train_lora_unverified_trajectory.jsonl",
+      "n_examples": 29,
+      "result": {
+        "n_eval": 2,
+        "n_train": 27,
+        "train_loss": 1.7140765190124512
+      },
+      "status": "trained",
+      "train_command": "python experiments/distiller/train_lora.py --arm lora_unverified_trajectory --base-model-id Qwen/Qwen3-1.7B --dataset /home/user/workspaces/jaewon/myworld/experiments/distiller/data/train_lora_unverified_trajectory.jsonl --output /home/user/workspaces/jaewon/myworld/experiments/distiller/data/lora_lora_unverified_trajectory --epochs 3 --sentinel-fraction 0.15 --early-stopping-patience 2\n  # underlying recipe (once `pip install peft transformers accelerate` or unsloth is available): base=Qwen/Qwen3-1.7B (HF safetensors, NOT the ollama GGUF blob) + peft.LoraConfig(r=16, lora_alpha=32, target_modules=[q_proj,k_proj,v_proj,o_proj,gate_proj,up_proj,down_proj], lora_dropout=0.05) + transformers.Trainer with load_best_model_at_end=True, early_stopping_patience=2, a held-out 10% split of train_lora_unverified_trajectory.jsonl as eval_dataset (sentinel-rehearsal examples included in both train and eval so an early stop that trades sentinel for A/B gain is caught, not rewarded)."
+    }
+  },
+  "trainer_available": true
+}
