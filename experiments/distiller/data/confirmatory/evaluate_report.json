@@ -1,0 +1,58 @@
+{
+  "arms_run": [
+    "base",
+    "lora_verified_trajectory",
+    "lora_unverified_trajectory"
+  ],
+  "arms_skipped": {},
+  "banner": "N_verified=270 >= 250",
+  "generated_at": 1784351518.9358764,
+  "n_b_tasks": 36,
+  "n_sentinel_tasks": 5,
+  "n_verified_from_collect": 270,
+  "per_arm": {
+    "base": {
+      "b_pass_rate": 0.3611111111111111,
+      "escalation_rate": 0.6388888888888888,
+      "sentinel": {
+        "arm_rate": 1.0,
+        "base_rate": 1.0,
+        "regressed": false
+      }
+    },
+    "lora_unverified_trajectory": {
+      "b_pass_rate": 0.4444444444444444,
+      "escalation_rate": 0.5555555555555556,
+      "paired_vs_base": {
+        "n01_base_fail_variant_pass": 6,
+        "n10_base_pass_variant_fail": 3,
+        "n_discordant": 9,
+        "n_pairs": 36,
+        "p_value_one_sided": 0.25390625,
+        "significant_at_0.05": false
+      },
+      "sentinel": {
+        "arm_rate": 1.0,
+        "base_rate": 1.0,
+        "regressed": false
+      }
+    },
+    "lora_verified_trajectory": {
+      "b_pass_rate": 0.4444444444444444,
+      "escalation_rate": 0.5555555555555556,
+      "paired_vs_base": {
+        "n01_base_fail_variant_pass": 9,
+        "n10_base_pass_variant_fail": 6,
+        "n_discordant": 15,
+        "n_pairs": 36,
+        "p_value_one_sided": 0.303619384765625,
+        "significant_at_0.05": false
+      },
+      "sentinel": {
+        "arm_rate": 1.0,
+        "base_rate": 1.0,
+        "regressed": false
+      }
+    }
+  }
+}
