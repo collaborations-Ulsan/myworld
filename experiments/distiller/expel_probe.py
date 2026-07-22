@@ -106,13 +106,21 @@ def load_cases() -> list[dict]:
     return cases
 
 
-def make_expel_caller(k: int, cases: list[dict], bm25: BM25, student_model: str):
-    """Return caller(prompt)->raw. k=0 is the base (no retrieval), identical to evaluate's base arm."""
+def make_expel_caller(k: int, cases: list[dict], bm25: BM25, student_model: str, strategy: str = "bm25"):
+    """Return caller(prompt)->raw. k=0 is the base (no retrieval). strategy: 'bm25' = relevance
+    retrieval; 'random' = k RANDOM cases (the RELEVANCE CONTROL -- if bm25>>random, the lift is
+    real retrieval; if bm25==random>base, it's just 'more few-shot context', not relevance)."""
+    import random as _random
+
     def caller(prompt: str) -> str:
         if k <= 0:
             resp = collect.call_student(prompt, model=student_model)
             return resp["content"] if resp["ok"] else ""
-        idxs = bm25.top_k(prompt, k)
+        if strategy == "random":
+            rng = _random.Random(f"expel-random:{prompt}")  # deterministic per prompt, reproducible
+            idxs = rng.sample(range(len(cases)), min(k, len(cases)))
+        else:
+            idxs = bm25.top_k(prompt, k)
         blocks = []
         for j in idxs:
             c = cases[j]
@@ -131,7 +139,8 @@ def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(description="ExpeL case-retrieval probe (bet #1)")
     p.add_argument("--b-instances", type=int, default=15, help="B held-out size = 6*b_instances")
     p.add_argument("--seed", type=int, default=20260717)
-    p.add_argument("--ks", type=int, nargs="*", default=[0, 2, 3], help="retrieval depths to compare")
+    p.add_argument("--ks", type=int, nargs="*", default=[0, 2, 3], help="BM25 retrieval depths to compare")
+    p.add_argument("--random-ks", type=int, nargs="*", default=[], help="RANDOM-retrieval depths (relevance control)")
     p.add_argument("--student-model", default=collect.STUDENT_MODEL_DEFAULT)
     p.add_argument("--out", default=str(HERE / "data" / "confirmatory" / "expel_probe_report.json"))
     args = p.parse_args(argv)
@@ -140,13 +149,16 @@ def main(argv: list[str] | None = None) -> int:
     bm25 = BM25([_tok(c["prompt"]) for c in cases])
     all_tasks = distiller_tasks.build_tasks(seed=args.seed, b_instances=args.b_instances)
     b_tasks = distiller_tasks.by_split(all_tasks, "B")
-    print(f"[expel] {len(cases)} cases, {len(b_tasks)} B held-out tasks, ks={args.ks}", flush=True)
+    # (arm_name, k, strategy) -- base once, then bm25 arms, then random-control arms
+    arm_specs = [("base", 0, "bm25")]
+    arm_specs += [(f"expel_k{k}", k, "bm25") for k in args.ks if k > 0]
+    arm_specs += [(f"random_k{k}", k, "random") for k in args.random_ks if k > 0]
+    print(f"[expel] {len(cases)} cases, {len(b_tasks)} B held-out, arms={[a for a,_,_ in arm_specs]}", flush=True)
 
     per_arm: dict[str, dict] = {}
-    for k in args.ks:
-        arm = f"base" if k == 0 else f"expel_k{k}"
+    for arm, k, strategy in arm_specs:
         t0 = time.time()
-        caller = make_expel_caller(k, cases, bm25, args.student_model)
+        caller = make_expel_caller(k, cases, bm25, args.student_model, strategy=strategy)
         per_task = ev.run_arm_on_split(arm, caller, b_tasks, log=lambda *a: None)
         solved = [per_task[t["task_id"]]["solved"] for t in b_tasks]
         rate = sum(solved) / len(solved) if solved else 0.0
