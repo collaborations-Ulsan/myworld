@@ -24,6 +24,7 @@ import json
 import re
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 import aios_authority as authority
@@ -32,6 +33,15 @@ import aios_skills_loader as skills_loader
 import aios_stakes as stakes
 import aios_trace_interior as interior
 import aios_turn_loop as loop
+
+# ORGANISM ASSEMBLY Phase 1b (docs/AIOS_ORGANISM_ASSEMBLY_PLAN_2026-07-22.md):
+# the egress gate is ENFORCED in front of every web.* network call. Guarded
+# import so a broken gate module degrades to fail-closed denial inside
+# _egress_enforce — it never crashes the turn loop at import time.
+try:
+    import aios_egress_gate as _egress_gate
+except Exception:  # noqa: BLE001 — _egress_enforce fails closed on None
+    _egress_gate = None
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -273,6 +283,33 @@ _WEB_BLOCKED_HOSTS = (
     "0.0.0.0", "::1", "::ffff:127.", "fe80:",   # IPv6 loopback + link-local
 )
 
+
+def _egress_enforce(payload: str, destination: str) -> dict | None:
+    """Phase 1b — ENFORCED egress gate before every web.* network call.
+
+    The host denylist above guards WHERE we talk to; this guards WHAT crosses:
+    the outbound URL/query is checked for secret values and privacy-boundary
+    path references BEFORE any network I/O. Returns an honest denial dict when
+    the send must not happen (the gate appends the audit receipt for allow AND
+    block), or None when clear to proceed. Fail-closed: a missing or broken
+    gate blocks the send — an ungated off-box send never happens.
+
+    Note: an ALLOWED payload is sent as-is (a PII-redacted URL would no longer
+    be a valid URL); only hard denials block. The receipt records PII findings.
+    """
+    if _egress_gate is None:
+        return {"status": "denied",
+                "reason": "egress gate unavailable — off-box send blocked (fail closed)"}
+    try:
+        decision = _egress_gate.egress_check(payload, destination, now=time.time())
+    except Exception as exc:  # noqa: BLE001 — a broken gate must block, never crash the loop
+        return {"status": "denied",
+                "reason": f"egress gate error ({type(exc).__name__}) — blocked (fail closed)"}
+    if not decision.allowed:
+        return {"status": "denied", "reason": ("egress gate: " + decision.reason)[:200]}
+    return None
+
+
 def _h_web_fetch(a: dict) -> dict:
     import re as _re
     import urllib.request as _req
@@ -283,6 +320,9 @@ def _h_web_fetch(a: dict) -> dict:
     host = _up(url).hostname or ""
     if any(host.startswith(b) or host == b.rstrip(".") for b in _WEB_BLOCKED_HOSTS):
         return {"status": "denied", "reason": "private address blocked"}
+    denied = _egress_enforce(url, url)          # Phase 1b: gate the outbound URL+query
+    if denied is not None:
+        return denied
     try:
         req = _req.Request(url, headers={"User-Agent": "AIOS/1.0"})
         with _req.urlopen(req, timeout=8) as resp:
@@ -330,6 +370,9 @@ def _h_web_scrape(a: dict) -> dict:
     host = _up(url).hostname or ""
     if any(host.startswith(b) or host == b.rstrip(".") for b in _WEB_BLOCKED_HOSTS):
         return {"status": "denied", "reason": "private address blocked"}
+    denied = _egress_enforce(url, url)          # Phase 1b: gate the outbound URL+query
+    if denied is not None:
+        return denied
 
     try:
         from scrapling.fetchers import Fetcher, StealthyFetcher  # noqa: PLC0415 -- optional dep, lazy import
@@ -501,6 +544,12 @@ def _h_web_search(a: dict) -> dict:
     query = str(a.get("query", "")).strip()[:200]
     if not query:
         return {"status": "empty"}
+    # Phase 1b: gate the outbound query once, up front — it is the payload of the
+    # DDG call and of every fallback (Open-Meteo / ko.wikipedia) below. Receipt
+    # destination is the primary (DDG); per-fallback granularity is a known limit.
+    denied = _egress_enforce(query, "https://api.duckduckgo.com/")
+    if denied is not None:
+        return denied
     is_korean = any('가' <= c <= '힣' for c in query)
     url = f"https://api.duckduckgo.com/?q={_up.quote(query)}&format=json&no_html=1&skip_disambig=1"
     try:

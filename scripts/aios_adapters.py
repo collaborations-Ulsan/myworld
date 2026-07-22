@@ -28,8 +28,50 @@ from __future__ import annotations
 import os
 import shutil
 import subprocess
+import sys
+import time
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Callable
+
+# ORGANISM ASSEMBLY Phase 1c (docs/AIOS_ORGANISM_ASSEMBLY_PLAN_2026-07-22.md):
+# ADVISORY egress receipts on provider sends. Every off-box provider payload —
+# CLI argv/stdin via _real_runner, REST body via _http_post_json — is recorded
+# through the egress gate BEFORE the send. Audit only: the send is never
+# blocked and the prompt is never modified/scrubbed (that would break real
+# tasks). If the gate cannot load, degrade honestly: skip receipts, log once,
+# never crash the loop.
+# TODO Phase-later: enforce mode — act on decision.allowed / scrubbed_payload
+# once advisory receipts have been validated clean on real traffic.
+sys.path.insert(0, str(Path(__file__).resolve().parent))  # sibling import when loaded by file path
+try:
+    import aios_egress_gate as _egress_gate
+except Exception:  # noqa: BLE001 — degrade honestly in _egress_receipt, never crash
+    _egress_gate = None
+
+_EGRESS_WARNED = False
+
+
+def _egress_receipt(payload: str, destination: str) -> None:
+    """Append one advisory egress receipt for a provider send (Phase 1c).
+
+    Receipt-only by contract: never blocks, never scrubs, never raises. A
+    missing gate is logged ONCE to stderr and skipped; any runtime gate
+    failure is swallowed — the provider send always proceeds unchanged.
+    """
+    global _EGRESS_WARNED
+    if _egress_gate is None:
+        if not _EGRESS_WARNED:
+            print("aios_adapters: egress gate unavailable — provider sends are "
+                  "NOT being receipted (advisory audit degraded)", file=sys.stderr)
+            _EGRESS_WARNED = True
+        return
+    try:
+        _egress_gate.egress_check(payload, destination, now=time.time(),
+                                  receipt_log=_egress_gate.DEFAULT_RECEIPT_LOG)
+    except Exception:  # noqa: BLE001 — advisory: a broken receipt never breaks the send
+        pass
+
 
 # A runner takes an argv list + optional stdin string + timeout and returns (returncode, stdout, stderr).
 # Signature: (argv, stdin_text_or_none, timeout) -> (returncode, stdout, stderr)
@@ -37,6 +79,10 @@ Runner = Callable[[list[str], "str | None", int], "tuple[int, str, str]"]
 
 
 def _real_runner(argv: list[str], stdin_text: "str | None", timeout: int) -> tuple[int, str, str]:
+    # Phase 1c: advisory receipt of what crosses to the provider CLI (argv
+    # carries the prompt for codex/gemini/ollama; stdin carries it for claude).
+    _egress_receipt(" ".join(argv) + (("\n" + stdin_text) if stdin_text else ""),
+                    f"provider-cli:{argv[0] if argv else ''}")
     try:
         r = subprocess.run(
             argv, text=True, capture_output=True,
@@ -121,6 +167,10 @@ def _http_post_json(url: str, body: dict, headers: dict, timeout: int) -> dict:
     import json as _json
     import urllib.request as _req
     data = _json.dumps(body).encode()
+    # Phase 1c: advisory receipt of the REST body that crosses to the provider.
+    # Headers are deliberately excluded: credential material (Bearer keys) has
+    # no business entering the gate — the body is where the prompt lives.
+    _egress_receipt(data.decode("utf-8", errors="replace"), url)
     req = _req.Request(url, data=data, headers={"Content-Type": "application/json", **headers})
     with _req.urlopen(req, timeout=timeout) as resp:
         return _json.loads(resp.read())

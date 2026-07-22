@@ -30,6 +30,18 @@ ROOT = Path(__file__).resolve().parents[1]
 CAPABILITYOS_ROOT = ROOT / "CapabilityOS"
 SCRIPTS = ROOT / "scripts"
 
+# ORGANISM ASSEMBLY Phase 1a (docs/AIOS_ORGANISM_ASSEMBLY_PLAN_2026-07-22.md):
+# domain tool scripts are EXTERNAL code selected by model-influenced routing —
+# they execute ONLY inside the OS sandbox (no network, privacy dirs invisible,
+# host env cleared). Guarded import: if the sandbox layer cannot load,
+# execute_tool REFUSES to run tool code (fail closed) — it never silently
+# falls back to unsandboxed subprocess execution.
+sys.path.insert(0, str(SCRIPTS))
+try:
+    import aios_sandbox as _sandbox
+except Exception:  # noqa: BLE001 — execute_tool fails closed on None
+    _sandbox = None
+
 # Registry: cap_tool_* capability ID → (script, default_args_factory)
 # Each factory receives the original task string and returns CLI args list.
 
@@ -97,24 +109,41 @@ def execute_tool(cap_id: str, task: str, dry_run: bool = False) -> dict[str, Any
     if not script_path.exists():
         return {"status": "script_missing", "cap_id": cap_id, "path": str(script_path)}
 
+    # Phase 1a — external tool code runs ONLY under OS enforcement (fail closed).
+    if _sandbox is None:
+        return {"status": "sandbox_unavailable", "cap_id": cap_id,
+                "note": "aios_sandbox unavailable — external tool code never "
+                        "runs unsandboxed (fail closed)"}
+
+    # Visible read-only: the script's own directory + the interpreter closure
+    # (sys.prefix / sys.base_prefix cover conda/venv stdlib and site-packages).
+    # Nothing else on the filesystem exists for the tool; no network; no env.
+    ro_paths = tuple(dict.fromkeys(
+        [str(script_path.parent.resolve()), sys.prefix, sys.base_prefix]))
     t0 = time.monotonic()
-    try:
-        proc = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
-    except subprocess.TimeoutExpired:
-        return {"status": "timeout", "cap_id": cap_id}
+    res = _sandbox.run_sandboxed(cmd, allow_net=False, ro_paths=ro_paths,
+                                 timeout=120.0, now=time.time())
     elapsed = round(time.monotonic() - t0, 2)
 
-    if proc.returncode != 0:
-        return {"status": "error", "cap_id": cap_id, "stderr": proc.stderr[:500],
+    if res.timed_out:
+        return {"status": "timeout", "cap_id": cap_id}
+    if not res.sandboxed:
+        # Refused before exec (no engine / forbidden bind / unwritable audit
+        # log) — the command did NOT run. Honest refusal, never a fallback.
+        return {"status": "sandbox_unavailable", "cap_id": cap_id,
+                "reason": res.reason[:200], "elapsed_s": elapsed}
+    if res.returncode != 0:
+        return {"status": "error", "cap_id": cap_id, "stderr": res.stderr[:500],
                 "elapsed_s": elapsed}
 
     try:
-        result = json.loads(proc.stdout)
-        result["_executor"] = {"cap_id": cap_id, "elapsed_s": elapsed, "status": "ok"}
+        result = json.loads(res.stdout)
+        result["_executor"] = {"cap_id": cap_id, "elapsed_s": elapsed, "status": "ok",
+                               "sandboxed": True, "sandbox_engine": res.engine}
         return result
     except json.JSONDecodeError:
         return {"status": "non_json_output", "cap_id": cap_id,
-                "stdout": proc.stdout[:500], "elapsed_s": elapsed}
+                "stdout": res.stdout[:500], "elapsed_s": elapsed}
 
 
 def run(task: str, dry_run: bool = False, top_k: int = 3) -> dict[str, Any]:
