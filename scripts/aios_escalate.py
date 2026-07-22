@@ -375,7 +375,12 @@ def _demo_scorer(answer: str) -> float:
     """DEMO SCORER — a length-capped heuristic, NOT a real verifier. Reward
     substantive-but-not-bloated answers, cap near ~600 chars. Real callers
     MUST inject a domain score_fn (e.g. a Hive verifier) via the
-    EscalationOrgan constructor instead of relying on this."""
+    EscalationOrgan constructor instead of relying on this.
+
+    Remains the DEFAULT for every existing caller (offline/test-safe, zero
+    ML deps) — see `make_score_fn()` below for the additive, opt-in real
+    verifier path (2026-07-22, docs/AIOS_ABSORPTION_SCAN_2026-07-22.md "#1
+    smallest integration path": Weaver)."""
     n = len(answer.strip())
     if n == 0:
         return 0.0
@@ -384,15 +389,46 @@ def _demo_scorer(answer: str) -> float:
     return _clamp01(1.0 - (n - 600) / 3000.0)
 
 
+def make_score_fn(goal: str, *, verifier: str = "demo") -> ScoreFn:
+    """Additive score_fn factory (2026-07-22 Weaver absorption). `verifier`:
+      - "demo" (default, unchanged behavior) -> `_demo_scorer`.
+      - "weaver" -> lazily imports scripts/aios_verifier.py's real local
+        cross-encoder verifier (HazyResearch/scaling-verification, MIT) and
+        binds it to `goal` via `make_verifier_score_fn`.
+    Lazy import keeps torch/transformers OPTIONAL for every caller that
+    doesn't request "weaver" — this module has zero hard ML deps otherwise,
+    matching pyproject.toml's stdlib-first convention. `_demo_scorer` stays
+    the unconditional default so no existing caller/test changes behavior.
+    """
+    if verifier == "demo":
+        return _demo_scorer
+    if verifier == "weaver":
+        try:
+            import aios_verifier
+        except ImportError as exc:
+            raise RuntimeError(
+                "verifier='weaver' requires scripts/aios_verifier.py's "
+                f"dependencies (torch, transformers) — import failed: {exc}"
+            ) from exc
+        return aios_verifier.make_verifier_score_fn(goal)
+    raise ValueError(f"unknown verifier {verifier!r}; expected 'demo' or 'weaver'")
+
+
 def main(argv: "list[str] | None" = None) -> int:
     parser = argparse.ArgumentParser(
         description="AIOS escalation organ — AB-MCTS multi-model search for hard tasks.",
     )
     parser.add_argument("goal", help="the hard task / question to escalate")
     parser.add_argument("--budget", type=int, default=16, help="generations budget (default: 16)")
+    parser.add_argument(
+        "--verifier", choices=["demo", "weaver"],
+        default=os.environ.get("AIOS_ESCALATE_VERIFIER", "demo"),
+        help="score_fn: 'demo' (length-capped placeholder, default) or "
+             "'weaver' (real local Weaver cross-encoder verifier; needs torch/transformers)",
+    )
     args = parser.parse_args(argv)
 
-    organ = EscalationOrgan(make_default_generators(), _demo_scorer)
+    organ = EscalationOrgan(make_default_generators(), make_score_fn(args.goal, verifier=args.verifier))
     result = organ.escalate(args.goal, budget=args.budget)
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 1 if "error" in result else 0

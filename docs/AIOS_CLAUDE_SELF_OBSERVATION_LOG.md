@@ -2835,3 +2835,16 @@ localStorage 히스토리 → 페이지 새로고침 후 대화 복원
 - key_decision: 세 독립 소스(내부 3 negative·지식원장 D7·외부 Council)가 "frozen 조립은 복리 안 됨, 학습으로 되돌려라"로 수렴 → 경험-증류기로 피벗. 사전등록 v1.1 동결(Codex 12건, 특히 unverified 대조군).
 - new_invariant_or_pattern_discovered: **재발하는 벽 = mechanism이 아니라 substrate-calibration.** DriftBench STOP(약모델 doom-loop)·S+1(idiosyncratic 태스크 전이불가)·S+1.1(B 천장 12/12)·distiller-collect(1.7b가 87% 풀어 N=4)가 전부 **태스크 기질의 headroom/전이구조/난이도 미스캘리브레이션**이 근인. 나는 매번 mechanism(게이트·archive·증류)을 정교화했지만 병목은 늘 substrate였다. ⟹ **새 규율: keystone 실험 전 substrate를 first-class로 캘리브레이션(학생이 목표 실패율 30-70%인지, held-out에 전이구조+headroom 있는지)을 먼저 측정·고정하고, 그 다음에 mechanism을 붙인다.** substrate 검증 없는 mechanism 빌드는 반복된 헛수고.
 - self-correction-of-prior-observation: "복리 미입증"을 매번 mechanism 문제로 프레이밍했으나, 4회 반복으로 substrate가 진짜 근인임이 드러남 — mechanism은 대체로 작동했다(게이트가 정확히 거부, 파이프라인 검증됨).
+
+## 2026-07-22 15:08 KST — claude@myworld (executor) — Weaver 흡수: escalate 실검증기 배선
+
+- session_id (or chat-distinguishing handle): AIOS_ABSORPTION_SCAN_2026-07-22.md #1 후속 executor 세션
+- mode_breakdown: verify:decide:intervene ≈ 40:10:50 (아키텍처 역설계 + 라이브 검증 비중 최대)
+- tools_used: WebFetch(GitHub repo/HF model card/HF collection/HazyResearch blog), curl(raw distillation/train.py·evaluate.py 원문), Bash(체크포인트 다운로드+라이브 프로브 3회 반복), Write/Edit, pytest
+- tools_NOT_used: 없음 (단일 순차 실행 흐름, 위임 불필요한 스코프)
+- substrate_specific_behaviors_observed: HF 모델 카드의 자체 로딩 예제(`AutoModelForSequenceClassification` + `torch.sigmoid`)가 실제 체크포인트와 불일치함을 발견 — 실제 repo는 `pytorch_model.bin` 하나만 존재(config.json/tokenizer 없음, `transformersInfo.auto_model="AutoModel"`). WebFetch가 2차 요약이라는 점을 의심해 GitHub raw 소스(`distillation/train.py`)를 직접 받아 대조한 결과, 실아키텍처는 `CustomCrossEncoder`(별도 학습된 4-layer MLP head, base encoder도 파인튜닝됨, sigmoid 없는 raw regression 출력)였음 — freshness-gate/원전-검증 원칙이 실제로 구체적 오류를 잡은 사례.
+- failures_recovered: (1) ModernBERT HF 구현의 `reference_compile` 기본값이 gcc/Triton JIT 컴파일 실패를 유발(GPU 자체 문제 아님) → `reference_compile=False, attn_implementation="sdpa"`로 우회. (2) 테스트 하네스에서 `aios_escalate.py`의 지연 `import aios_verifier`가 `importlib.util.spec_from_file_location`으로 로드한 테스트 모듈과 다른 별도 인스턴스를 생성해 mock이 무시됨(0.0으로 조용히 실패) → `sys.modules`에 plain 이름으로도 등록하도록 테스트 헬퍼 수정.
+- failures_escalated_to_founder: 없음 (지시된 범위 내 판단으로 처리)
+- key_decision: Weaver 배선을 additive/opt-in으로 유지(`_demo_scorer` 여전히 기본값, `verifier="weaver"`로만 활성화) — 라이브 검증에서 discrimination이 학습 분포(다단계 추론 trace)에 국한됨을 확인했으므로 무조건 기본값 교체는 하지 않음.
+- new_invariant_or_pattern_discovered: **"진짜" 검증기도 도메인-바운드다.** 실 held-out MATH500 데이터(학습 분포와 일치: 경쟁수학 다단계 풀이)에서는 5쌍 중 4쌍 정답>오답(평균 점수 갭 +0.036)이지만, 손수 제작한 단문 사실/산술 QA 쌍에서는 3회 독립 시도 합산 4/12(chance 이하) — Weaver 증류 모델 하나만으로도 "real verifier" 라벨은 정당하지만 무조건 신뢰는 금물. `weak_ensemble()`로 여러 약한 신호(멀티기질 리뷰, H0 일관성, 기능테스트)를 융합하는 설계가 바로 이 발견에서 실증적으로 정당화됨 — 단일 검증기 의존이 이번 프로그램의 핵심 발견(검증기 계층이 자기개선 강도를 결정)의 축소판으로 재확인됨.
+- self-correction-of-prior-observation: 초안 module docstring이 WebFetch의 모델 카드 요약을 그대로 인용했다가(`sigmoid`, `AutoModelForSequenceClassification`) raw 소스 검증 후 GROUNDING 섹션을 전면 정정하고 "CORRECTION" 블록으로 명시 — 2차 소스 요약과 1차 소스 코드가 다를 수 있다는 원칙을 실전에서 재확인.
