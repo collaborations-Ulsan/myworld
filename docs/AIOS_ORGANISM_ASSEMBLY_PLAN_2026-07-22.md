@@ -30,7 +30,7 @@ The top unwired seam. Make the privacy boundary ENFORCED in the running kernel, 
   tamper-evident store (build on run_log + Merkle Pack + tlog-tiles). The organism's memory + "aliveness" substrate.
 - **Accept**: the loop writes to it each turn; it's queryable ("what did I learn / fail at"); tamper-evident (peer-verifiable Merkle root).
 
-## Phase 4 — Skills as the compounding unit (Code Artifact Induction)  [STATUS: TODO]
+## Phase 4 — Skills as the compounding unit (Code Artifact Induction)  [STATUS: DONE ✓ verified `81868f7`]
 - On solving a hard task: write a verified Python tool (applicability predicate + example + counterexample
   + unit test + provenance) → sandbox-test it → register Merkle-rooted → future tasks retrieve/compose it.
 - The heritable gene, not the scar. Compounding happens HERE, in the OS, not in weights.
@@ -77,3 +77,19 @@ The top unwired seam. Make the privacy boundary ENFORCED in the running kernel, 
   Third organ wired — the continuous, queryable, tamper-evident self. **Honest**: 187 pre-Phase-3 runs are
   `unknown_exit` (exits weren't logged before — reported, never guessed); 0 live escalation records yet
   (Phase 2 opt-in unfired). Next: Phase 4 (the compounding organ).
+- 2026-07-22 — **Phase 4 DONE + verified by me** (`81868f7`). Code Artifact Induction organ
+  (`scripts/aios_skills.py`, stdlib-only, composes sandbox + Merkle): skill schema (content-addressed id,
+  code, applicability, example, unit_test, provenance) · `register` runs code+unit_test INSIDE
+  `run_untrusted_code` and registers ONLY on pass (verdicts registered / rejected_unit_test_failed /
+  refused_sandbox_unavailable / refused_invalid / refused_duplicate) · `retrieve` (BM25) · `induce_skill`
+  (AST extraction, v1 structured-not-LLM) · Merkle registry pin/verify · CLI · opt-in `induce_and_register`
+  hook (NOT forced into every solve). QA: 12 tests foreground. **My adversarial pass (the load-bearing
+  anti-reward-hack gate): honest skill→registered; reward-hack (code returns 0)→rejected; unit_test that
+  tries NETWORK exfil→rejected (the test runs CAGED in the sandbox — a malicious skill can't exfiltrate
+  during its own verification); unit_test that reads a private dir→rejected; no-engine→refused (fail-closed);
+  final registry = exactly the one honest skill, verify=ok.** Fourth organ wired — the GROWTH mechanism:
+  the organism accumulates only externally-verified, sandbox-caged, reusable skills. Compounding happens in
+  the OS, not in weights. **Honest**: gate strength = unit-test strength (a weak test admits a weak skill;
+  the external property is register never edits code/test); induce v1 is AST-structured not LLM; hook is
+  opt-in, not yet fired by the live loop; retrieval is lexical BM25. Next: Phase 5 (settle learning on a
+  measurable testbed — the honest 5-null resolution).
