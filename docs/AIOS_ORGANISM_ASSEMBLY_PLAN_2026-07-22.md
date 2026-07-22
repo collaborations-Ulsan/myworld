@@ -25,7 +25,7 @@ The top unwired seam. Make the privacy boundary ENFORCED in the running kernel, 
 - Mount `aios_escalate` into head/turn_loop failure path (today zero callers).
 - **Accept**: a task the base student fails triggers escalation+verify; verifier catch-rate measurable; no regression.
 
-## Phase 3 — Sovereign Experience Graph (the continuous self)  [STATUS: TODO]
+## Phase 3 — Sovereign Experience Graph (the continuous self)  [STATUS: DONE ✓ verified `1785d85`]
 - Every run / decision / verifier result / skill / failure / provider-route → one queryable, versioned,
   tamper-evident store (build on run_log + Merkle Pack + tlog-tiles). The organism's memory + "aliveness" substrate.
 - **Accept**: the loop writes to it each turn; it's queryable ("what did I learn / fail at"); tamper-evident (peer-verifiable Merkle root).
@@ -68,3 +68,12 @@ The top unwired seam. Make the privacy boundary ENFORCED in the running kernel, 
   adapters), zero regression; wiring read (torch probe, never-raises, default-off). Second ORPHAN→WIRED
   (escalate + Weaver). **Honest**: Weaver is domain-bound → `recovered` is not a capability win, it's
   mechanism+measurement; per-domain value is a Phase-3/5 question. Next: Phase 3.
+- 2026-07-22 — **Phase 3 DONE + verified by me** (`1785d85`). Sovereign Experience Graph
+  (`scripts/aios_experience.py`, stdlib-only, composes run_log — no new DB) + head appends a content-safe
+  `kind:"outcome"` line per goal. Queries: failures / escalations / by-goal / provider-recovery / summary;
+  Merkle root (reused from pack_export) + pin/verify tamper-evidence. QA: 16 tests foreground + 34 combined
+  with head, zero regression. My live verify on REAL data: 187 runs / 1215 entries / 0 malformed;
+  q_by_goal("날씨")=4 real matches (organism queries its own experience); pin→verify=ok; root deterministic.
+  Third organ wired — the continuous, queryable, tamper-evident self. **Honest**: 187 pre-Phase-3 runs are
+  `unknown_exit` (exits weren't logged before — reported, never guessed); 0 live escalation records yet
+  (Phase 2 opt-in unfired). Next: Phase 4 (the compounding organ).
