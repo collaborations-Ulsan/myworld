@@ -20,7 +20,7 @@ The top unwired seam. Make the privacy boundary ENFORCED in the running kernel, 
 - 1c. `egress_check` (RECEIPT/advisory mode first) on `aios_adapters` provider sends — audit trail without breaking the loop; tighten to enforce after validation.
 - **Accept**: existing 297 tests still pass · new integration tests prove (i) a tool that tries to exfiltrate/read a private dir is blocked, (ii) a normal tool run still works, (iii) provider sends emit egress receipts. Verified by my own adversarial pass.
 
-## Phase 2 — Mount self-verification (escalate + Weaver → the loop)  [STATUS: TODO]
+## Phase 2 — Mount self-verification (escalate + Weaver → the loop)  [STATUS: DONE ✓ verified `acb6302`]
 - Loop failure / low-confidence → `EscalationOrgan` with default `verifier="weaver"` (demo fallback if torch absent).
 - Mount `aios_escalate` into head/turn_loop failure path (today zero callers).
 - **Accept**: a task the base student fails triggers escalation+verify; verifier catch-rate measurable; no regression.
@@ -59,3 +59,12 @@ The top unwired seam. Make the privacy boundary ENFORCED in the running kernel, 
   conversion — the loop enforces its own boundary. **Honest gaps carried to later**: 1c is receipt-only (a
   secret in a provider prompt is recorded but still sent — enforce/scrub deferred); sibling-OS CLIs +
   contract-runner subprocesses remain unsandboxed (out of Phase-1 scope). Next: Phase 2.
+- 2026-07-22 — **Phase 2 DONE + verified by me** (`acb6302`). Self-verification mounted at the head:
+  turn-loop FAILURE exit → optional `_escalate_failed_goal` (the zero-caller EscalationOrgan, AB-MCTS over
+  provider adapters, scored by Weaver with torch-probe→demo fallback). OPT-IN default-OFF
+  (--escalate/AIOS_ESCALATE) so default behavior + test surface unchanged; instruments
+  escalation_attempted/recovered/best_score/provenance into the outcome+run-log (content-safe). Never
+  raises → original failed outcome intact. Verified: 123 passed (phase2 + head/turn_loop/escalate/verifier/
+  adapters), zero regression; wiring read (torch probe, never-raises, default-off). Second ORPHAN→WIRED
+  (escalate + Weaver). **Honest**: Weaver is domain-bound → `recovered` is not a capability win, it's
+  mechanism+measurement; per-domain value is a Phase-3/5 question. Next: Phase 3.
