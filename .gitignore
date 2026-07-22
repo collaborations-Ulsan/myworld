@@ -55,3 +55,6 @@ docs/imports/
 
 # Scratch files
 [0-9].md
+
+# generated ontology pack (regenerable via pack_export.py)
+docs/ontology/ledger/aios_ontology_pack_v1.zip
