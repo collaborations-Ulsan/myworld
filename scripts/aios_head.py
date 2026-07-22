@@ -1184,6 +1184,29 @@ def _organ_synthesis(goal: str, result: dict, preamble: dict | None = None,
         return f"synthesis unavailable: {str(exc)[:60]}"
 
 
+def _log_experience_outcome(run_log, result: dict, goal: str) -> None:
+    """Organism assembly Phase 3 (scripts/aios_experience.py): append the run-level
+    outcome as one line in the run log, so the experience graph can answer "what
+    did I fail at / did escalation recover it" across sessions — the run log
+    otherwise never records the exit. Local-only (.aios/runs/), and carries a
+    truncated goal hint mirroring the postamble's existing local-memory practice
+    (goal[:200] into memoryOS); otherwise labels/counts, no answer text.
+    Additive record kind — aios_run_log.reconstruct filters by kind and ignores
+    it. Never raises: experience logging must not break the run."""
+    try:
+        rec = {"kind": "outcome", "exit": result.get("exit"),
+               "turns": result.get("turns", 0),
+               "tool_calls": result.get("tool_calls")
+               or len(result.get("trajectory") or []),
+               "goal_hint": str(goal)[:160]}
+        esc = result.get("escalation")
+        if isinstance(esc, dict):
+            rec["escalation_recovered"] = bool(esc.get("recovered"))
+        run_log.sink(rec)
+    except Exception:  # noqa: BLE001 — a sink failure must not break the outcome
+        pass
+
+
 def run_organic_goal(goal: str, *, agent_id: str = "codex@myworld", sampler=None,
                      max_turns: int = 12, root: Path | None = None,
                      epistemic_gate=None,
@@ -1242,6 +1265,7 @@ def run_organic_goal(goal: str, *, agent_id: str = "codex@myworld", sampler=None
                 "final_answer": json.dumps(
                     _domain_result.get("result", _domain_result), ensure_ascii=False),
             }
+            _log_experience_outcome(run_log, _result, goal)
             _postamble = _organ_postamble(goal, _result, root, run_id=run_id)
             return {**_result, "run_id": run_id,
                     "organic_pipeline": {"preamble": preamble, "postamble": _postamble,
@@ -1274,6 +1298,7 @@ def run_organic_goal(goal: str, *, agent_id: str = "codex@myworld", sampler=None
                            # escalation record lands in the run log + memory ingest.
                            escalate=escalate, escalate_generators=escalate_generators,
                            escalate_budget=escalate_budget)
+    _log_experience_outcome(run_log, result, goal)
     postamble = _organ_postamble(goal, result, root, run_id=run_id)
 
     return {
