@@ -13,7 +13,7 @@ Each phase is independently committed; the log below is the source of truth for 
 
 ---
 
-## Phase 1 — Mount the enforced body (sovereignty pair → the loop)  [STATUS: IN PROGRESS]
+## Phase 1 — Mount the enforced body (sovereignty pair → the loop)  [STATUS: DONE ✓ verified `e19659d4`]
 The top unwired seam. Make the privacy boundary ENFORCED in the running kernel, not a docstring.
 - 1a. `run_sandboxed` wraps code/tool execution in `aios_tools` (subprocess / skill.use / domain.run exec paths). ENFORCE (fail-closed: no engine → don't run).
 - 1b. `egress_check` (ENFORCE) on `aios_tools` web.fetch/scrape/search (clearly off-box network).
@@ -49,3 +49,13 @@ The top unwired seam. Make the privacy boundary ENFORCED in the running kernel, 
 - 2026-07-22 — Plan created. Capstone synthesis committed (`c116f9b`). Prior session bricks (all ORPHAN,
   to be mounted here): Weaver `c1d71e6`, egress gate `bf83336`, sandbox `12227b2` (adversarially verified),
   Pack `455b550`. Starting Phase 1.
+- 2026-07-22 — **Phase 1 DONE + independently verified** (`e19659d4`). Sovereignty pair mounted into the
+  running kernel: 1a untrusted tool-code exec (`aios_tool_executor.execute_tool`) now routes through
+  `run_sandboxed(allow_net=False)` fail-closed (kernel fs primitives untouched); 1b web.fetch/scrape/search
+  egress-enforced (secret/private-path URLs blocked, clean pass); 1c provider sends emit egress receipts
+  (advisory, non-blocking). QA: existing 177 pass + 16 new phase1 tests + 2148 collected zero-breakage. My
+  adversarial pass confirmed on the REAL handlers: secret/dain/AWS URLs blocked, run_sandboxed invoked with
+  allow_net=False on real exec, fs.list unregressed, receipt appended without blocking. First ORPHAN→WIRED
+  conversion — the loop enforces its own boundary. **Honest gaps carried to later**: 1c is receipt-only (a
+  secret in a provider prompt is recorded but still sent — enforce/scrub deferred); sibling-OS CLIs +
+  contract-runner subprocesses remain unsandboxed (out of Phase-1 scope). Next: Phase 2.
