@@ -47,6 +47,7 @@ TOOL_SPEC: dict[str, tuple[str, str, str]] = {
     "fs.grep":           ("read", "",    'Search file CONTENTS under the repo for a text pattern — use this to FIND which files mention something. Args: {"pattern":"gate","path":"scripts","glob":"*.py"}'),
     "web.search":        ("advisory", "", 'Search the web. Args: {"query":"<search terms>"}'),
     "web.fetch":         ("advisory", "", 'Fetch a public URL. Args: {"url":"https://..."}'),
+    "web.scrape":        ("advisory", "", 'Stealth-fetch a public URL via scrapling (survives TLS-fingerprint/Cloudflare-style bot checks web.fetch cannot); returns clean extracted text, not raw HTML. Public pages only -- never for login/paywall bypass. Args: {"url":"https://...","stealth":false}'),
     "note.write":        ("write", "propose_contract", 'Save a note. Args: {"title":"<title>","content":"<text up to 2000 chars>"}'),
     "stakes.record":     ("write", "propose_contract", 'Record a proposal. Args: {"claim":"<proposal>","confidence":0.8}'),
     "fs.write":          ("write", "commit_to_child_repo", 'Write a file (requires authority). Args: {"path":"...","content":"..."}'),
@@ -293,6 +294,72 @@ def _h_web_fetch(a: dict) -> dict:
     text = _re.sub(r"<[^>]+>", " ", raw)
     text = _re.sub(r"\s+", " ", text).strip()
     return {"status": "ok", "url": url[:100], "snippet": text[:1000]}
+
+
+_SCRAPE_MAX_TEXT = 4000  # generous vs web.fetch's 1000 -- this is already-clean extracted text, not raw HTML
+
+
+def _h_web_scrape(a: dict) -> dict:
+    """Stealth-fetch a public URL via scrapling and return clean extracted text --
+    the upgraded path over web.fetch for pages plain urllib can't reach (TLS-
+    fingerprint checks, Cloudflare-style JS challenges) but that anyone could open
+    in a normal browser without logging in.
+
+    PUBLIC PAGES ONLY (same discipline as the insane-search skill): this must never
+    be used to bypass a login wall or paywall -- it carries no credentials or session
+    cookies and attempts none. scrapling's Fetcher/StealthyFetcher expose no robots.txt
+    flag at this API surface (verified 2026-07-22, scrapling 0.4.11), so this does not
+    programmatically enforce robots.txt; "publicly-accessible pages only" is the
+    operative control, same as web.fetch.
+
+    Degrades honestly (DNA #5/#7 discipline): scrapling not installed, a fetch
+    exception, or an HTTP error status all return {"status": "unavailable", ...} --
+    never a crash, never a hang, never fabricated content. Advisory class: read-only.
+
+    Args: {"url": "https://...", "stealth": false}
+      stealth=false (default): lightweight Fetcher -- curl_cffi TLS impersonation,
+        no browser, fast. Handles most bot-check pages.
+      stealth=true: StealthyFetcher -- real (camoufox) browser engine, solves
+        Cloudflare-style JS challenges. Slower; requires scrapling's browser deps
+        (`scrapling install`) -- degrades to unavailable if missing.
+    """
+    url = str(a.get("url", "")).strip()
+    if not url.startswith(("http://", "https://")):
+        return {"status": "denied", "reason": "only http/https allowed"}
+    from urllib.parse import urlparse as _up
+    host = _up(url).hostname or ""
+    if any(host.startswith(b) or host == b.rstrip(".") for b in _WEB_BLOCKED_HOSTS):
+        return {"status": "denied", "reason": "private address blocked"}
+
+    try:
+        from scrapling.fetchers import Fetcher, StealthyFetcher  # noqa: PLC0415 -- optional dep, lazy import
+    except ImportError:
+        return {"status": "unavailable", "reason": "scrapling not installed (pip install \"scrapling[fetchers]\")"}
+
+    stealth = bool(a.get("stealth", False))
+    try:
+        if stealth:
+            resp = StealthyFetcher.fetch(url, timeout=20_000, headless=True, solve_cloudflare=True)
+        else:
+            resp = Fetcher.get(url, timeout=12, stealthy_headers=True)
+    except Exception as exc:  # noqa: BLE001 -- any fetcher/browser failure degrades honestly, never hangs/crashes
+        return {"status": "unavailable", "reason": f"{type(exc).__name__}: {str(exc)[:120]}"}
+
+    status = getattr(resp, "status", None)
+    if not status or status >= 400:
+        return {"status": "unavailable", "reason": f"http {status}"}
+
+    try:
+        title = (resp.css("title::text").get() or "").strip()
+    except Exception:  # noqa: BLE001 -- title extraction is best-effort
+        title = ""
+    try:
+        text = resp.get_all_text(strip=True)[:_SCRAPE_MAX_TEXT]
+    except Exception as exc:  # noqa: BLE001
+        return {"status": "unavailable", "reason": f"text extraction failed: {type(exc).__name__}"}
+
+    return {"status": "ok", "url": url[:100], "http_status": status,
+            "title": title[:200], "text": text, "stealth": stealth}
 
 
 _CITIES_LATLON: dict[str, tuple[float, float]] = {
@@ -592,7 +659,8 @@ HANDLERS = {
     "genesis.challenge": _h_challenge, "self.audit": _h_self_audit,
     "interior.read": _h_interior, "stakes.record": _h_stakes,
     "fs.list": _h_fs_list, "fs.read": _h_fs_read, "fs.grep": _h_fs_grep, "fs.write": _h_fs_write,
-    "web.search": _h_web_search, "web.fetch": _h_web_fetch, "note.write": _h_note_write,
+    "web.search": _h_web_search, "web.fetch": _h_web_fetch, "web.scrape": _h_web_scrape,
+    "note.write": _h_note_write,
     "domain.run": _h_domain_run, "skill.use": _h_skill_use,
 }
 

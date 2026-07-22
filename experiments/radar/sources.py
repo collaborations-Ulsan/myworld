@@ -30,6 +30,17 @@ SESSION-GATED SOURCES (not implemented here, by design):
   fake-fetch them. `SESSION_GATED_SOURCES` below documents what a live Claude
   session's Ground phase should check manually; `run_radar.py` prints a
   reminder for these instead of silently omitting them.
+
+OPTIONAL STEALTH FETCH (scrapling) -- a DIFFERENT gap:
+  Some publicly-accessible pages block plain `_http_get` (stdlib urllib) with
+  a TLS-fingerprint or Cloudflare-style JS check -- not a login wall. That is
+  a different problem from SESSION_GATED_SOURCES above and scrapling (an
+  OPTIONAL dependency -- `pip install "scrapling[fetchers]"` or the repo's
+  `aios-os[scrapling]` extra) can solve it: `fetch_page_via_scrapling()` below.
+  It does NOT solve SESSION_GATED_SOURCES -- it carries no credentials or
+  session cookies and never will. Not wired into `fetch_all()` by default
+  (optional escalation path, not a default-on source); a future source that
+  hits an anti-bot wall can call it directly.
 """
 from __future__ import annotations
 
@@ -237,6 +248,35 @@ def fetch_reddit(subreddit: str, limit: int = 20, timeout: int = DEFAULT_TIMEOUT
     url = f"https://www.reddit.com/r/{subreddit}/new.json?{urllib.parse.urlencode({'limit': limit})}"
     body = _http_get(url, timeout=timeout, accept="application/json")
     return parse_reddit_listing(json.loads(body.decode("utf-8", errors="replace")))
+
+
+# ---------------------------------------------------------------------------
+# Optional stealth fetch (scrapling) -- for scriptable-but-bot-protected pages
+# ---------------------------------------------------------------------------
+
+def fetch_page_via_scrapling(url: str, *, stealth: bool = False, timeout: int = DEFAULT_TIMEOUT) -> dict:
+    """Fetch ONE public page's clean text via scrapling. Raises on failure like
+    the other fetch_* functions in this module -- wrap with `_safe()` the same
+    way if a future source uses this inside a fetch_all()-style sweep.
+
+    PUBLIC PAGES ONLY -- same discipline as the rest of this module: no
+    credentials, no session cookies, never for a login wall or paywall.
+
+    stealth=False (default): lightweight Fetcher (TLS impersonation, no
+      browser). stealth=True: StealthyFetcher (real browser engine, solves
+      Cloudflare-style challenges) -- needs scrapling's browser deps installed
+      (`scrapling install`); raises if missing, same as any other dead source.
+    """
+    from scrapling.fetchers import Fetcher, StealthyFetcher  # optional dep -- ImportError bubbles to caller/_safe()
+    if stealth:
+        resp = StealthyFetcher.fetch(url, timeout=timeout * 1000, headless=True, solve_cloudflare=True)
+    else:
+        resp = Fetcher.get(url, timeout=timeout, stealthy_headers=True)
+    if not resp.status or resp.status >= 400:
+        raise RuntimeError(f"scrapling fetch http {resp.status}")
+    title = (resp.css("title::text").get() or "").strip()
+    text = resp.get_all_text(strip=True)
+    return {"title": title, "text": text, "url": str(resp.url), "status": resp.status}
 
 
 # ---------------------------------------------------------------------------

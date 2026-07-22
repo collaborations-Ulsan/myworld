@@ -33,8 +33,9 @@ Repository = "https://github.com/cjw0076/myworld"
 Documentation = "https://github.com/cjw0076/myworld/blob/main/README.md"
 
 [project.optional-dependencies]
-gemini  = ["google-generativeai"]
-ollama  = []          # Ollama is a local binary — install via aios setup apply
+gemini    = ["google-generativeai"]
+ollama    = []          # Ollama is a local binary — install via aios setup apply
+scrapling = ["scrapling[fetchers]"]   # backs the web.scrape tool (stealth fetch); scrapling install still needed for browser deps
 
 [project.scripts]
 aios = "aios_launcher:main"

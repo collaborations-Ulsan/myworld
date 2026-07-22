@@ -13,6 +13,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import MagicMock, patch
 
 sys.path.insert(0, (Path(__file__).resolve().parents[1] / "experiments" / "radar").as_posix())
 
@@ -129,6 +130,45 @@ class SourceParsingTests(unittest.TestCase):
         self.assertEqual(items[0]["id"], "hf:2607.06701")
         self.assertEqual(items[0]["signal"], 12)
         self.assertEqual(items[0]["date"], "2026-07-07")
+
+
+class ScraplingFetchTests(unittest.TestCase):
+    """fetch_page_via_scrapling (2026-07-22 scrapling absorption) -- mocked at the
+    scrapling.fetchers call boundary, no live network. Optional escalation path,
+    not wired into fetch_all()'s default sweep."""
+
+    @staticmethod
+    def _fake_response(status: int = 200, title: str = "T", text: str = "body text",
+                        url: str = "https://x.example/") -> MagicMock:
+        resp = MagicMock()
+        resp.status = status
+        resp.url = url
+        resp.get_all_text.return_value = text
+        resp.css.return_value.get.return_value = title
+        return resp
+
+    def test_success_shape(self) -> None:
+        with patch("scrapling.fetchers.Fetcher.get", return_value=self._fake_response()):
+            out = sources.fetch_page_via_scrapling("https://x.example/")
+        self.assertEqual(out, {"title": "T", "text": "body text", "url": "https://x.example/", "status": 200})
+
+    def test_http_error_raises_like_other_fetch_functions(self) -> None:
+        with patch("scrapling.fetchers.Fetcher.get", return_value=self._fake_response(status=403)):
+            with self.assertRaises(RuntimeError):
+                sources.fetch_page_via_scrapling("https://x.example/blocked")
+
+    def test_stealth_flag_routes_to_stealthy_fetcher(self) -> None:
+        with patch("scrapling.fetchers.StealthyFetcher.fetch", return_value=self._fake_response()) as m_stealth, \
+             patch("scrapling.fetchers.Fetcher.get") as m_plain:
+            sources.fetch_page_via_scrapling("https://x.example/", stealth=True, timeout=5)
+        m_stealth.assert_called_once()
+        m_plain.assert_not_called()
+        _, kwargs = m_stealth.call_args
+        self.assertEqual(kwargs.get("timeout"), 5000)  # seconds -> ms for the Playwright-backed fetcher
+
+    def test_not_wired_into_fetch_all_by_default(self) -> None:
+        import inspect
+        self.assertNotIn("fetch_page_via_scrapling", inspect.getsource(sources.fetch_all))
 
 
 class SeenLedgerTests(unittest.TestCase):
