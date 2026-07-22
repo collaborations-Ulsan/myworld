@@ -555,11 +555,91 @@ def _make_sampler_for(provider: str, adapters: dict[str, Callable[[str], str]], 
     return make_provider_sampler(provider, adapters, goal=goal)
 
 
+# Organism assembly Phase 2 (docs/AIOS_ORGANISM_ASSEMBLY_PLAN_2026-07-22.md):
+# run_loop FAILURE exits that may trigger the escalation organ. loop_detected /
+# epistemic_gate_circuit_breaker are circuit-breakers; "max_turns" means the loop
+# exhausted its turn budget without ever reaching model_finished. Success
+# (model_finished), the approval checkpoint (needs_approval), and config errors
+# (no_sampler) are NOT escalation triggers.
+_ESCALATION_FAILURE_EXITS = frozenset(
+    {"loop_detected", "epistemic_gate_circuit_breaker", "max_turns"})
+
+
+def _escalate_failed_goal(goal: str, failed_exit: str, *,
+                          generators: "dict[str, Callable[[str], str]] | None" = None,
+                          budget: int = 6,
+                          emit: "Callable[[dict], None] | None" = None) -> dict:
+    """Organism assembly Phase 2 — self-verification: when the turn-loop FAILS,
+    escalate across substrates instead of just giving up. Runs the (previously
+    zero-caller) escalation organ `aios_escalate.EscalationOrgan` — AB-MCTS over
+    a generator pool — on the goal, with `generators` = the head's provider
+    adapters (claude/codex/ollama/NIM prompt->answer callables; falls back to
+    `make_default_generators()` when none were passed) and the score_fn from
+    `make_score_fn(goal, verifier="weaver")` when torch + aios_verifier are
+    available, else the demo scorer.
+
+    HONEST LIMITATION (do not read `recovered` as a capability win): the Weaver
+    verifier is DOMAIN-BOUND — strong on multi-step reasoning traces (its
+    training distribution), at-or-below chance on short/general answers, per
+    scripts/aios_verifier.py's own live-verified docstring — and the demo
+    fallback scorer is a length heuristic, not a verifier at all. `recovered`
+    therefore measures only "escalation produced a non-empty answer the active
+    scorer rated > 0". This wires the MECHANISM + MEASUREMENT; whether the
+    verifier adds value per domain is a Phase-3 experience-graph question.
+
+    Never raises: any internal error returns an honest record with
+    `recovered: False` and an `error` field, so the caller keeps the original
+    failed outcome untouched.
+    """
+    record: dict = {"escalation_attempted": True, "recovered": False,
+                    "failed_exit": failed_exit}
+    try:
+        esc = _load("aios_escalate")
+        gens = dict(generators) if generators else esc.make_default_generators()
+        try:
+            import torch  # noqa: F401, PLC0415 — presence probe only. Without it,
+            # make_score_fn("weaver") would still "succeed" (aios_verifier imports
+            # lazily) but every score() call would degrade to 0.0 — silent
+            # all-zeros, not the honest demo fallback this path promises.
+            score_fn = esc.make_score_fn(goal, verifier="weaver")
+            record["verifier"] = "weaver"
+        except Exception as exc:  # noqa: BLE001 — torch/transformers/aios_verifier absent
+            record["verifier"] = "demo"
+            record["verifier_fallback_reason"] = f"{type(exc).__name__}: {exc}"[:200]
+            score_fn = esc.make_score_fn(goal, verifier="demo")
+        esc_result = esc.EscalationOrgan(gens, score_fn).escalate(goal, budget=budget)
+        record["engine"] = esc_result.get("engine")
+        record["budget_used"] = esc_result.get("budget_used")
+        record["provenance"] = esc_result.get("provenance")
+        record["provider_breakdown"] = esc_result.get("provider_breakdown")
+        if "error" in esc_result:
+            record["error"] = esc_result["error"]
+        else:
+            record["best_score"] = esc_result.get("best_score")
+            answer = str(esc_result.get("best_answer") or "").strip()
+            if answer and float(esc_result.get("best_score") or 0.0) > 0.0:
+                record["recovered"] = True
+                record["answer"] = answer
+    except Exception as exc:  # noqa: BLE001 — escalation must never crash the head:
+        # honest fallback is the ORIGINAL failed outcome plus this error record.
+        record["error"] = f"escalation_internal_error: {type(exc).__name__}: {exc}"[:300]
+    if emit is not None:
+        try:  # run-log record is content-safe (DNA #7): scores/provenance/labels, no answer text
+            emit({"kind": "escalation",
+                  **{k: v for k, v in record.items() if k != "answer"}})
+        except Exception:  # noqa: BLE001 — a sink failure must not break the outcome
+            pass
+    return record
+
+
 def run_loop_goal(goal: str, *, agent_id: str = "codex@myworld", sampler=None,
                   max_turns: int = 12,
                   turn_sink: Callable[[dict], None] | None = None,
                   constraint_provider=None,
-                  epistemic_gate=None) -> dict:
+                  epistemic_gate=None,
+                  escalate: "bool | None" = None,
+                  escalate_generators: "dict[str, Callable[[str], str]] | None" = None,
+                  escalate_budget: int = 6) -> dict:
     """Run a goal as a real agent TURN-LOOP (the kernel spine) with AIOS organs as
     kernel tools behind an authority gate — not a single-pass batch over a pre-planned
     step list. The model is a sampler (DI for tests, provider-backed live).
@@ -567,17 +647,36 @@ def run_loop_goal(goal: str, *, agent_id: str = "codex@myworld", sampler=None,
     epistemic_gate (optional, ASC-0282 WP-A): forwarded verbatim to
     `aios_turn_loop.run_loop` — see that function's docstring and
     `aios_epistemic_gate.make_gate`. Default None preserves existing behavior for
-    every caller that predates the gate (see `_resolve_epistemic_gate`)."""
+    every caller that predates the gate (see `_resolve_epistemic_gate`).
+
+    escalate (optional, organism assembly Phase 2): OPT-IN, DEFAULT OFF. When True
+    (or default None with env AIOS_ESCALATE set) and the loop returns a FAILURE
+    exit (see `_ESCALATION_FAILURE_EXITS`), run `_escalate_failed_goal` as a
+    try-harder fallback and attach its record under outcome["escalation"]. The
+    original failure exit is PRESERVED either way — escalation is instrumented
+    measurement, not a laundered success. escalate=False disables even with the
+    env set. `escalate_budget` is env-overridable via AIOS_ESCALATE_BUDGET."""
     tl = _load("aios_turn_loop")
     tools = _load("aios_tools")
     if sampler is None:
         return {"schema_version": "aios.turn_loop.v1", "exit": "no_sampler",
                 "detail": "pass a sampler, or run --loop with an available provider"}
-    return tl.run_loop(goal, sampler, tools.build_registry(),
-                       gate=tools.gate_for(agent_id), max_turns=max_turns,
-                       turn_sink=turn_sink, constraint_provider=constraint_provider,
-                       epistemic_gate=epistemic_gate,
-                       answer_bounce=1)   # a goal-run that ends answerless gets one "state your answer" nudge (2026-07-10 head probe)
+    outcome = tl.run_loop(goal, sampler, tools.build_registry(),
+                          gate=tools.gate_for(agent_id), max_turns=max_turns,
+                          turn_sink=turn_sink, constraint_provider=constraint_provider,
+                          epistemic_gate=epistemic_gate,
+                          answer_bounce=1)   # a goal-run that ends answerless gets one "state your answer" nudge (2026-07-10 head probe)
+    if escalate is None:
+        escalate = bool(os.environ.get("AIOS_ESCALATE"))
+    if escalate and outcome.get("exit") in _ESCALATION_FAILURE_EXITS:
+        try:  # a malformed env override must not crash the head (fail-graceful)
+            budget = int(os.environ.get("AIOS_ESCALATE_BUDGET", "") or escalate_budget)
+        except ValueError:
+            budget = escalate_budget
+        outcome["escalation"] = _escalate_failed_goal(
+            goal, outcome["exit"], generators=escalate_generators,
+            budget=budget, emit=turn_sink)
+    return outcome
 
 
 def _cosine(a: list[float], b: list[float]) -> float:
@@ -1087,7 +1186,10 @@ def _organ_synthesis(goal: str, result: dict, preamble: dict | None = None,
 
 def run_organic_goal(goal: str, *, agent_id: str = "codex@myworld", sampler=None,
                      max_turns: int = 12, root: Path | None = None,
-                     epistemic_gate=None) -> dict:
+                     epistemic_gate=None,
+                     escalate: "bool | None" = None,
+                     escalate_generators: "dict[str, Callable[[str], str]] | None" = None,
+                     escalate_budget: int = 6) -> dict:
     """The 5-OS organic pipeline — mandatory preamble + turn loop + mandatory postamble.
 
     This is what 'make AIOS actually run organically' means:
@@ -1166,7 +1268,12 @@ def run_organic_goal(goal: str, *, agent_id: str = "codex@myworld", sampler=None
     result = run_loop_goal(goal, agent_id=agent_id, sampler=sampler, max_turns=max_turns,
                            turn_sink=run_log.sink,
                            constraint_provider=_constraint_provider if _pre_constraints else None,
-                           epistemic_gate=epistemic_gate)
+                           epistemic_gate=epistemic_gate,
+                           # Phase 2 self-verification fallback (opt-in, default off) —
+                           # a failure exit escalates BEFORE the postamble, so the
+                           # escalation record lands in the run log + memory ingest.
+                           escalate=escalate, escalate_generators=escalate_generators,
+                           escalate_budget=escalate_budget)
     postamble = _organ_postamble(goal, result, root, run_id=run_id)
 
     return {
@@ -1350,6 +1457,15 @@ def main(argv: list[str] | None = None) -> int:
                         choices=["h0guard", "apex", "descent", "provenance"],
                         help="disable a specific gate organ in organs mode (repeatable) — "
                              "ablation-replay per descentnet prereg v1.1 §C")
+    parser.add_argument("--escalate", action="store_true",
+                        help="organism assembly Phase 2 (opt-in, default off; env "
+                             "AIOS_ESCALATE=1 equivalent): when a --loop/--organic run "
+                             "FAILS (loop_detected / epistemic_gate_circuit_breaker / "
+                             "max_turns), retry the goal via the escalation organ "
+                             "(aios_escalate AB-MCTS over the provider adapters, scored "
+                             "by the Weaver verifier when available, demo scorer "
+                             "otherwise). The failure exit is preserved; the attempt is "
+                             "recorded under outcome['escalation'].")
     parser.add_argument("--bash-loop", action="store_true",
                         help="guaranteed-fallback bash-only agent loop (mini-swe-agent semantics, "
                              "M5/D1-2) — one bash block per turn, no function-calling/JSON parsing "
@@ -1429,12 +1545,17 @@ def main(argv: list[str] | None = None) -> int:
     # escalation is always auditable, never invisible (founder requirement).
     sovereign_adapter = adapters.get("sovereign") if args.provider == "sovereign" else None
 
+    # Phase 2 escalation opt-in: explicit --escalate wins; None defers to env
+    # AIOS_ESCALATE inside run_loop_goal. Generators = this run's provider adapters.
+    _escalate_flag = True if args.escalate else None
+
     if args.organic:
         sampler = _make_sampler_for(args.provider, adapters, args.goal)
         root_path = Path(args.root).resolve()
         outcome = run_organic_goal(args.goal, agent_id=args.agent, sampler=sampler,
                                    root=root_path, max_turns=args.max_turns,
-                                   epistemic_gate=_resolve_epistemic_gate(args.gate, args.gate_disable))
+                                   epistemic_gate=_resolve_epistemic_gate(args.gate, args.gate_disable),
+                                   escalate=_escalate_flag, escalate_generators=adapters)
         if sovereign_adapter is not None:
             outcome["sovereign_provenance"] = list(getattr(sovereign_adapter, "provenance", []))
         print(json.dumps(outcome, ensure_ascii=False, indent=2))
@@ -1446,7 +1567,8 @@ def main(argv: list[str] | None = None) -> int:
         root_path = Path(args.root).resolve()
         outcome = run_organic_goal(args.goal, agent_id=args.agent, sampler=sampler,
                                    root=root_path, max_turns=args.max_turns,
-                                   epistemic_gate=_resolve_epistemic_gate(args.gate, args.gate_disable))
+                                   epistemic_gate=_resolve_epistemic_gate(args.gate, args.gate_disable),
+                                   escalate=_escalate_flag, escalate_generators=adapters)
         if sovereign_adapter is not None:
             outcome["sovereign_provenance"] = list(getattr(sovereign_adapter, "provenance", []))
         print(json.dumps(outcome, ensure_ascii=False, indent=2))
