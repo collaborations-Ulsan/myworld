@@ -131,3 +131,38 @@ Effort: ~2–4 days (model-serving wrapper + `score_fn` adapter + offline eval).
 *Sources are inline above; stars / licenses / prices / dates verified live 2026-07-22 (WebSearch,
 WebFetch, GitHub API, HF hub). Aggregator/secondary sources are flagged hypothesis-grade where
 primary confirmation was unreachable.*
+
+---
+
+## Addendum — Peer convergence: OpenCrab (2026-07-22, founder-surfaced)
+
+Founder pointed at **opencrab.sh** ("우리 Akashic record와 비슷한 비전"). Live-verified — correct:
+OpenCrab (GitHub `AlexAI-MCP/OpenCrab`, tagline *"LocalCrab builds. OpenCrab SaaS distributes."*) is an
+**Ontology Graph RAG Platform** that converges ~1:1 with our OntologyOS ledger + Akashic provenance vision.
+This is **peer = demand validation, not a competitor threat** (founder-frame); it also sharpens our wedge.
+
+**Overlap (independent team, same stack):** ontology ledger (nodes/edges/evidence) · evidence provenance
+(hash + source URL + timestamp) · MCP organ surface (`ontology_add_node/edge/query/impact/rebac_check/
+ingest`) · provider-CLI agent runtime (Codex/Claude Code) · promotion receipts · pack marketplace (≈ our
+star-radar). Their **9-space MetaOntology** (subject·resource·evidence·concept·claim·community·outcome·
+lever·policy) names our taxonomy almost verbatim. HWP ingestion ⇒ Korea-aware team.
+
+**Our defensible differentiation (do NOT let identity collapse to "ontology RAG + marketplace"):**
+1. **Compounding learning loop** — OpenCrab is retrieval-only (Graph RAG); it has **no weight-level learning
+   organ**. Our keystone is experience-distillation into local weights (today's `0f7c18e`: +14pp, p=1e-5).
+   This is the single biggest genuine gap in their stack and our wedge.
+2. **Provider-death sovereignty** — they are SaaS + depend on Codex/Claude runtimes; our escalation cascade
+   survives provider death (`f31d055`).
+3. **Verifier hierarchy depth** — formal>PRM>rubric>intrinsic + Weaver weak-verifier ensemble (this scan).
+
+**Absorb (cheap, real — reversible, awaiting founder GO before build):**
+- **A1. OpenCrab Pack v1 interchange format** (`manifest.json` + `graph/nodes.jsonl` + `graph/edges.jsonl` +
+  `evidence/index.jsonl` + `quality/report.json`, ZIP). Export our `experiments/ontology/_merged.json` to it →
+  ontology becomes portable/shareable and interoperable with their ecosystem. Low cost, high interop.
+- **A2. Promotion-gate recipe** (completeness + semantic-relevance + autoresearch validation) → concrete gate
+  for MemoryOS draft→accept, which currently under-specifies the accept criterion.
+- **A3. ReBAC** (relationship-based access control) → mature pattern for the shared-tier / personal-park
+  re-open question (`project_aios_for_the_world_not_founder`).
+
+**Trap flagged:** do not pivot toward an ontology-pack marketplace — that is their lane and the exact
+"assembly = cope" pattern Council already rejected. Keep the keystone on the learning loop.
