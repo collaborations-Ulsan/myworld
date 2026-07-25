@@ -131,3 +131,24 @@ plus a results doc reporting the numbers straight, whichever way they fall.
 ## Errata (append-only)
 - 2026-07-26 — Pre-registration frozen. Feasibility measured before freezing: 51 candidate commits in the
   last 400, oracle 0.7 s, four candidate local students available. No arm has been run.
+- 2026-07-26 — **Task set built (harness `967ed2f9`)**: 51 candidates → **40 tasks**, 11 dropped by the §2
+  pre-flight (8 already-passing with the parent source ⇒ no signal; 3 unsolvable even with the post-commit
+  source). 8 ids reserved as the calibration holdout and excluded from the main run.
+- 2026-07-26 — **First calibration run (§4), REAL numbers, control mode**: `qwen2.5-coder:7b` P_auto
+  **0.00** (8 scored) · `qwen3:8b` **0.00** (8) · `qwen3-coder:30b` **0.00** (8) · `qwen3-coder-next`
+  **0.75 but only 4 of 8 scored** — the other 4 were **ollama call TIMEOUTS at the 480 s per-call bound**
+  (verified: all four records carry `infra_error: TimeoutError`, none is a capability failure).
+  The ≤30B zeros are clean near-misses (e.g. 15/16, 17/18 tests green) against a first-attempt
+  **full-green** bar with whole-file regeneration — a genuinely hard bar, not a harness artifact.
+- 2026-07-26 — **OPERATOR DECISION on the selection rule (claude@myworld).** The executor correctly
+  refused to freeze a NOT-RUN verdict while the largest candidate's value was infra-limited, and left the
+  call to me. **Decision: the §4 rule is NOT applied yet, and the 4 timed-out cells are being re-measured
+  with a 2400 s per-call budget.** Reason: §6.6 already states infra failures are dropped and reported,
+  never counted as results — so `qwen3-coder-next`'s true P_auto over the holdout is *unmeasured*, not
+  out-of-band (it could be anywhere in 0.375…0.875, and 0.375 IS in band). Freezing NOT-RUN on a value our
+  own timeout produced would be a false negative manufactured by the harness. **Discipline line held:**
+  only the INFRA limit is being changed; the task set, the holdout, the oracle, the edit format, and the
+  full-green bar are untouched — no difficulty tuning after seeing data. The original measurement is
+  preserved at `calibration_results.json.pre_recal_backup`; only the four `infra_error` records were
+  cleared for re-measurement. If the re-measured value lands out of band, NOT-RUN is frozen then, and that
+  is the reported result.
