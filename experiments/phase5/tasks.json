@@ -1,0 +1,1164 @@
+{
+  "schema": "aios.phase5.tasks.v1",
+  "built_at": "2026-07-25T19:24:00+00:00",
+  "repo_head": "7e0a49dd6b7eb354d8407ab53bf705b903272531",
+  "max_commits": 400,
+  "filter": "non-merge; exactly one A/M scripts/*.py; >=1 A/M tests/test_*.py; test file exists at HEAD; preflight (a) parent-reverted oracle FAILS and (b) post-commit oracle PASSES (rc==0 and >=1 test passed)",
+  "n_candidates": 51,
+  "n_tasks": 40,
+  "n_dropped": 11,
+  "tasks": [
+    {
+      "commit": "fe70dc5bb66ab47e90f44ce9e6e5146564343c69",
+      "parent_commit": "918c40260d62f89b0dcb9841a632a71871e23999",
+      "script_path": "scripts/aios_serving_api.py",
+      "test_paths": [
+        "tests/test_aios_serving_e2e.py"
+      ],
+      "oracle_cmd": [
+        "/home/user/miniconda3/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_aios_serving_e2e.py"
+      ],
+      "oracle_cmd_sha256": "f0825a467dbf906e9219adaf9a4122131c5c1842cd2b59e73bc02cb4a1128327",
+      "ts": "2026-06-14T10:22:43+00:00",
+      "ts_epoch": 1781432563,
+      "parent_state": "present",
+      "preflight": {
+        "reverted_rc": 1,
+        "reverted_passed": 14,
+        "solution_passed": 16
+      },
+      "task_id": "p5-000-fe70dc5b"
+    },
+    {
+      "commit": "8ae428b31161ec4cfa9c912910a10e46c7e094df",
+      "parent_commit": "a1ca97af9fdd18bddad30938714fb9137d98ab2b",
+      "script_path": "scripts/aios_world_service_audit.py",
+      "test_paths": [
+        "tests/test_aios_world_service_audit.py"
+      ],
+      "oracle_cmd": [
+        "/home/user/miniconda3/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_aios_world_service_audit.py"
+      ],
+      "oracle_cmd_sha256": "7a2e3fc855eae094c730bd24cf8c8b0750784698073d785d7c58081c337ab739",
+      "ts": "2026-06-19T06:37:05+00:00",
+      "ts_epoch": 1781851025,
+      "parent_state": "absent",
+      "preflight": {
+        "reverted_rc": 1,
+        "reverted_passed": 0,
+        "solution_passed": 7
+      },
+      "task_id": "p5-001-8ae428b3"
+    },
+    {
+      "commit": "a6785e7fa69cb7ddb59d1d7efe6c64ad9da2f334",
+      "parent_commit": "e82fda920a8ec02f678a965a545a31e0c4ff01fb",
+      "script_path": "scripts/aios_demo.py",
+      "test_paths": [
+        "tests/test_aios_demo.py"
+      ],
+      "oracle_cmd": [
+        "/home/user/miniconda3/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_aios_demo.py"
+      ],
+      "oracle_cmd_sha256": "a8799fc82c60d6c62e18d6a0afbd4c5b7c12f19f57542a01bc1a0df5ebe2394d",
+      "ts": "2026-06-19T07:12:45+00:00",
+      "ts_epoch": 1781853165,
+      "parent_state": "present",
+      "preflight": {
+        "reverted_rc": 1,
+        "reverted_passed": 7,
+        "solution_passed": 13
+      },
+      "task_id": "p5-002-a6785e7f"
+    },
+    {
+      "commit": "0d1a189f17879991cca575faea020c37d093aa3b",
+      "parent_commit": "6058f47e00b091ec255fce5c7e33c73ba6db05c0",
+      "script_path": "scripts/aios_adapters.py",
+      "test_paths": [
+        "tests/test_aios_adapters.py"
+      ],
+      "oracle_cmd": [
+        "/home/user/miniconda3/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_aios_adapters.py"
+      ],
+      "oracle_cmd_sha256": "ebbf1b0c7bbee48871afb8b4592f2c964f1a42b902c0d4d68b06be0eeb483c86",
+      "ts": "2026-06-19T08:47:48+00:00",
+      "ts_epoch": 1781858868,
+      "parent_state": "present",
+      "preflight": {
+        "reverted_rc": 1,
+        "reverted_passed": 22,
+        "solution_passed": 25
+      },
+      "task_id": "p5-003-0d1a189f"
+    },
+    {
+      "commit": "badd98c2cb015ba233febdf1610ace7ae3859d05",
+      "parent_commit": "0d8b7500d3ce8dacf6b206a9ac77da1ddc957a7b",
+      "script_path": "scripts/aios_agent_system.py",
+      "test_paths": [
+        "tests/test_aios_harness.py"
+      ],
+      "oracle_cmd": [
+        "/home/user/miniconda3/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_aios_harness.py"
+      ],
+      "oracle_cmd_sha256": "a1b14a65ea60e79af27f67b686610148a60f342c23a238a097775319aaa3b41f",
+      "ts": "2026-06-19T19:45:18+00:00",
+      "ts_epoch": 1781898318,
+      "parent_state": "present",
+      "preflight": {
+        "reverted_rc": 1,
+        "reverted_passed": 17,
+        "solution_passed": 18
+      },
+      "task_id": "p5-004-badd98c2"
+    },
+    {
+      "commit": "2f94aa2ed7aeacfdd40e6efcf1c74b88cf4b74b8",
+      "parent_commit": "5ad325d0b66312a50e87c8d25fcb8d4f58537384",
+      "script_path": "scripts/aios_head.py",
+      "test_paths": [
+        "tests/test_aios_head.py"
+      ],
+      "oracle_cmd": [
+        "/home/user/miniconda3/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_aios_head.py"
+      ],
+      "oracle_cmd_sha256": "f6ed50439cfb9475a0bbcbbd9152941a717494808c45aa37e6ca87c729056f0c",
+      "ts": "2026-06-19T20:22:55+00:00",
+      "ts_epoch": 1781900575,
+      "parent_state": "present",
+      "preflight": {
+        "reverted_rc": 1,
+        "reverted_passed": 10,
+        "solution_passed": 18
+      },
+      "task_id": "p5-005-2f94aa2e"
+    },
+    {
+      "commit": "6db52ee472051c431275375008f7a183ff1e0402",
+      "parent_commit": "9ae0f3ecf0091ddc0b60ae76e054fb241d9d411b",
+      "script_path": "scripts/aios_head.py",
+      "test_paths": [
+        "tests/test_aios_head.py"
+      ],
+      "oracle_cmd": [
+        "/home/user/miniconda3/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_aios_head.py"
+      ],
+      "oracle_cmd_sha256": "f6ed50439cfb9475a0bbcbbd9152941a717494808c45aa37e6ca87c729056f0c",
+      "ts": "2026-06-19T20:45:29+00:00",
+      "ts_epoch": 1781901929,
+      "parent_state": "present",
+      "preflight": {
+        "reverted_rc": 1,
+        "reverted_passed": 19,
+        "solution_passed": 24
+      },
+      "task_id": "p5-006-6db52ee4"
+    },
+    {
+      "commit": "87afc6f1c2458426aec0fa7515a36327691b6016",
+      "parent_commit": "f0610f861060dfc617431a5d8a0a8f0c3aa91219",
+      "script_path": "scripts/aios_agent_behavior.py",
+      "test_paths": [
+        "tests/test_aios_agent_behavior.py"
+      ],
+      "oracle_cmd": [
+        "/home/user/miniconda3/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_aios_agent_behavior.py"
+      ],
+      "oracle_cmd_sha256": "51f9692736eacf4f00500b17083601cf68c2bbededd635f4a723b0a81c09a46e",
+      "ts": "2026-06-19T20:57:48+00:00",
+      "ts_epoch": 1781902668,
+      "parent_state": "present",
+      "preflight": {
+        "reverted_rc": 1,
+        "reverted_passed": 24,
+        "solution_passed": 28
+      },
+      "task_id": "p5-007-87afc6f1"
+    },
+    {
+      "commit": "af31841ef8ad78ee28c652ed73f6b47b7a762402",
+      "parent_commit": "314437540a07d6231c67674c4e979cfe3bfc99ee",
+      "script_path": "scripts/aios_harness.py",
+      "test_paths": [
+        "tests/test_aios_harness.py",
+        "tests/test_aios_world_service_audit.py"
+      ],
+      "oracle_cmd": [
+        "/home/user/miniconda3/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_aios_harness.py",
+        "tests/test_aios_world_service_audit.py"
+      ],
+      "oracle_cmd_sha256": "02213caaa1156a0995368319cdc1350b867a2dde49ec07fa8059b804c1ec0d4c",
+      "ts": "2026-06-20T21:28:27+00:00",
+      "ts_epoch": 1781990907,
+      "parent_state": "present",
+      "preflight": {
+        "reverted_rc": 1,
+        "reverted_passed": 27,
+        "solution_passed": 29
+      },
+      "task_id": "p5-008-af31841e"
+    },
+    {
+      "commit": "eea69885aa1eae39e96c4bf91fabdaec8397789b",
+      "parent_commit": "af31841ef8ad78ee28c652ed73f6b47b7a762402",
+      "script_path": "scripts/aios_harness.py",
+      "test_paths": [
+        "tests/test_aios_harness.py"
+      ],
+      "oracle_cmd": [
+        "/home/user/miniconda3/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_aios_harness.py"
+      ],
+      "oracle_cmd_sha256": "a1b14a65ea60e79af27f67b686610148a60f342c23a238a097775319aaa3b41f",
+      "ts": "2026-06-20T21:45:13+00:00",
+      "ts_epoch": 1781991913,
+      "parent_state": "present",
+      "preflight": {
+        "reverted_rc": 1,
+        "reverted_passed": 22,
+        "solution_passed": 23
+      },
+      "task_id": "p5-009-eea69885"
+    },
+    {
+      "commit": "0d5a12b5e48942b85bd8f7f7cebc1fc6f256692f",
+      "parent_commit": "eea69885aa1eae39e96c4bf91fabdaec8397789b",
+      "script_path": "scripts/aios_harness.py",
+      "test_paths": [
+        "tests/test_aios_harness.py"
+      ],
+      "oracle_cmd": [
+        "/home/user/miniconda3/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_aios_harness.py"
+      ],
+      "oracle_cmd_sha256": "a1b14a65ea60e79af27f67b686610148a60f342c23a238a097775319aaa3b41f",
+      "ts": "2026-06-20T21:54:02+00:00",
+      "ts_epoch": 1781992442,
+      "parent_state": "present",
+      "preflight": {
+        "reverted_rc": 1,
+        "reverted_passed": 23,
+        "solution_passed": 31
+      },
+      "task_id": "p5-010-0d5a12b5"
+    },
+    {
+      "commit": "ccdac319ba9ea1705adadd53e9e2dcd857162c8d",
+      "parent_commit": "5fe7ec37420f783ab4b35f6a86d8ad891987e8ca",
+      "script_path": "scripts/aios_role_router.py",
+      "test_paths": [
+        "tests/test_aios_role_router.py"
+      ],
+      "oracle_cmd": [
+        "/home/user/miniconda3/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_aios_role_router.py"
+      ],
+      "oracle_cmd_sha256": "26b21934b49c74e7addb485581a58f5e52284dba3db0092b42df5b3db7073988",
+      "ts": "2026-06-20T22:28:46+00:00",
+      "ts_epoch": 1781994526,
+      "parent_state": "present",
+      "preflight": {
+        "reverted_rc": 1,
+        "reverted_passed": 14,
+        "solution_passed": 18
+      },
+      "task_id": "p5-011-ccdac319"
+    },
+    {
+      "commit": "e4825c5bd79929ed868c6a11de9391b19bd5b282",
+      "parent_commit": "97aeaf3c868d3372f2095af1ff098f8b36d459c1",
+      "script_path": "scripts/aios_seci_pipeline.py",
+      "test_paths": [
+        "tests/test_aios_seci_pipeline.py"
+      ],
+      "oracle_cmd": [
+        "/home/user/miniconda3/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_aios_seci_pipeline.py"
+      ],
+      "oracle_cmd_sha256": "33dcad82bbb7bf3fc97610ceda417db7cc70a2e88a27ac3d1378c3ae7d860c3b",
+      "ts": "2026-06-21T02:00:39+00:00",
+      "ts_epoch": 1782007239,
+      "parent_state": "present",
+      "preflight": {
+        "reverted_rc": 1,
+        "reverted_passed": 11,
+        "solution_passed": 12
+      },
+      "task_id": "p5-012-e4825c5b"
+    },
+    {
+      "commit": "fd6d0aabde90111c6a5afafa5c79ab19ea823378",
+      "parent_commit": "2935dde6547168dd68a232f6379d4aa54acd9882",
+      "script_path": "scripts/aios_head.py",
+      "test_paths": [
+        "tests/test_aios_head_loop.py"
+      ],
+      "oracle_cmd": [
+        "/home/user/miniconda3/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_aios_head_loop.py"
+      ],
+      "oracle_cmd_sha256": "28f77ab50dc8d1047dae27560a0947849f9875a410e1cd867c00f265a2bc1fcb",
+      "ts": "2026-06-24T04:46:26+00:00",
+      "ts_epoch": 1782276386,
+      "parent_state": "present",
+      "preflight": {
+        "reverted_rc": 1,
+        "reverted_passed": 4,
+        "solution_passed": 5
+      },
+      "task_id": "p5-013-fd6d0aab"
+    },
+    {
+      "commit": "72ddf7849f3ce40bed9d066dcdc27c2e412ee111",
+      "parent_commit": "d6ced298f55b94523ba82648b4b85b1d093dee36",
+      "script_path": "scripts/aios_agent_behavior.py",
+      "test_paths": [
+        "tests/test_aios_agent_behavior.py"
+      ],
+      "oracle_cmd": [
+        "/home/user/miniconda3/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_aios_agent_behavior.py"
+      ],
+      "oracle_cmd_sha256": "51f9692736eacf4f00500b17083601cf68c2bbededd635f4a723b0a81c09a46e",
+      "ts": "2026-06-24T11:01:06+00:00",
+      "ts_epoch": 1782298866,
+      "parent_state": "present",
+      "preflight": {
+        "reverted_rc": 1,
+        "reverted_passed": 29,
+        "solution_passed": 30
+      },
+      "task_id": "p5-014-72ddf784"
+    },
+    {
+      "commit": "e2bd34447dc748cd0888bd0ef293cdc9dc874e96",
+      "parent_commit": "5e0319c79cca2e443974d22b588fc5a58237e160",
+      "script_path": "scripts/aios_sources.py",
+      "test_paths": [
+        "tests/test_aios_sources.py"
+      ],
+      "oracle_cmd": [
+        "/home/user/miniconda3/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_aios_sources.py"
+      ],
+      "oracle_cmd_sha256": "9eccb8f1a30617bd5525ecee1e74bfeec878bedb83ba284a836a8bfa53dd1a58",
+      "ts": "2026-06-24T11:14:14+00:00",
+      "ts_epoch": 1782299654,
+      "parent_state": "present",
+      "preflight": {
+        "reverted_rc": 1,
+        "reverted_passed": 3,
+        "solution_passed": 5
+      },
+      "task_id": "p5-015-e2bd3444"
+    },
+    {
+      "commit": "a5f204674acacf1695736db8c97105df9618a69b",
+      "parent_commit": "5d5f983ac5c23b204e3d85b012ac504954ef96fb",
+      "script_path": "scripts/aios_cls_gate.py",
+      "test_paths": [
+        "tests/test_aios_cls_gate.py"
+      ],
+      "oracle_cmd": [
+        "/home/user/miniconda3/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_aios_cls_gate.py"
+      ],
+      "oracle_cmd_sha256": "dae40a398c873f8208b80e032120f9f7040f4be558342e407294f31c79100520",
+      "ts": "2026-06-24T12:12:06+00:00",
+      "ts_epoch": 1782303126,
+      "parent_state": "present",
+      "preflight": {
+        "reverted_rc": 1,
+        "reverted_passed": 7,
+        "solution_passed": 9
+      },
+      "task_id": "p5-016-a5f20467"
+    },
+    {
+      "commit": "a8c13252de1c4010d7c86d96f55067ef134896a9",
+      "parent_commit": "a5f204674acacf1695736db8c97105df9618a69b",
+      "script_path": "scripts/aios_cls_gate.py",
+      "test_paths": [
+        "tests/test_aios_cls_gate.py"
+      ],
+      "oracle_cmd": [
+        "/home/user/miniconda3/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_aios_cls_gate.py"
+      ],
+      "oracle_cmd_sha256": "dae40a398c873f8208b80e032120f9f7040f4be558342e407294f31c79100520",
+      "ts": "2026-06-24T12:13:09+00:00",
+      "ts_epoch": 1782303189,
+      "parent_state": "present",
+      "preflight": {
+        "reverted_rc": 1,
+        "reverted_passed": 9,
+        "solution_passed": 13
+      },
+      "task_id": "p5-017-a8c13252"
+    },
+    {
+      "commit": "d20a71c3b48dc652ffb5431fafa92741591583ed",
+      "parent_commit": "a8c13252de1c4010d7c86d96f55067ef134896a9",
+      "script_path": "scripts/aios_cls_gate.py",
+      "test_paths": [
+        "tests/test_aios_cls_gate.py"
+      ],
+      "oracle_cmd": [
+        "/home/user/miniconda3/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_aios_cls_gate.py"
+      ],
+      "oracle_cmd_sha256": "dae40a398c873f8208b80e032120f9f7040f4be558342e407294f31c79100520",
+      "ts": "2026-06-24T12:41:25+00:00",
+      "ts_epoch": 1782304885,
+      "parent_state": "present",
+      "preflight": {
+        "reverted_rc": 1,
+        "reverted_passed": 13,
+        "solution_passed": 15
+      },
+      "task_id": "p5-018-d20a71c3"
+    },
+    {
+      "commit": "b5e92f7ae4906a7cffd6e2aca793d6eeaa74107b",
+      "parent_commit": "d20a71c3b48dc652ffb5431fafa92741591583ed",
+      "script_path": "scripts/aios_cls_gate.py",
+      "test_paths": [
+        "tests/test_aios_cls_gate.py"
+      ],
+      "oracle_cmd": [
+        "/home/user/miniconda3/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_aios_cls_gate.py"
+      ],
+      "oracle_cmd_sha256": "dae40a398c873f8208b80e032120f9f7040f4be558342e407294f31c79100520",
+      "ts": "2026-06-24T12:43:02+00:00",
+      "ts_epoch": 1782304982,
+      "parent_state": "present",
+      "preflight": {
+        "reverted_rc": 1,
+        "reverted_passed": 15,
+        "solution_passed": 18
+      },
+      "task_id": "p5-019-b5e92f7a"
+    },
+    {
+      "commit": "6ee07972083d4077178fede7584afd586fb5282b",
+      "parent_commit": "b5e92f7ae4906a7cffd6e2aca793d6eeaa74107b",
+      "script_path": "scripts/aios_agent_behavior.py",
+      "test_paths": [
+        "tests/test_aios_agent_behavior.py"
+      ],
+      "oracle_cmd": [
+        "/home/user/miniconda3/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_aios_agent_behavior.py"
+      ],
+      "oracle_cmd_sha256": "51f9692736eacf4f00500b17083601cf68c2bbededd635f4a723b0a81c09a46e",
+      "ts": "2026-06-24T12:46:56+00:00",
+      "ts_epoch": 1782305216,
+      "parent_state": "present",
+      "preflight": {
+        "reverted_rc": 1,
+        "reverted_passed": 28,
+        "solution_passed": 30
+      },
+      "task_id": "p5-020-6ee07972"
+    },
+    {
+      "commit": "fb704b5c9011fb356ca8d15b03ebc242ac5f1f20",
+      "parent_commit": "339696777289abc6ce81523431bdf020bd345ffd",
+      "script_path": "scripts/aios_capture_args.py",
+      "test_paths": [
+        "tests/test_aios_capture_args.py"
+      ],
+      "oracle_cmd": [
+        "/home/user/miniconda3/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_aios_capture_args.py"
+      ],
+      "oracle_cmd_sha256": "4493d1ccb32d3cd45694f623127a820494c1fa1196f2ffa785e28bb1b1a08ff0",
+      "ts": "2026-06-24T19:44:34+00:00",
+      "ts_epoch": 1782330274,
+      "parent_state": "absent",
+      "preflight": {
+        "reverted_rc": 1,
+        "reverted_passed": 0,
+        "solution_passed": 11
+      },
+      "task_id": "p5-021-fb704b5c"
+    },
+    {
+      "commit": "c13e5de751d23116634de8ed212e3097511f0fb6",
+      "parent_commit": "34b1d686bd4bbada337c849ffb5100a25d561349",
+      "script_path": "scripts/aios_agent_system.py",
+      "test_paths": [
+        "tests/test_aios_agent_system_privacy.py"
+      ],
+      "oracle_cmd": [
+        "/home/user/miniconda3/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_aios_agent_system_privacy.py"
+      ],
+      "oracle_cmd_sha256": "fbee6db2049641c56bbb99f28bd8324a4b8aa1e1fdea4373d76c2e4e1520bbf6",
+      "ts": "2026-06-24T21:17:31+00:00",
+      "ts_epoch": 1782335851,
+      "parent_state": "present",
+      "preflight": {
+        "reverted_rc": 1,
+        "reverted_passed": 0,
+        "solution_passed": 4
+      },
+      "task_id": "p5-022-c13e5de7"
+    },
+    {
+      "commit": "9ae0fdd167155d2dd428e9a1f75bc70f5ae5faf2",
+      "parent_commit": "693b73a8f39239cf4b2d13f6f437af4ec5cddb9d",
+      "script_path": "scripts/aios_agent_behavior.py",
+      "test_paths": [
+        "tests/test_aios_agent_system_privacy.py"
+      ],
+      "oracle_cmd": [
+        "/home/user/miniconda3/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_aios_agent_system_privacy.py"
+      ],
+      "oracle_cmd_sha256": "fbee6db2049641c56bbb99f28bd8324a4b8aa1e1fdea4373d76c2e4e1520bbf6",
+      "ts": "2026-06-24T21:30:15+00:00",
+      "ts_epoch": 1782336615,
+      "parent_state": "present",
+      "preflight": {
+        "reverted_rc": 1,
+        "reverted_passed": 7,
+        "solution_passed": 9
+      },
+      "task_id": "p5-023-9ae0fdd1"
+    },
+    {
+      "commit": "ba17518d73747f27cdef6fc1d3ebd721ba06c1ca",
+      "parent_commit": "aa1bbe0f6b16ca8ecb127693cbfa8161af42167d",
+      "script_path": "scripts/aios_hivemind_probe.py",
+      "test_paths": [
+        "tests/test_aios_hivemind_probe.py"
+      ],
+      "oracle_cmd": [
+        "/home/user/miniconda3/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_aios_hivemind_probe.py"
+      ],
+      "oracle_cmd_sha256": "a2d555e165dc58d62446aaa576af28675555b38022d616d433a0db09c034204b",
+      "ts": "2026-06-29T02:29:18+00:00",
+      "ts_epoch": 1782700158,
+      "parent_state": "absent",
+      "preflight": {
+        "reverted_rc": 2,
+        "reverted_passed": 0,
+        "solution_passed": 27
+      },
+      "task_id": "p5-024-ba17518d"
+    },
+    {
+      "commit": "09b5c312424aaa7f680345178c239ef304a67d06",
+      "parent_commit": "ba17518d73747f27cdef6fc1d3ebd721ba06c1ca",
+      "script_path": "scripts/aios_hivemind_probe.py",
+      "test_paths": [
+        "tests/test_aios_hivemind_probe.py"
+      ],
+      "oracle_cmd": [
+        "/home/user/miniconda3/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_aios_hivemind_probe.py"
+      ],
+      "oracle_cmd_sha256": "a2d555e165dc58d62446aaa576af28675555b38022d616d433a0db09c034204b",
+      "ts": "2026-06-29T02:43:41+00:00",
+      "ts_epoch": 1782701021,
+      "parent_state": "present",
+      "preflight": {
+        "reverted_rc": 1,
+        "reverted_passed": 33,
+        "solution_passed": 41
+      },
+      "task_id": "p5-025-09b5c312"
+    },
+    {
+      "commit": "35358b512817faf8c97482059695aa4ad0674a60",
+      "parent_commit": "01997977a6bd078894b1500766973aae09c89337",
+      "script_path": "scripts/aios_hivemind_probe.py",
+      "test_paths": [
+        "tests/test_aios_hivemind_probe.py"
+      ],
+      "oracle_cmd": [
+        "/home/user/miniconda3/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_aios_hivemind_probe.py"
+      ],
+      "oracle_cmd_sha256": "a2d555e165dc58d62446aaa576af28675555b38022d616d433a0db09c034204b",
+      "ts": "2026-06-29T03:29:35+00:00",
+      "ts_epoch": 1782703775,
+      "parent_state": "present",
+      "preflight": {
+        "reverted_rc": 2,
+        "reverted_passed": 0,
+        "solution_passed": 65
+      },
+      "task_id": "p5-026-35358b51"
+    },
+    {
+      "commit": "eabf59c3303d3ae42f691827e6de09b35a94fe2d",
+      "parent_commit": "d20a76a3eacc75ff5e214c2001e8ff841a09f925",
+      "script_path": "scripts/aios_semantic_fs.py",
+      "test_paths": [
+        "tests/test_aios_semantic_fs.py"
+      ],
+      "oracle_cmd": [
+        "/home/user/miniconda3/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_aios_semantic_fs.py"
+      ],
+      "oracle_cmd_sha256": "339d4c382637b5c9f5de40bf202e71c775c1891aa29550ac8bf3c4cb7207375d",
+      "ts": "2026-06-29T08:03:22+00:00",
+      "ts_epoch": 1782720202,
+      "parent_state": "absent",
+      "preflight": {
+        "reverted_rc": 1,
+        "reverted_passed": 0,
+        "solution_passed": 6
+      },
+      "task_id": "p5-027-eabf59c3"
+    },
+    {
+      "commit": "5034e8d92e41f16d18290d1f73062a27848c23f6",
+      "parent_commit": "eabf59c3303d3ae42f691827e6de09b35a94fe2d",
+      "script_path": "scripts/aios_semantic_fs.py",
+      "test_paths": [
+        "tests/test_aios_semantic_fs.py"
+      ],
+      "oracle_cmd": [
+        "/home/user/miniconda3/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_aios_semantic_fs.py"
+      ],
+      "oracle_cmd_sha256": "339d4c382637b5c9f5de40bf202e71c775c1891aa29550ac8bf3c4cb7207375d",
+      "ts": "2026-06-29T08:08:40+00:00",
+      "ts_epoch": 1782720520,
+      "parent_state": "present",
+      "preflight": {
+        "reverted_rc": 1,
+        "reverted_passed": 6,
+        "solution_passed": 8
+      },
+      "task_id": "p5-028-5034e8d9"
+    },
+    {
+      "commit": "86f8b0d91ec27c714a4751a6a569c042ba4f24f1",
+      "parent_commit": "be17dcf92485f35bd07044daf5c45ed878ed37a3",
+      "script_path": "scripts/aios_channel.py",
+      "test_paths": [
+        "tests/test_aios_channel.py"
+      ],
+      "oracle_cmd": [
+        "/home/user/miniconda3/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_aios_channel.py"
+      ],
+      "oracle_cmd_sha256": "c0e77a263cca8c00b918e3ac551a746119e442a036e839018b4f96c20f5cbf55",
+      "ts": "2026-06-29T10:08:20+00:00",
+      "ts_epoch": 1782727700,
+      "parent_state": "present",
+      "preflight": {
+        "reverted_rc": 1,
+        "reverted_passed": 22,
+        "solution_passed": 28
+      },
+      "task_id": "p5-029-86f8b0d9"
+    },
+    {
+      "commit": "c069564ad6e11bb3671b3f10510125d21b17360f",
+      "parent_commit": "0b2d9db31347d8e2bc965731a4e0fda8ae986fe2",
+      "script_path": "scripts/aios_h1_agent_edges.py",
+      "test_paths": [
+        "tests/test_aios_h1_agent_edges.py"
+      ],
+      "oracle_cmd": [
+        "/home/user/miniconda3/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_aios_h1_agent_edges.py"
+      ],
+      "oracle_cmd_sha256": "f8cdc98c4bd171892a3e08fd8b467385526fc2c3be6c29fa06def7a81f96f8de",
+      "ts": "2026-06-29T15:22:33+00:00",
+      "ts_epoch": 1782746553,
+      "parent_state": "present",
+      "preflight": {
+        "reverted_rc": 1,
+        "reverted_passed": 6,
+        "solution_passed": 9
+      },
+      "task_id": "p5-030-c069564a"
+    },
+    {
+      "commit": "09cce7091ab072ae55ed0a2e7fa56e9be979fe68",
+      "parent_commit": "c069564ad6e11bb3671b3f10510125d21b17360f",
+      "script_path": "scripts/aios_channel.py",
+      "test_paths": [
+        "tests/test_aios_channel.py"
+      ],
+      "oracle_cmd": [
+        "/home/user/miniconda3/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_aios_channel.py"
+      ],
+      "oracle_cmd_sha256": "c0e77a263cca8c00b918e3ac551a746119e442a036e839018b4f96c20f5cbf55",
+      "ts": "2026-06-29T15:23:16+00:00",
+      "ts_epoch": 1782746596,
+      "parent_state": "present",
+      "preflight": {
+        "reverted_rc": 2,
+        "reverted_passed": 0,
+        "solution_passed": 36
+      },
+      "task_id": "p5-031-09cce709"
+    },
+    {
+      "commit": "77450c42e119851a322b37704f1e8da5e43ec479",
+      "parent_commit": "35edf8a97c9f11cc00f06573aef8889462fdd481",
+      "script_path": "scripts/aios_demo.py",
+      "test_paths": [
+        "tests/test_aios_demo_memory.py"
+      ],
+      "oracle_cmd": [
+        "/home/user/miniconda3/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_aios_demo_memory.py"
+      ],
+      "oracle_cmd_sha256": "95f9a5b819e03479a971460278fdf3ad0bcbe0a67196004b7abcee947e079c2e",
+      "ts": "2026-07-02T01:28:16+00:00",
+      "ts_epoch": 1782955696,
+      "parent_state": "present",
+      "preflight": {
+        "reverted_rc": 1,
+        "reverted_passed": 2,
+        "solution_passed": 10
+      },
+      "task_id": "p5-032-77450c42"
+    },
+    {
+      "commit": "bdc63f1c2304e43d646bfa44cb43b10bbceac4e4",
+      "parent_commit": "afe728a789060e30f1ea54679cbe685eb5d1d39e",
+      "script_path": "scripts/aios_mcp_server.py",
+      "test_paths": [
+        "tests/test_aios_mcp_self.py"
+      ],
+      "oracle_cmd": [
+        "/home/user/miniconda3/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_aios_mcp_self.py"
+      ],
+      "oracle_cmd_sha256": "d38dda6bae43f81caf30fe2684b4f1dbb13d2a2103ed24062959ef434387f939",
+      "ts": "2026-07-04T06:06:05+00:00",
+      "ts_epoch": 1783145165,
+      "parent_state": "present",
+      "preflight": {
+        "reverted_rc": 1,
+        "reverted_passed": 3,
+        "solution_passed": 11
+      },
+      "task_id": "p5-033-bdc63f1c"
+    },
+    {
+      "commit": "7bf9d8a28049e0906b8d7aef5d4f1a667dbb1ebb",
+      "parent_commit": "92379e6dbcce4fee65a157f6f6dda3506b1e7586",
+      "script_path": "scripts/aios_agent_self.py",
+      "test_paths": [
+        "tests/test_aios_agent_self.py"
+      ],
+      "oracle_cmd": [
+        "/home/user/miniconda3/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_aios_agent_self.py"
+      ],
+      "oracle_cmd_sha256": "829f11dcc98e44e2adfb01c68bbef2e6ca8b54c8750867bb728c74b5a7cccc43",
+      "ts": "2026-07-04T06:09:40+00:00",
+      "ts_epoch": 1783145380,
+      "parent_state": "present",
+      "preflight": {
+        "reverted_rc": 1,
+        "reverted_passed": 14,
+        "solution_passed": 23
+      },
+      "task_id": "p5-034-7bf9d8a2"
+    },
+    {
+      "commit": "a49332bf9c523b59a4652cf3d8feebc461c16738",
+      "parent_commit": "716a81c42711e2008f81edebce6628010336393d",
+      "script_path": "scripts/aios_headline_ab.py",
+      "test_paths": [
+        "tests/test_aios_headline_ab.py"
+      ],
+      "oracle_cmd": [
+        "/home/user/miniconda3/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_aios_headline_ab.py"
+      ],
+      "oracle_cmd_sha256": "2a4a57d27b9c264356c02cfceaf86c1572b70b198c3002463a07b2d3a3d8ef3c",
+      "ts": "2026-07-04T13:45:02+00:00",
+      "ts_epoch": 1783172702,
+      "parent_state": "present",
+      "preflight": {
+        "reverted_rc": 1,
+        "reverted_passed": 5,
+        "solution_passed": 8
+      },
+      "task_id": "p5-035-a49332bf"
+    },
+    {
+      "commit": "372841b1e2882bbec73f7a6212a357bccc0ba8b1",
+      "parent_commit": "2bf3d293468c9053440eea8bfd51fa9a68298640",
+      "script_path": "scripts/aios_bash_agent.py",
+      "test_paths": [
+        "tests/test_aios_bash_agent.py"
+      ],
+      "oracle_cmd": [
+        "/home/user/miniconda3/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_aios_bash_agent.py"
+      ],
+      "oracle_cmd_sha256": "c91407f33f0f02201babfe8de36e8289ad85bc91e0d81350130b5e3c51828652",
+      "ts": "2026-07-10T15:18:18+00:00",
+      "ts_epoch": 1783696698,
+      "parent_state": "present",
+      "preflight": {
+        "reverted_rc": 1,
+        "reverted_passed": 24,
+        "solution_passed": 25
+      },
+      "task_id": "p5-036-372841b1"
+    },
+    {
+      "commit": "fb01c7a1a72a00dd2ededb88f3bbd37f2a848c15",
+      "parent_commit": "94ac3cb532d2d3e56a0df823f51a71ad52d10c9a",
+      "script_path": "scripts/aios_escalate.py",
+      "test_paths": [
+        "tests/test_aios_escalate.py"
+      ],
+      "oracle_cmd": [
+        "/home/user/miniconda3/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_aios_escalate.py"
+      ],
+      "oracle_cmd_sha256": "3167fa286559c3aff0888ce38ea07a5e34dc6aac3173b6614620fb084a8df39f",
+      "ts": "2026-07-11T01:36:47+00:00",
+      "ts_epoch": 1783733807,
+      "parent_state": "absent",
+      "preflight": {
+        "reverted_rc": 1,
+        "reverted_passed": 0,
+        "solution_passed": 20
+      },
+      "task_id": "p5-037-fb01c7a1"
+    },
+    {
+      "commit": "8d16b2a4ace702c702c749cf89e4bfdae74a7bcc",
+      "parent_commit": "508a7b6dacf89ab72e6e20acdcc4493920e0060d",
+      "script_path": "scripts/aios_tools.py",
+      "test_paths": [
+        "tests/test_aios_scrape.py",
+        "tests/test_radar.py"
+      ],
+      "oracle_cmd": [
+        "/home/user/miniconda3/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_aios_scrape.py",
+        "tests/test_radar.py"
+      ],
+      "oracle_cmd_sha256": "61e767e71b5d7c1f607e8937f70cea05b2fa9aca4e583ed7d6e3224beab89ccc",
+      "ts": "2026-07-22T05:39:20+00:00",
+      "ts_epoch": 1784698760,
+      "parent_state": "present",
+      "preflight": {
+        "reverted_rc": 1,
+        "reverted_passed": 21,
+        "solution_passed": 41
+      },
+      "task_id": "p5-038-8d16b2a4"
+    },
+    {
+      "commit": "acb63022d88f5faf9df168ecf178b8e51a91a05c",
+      "parent_commit": "48cdc4d600bc3a4f26c9727644871dcd093f9d5f",
+      "script_path": "scripts/aios_head.py",
+      "test_paths": [
+        "tests/test_aios_organism_phase2.py"
+      ],
+      "oracle_cmd": [
+        "/home/user/miniconda3/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "tests/test_aios_organism_phase2.py"
+      ],
+      "oracle_cmd_sha256": "b8c5be892bba69d0ee7f757946200cbdb8402f6db549d43781bad79e32e97a4b",
+      "ts": "2026-07-22T12:52:51+00:00",
+      "ts_epoch": 1784724771,
+      "parent_state": "present",
+      "preflight": {
+        "reverted_rc": 1,
+        "reverted_passed": 0,
+        "solution_passed": 11
+      },
+      "task_id": "p5-039-acb63022"
+    }
+  ],
+  "dropped": [
+    {
+      "commit": "f5c5abceb2807f0ed3948b72469a22cb81107e57",
+      "script_path": "scripts/aios_drive.py",
+      "reason": "already_passing_with_parent_source_no_signal",
+      "detail": "rc=0 passed=21"
+    },
+    {
+      "commit": "81868f7cd4a311754c6d4ea7774f9ce81585164b",
+      "script_path": "scripts/aios_skills.py",
+      "reason": "already_passing_with_parent_source_no_signal",
+      "detail": "rc=0 passed=12"
+    },
+    {
+      "commit": "12227b2c709231f7e42bb0261217fcf3aa98af31",
+      "script_path": "scripts/aios_sandbox.py",
+      "reason": "not_passing_with_postcommit_source_unsolvable",
+      "detail": "rc=1 passed=34 timed_out=False tail= short test summary info ============================\nFAILED tests/test_aios_sandbox.py::test_privacy_bind_refused_pre_exec[/home]\n1 failed, 34 passed in 2.33s\n"
+    },
+    {
+      "commit": "bf83336f59e7ea39f8de04d2d178ae2f1d1a3126",
+      "script_path": "scripts/aios_egress_gate.py",
+      "reason": "already_passing_with_parent_source_no_signal",
+      "detail": "rc=0 passed=40"
+    },
+    {
+      "commit": "3f9533b0417f96e1b73e4feff3f2c3812019930c",
+      "script_path": "scripts/aios_headline_ab.py",
+      "reason": "already_passing_with_parent_source_no_signal",
+      "detail": "rc=0 passed=5"
+    },
+    {
+      "commit": "17c83d65f55207af1d239707f2b019fc1cb7b259",
+      "script_path": "scripts/aios_headline_ab.py",
+      "reason": "already_passing_with_parent_source_no_signal",
+      "detail": "rc=0 passed=5"
+    },
+    {
+      "commit": "5a67d0532971738e7aa1dcd9d7d8d7436d8df34e",
+      "script_path": "scripts/aios_h1_gate.py",
+      "reason": "not_passing_with_postcommit_source_unsolvable",
+      "detail": "rc=2 passed=0 timed_out=False tail=============================\nERROR tests/test_aios_h1_gate.py\n!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n1 error in 1.42s\n"
+    },
+    {
+      "commit": "99ca73e82b42e58cdefdd6d70b60c5c9db2f5503",
+      "script_path": "scripts/aios_command_api.py",
+      "reason": "already_passing_with_parent_source_no_signal",
+      "detail": "rc=0 passed=20"
+    },
+    {
+      "commit": "a872efddcb9c762529f61ec10bab665384810ed5",
+      "script_path": "scripts/aios_graph_compiler.py",
+      "reason": "already_passing_with_parent_source_no_signal",
+      "detail": "rc=0 passed=22"
+    },
+    {
+      "commit": "21a5306cf90e566bf714859f6931ffd96c5f3d99",
+      "script_path": "scripts/aios_outbox_relay.py",
+      "reason": "already_passing_with_parent_source_no_signal",
+      "detail": "rc=0 passed=18"
+    },
+    {
+      "commit": "76ab27fd7845c3f090aae42301b45c578f826be5",
+      "script_path": "scripts/aios_agent_behavior.py",
+      "reason": "not_passing_with_postcommit_source_unsolvable",
+      "detail": "rc=1 passed=28 timed_out=False tail====================\nFAILED tests/test_aios_agent_behavior.py::SubAgentStructureTest::test_separates_main_sub_and_captures_features\n1 failed, 28 passed in 0.60s\n"
+    }
+  ]
+}

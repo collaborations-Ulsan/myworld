@@ -1,0 +1,907 @@
+{
+  "schema": "aios.phase5.calibration.v1",
+  "records": [
+    {
+      "schema": "aios.phase5.attempt.v1",
+      "task_id": "p5-000-fe70dc5b",
+      "arm": "control",
+      "model": "qwen2.5-coder:7b",
+      "passed": false,
+      "infra_error": null,
+      "tests_tampered": [],
+      "oracle": {
+        "rc": 1,
+        "passed": 14,
+        "timed_out": false,
+        "ok": false,
+        "wall_s": 0.82,
+        "tail": "   \"\"\"Unavailable providers include a hint about how to enable them.\"\"\"\n        status, body = self._get(\"/status\")\n        self.assertEqual(status, 200)\n        d = json.loads(body)\n>       for name, info in d[\"providers\"].items():\n                          ^^^^^^^^^^^^^^\nE       KeyError: 'providers'\n\ntests/test_aios_serving_e2e.py:208: KeyError\n----------------------------- Captured stdout call -----------------------------\n[aios-serving] 127.0.0.1 \"GET /status HTTP/1.1\" 200 -\n=========================== short test summary info ============================\nFAILED tests/test_aios_serving_e2e.py::TestServingApiServer::test_status_endpoint_has_provider_info\nFAILED tests/test_aios_serving_e2e.py::TestServingApiServer::test_status_provider_hints_when_unavailable\n2 failed, 14 passed in 0.62s\n"
+      },
+      "tokens": {
+        "prompt_tokens": 6516,
+        "output_tokens": 4402,
+        "model_wall_ns": 42018661876
+      },
+      "injected_chars": 0,
+      "injection_nonempty": false,
+      "wall_s": 42.89,
+      "fail_reason": "oracle_failed",
+      "prompt_chars": 27172,
+      "kind": "calibration"
+    },
+    {
+      "schema": "aios.phase5.attempt.v1",
+      "task_id": "p5-006-6db52ee4",
+      "arm": "control",
+      "model": "qwen2.5-coder:7b",
+      "passed": false,
+      "infra_error": null,
+      "tests_tampered": [],
+      "oracle": {
+        "rc": 1,
+        "passed": 0,
+        "timed_out": false,
+        "ok": false,
+        "wall_s": 0.39,
+        "tail": "aises\nFAILED tests/test_aios_head.py::GoalFilesystemDetectionTest::test_concept_explanation_is_not_filesystem\nFAILED tests/test_aios_head.py::GoalFilesystemDetectionTest::test_directory_path_is_filesystem\nFAILED tests/test_aios_head.py::GoalFilesystemDetectionTest::test_early_exit_present_for_knowledge_goal\nFAILED tests/test_aios_head.py::GoalFilesystemDetectionTest::test_early_exit_suppressed_for_fs_goal\nFAILED tests/test_aios_head.py::GoalFilesystemDetectionTest::test_file_extension_is_filesystem\nFAILED tests/test_aios_head.py::GoalFilesystemDetectionTest::test_korean_read_is_filesystem\nFAILED tests/test_aios_head.py::GoalFilesystemDetectionTest::test_list_files_is_filesystem\nFAILED tests/test_aios_head.py::GoalFilesystemDetectionTest::test_pure_math_is_not_filesystem\n24 failed in 0.21s\n"
+      },
+      "tokens": {
+        "prompt_tokens": 15086,
+        "output_tokens": 12220,
+        "model_wall_ns": 78390152747
+      },
+      "injected_chars": 0,
+      "injection_nonempty": false,
+      "wall_s": 78.86,
+      "fail_reason": "oracle_failed",
+      "prompt_chars": 61222,
+      "kind": "calibration"
+    },
+    {
+      "schema": "aios.phase5.attempt.v1",
+      "task_id": "p5-011-ccdac319",
+      "arm": "control",
+      "model": "qwen2.5-coder:7b",
+      "passed": false,
+      "infra_error": null,
+      "tests_tampered": [],
+      "oracle": {
+        "rc": 1,
+        "passed": 14,
+        "timed_out": false,
+        "ok": false,
+        "wall_s": 0.23,
+        "tail": "thod=test_ml_routes_to_ml_engineer>\n\n    def test_ml_routes_to_ml_engineer(self):\n        r = self._route(\"train pytorch model on classification dataset\")\n>       self.assertEqual(r.role, \"ml-engineer\")\nE       AssertionError: 'executor' != 'ml-engineer'\nE       - executor\nE       + ml-engineer\n\ntests/test_aios_role_router.py:83: AssertionError\n=========================== short test summary info ============================\nFAILED tests/test_aios_role_router.py::RouteTests::test_arch_routes_to_architect\nFAILED tests/test_aios_role_router.py::RouteTests::test_incident_routes_to_incident_responder\nFAILED tests/test_aios_role_router.py::RouteTests::test_infra_routes_to_infrastructure\nFAILED tests/test_aios_role_router.py::RouteTests::test_ml_routes_to_ml_engineer\n4 failed, 14 passed in 0.05s\n"
+      },
+      "tokens": {
+        "prompt_tokens": 3459,
+        "output_tokens": 2403,
+        "model_wall_ns": 12234252392
+      },
+      "injected_chars": 0,
+      "injection_nonempty": false,
+      "wall_s": 12.5,
+      "fail_reason": "oracle_failed",
+      "prompt_chars": 13198,
+      "kind": "calibration"
+    },
+    {
+      "schema": "aios.phase5.attempt.v1",
+      "task_id": "p5-017-a8c13252",
+      "arm": "control",
+      "model": "qwen2.5-coder:7b",
+      "passed": false,
+      "infra_error": null,
+      "tests_tampered": [],
+      "oracle": {
+        "rc": 1,
+        "passed": 9,
+        "timed_out": false,
+        "ok": false,
+        "wall_s": 0.26,
+        "tail": "{\"Edit\": 6}) for i in range(3)]\n        corpus.append(self._c(\"x\", \"exploration\", {\"Read\": 6}))\n>       sched, summary = self.m.replay_schedule(corpus)\n                         ^^^^^^^^^^^^^^^^^^^^^^\nE       AttributeError: module 'aios_cls_gate_uut' has no attribute 'replay_schedule'\n\ntests/test_aios_cls_gate.py:124: AttributeError\n=========================== short test summary info ============================\nFAILED tests/test_aios_cls_gate.py::ReplayPolicyTest::test_empty_corpus_is_safe\nFAILED tests/test_aios_cls_gate.py::ReplayPolicyTest::test_epoch_counts_emitted\nFAILED tests/test_aios_cls_gate.py::ReplayPolicyTest::test_intervention_weight_carries_into_replay\nFAILED tests/test_aios_cls_gate.py::ReplayPolicyTest::test_rare_mode_replayed_more_than_dominant\n4 failed, 9 passed in 0.07s\n"
+      },
+      "tokens": {
+        "prompt_tokens": 4297,
+        "output_tokens": 2321,
+        "model_wall_ns": 12215244957
+      },
+      "injected_chars": 0,
+      "injection_nonempty": false,
+      "wall_s": 12.52,
+      "fail_reason": "oracle_failed",
+      "prompt_chars": 16040,
+      "kind": "calibration"
+    },
+    {
+      "schema": "aios.phase5.attempt.v1",
+      "task_id": "p5-022-c13e5de7",
+      "arm": "control",
+      "model": "qwen2.5-coder:7b",
+      "passed": false,
+      "infra_error": null,
+      "tests_tampered": [],
+      "oracle": {
+        "rc": 1,
+        "passed": 0,
+        "timed_out": false,
+        "ok": false,
+        "wall_s": 0.27,
+        "tail": "ctural_only(self):\n>       s = self.m._safe_summary(\"code\", [\"Bash\", \"Read\"], \"react_code\")\n            ^^^^^^^^^^^^^^^^^^^^\nE       AttributeError: module 'aios_agent_system_uut' has no attribute '_safe_summary'\n\ntests/test_aios_agent_system_privacy.py:61: AttributeError\n=========================== short test summary info ============================\nFAILED tests/test_aios_agent_system_privacy.py::GlobalPayloadPrivacyTest::test_contribute_sends_no_raw_goal\nFAILED tests/test_aios_agent_system_privacy.py::GlobalPayloadPrivacyTest::test_predict_sends_no_raw_goal\nFAILED tests/test_aios_agent_system_privacy.py::GlobalPayloadPrivacyTest::test_recall_sends_no_raw_goal\nFAILED tests/test_aios_agent_system_privacy.py::GlobalPayloadPrivacyTest::test_safe_summary_is_structural_only\n4 failed in 0.08s\n"
+      },
+      "tokens": {
+        "prompt_tokens": 6904,
+        "output_tokens": 6199,
+        "model_wall_ns": 33592833965
+      },
+      "injected_chars": 0,
+      "injection_nonempty": false,
+      "wall_s": 33.91,
+      "fail_reason": "oracle_failed",
+      "prompt_chars": 26704,
+      "kind": "calibration"
+    },
+    {
+      "schema": "aios.phase5.attempt.v1",
+      "task_id": "p5-028-5034e8d9",
+      "arm": "control",
+      "model": "qwen2.5-coder:7b",
+      "passed": false,
+      "infra_error": null,
+      "tests_tampered": [],
+      "oracle": {
+        "rc": 1,
+        "passed": 6,
+        "timed_out": false,
+        "ok": false,
+        "wall_s": 0.25,
+        "tail": "-1.0) as a result\n        self.m._embed = _fake_embed\n        good = self.m.put(SEEDS[\"solar\"], summary=SEEDS[\"solar\"], tags=[\"solar\"])\n        self.m._embed = lambda t: None\n        self.m.put(\"unrelated note\", summary=\"unrelated note\", tags=[\"x\"])\n        self.m._embed = _fake_embed\n        hits = self.m.search(\"sunlight energy\", k=5)\n>       self.assertTrue(all(h[\"_score\"] > 0 for h in hits))\nE       AssertionError: False is not true\n\ntests/test_aios_semantic_fs.py:90: AssertionError\n=========================== short test summary info ============================\nFAILED tests/test_aios_semantic_fs.py::SemanticFsTest::test_explicit_summary_kept_when_content_blank\nFAILED tests/test_aios_semantic_fs.py::SemanticFsTest::test_semantic_mode_drops_no_embedding_node\n2 failed, 6 passed in 0.07s\n"
+      },
+      "tokens": {
+        "prompt_tokens": 4331,
+        "output_tokens": 2720,
+        "model_wall_ns": 14249644288
+      },
+      "injected_chars": 0,
+      "injection_nonempty": false,
+      "wall_s": 14.54,
+      "fail_reason": "oracle_failed",
+      "prompt_chars": 16279,
+      "kind": "calibration"
+    },
+    {
+      "schema": "aios.phase5.attempt.v1",
+      "task_id": "p5-033-bdc63f1c",
+      "arm": "control",
+      "model": "qwen2.5-coder:7b",
+      "passed": false,
+      "infra_error": null,
+      "tests_tampered": [],
+      "oracle": {
+        "rc": 1,
+        "passed": 3,
+        "timed_out": false,
+        "ok": false,
+        "wall_s": 0.26,
+        "tail": "=============\nFAILED tests/test_aios_mcp_self.py::McpSelfTests::test_birth_returns_compiled_self_text\nFAILED tests/test_aios_mcp_self.py::McpSelfTests::test_carry_json_target_returns_self_md\nFAILED tests/test_aios_mcp_self.py::McpSelfTests::test_carry_returns_a_claude_block\nFAILED tests/test_aios_mcp_self.py::McpSelfTests::test_checkpoint_records_death_and_birth_resumes\nFAILED tests/test_aios_mcp_self.py::McpSelfTests::test_learn_creates_draft_hidden_from_birth_until_accepted\nFAILED tests/test_aios_mcp_self.py::McpSelfTests::test_learn_tool_description_documents_the_cli_accept_path\nFAILED tests/test_aios_mcp_self.py::McpSelfTests::test_status_returns_counts_and_store_path\nFAILED tests/test_aios_mcp_self.py::McpSelfTests::test_tools_list_contains_the_5_new_tools\n8 failed, 3 passed in 0.07s\n"
+      },
+      "tokens": {
+        "prompt_tokens": 7076,
+        "output_tokens": 5486,
+        "model_wall_ns": 29893993086
+      },
+      "injected_chars": 0,
+      "injection_nonempty": false,
+      "wall_s": 30.21,
+      "fail_reason": "oracle_failed",
+      "prompt_chars": 29124,
+      "kind": "calibration"
+    },
+    {
+      "schema": "aios.phase5.attempt.v1",
+      "task_id": "p5-039-acb63022",
+      "arm": "control",
+      "model": "qwen2.5-coder:7b",
+      "passed": false,
+      "infra_error": null,
+      "tests_tampered": [],
+      "oracle": {
+        "rc": 2,
+        "passed": 0,
+        "timed_out": false,
+        "ok": false,
+        "wall_s": 0.36,
+        "tail": "n importlib._bootstrap>:1360: in _find_and_load\n    ???\n<frozen importlib._bootstrap>:1331: in _find_and_load_unlocked\n    ???\n<frozen importlib._bootstrap>:935: in _load_unlocked\n    ???\n/home/user/miniconda3/lib/python3.13/site-packages/_pytest/assertion/rewrite.py:197: in exec_module\n    exec(co, module.__dict__)\ntests/test_aios_organism_phase2.py:32: in <module>\n    import aios_head as H\nE     File \"/tmp/phase5-ws-dyavfw9v/scripts/aios_head.py\", line 121\nE       text = re.sub(r\"\nE                     ^\nE   SyntaxError: unterminated string literal (detected at line 121)\n=========================== short test summary info ============================\nERROR tests/test_aios_organism_phase2.py\n!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n1 error in 0.16s\n"
+      },
+      "tokens": {
+        "prompt_tokens": 20990,
+        "output_tokens": 16384,
+        "model_wall_ns": 107311089688
+      },
+      "injected_chars": 0,
+      "injection_nonempty": false,
+      "wall_s": 107.79,
+      "fail_reason": "oracle_failed",
+      "prompt_chars": 85938,
+      "kind": "calibration"
+    },
+    {
+      "schema": "aios.phase5.attempt.v1",
+      "task_id": "p5-000-fe70dc5b",
+      "arm": "control",
+      "model": "qwen3:8b",
+      "passed": false,
+      "infra_error": null,
+      "tests_tampered": [],
+      "oracle": {
+        "rc": 1,
+        "passed": 15,
+        "timed_out": false,
+        "ok": false,
+        "wall_s": 0.83,
+        "tail": " \"ok\")\n        self.assertIn(\"providers\", d)\n>       self.assertIn(\"ollama\", d[\"providers\"])\nE       AssertionError: 'ollama' not found in {'ollama_rest': {'available': True, 'hint': 'run `aios setup apply` to install'}, 'gemini_rest': {'available': False, 'hint': 'set GEMINI_API_KEY to enable — free tier available'}, 'anthropic_rest': {'available': False, 'hint': 'set ANTHROPIC_API_KEY to enable'}}\n\ntests/test_aios_serving_e2e.py:193: AssertionError\n----------------------------- Captured stdout call -----------------------------\n[aios-serving] 127.0.0.1 \"GET /status HTTP/1.1\" 200 -\n=========================== short test summary info ============================\nFAILED tests/test_aios_serving_e2e.py::TestServingApiServer::test_status_endpoint_has_provider_info\n1 failed, 15 passed in 0.64s\n"
+      },
+      "tokens": {
+        "prompt_tokens": 6499,
+        "output_tokens": 8534,
+        "model_wall_ns": 54955838372
+      },
+      "injected_chars": 0,
+      "injection_nonempty": false,
+      "wall_s": 55.85,
+      "fail_reason": "oracle_failed",
+      "prompt_chars": 27172,
+      "kind": "calibration"
+    },
+    {
+      "schema": "aios.phase5.attempt.v1",
+      "task_id": "p5-006-6db52ee4",
+      "arm": "control",
+      "model": "qwen3:8b",
+      "passed": false,
+      "infra_error": null,
+      "tests_tampered": [],
+      "oracle": {
+        "rc": 1,
+        "passed": 0,
+        "timed_out": false,
+        "ok": false,
+        "wall_s": 0.39,
+        "tail": "aises\nFAILED tests/test_aios_head.py::GoalFilesystemDetectionTest::test_concept_explanation_is_not_filesystem\nFAILED tests/test_aios_head.py::GoalFilesystemDetectionTest::test_directory_path_is_filesystem\nFAILED tests/test_aios_head.py::GoalFilesystemDetectionTest::test_early_exit_present_for_knowledge_goal\nFAILED tests/test_aios_head.py::GoalFilesystemDetectionTest::test_early_exit_suppressed_for_fs_goal\nFAILED tests/test_aios_head.py::GoalFilesystemDetectionTest::test_file_extension_is_filesystem\nFAILED tests/test_aios_head.py::GoalFilesystemDetectionTest::test_korean_read_is_filesystem\nFAILED tests/test_aios_head.py::GoalFilesystemDetectionTest::test_list_files_is_filesystem\nFAILED tests/test_aios_head.py::GoalFilesystemDetectionTest::test_pure_math_is_not_filesystem\n24 failed in 0.20s\n"
+      },
+      "tokens": {
+        "prompt_tokens": 15088,
+        "output_tokens": 15956,
+        "model_wall_ns": 117641973895
+      },
+      "injected_chars": 0,
+      "injection_nonempty": false,
+      "wall_s": 118.1,
+      "fail_reason": "oracle_failed",
+      "prompt_chars": 61222,
+      "kind": "calibration"
+    },
+    {
+      "schema": "aios.phase5.attempt.v1",
+      "task_id": "p5-011-ccdac319",
+      "arm": "control",
+      "model": "qwen3:8b",
+      "passed": false,
+      "infra_error": null,
+      "tests_tampered": [],
+      "oracle": null,
+      "tokens": {
+        "prompt_tokens": 3456,
+        "output_tokens": 16384,
+        "model_wall_ns": 101880033388
+      },
+      "injected_chars": 0,
+      "injection_nonempty": false,
+      "wall_s": 101.93,
+      "fail_reason": "no_usable_code_in_model_output",
+      "prompt_chars": 13198,
+      "kind": "calibration"
+    },
+    {
+      "schema": "aios.phase5.attempt.v1",
+      "task_id": "p5-017-a8c13252",
+      "arm": "control",
+      "model": "qwen3:8b",
+      "passed": false,
+      "infra_error": null,
+      "tests_tampered": [],
+      "oracle": {
+        "rc": 1,
+        "passed": 9,
+        "timed_out": false,
+        "ok": false,
+        "wall_s": 0.26,
+        "tail": "{\"Edit\": 6}) for i in range(3)]\n        corpus.append(self._c(\"x\", \"exploration\", {\"Read\": 6}))\n>       sched, summary = self.m.replay_schedule(corpus)\n                         ^^^^^^^^^^^^^^^^^^^^^^\nE       AttributeError: module 'aios_cls_gate_uut' has no attribute 'replay_schedule'\n\ntests/test_aios_cls_gate.py:124: AttributeError\n=========================== short test summary info ============================\nFAILED tests/test_aios_cls_gate.py::ReplayPolicyTest::test_empty_corpus_is_safe\nFAILED tests/test_aios_cls_gate.py::ReplayPolicyTest::test_epoch_counts_emitted\nFAILED tests/test_aios_cls_gate.py::ReplayPolicyTest::test_intervention_weight_carries_into_replay\nFAILED tests/test_aios_cls_gate.py::ReplayPolicyTest::test_rare_mode_replayed_more_than_dominant\n4 failed, 9 passed in 0.07s\n"
+      },
+      "tokens": {
+        "prompt_tokens": 4320,
+        "output_tokens": 7071,
+        "model_wall_ns": 41975000075
+      },
+      "injected_chars": 0,
+      "injection_nonempty": false,
+      "wall_s": 42.28,
+      "fail_reason": "oracle_failed",
+      "prompt_chars": 16040,
+      "kind": "calibration"
+    },
+    {
+      "schema": "aios.phase5.attempt.v1",
+      "task_id": "p5-022-c13e5de7",
+      "arm": "control",
+      "model": "qwen3:8b",
+      "passed": false,
+      "infra_error": null,
+      "tests_tampered": [],
+      "oracle": {
+        "rc": 1,
+        "passed": 0,
+        "timed_out": false,
+        "ok": false,
+        "wall_s": 0.22,
+        "tail": "ctural_only(self):\n>       s = self.m._safe_summary(\"code\", [\"Bash\", \"Read\"], \"react_code\")\n            ^^^^^^^^^^^^^^^^^^^^\nE       AttributeError: module 'aios_agent_system_uut' has no attribute '_safe_summary'\n\ntests/test_aios_agent_system_privacy.py:61: AttributeError\n=========================== short test summary info ============================\nFAILED tests/test_aios_agent_system_privacy.py::GlobalPayloadPrivacyTest::test_contribute_sends_no_raw_goal\nFAILED tests/test_aios_agent_system_privacy.py::GlobalPayloadPrivacyTest::test_predict_sends_no_raw_goal\nFAILED tests/test_aios_agent_system_privacy.py::GlobalPayloadPrivacyTest::test_recall_sends_no_raw_goal\nFAILED tests/test_aios_agent_system_privacy.py::GlobalPayloadPrivacyTest::test_safe_summary_is_structural_only\n4 failed in 0.04s\n"
+      },
+      "tokens": {
+        "prompt_tokens": 7000,
+        "output_tokens": 16384,
+        "model_wall_ns": 108115868553
+      },
+      "injected_chars": 0,
+      "injection_nonempty": false,
+      "wall_s": 108.4,
+      "fail_reason": "oracle_failed",
+      "prompt_chars": 26704,
+      "kind": "calibration"
+    },
+    {
+      "schema": "aios.phase5.attempt.v1",
+      "task_id": "p5-028-5034e8d9",
+      "arm": "control",
+      "model": "qwen3:8b",
+      "passed": false,
+      "infra_error": null,
+      "tests_tampered": [],
+      "oracle": {
+        "rc": 1,
+        "passed": 0,
+        "timed_out": false,
+        "ok": false,
+        "wall_s": 0.24,
+        "tail": "======================\nFAILED tests/test_aios_semantic_fs.py::SemanticFsTest::test_explicit_summary_kept_when_content_blank\nFAILED tests/test_aios_semantic_fs.py::SemanticFsTest::test_link_and_neighbors\nFAILED tests/test_aios_semantic_fs.py::SemanticFsTest::test_privacy_index_holds_pointer_and_capped_summary_only\nFAILED tests/test_aios_semantic_fs.py::SemanticFsTest::test_put_get_pointer_integrity\nFAILED tests/test_aios_semantic_fs.py::SemanticFsTest::test_rm_is_append_only_tombstone\nFAILED tests/test_aios_semantic_fs.py::SemanticFsTest::test_search_keyword_fallback_when_no_embeddings\nFAILED tests/test_aios_semantic_fs.py::SemanticFsTest::test_search_semantic_top1_by_meaning\nFAILED tests/test_aios_semantic_fs.py::SemanticFsTest::test_semantic_mode_drops_no_embedding_node\n8 failed in 0.06s\n"
+      },
+      "tokens": {
+        "prompt_tokens": 4343,
+        "output_tokens": 16384,
+        "model_wall_ns": 103714821810
+      },
+      "injected_chars": 0,
+      "injection_nonempty": false,
+      "wall_s": 104.01,
+      "fail_reason": "oracle_failed",
+      "prompt_chars": 16279,
+      "kind": "calibration"
+    },
+    {
+      "schema": "aios.phase5.attempt.v1",
+      "task_id": "p5-033-bdc63f1c",
+      "arm": "control",
+      "model": "qwen3:8b",
+      "passed": false,
+      "infra_error": null,
+      "tests_tampered": [],
+      "oracle": {
+        "rc": 2,
+        "passed": 0,
+        "timed_out": false,
+        "ok": false,
+        "wall_s": 0.32,
+        "tail": "d_load\n    ???\n<frozen importlib._bootstrap>:1331: in _find_and_load_unlocked\n    ???\n<frozen importlib._bootstrap>:935: in _load_unlocked\n    ???\n/home/user/miniconda3/lib/python3.13/site-packages/_pytest/assertion/rewrite.py:197: in exec_module\n    exec(co, module.__dict__)\ntests/test_aios_mcp_self.py:18: in <module>\n    import aios_mcp_server as M  # noqa: E402\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE     File \"/tmp/phase5-ws-cjcnpnli/scripts/aios_mcp_server.py\", line 295\nE       return True, \"\nE                    ^\nE   SyntaxError: unterminated string literal (detected at line 295)\n=========================== short test summary info ============================\nERROR tests/test_aios_mcp_self.py\n!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n1 error in 0.13s\n"
+      },
+      "tokens": {
+        "prompt_tokens": 7134,
+        "output_tokens": 8029,
+        "model_wall_ns": 50111095822
+      },
+      "injected_chars": 0,
+      "injection_nonempty": false,
+      "wall_s": 50.48,
+      "fail_reason": "oracle_failed",
+      "prompt_chars": 29124,
+      "kind": "calibration"
+    },
+    {
+      "schema": "aios.phase5.attempt.v1",
+      "task_id": "p5-039-acb63022",
+      "arm": "control",
+      "model": "qwen3:8b",
+      "passed": false,
+      "infra_error": null,
+      "tests_tampered": [],
+      "oracle": {
+        "rc": 2,
+        "passed": 0,
+        "timed_out": false,
+        "ok": false,
+        "wall_s": 0.35,
+        "tail": "n importlib._bootstrap>:1360: in _find_and_load\n    ???\n<frozen importlib._bootstrap>:1331: in _find_and_load_unlocked\n    ???\n<frozen importlib._bootstrap>:935: in _load_unlocked\n    ???\n/home/user/miniconda3/lib/python3.13/site-packages/_pytest/assertion/rewrite.py:197: in exec_module\n    exec(co, module.__dict__)\ntests/test_aios_organism_phase2.py:32: in <module>\n    import aios_head as H\nE     File \"/tmp/phase5-ws-9ybxpfc2/scripts/aios_head.py\", line 121\nE       text = re.sub(r\"\nE                     ^\nE   SyntaxError: unterminated string literal (detected at line 121)\n=========================== short test summary info ============================\nERROR tests/test_aios_organism_phase2.py\n!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n1 error in 0.16s\n"
+      },
+      "tokens": {
+        "prompt_tokens": 20990,
+        "output_tokens": 3535,
+        "model_wall_ns": 27924344454
+      },
+      "injected_chars": 0,
+      "injection_nonempty": false,
+      "wall_s": 28.34,
+      "fail_reason": "oracle_failed",
+      "prompt_chars": 85938,
+      "kind": "calibration"
+    },
+    {
+      "schema": "aios.phase5.attempt.v1",
+      "task_id": "p5-000-fe70dc5b",
+      "arm": "control",
+      "model": "qwen3-coder:30b",
+      "passed": false,
+      "infra_error": null,
+      "tests_tampered": [],
+      "oracle": {
+        "rc": 1,
+        "passed": 14,
+        "timed_out": false,
+        "ok": false,
+        "wall_s": 0.82,
+        "tail": "   \"\"\"Unavailable providers include a hint about how to enable them.\"\"\"\n        status, body = self._get(\"/status\")\n        self.assertEqual(status, 200)\n        d = json.loads(body)\n>       for name, info in d[\"providers\"].items():\n                          ^^^^^^^^^^^^^^\nE       KeyError: 'providers'\n\ntests/test_aios_serving_e2e.py:208: KeyError\n----------------------------- Captured stdout call -----------------------------\n[aios-serving] 127.0.0.1 \"GET /status HTTP/1.1\" 200 -\n=========================== short test summary info ============================\nFAILED tests/test_aios_serving_e2e.py::TestServingApiServer::test_status_endpoint_has_provider_info\nFAILED tests/test_aios_serving_e2e.py::TestServingApiServer::test_status_provider_hints_when_unavailable\n2 failed, 14 passed in 0.62s\n"
+      },
+      "tokens": {
+        "prompt_tokens": 6497,
+        "output_tokens": 4402,
+        "model_wall_ns": 32921526318
+      },
+      "injected_chars": 0,
+      "injection_nonempty": false,
+      "wall_s": 33.78,
+      "fail_reason": "oracle_failed",
+      "prompt_chars": 27172,
+      "kind": "calibration"
+    },
+    {
+      "schema": "aios.phase5.attempt.v1",
+      "task_id": "p5-006-6db52ee4",
+      "arm": "control",
+      "model": "qwen3-coder:30b",
+      "passed": false,
+      "infra_error": null,
+      "tests_tampered": [],
+      "oracle": {
+        "rc": 1,
+        "passed": 0,
+        "timed_out": false,
+        "ok": false,
+        "wall_s": 0.4,
+        "tail": "aises\nFAILED tests/test_aios_head.py::GoalFilesystemDetectionTest::test_concept_explanation_is_not_filesystem\nFAILED tests/test_aios_head.py::GoalFilesystemDetectionTest::test_directory_path_is_filesystem\nFAILED tests/test_aios_head.py::GoalFilesystemDetectionTest::test_early_exit_present_for_knowledge_goal\nFAILED tests/test_aios_head.py::GoalFilesystemDetectionTest::test_early_exit_suppressed_for_fs_goal\nFAILED tests/test_aios_head.py::GoalFilesystemDetectionTest::test_file_extension_is_filesystem\nFAILED tests/test_aios_head.py::GoalFilesystemDetectionTest::test_korean_read_is_filesystem\nFAILED tests/test_aios_head.py::GoalFilesystemDetectionTest::test_list_files_is_filesystem\nFAILED tests/test_aios_head.py::GoalFilesystemDetectionTest::test_pure_math_is_not_filesystem\n24 failed in 0.21s\n"
+      },
+      "tokens": {
+        "prompt_tokens": 15086,
+        "output_tokens": 12547,
+        "model_wall_ns": 93567666791
+      },
+      "injected_chars": 0,
+      "injection_nonempty": false,
+      "wall_s": 94.03,
+      "fail_reason": "oracle_failed",
+      "prompt_chars": 61222,
+      "kind": "calibration"
+    },
+    {
+      "schema": "aios.phase5.attempt.v1",
+      "task_id": "p5-011-ccdac319",
+      "arm": "control",
+      "model": "qwen3-coder:30b",
+      "passed": false,
+      "infra_error": null,
+      "tests_tampered": [],
+      "oracle": {
+        "rc": 1,
+        "passed": 17,
+        "timed_out": false,
+        "ok": false,
+        "wall_s": 0.23,
+        "tail": "                                            [100%]\n=================================== FAILURES ===================================\n___________________ RouteTests.test_arch_routes_to_architect ___________________\n\nself = <tests.test_aios_role_router.RouteTests testMethod=test_arch_routes_to_architect>\n\n    def test_arch_routes_to_architect(self):\n        r = self._route(\"system architecture design for AIOS kernel ADR\")\n>       self.assertEqual(r.role, \"architect\")\nE       AssertionError: 'designer' != 'architect'\nE       - designer\nE       + architect\n\ntests/test_aios_role_router.py:91: AssertionError\n=========================== short test summary info ============================\nFAILED tests/test_aios_role_router.py::RouteTests::test_arch_routes_to_architect\n1 failed, 17 passed in 0.04s\n"
+      },
+      "tokens": {
+        "prompt_tokens": 3454,
+        "output_tokens": 2675,
+        "model_wall_ns": 15606529811
+      },
+      "injected_chars": 0,
+      "injection_nonempty": false,
+      "wall_s": 15.87,
+      "fail_reason": "oracle_failed",
+      "prompt_chars": 13198,
+      "kind": "calibration"
+    },
+    {
+      "schema": "aios.phase5.attempt.v1",
+      "task_id": "p5-017-a8c13252",
+      "arm": "control",
+      "model": "qwen3-coder:30b",
+      "passed": false,
+      "infra_error": null,
+      "tests_tampered": [],
+      "oracle": {
+        "rc": 1,
+        "passed": 9,
+        "timed_out": false,
+        "ok": false,
+        "wall_s": 0.26,
+        "tail": "{\"Edit\": 6}) for i in range(3)]\n        corpus.append(self._c(\"x\", \"exploration\", {\"Read\": 6}))\n>       sched, summary = self.m.replay_schedule(corpus)\n                         ^^^^^^^^^^^^^^^^^^^^^^\nE       AttributeError: module 'aios_cls_gate_uut' has no attribute 'replay_schedule'\n\ntests/test_aios_cls_gate.py:124: AttributeError\n=========================== short test summary info ============================\nFAILED tests/test_aios_cls_gate.py::ReplayPolicyTest::test_empty_corpus_is_safe\nFAILED tests/test_aios_cls_gate.py::ReplayPolicyTest::test_epoch_counts_emitted\nFAILED tests/test_aios_cls_gate.py::ReplayPolicyTest::test_intervention_weight_carries_into_replay\nFAILED tests/test_aios_cls_gate.py::ReplayPolicyTest::test_rare_mode_replayed_more_than_dominant\n4 failed, 9 passed in 0.08s\n"
+      },
+      "tokens": {
+        "prompt_tokens": 4318,
+        "output_tokens": 2356,
+        "model_wall_ns": 13985803388
+      },
+      "injected_chars": 0,
+      "injection_nonempty": false,
+      "wall_s": 14.28,
+      "fail_reason": "oracle_failed",
+      "prompt_chars": 16040,
+      "kind": "calibration"
+    },
+    {
+      "schema": "aios.phase5.attempt.v1",
+      "task_id": "p5-022-c13e5de7",
+      "arm": "control",
+      "model": "qwen3-coder:30b",
+      "passed": false,
+      "infra_error": null,
+      "tests_tampered": [],
+      "oracle": {
+        "rc": 1,
+        "passed": 2,
+        "timed_out": false,
+        "ok": false,
+        "wall_s": 0.26,
+        "tail": "ests/test_aios_agent_system_privacy.py:52: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \ntests/test_aios_agent_system_privacy.py:38: in _assert_no_goal\n    self.assertNotIn(leak, blob, f\"raw-goal leak in global payload: {leak}\")\nE   AssertionError: 'sk-LIVE-9f3a' unexpectedly found in \"{'query': 'deploy prod with token sk-LIVE-9f3a and email me at ceo@corp.com about /dain/private', 'top_k': 3}\" : raw-goal leak in global payload: sk-LIVE-9f3a\n=========================== short test summary info ============================\nFAILED tests/test_aios_agent_system_privacy.py::GlobalPayloadPrivacyTest::test_predict_sends_no_raw_goal\nFAILED tests/test_aios_agent_system_privacy.py::GlobalPayloadPrivacyTest::test_recall_sends_no_raw_goal\n2 failed, 2 passed in 0.07s\n"
+      },
+      "tokens": {
+        "prompt_tokens": 6998,
+        "output_tokens": 6370,
+        "model_wall_ns": 42669209294
+      },
+      "injected_chars": 0,
+      "injection_nonempty": false,
+      "wall_s": 42.97,
+      "fail_reason": "oracle_failed",
+      "prompt_chars": 26704,
+      "kind": "calibration"
+    },
+    {
+      "schema": "aios.phase5.attempt.v1",
+      "task_id": "p5-028-5034e8d9",
+      "arm": "control",
+      "model": "qwen3-coder:30b",
+      "passed": false,
+      "infra_error": null,
+      "tests_tampered": [],
+      "oracle": {
+        "rc": 1,
+        "passed": 6,
+        "timed_out": false,
+        "ok": false,
+        "wall_s": 0.27,
+        "tail": "-1.0) as a result\n        self.m._embed = _fake_embed\n        good = self.m.put(SEEDS[\"solar\"], summary=SEEDS[\"solar\"], tags=[\"solar\"])\n        self.m._embed = lambda t: None\n        self.m.put(\"unrelated note\", summary=\"unrelated note\", tags=[\"x\"])\n        self.m._embed = _fake_embed\n        hits = self.m.search(\"sunlight energy\", k=5)\n>       self.assertTrue(all(h[\"_score\"] > 0 for h in hits))\nE       AssertionError: False is not true\n\ntests/test_aios_semantic_fs.py:90: AssertionError\n=========================== short test summary info ============================\nFAILED tests/test_aios_semantic_fs.py::SemanticFsTest::test_explicit_summary_kept_when_content_blank\nFAILED tests/test_aios_semantic_fs.py::SemanticFsTest::test_semantic_mode_drops_no_embedding_node\n2 failed, 6 passed in 0.07s\n"
+      },
+      "tokens": {
+        "prompt_tokens": 4341,
+        "output_tokens": 2749,
+        "model_wall_ns": 17068341132
+      },
+      "injected_chars": 0,
+      "injection_nonempty": false,
+      "wall_s": 17.38,
+      "fail_reason": "oracle_failed",
+      "prompt_chars": 16279,
+      "kind": "calibration"
+    },
+    {
+      "schema": "aios.phase5.attempt.v1",
+      "task_id": "p5-033-bdc63f1c",
+      "arm": "control",
+      "model": "qwen3-coder:30b",
+      "passed": false,
+      "infra_error": null,
+      "tests_tampered": [],
+      "oracle": {
+        "rc": 1,
+        "passed": 5,
+        "timed_out": false,
+        "ok": false,
+        "wall_s": 0.28,
+        "tail": "nt\": \"a1\"})\n>       self.assertFalse(err)\nE       AssertionError: True is not false\n\ntests/test_aios_mcp_self.py:78: AssertionError\n=========================== short test summary info ============================\nFAILED tests/test_aios_mcp_self.py::McpSelfTests::test_birth_returns_compiled_self_text\nFAILED tests/test_aios_mcp_self.py::McpSelfTests::test_carry_json_target_returns_self_md\nFAILED tests/test_aios_mcp_self.py::McpSelfTests::test_carry_returns_a_claude_block\nFAILED tests/test_aios_mcp_self.py::McpSelfTests::test_checkpoint_records_death_and_birth_resumes\nFAILED tests/test_aios_mcp_self.py::McpSelfTests::test_learn_creates_draft_hidden_from_birth_until_accepted\nFAILED tests/test_aios_mcp_self.py::McpSelfTests::test_status_returns_counts_and_store_path\n6 failed, 5 passed in 0.07s\n"
+      },
+      "tokens": {
+        "prompt_tokens": 7132,
+        "output_tokens": 6797,
+        "model_wall_ns": 46304935175
+      },
+      "injected_chars": 0,
+      "injection_nonempty": false,
+      "wall_s": 46.63,
+      "fail_reason": "oracle_failed",
+      "prompt_chars": 29124,
+      "kind": "calibration"
+    },
+    {
+      "schema": "aios.phase5.attempt.v1",
+      "task_id": "p5-039-acb63022",
+      "arm": "control",
+      "model": "qwen3-coder:30b",
+      "passed": false,
+      "infra_error": null,
+      "tests_tampered": [],
+      "oracle": {
+        "rc": 2,
+        "passed": 0,
+        "timed_out": false,
+        "ok": false,
+        "wall_s": 0.35,
+        "tail": "n importlib._bootstrap>:1360: in _find_and_load\n    ???\n<frozen importlib._bootstrap>:1331: in _find_and_load_unlocked\n    ???\n<frozen importlib._bootstrap>:935: in _load_unlocked\n    ???\n/home/user/miniconda3/lib/python3.13/site-packages/_pytest/assertion/rewrite.py:197: in exec_module\n    exec(co, module.__dict__)\ntests/test_aios_organism_phase2.py:32: in <module>\n    import aios_head as H\nE     File \"/tmp/phase5-ws-w_9vigdx/scripts/aios_head.py\", line 121\nE       text = re.sub(r\"\nE                     ^\nE   SyntaxError: unterminated string literal (detected at line 121)\n=========================== short test summary info ============================\nERROR tests/test_aios_organism_phase2.py\n!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n1 error in 0.16s\n"
+      },
+      "tokens": {
+        "prompt_tokens": 20988,
+        "output_tokens": 16301,
+        "model_wall_ns": 143135478626
+      },
+      "injected_chars": 0,
+      "injection_nonempty": false,
+      "wall_s": 143.57,
+      "fail_reason": "oracle_failed",
+      "prompt_chars": 85938,
+      "kind": "calibration"
+    },
+    {
+      "schema": "aios.phase5.attempt.v1",
+      "task_id": "p5-000-fe70dc5b",
+      "arm": "control",
+      "model": "qwen3-coder-next",
+      "passed": true,
+      "infra_error": null,
+      "tests_tampered": [],
+      "oracle": {
+        "rc": 0,
+        "passed": 16,
+        "timed_out": false,
+        "ok": true,
+        "wall_s": 0.88,
+        "tail": "................                                                         [100%]\n16 passed in 0.65s\n"
+      },
+      "tokens": {
+        "prompt_tokens": 6497,
+        "output_tokens": 4877,
+        "model_wall_ns": 439943245457
+      },
+      "injected_chars": 0,
+      "injection_nonempty": false,
+      "wall_s": 440.87,
+      "fail_reason": null,
+      "prompt_chars": 27172,
+      "kind": "calibration"
+    },
+    {
+      "schema": "aios.phase5.attempt.v1",
+      "task_id": "p5-006-6db52ee4",
+      "arm": "control",
+      "model": "qwen3-coder-next",
+      "passed": null,
+      "infra_error": "ollama call failed: TimeoutError: timed out",
+      "tests_tampered": [],
+      "oracle": null,
+      "tokens": {},
+      "injected_chars": 0,
+      "injection_nonempty": false,
+      "wall_s": 480.12,
+      "fail_reason": null,
+      "prompt_chars": 61222,
+      "kind": "calibration"
+    },
+    {
+      "schema": "aios.phase5.attempt.v1",
+      "task_id": "p5-011-ccdac319",
+      "arm": "control",
+      "model": "qwen3-coder-next",
+      "passed": false,
+      "infra_error": null,
+      "tests_tampered": [],
+      "oracle": {
+        "rc": 1,
+        "passed": 17,
+        "timed_out": false,
+        "ok": false,
+        "wall_s": 0.19,
+        "tail": "      [100%]\n=================================== FAILURES ===================================\n________________ RouteTests.test_build_error_routes_to_debugger ________________\n\nself = <tests.test_aios_role_router.RouteTests testMethod=test_build_error_routes_to_debugger>\n\n    def test_build_error_routes_to_debugger(self):\n        r = self._route(\"Fix the TypeScript build error in the CI pipeline\")\n>       self.assertEqual(r.role, \"debugger\")\nE       AssertionError: 'incident-responder' != 'debugger'\nE       - incident-responder\nE       + debugger\n\ntests/test_aios_role_router.py:18: AssertionError\n=========================== short test summary info ============================\nFAILED tests/test_aios_role_router.py::RouteTests::test_build_error_routes_to_debugger\n1 failed, 17 passed in 0.03s\n"
+      },
+      "tokens": {
+        "prompt_tokens": 3454,
+        "output_tokens": 2801,
+        "model_wall_ns": 321701987429
+      },
+      "injected_chars": 0,
+      "injection_nonempty": false,
+      "wall_s": 321.92,
+      "fail_reason": "oracle_failed",
+      "prompt_chars": 13198,
+      "kind": "calibration"
+    },
+    {
+      "schema": "aios.phase5.attempt.v1",
+      "task_id": "p5-017-a8c13252",
+      "arm": "control",
+      "model": "qwen3-coder-next",
+      "passed": true,
+      "infra_error": null,
+      "tests_tampered": [],
+      "oracle": {
+        "rc": 0,
+        "passed": 13,
+        "timed_out": false,
+        "ok": true,
+        "wall_s": 0.19,
+        "tail": ".............                                                            [100%]\n13 passed in 0.05s\n"
+      },
+      "tokens": {
+        "prompt_tokens": 4318,
+        "output_tokens": 2938,
+        "model_wall_ns": 404428244916
+      },
+      "injected_chars": 0,
+      "injection_nonempty": false,
+      "wall_s": 404.65,
+      "fail_reason": null,
+      "prompt_chars": 16040,
+      "kind": "calibration"
+    },
+    {
+      "schema": "aios.phase5.attempt.v1",
+      "task_id": "p5-022-c13e5de7",
+      "arm": "control",
+      "model": "qwen3-coder-next",
+      "passed": null,
+      "infra_error": "ollama call failed: TimeoutError: timed out",
+      "tests_tampered": [],
+      "oracle": null,
+      "tokens": {},
+      "injected_chars": 0,
+      "injection_nonempty": false,
+      "wall_s": 480.11,
+      "fail_reason": null,
+      "prompt_chars": 26704,
+      "kind": "calibration"
+    },
+    {
+      "schema": "aios.phase5.attempt.v1",
+      "task_id": "p5-028-5034e8d9",
+      "arm": "control",
+      "model": "qwen3-coder-next",
+      "passed": true,
+      "infra_error": null,
+      "tests_tampered": [],
+      "oracle": {
+        "rc": 0,
+        "passed": 8,
+        "timed_out": false,
+        "ok": true,
+        "wall_s": 0.25,
+        "tail": "........                                                                 [100%]\n8 passed in 0.06s\n"
+      },
+      "tokens": {
+        "prompt_tokens": 4341,
+        "output_tokens": 3139,
+        "model_wall_ns": 238064290185
+      },
+      "injected_chars": 0,
+      "injection_nonempty": false,
+      "wall_s": 238.36,
+      "fail_reason": null,
+      "prompt_chars": 16279,
+      "kind": "calibration"
+    },
+    {
+      "schema": "aios.phase5.attempt.v1",
+      "task_id": "p5-033-bdc63f1c",
+      "arm": "control",
+      "model": "qwen3-coder-next",
+      "passed": null,
+      "infra_error": "ollama call failed: TimeoutError: timed out",
+      "tests_tampered": [],
+      "oracle": null,
+      "tokens": {},
+      "injected_chars": 0,
+      "injection_nonempty": false,
+      "wall_s": 480.12,
+      "fail_reason": null,
+      "prompt_chars": 29124,
+      "kind": "calibration"
+    },
+    {
+      "schema": "aios.phase5.attempt.v1",
+      "task_id": "p5-039-acb63022",
+      "arm": "control",
+      "model": "qwen3-coder-next",
+      "passed": null,
+      "infra_error": "ollama call failed: TimeoutError: timed out",
+      "tests_tampered": [],
+      "oracle": null,
+      "tokens": {},
+      "injected_chars": 0,
+      "injection_nonempty": false,
+      "wall_s": 480.11,
+      "fail_reason": null,
+      "prompt_chars": 85938,
+      "kind": "calibration"
+    }
+  ],
+  "summary": {
+    "band": [
+      0.2,
+      0.6
+    ],
+    "per_model": {
+      "qwen2.5-coder:7b": {
+        "params_b": 7.6,
+        "attempts": 8,
+        "infra_errors": 0,
+        "scored": 8,
+        "passes": 0,
+        "P_auto": 0.0,
+        "in_band": false
+      },
+      "qwen3:8b": {
+        "params_b": 8.2,
+        "attempts": 8,
+        "infra_errors": 0,
+        "scored": 8,
+        "passes": 0,
+        "P_auto": 0.0,
+        "in_band": false
+      },
+      "qwen3-coder:30b": {
+        "params_b": 30.5,
+        "attempts": 8,
+        "infra_errors": 0,
+        "scored": 8,
+        "passes": 0,
+        "P_auto": 0.0,
+        "in_band": false
+      },
+      "qwen3-coder-next": {
+        "params_b": 79.7,
+        "attempts": 8,
+        "infra_errors": 4,
+        "scored": 4,
+        "passes": 3,
+        "P_auto": 0.75,
+        "in_band": false
+      }
+    },
+    "selected_student": null,
+    "verdict": "EXPERIMENT NOT RUN — no candidate has measurable headroom",
+    "holdout_task_ids": [
+      "p5-000-fe70dc5b",
+      "p5-006-6db52ee4",
+      "p5-011-ccdac319",
+      "p5-017-a8c13252",
+      "p5-022-c13e5de7",
+      "p5-028-5034e8d9",
+      "p5-033-bdc63f1c",
+      "p5-039-acb63022"
+    ],
+    "complete": true
+  }
+}
