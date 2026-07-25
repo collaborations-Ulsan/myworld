@@ -45,7 +45,34 @@ revival: name and demonstrate ONE capability impossible with fast-start CLI + fi
 it socket-activated, stateless, disk-authoritative, 0600+SO_PEERCRED, no state-mutating tick.** Full
 reasoning: `docs/AIOS_FORM_FACTOR_DECISION_2026-07-22.md` §0.
 
-## Phase 5 — Settle learning on a measurable testbed  [STATUS: TODO — now the front line]
+## Phase 8 — RESONANCE: the self-questioning loop (깊은 고찰)  [STATUS: IN PROGRESS]
+Founder: *"스스로에게 질문을 계속 던지는 공진 루프가 시스테믹"* + *"유기적으로 연결"*. DRIVE (Phase 7)
+gave the organism a motive force (it FEELS pain and proposes remedies). Resonance gives it the faculty
+that turns feeling into inquiry: it keeps asking itself questions, and the questions that keep coming
+back from multiple organs AMPLIFY, while settled ones DAMP.
+
+**It must be CIRCULATION between organs that already exist — not a sixth orphan brick.**
+- **Inflow (questions are born from existing organ output)**: DRIVE's dominant pain component · each of the
+  ontology's 72 contradiction edges (a contradiction IS a standing question) · experience-graph failures
+  ("why did this fail?") · repeated failures with no covering skill ("what tool is missing?") · escalation
+  records ("what did the substrate cascade reveal?").
+- **Throughflow (questions are routed to the organ that can answer)**: memory/ontology retrieve · escalate
+  + Weaver for hard ones · skills (can an existing tool settle it?) · GenesisOS challenge when stuck.
+- **Resonance = constructive interference**: a question arriving from MULTIPLE organs, recurring across
+  pulses, or sitting on the dominant pain component gains amplitude and rises in rank.
+- **Damping**: settled questions decay. **Anti-rumination (the load-bearing guard)**: a question asked N
+  times with ZERO behavioral change (no contradiction resolved, no skill registered, no failure cleared) is
+  forcibly retired with a record. *Resonance without damping is rumination, not thought* — that is this
+  organ's specific failure mode and it must be measured, not asserted.
+- **Outflow closes the loop**: questions become DRIVE proposals / skill inductions / operator-surfaced
+  items, and every question + its fate appends to the Experience Graph — so the next pulse's questions are
+  informed by the last one's answers. Organ → question → organ → behavior → record → question.
+- **Ownership**: `scripts/aios_resonance.py` (small, testable) **called BY `aios_drive.pulse()`** — one
+  heartbeat, two faculties: FEEL (pain) and ASK (questions). Not a standalone silo.
+- **Anti-theater metric**: `question_resolution_rate` + the rumination count. If questions never change
+  behavior, the organ is rumination and gets killed — same discipline as DRIVE's verified_effect_fraction.
+
+## Phase 5 — Settle learning on a measurable testbed  [STATUS: TODO — the remaining front line]
 - Codex's discriminating experiment: 2 model (1.7B, 7-8B) × 3 transfer-distance (E0 same / E1 near / E2 cross)
   × 4 learning-unit (none / retrieval / skill-library / +scaffold-evolution), Pass@K, deterministic verifier,
   bootstrap CI. Stop rules localize substrate vs transfer vs scaffold-organ vs retire-testbed.
