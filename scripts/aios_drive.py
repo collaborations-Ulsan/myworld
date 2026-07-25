@@ -532,6 +532,8 @@ def pulse(now: float, *, dry_run: bool = True,
           skills_registry: str | Path = SKILLS_REGISTRY,
           pulse_log: str | Path = PULSE_LOG) -> dict:
     """One wake-up: measure pain -> if over threshold emit ranked proposals ->
+    ASK (Phase 8: aios_resonance questions section, guarded — resonance
+    failure degrades to available:False, never breaks the pulse) ->
     (opt-in, dry_run=False) execute auto-executable remedies through existing
     gates -> append EXACTLY ONE kind:"drive_pulse" record to the experience
     runs dir -> return the record. Default dry_run=True: it PROPOSES ONLY."""
@@ -540,6 +542,20 @@ def pulse(now: float, *, dry_run: bool = True,
     state = homeostasis(now, **paths)
     snapshot = state_snapshot(state)
     proposals = propose_actions(state) if state["over_threshold"] else []
+    prev = _read_pulses(pulse_log)
+
+    # Phase 8 — RESONANCE: one heartbeat, two faculties. The pulse FEELS
+    # (pain, above) and ASKS (questions born from the same organ signals).
+    # Guarded: a broken or missing resonance organ degrades honestly and can
+    # never take the heartbeat down (import lives inside the guard).
+    try:
+        import aios_resonance as _resonance
+        questions = _resonance.pulse_questions(
+            state, prev, now=now, ontology=ontology, runs_dir=runs_dir,
+            skills_registry=skills_registry)
+    except Exception as exc:  # noqa: BLE001 — degrade, never break the pulse
+        questions = {"available": False,
+                     "note": f"resonance unavailable: {exc}"}
 
     executed: list[dict] = []
     acted_effect = None
@@ -550,7 +566,6 @@ def pulse(now: float, *, dry_run: bool = True,
             acted_effect = pulse_effect(snapshot, after)
             snapshot = after   # the record carries the post-act facts
 
-    prev = _read_pulses(pulse_log)
     effect_since_last = (pulse_effect(prev[-1].get("state") or {}, snapshot)
                          if prev else None)
 
@@ -572,7 +587,8 @@ def pulse(now: float, *, dry_run: bool = True,
         "components": {n: {"available": c["available"], "raw": c["raw"],
                            "normalized": c["normalized"], "weighted": c["weighted"]}
                        for n, c in state["components"].items()},
-        "proposals": proposals, "dry_run": bool(dry_run), "executed": executed,
+        "proposals": proposals, "questions": questions,
+        "dry_run": bool(dry_run), "executed": executed,
         "state": snapshot, "effect_since_last": effect_since_last,
         "acted_effect": acted_effect, "effect_verified": effect_verified,
         "note": state["note"],
