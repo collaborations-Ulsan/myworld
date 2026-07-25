@@ -1,0 +1,57 @@
+# AIOS Ambient Pulse — scheduler examples (organism assembly Phase 7)
+#
+# NO DAEMON (council-refuted 2026-07-25): the pulse is the OS scheduler waking
+# a SHORT-LIVED CLI process that reads disk, proposes (dry-run by default),
+# appends one drive_pulse record to .aios/runs/drive-pulses.jsonl, and EXITS.
+# Disk is the source of truth; there is no resident process, no socket, no
+# in-memory authoritative state. Crash-only by construction.
+#
+# Read the verdict any time:   python3 scripts/aios_drive.py report
+# (verified_effect_fraction ~0 over a real sample => the organ is theater —
+#  kill it or wire its proposals to an actor.)
+
+# --- Option A: crontab (crontab -e) ------------------------------------------
+# Every 30 minutes, dry-run pulse (PROPOSES only — recommendation-first DNA):
+#
+# */30 * * * * cd /home/user/workspaces/jaewon/myworld && python3 scripts/aios_drive.py pulse >> .aios/drive.log 2>&1
+#
+# Opt-in acting variant (only auto-executable remedies run, v1 = re-pin the
+# experience graph through the existing append-only organ — never code exec):
+#
+# */30 * * * * cd /home/user/workspaces/jaewon/myworld && python3 scripts/aios_drive.py pulse --act >> .aios/drive.log 2>&1
+
+# --- Option B: systemd user timer (no daemon — Type=oneshot, exits) ----------
+# ~/.config/systemd/user/aios-pulse.service:
+#
+#   [Unit]
+#   Description=AIOS drive pulse (wake, measure pain, propose, exit)
+#
+#   [Service]
+#   Type=oneshot
+#   WorkingDirectory=/home/user/workspaces/jaewon/myworld
+#   ExecStart=/usr/bin/python3 scripts/aios_drive.py pulse
+#   StandardOutput=append:/home/user/workspaces/jaewon/myworld/.aios/drive.log
+#   StandardError=inherit
+#
+# ~/.config/systemd/user/aios-pulse.timer:
+#
+#   [Unit]
+#   Description=AIOS ambient pulse every 30 minutes
+#
+#   [Timer]
+#   OnBootSec=5min
+#   OnUnitActiveSec=30min
+#   Persistent=true
+#
+#   [Install]
+#   WantedBy=timers.target
+#
+# Enable:  systemctl --user enable --now aios-pulse.timer
+
+# --- Option C: inotify (event-driven wake on new experience) -----------------
+# Wake when a run log changes (inotify-tools). Still no daemon in the drive:
+# inotifywait blocks in a shell loop; each event spawns the short-lived CLI:
+#
+# while inotifywait -qq -e close_write -r /home/user/workspaces/jaewon/myworld/.aios/runs; do
+#   (cd /home/user/workspaces/jaewon/myworld && python3 scripts/aios_drive.py pulse >> .aios/drive.log 2>&1)
+# done
