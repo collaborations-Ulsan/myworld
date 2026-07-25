@@ -8,8 +8,14 @@
 
 My first answer (below, §1+) was "one local daemon = the organism's body." I sent it to a heterogeneous
 adversarial council (perplexity-api, deepseek-api, codex — framed to REFUTE, default "this is wrong").
-**Two independent substrates returned REFUTED with mechanically specific arguments, not vibes.** They are
-right and I was wrong. The Phase-6 daemon build was killed mid-flight (zero wrong code committed).
+**Votes: REFUTED · REFUTED · SURVIVES-WITH-CONDITIONS** — mechanically specific arguments, not vibes, and
+the third vote's conditions are the same conditions the other two set for "if you insist." They are right
+and I was wrong. The Phase-6 daemon build was killed mid-flight (zero wrong code committed).
+
+**The falsifiable rule that settles it (codex, adopted):** *do not promote `aiosd` to kernel architecture
+until at least ONE capability is proven IMPOSSIBLE with fast-start CLI + file-backed MCP.* Until such a
+capability is named and demonstrated, the daemon is unjustified by construction. (codex also logged its
+review to `docs/AIOS_AGENT_LEDGER.md` — layer=execution_substrate, owner=hivemind, status=proposed.)
 
 **The sharpest correction (both, independently):**
 > *"You conflated 'the organism's body' with 'a long-lived process.' The body is the **append-only

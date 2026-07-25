@@ -36,7 +36,16 @@ The top unwired seam. Make the privacy boundary ENFORCED in the running kernel, 
 - The heritable gene, not the scar. Compounding happens HERE, in the OS, not in weights.
 - **Accept**: a solved task produces a registered tested skill; a later task reuses it; skill-reuse EV measurable.
 
-## Phase 5 — Settle learning on a measurable testbed  [STATUS: TODO]
+## Phase 6 — (was: give the organism a daemon body)  [STATUS: CANCELLED — council-REFUTED `92401c3`]
+Proposed after the founder's form-factor question, then killed mid-build by a heterogeneous adversarial
+council (REFUTED · REFUTED · SURVIVES-WITH-CONDITIONS). "Persistence is not presence" — the organism's
+body is the append-only Merkle record on disk, not a resident process; a daemon adds attack surface, a
+second source of truth, and ops burden while buying no exclusive capability. **Gate for any future
+revival: name and demonstrate ONE capability impossible with fast-start CLI + file-backed MCP; then build
+it socket-activated, stateless, disk-authoritative, 0600+SO_PEERCRED, no state-mutating tick.** Full
+reasoning: `docs/AIOS_FORM_FACTOR_DECISION_2026-07-22.md` §0.
+
+## Phase 5 — Settle learning on a measurable testbed  [STATUS: TODO — now the front line]
 - Codex's discriminating experiment: 2 model (1.7B, 7-8B) × 3 transfer-distance (E0 same / E1 near / E2 cross)
   × 4 learning-unit (none / retrieval / skill-library / +scaffold-evolution), Pass@K, deterministic verifier,
   bootstrap CI. Stop rules localize substrate vs transfer vs scaffold-organ vs retire-testbed.
