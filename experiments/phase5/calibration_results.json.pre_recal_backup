@@ -696,6 +696,23 @@
     },
     {
       "schema": "aios.phase5.attempt.v1",
+      "task_id": "p5-006-6db52ee4",
+      "arm": "control",
+      "model": "qwen3-coder-next",
+      "passed": null,
+      "infra_error": "ollama call failed: TimeoutError: timed out",
+      "tests_tampered": [],
+      "oracle": null,
+      "tokens": {},
+      "injected_chars": 0,
+      "injection_nonempty": false,
+      "wall_s": 480.12,
+      "fail_reason": null,
+      "prompt_chars": 61222,
+      "kind": "calibration"
+    },
+    {
+      "schema": "aios.phase5.attempt.v1",
       "task_id": "p5-011-ccdac319",
       "arm": "control",
       "model": "qwen3-coder-next",
@@ -752,6 +769,23 @@
     },
     {
       "schema": "aios.phase5.attempt.v1",
+      "task_id": "p5-022-c13e5de7",
+      "arm": "control",
+      "model": "qwen3-coder-next",
+      "passed": null,
+      "infra_error": "ollama call failed: TimeoutError: timed out",
+      "tests_tampered": [],
+      "oracle": null,
+      "tokens": {},
+      "injected_chars": 0,
+      "injection_nonempty": false,
+      "wall_s": 480.11,
+      "fail_reason": null,
+      "prompt_chars": 26704,
+      "kind": "calibration"
+    },
+    {
+      "schema": "aios.phase5.attempt.v1",
       "task_id": "p5-028-5034e8d9",
       "arm": "control",
       "model": "qwen3-coder-next",
@@ -780,85 +814,18 @@
     },
     {
       "schema": "aios.phase5.attempt.v1",
-      "task_id": "p5-006-6db52ee4",
-      "arm": "control",
-      "model": "qwen3-coder-next",
-      "passed": false,
-      "infra_error": null,
-      "tests_tampered": [],
-      "oracle": {
-        "rc": 1,
-        "passed": 0,
-        "timed_out": false,
-        "ok": false,
-        "wall_s": 0.33,
-        "tail": "aises\nFAILED tests/test_aios_head.py::GoalFilesystemDetectionTest::test_concept_explanation_is_not_filesystem\nFAILED tests/test_aios_head.py::GoalFilesystemDetectionTest::test_directory_path_is_filesystem\nFAILED tests/test_aios_head.py::GoalFilesystemDetectionTest::test_early_exit_present_for_knowledge_goal\nFAILED tests/test_aios_head.py::GoalFilesystemDetectionTest::test_early_exit_suppressed_for_fs_goal\nFAILED tests/test_aios_head.py::GoalFilesystemDetectionTest::test_file_extension_is_filesystem\nFAILED tests/test_aios_head.py::GoalFilesystemDetectionTest::test_korean_read_is_filesystem\nFAILED tests/test_aios_head.py::GoalFilesystemDetectionTest::test_list_files_is_filesystem\nFAILED tests/test_aios_head.py::GoalFilesystemDetectionTest::test_pure_math_is_not_filesystem\n24 failed in 0.16s\n"
-      },
-      "tokens": {
-        "prompt_tokens": 15086,
-        "output_tokens": 12762,
-        "model_wall_ns": 1892514285794
-      },
-      "injected_chars": 0,
-      "injection_nonempty": false,
-      "wall_s": 1892.95,
-      "fail_reason": "oracle_failed",
-      "prompt_chars": 61222,
-      "kind": "calibration"
-    },
-    {
-      "schema": "aios.phase5.attempt.v1",
-      "task_id": "p5-022-c13e5de7",
-      "arm": "control",
-      "model": "qwen3-coder-next",
-      "passed": false,
-      "infra_error": null,
-      "tests_tampered": [],
-      "oracle": {
-        "rc": 1,
-        "passed": 2,
-        "timed_out": false,
-        "ok": false,
-        "wall_s": 0.27,
-        "tail": "ests/test_aios_agent_system_privacy.py:52: \n_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ \ntests/test_aios_agent_system_privacy.py:38: in _assert_no_goal\n    self.assertNotIn(leak, blob, f\"raw-goal leak in global payload: {leak}\")\nE   AssertionError: 'sk-LIVE-9f3a' unexpectedly found in \"{'query': 'deploy prod with token sk-LIVE-9f3a and email me at ceo@corp.com about /dain/private', 'top_k': 3}\" : raw-goal leak in global payload: sk-LIVE-9f3a\n=========================== short test summary info ============================\nFAILED tests/test_aios_agent_system_privacy.py::GlobalPayloadPrivacyTest::test_predict_sends_no_raw_goal\nFAILED tests/test_aios_agent_system_privacy.py::GlobalPayloadPrivacyTest::test_recall_sends_no_raw_goal\n2 failed, 2 passed in 0.08s\n"
-      },
-      "tokens": {
-        "prompt_tokens": 6998,
-        "output_tokens": 6432,
-        "model_wall_ns": 548780408842
-      },
-      "injected_chars": 0,
-      "injection_nonempty": false,
-      "wall_s": 549.09,
-      "fail_reason": "oracle_failed",
-      "prompt_chars": 26704,
-      "kind": "calibration"
-    },
-    {
-      "schema": "aios.phase5.attempt.v1",
       "task_id": "p5-033-bdc63f1c",
       "arm": "control",
       "model": "qwen3-coder-next",
-      "passed": false,
-      "infra_error": null,
+      "passed": null,
+      "infra_error": "ollama call failed: TimeoutError: timed out",
       "tests_tampered": [],
-      "oracle": {
-        "rc": 2,
-        "passed": 0,
-        "timed_out": false,
-        "ok": false,
-        "wall_s": 0.33,
-        "tail": "oad\n    ???\n<frozen importlib._bootstrap>:1331: in _find_and_load_unlocked\n    ???\n<frozen importlib._bootstrap>:935: in _load_unlocked\n    ???\n/home/user/miniconda3/lib/python3.13/site-packages/_pytest/assertion/rewrite.py:197: in exec_module\n    exec(co, module.__dict__)\ntests/test_aios_mcp_self.py:18: in <module>\n    import aios_mcp_server as M  # noqa: E402\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^\nE     File \"/tmp/phase5-ws-lg4rerec/scripts/aios_mcp_server.py\", line 624\nE       return True, f\"\nE                    ^\nE   SyntaxError: unterminated f-string literal (detected at line 624)\n=========================== short test summary info ============================\nERROR tests/test_aios_mcp_self.py\n!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n1 error in 0.14s\n"
-      },
-      "tokens": {
-        "prompt_tokens": 7132,
-        "output_tokens": 7486,
-        "model_wall_ns": 631847632781
-      },
+      "oracle": null,
+      "tokens": {},
       "injected_chars": 0,
       "injection_nonempty": false,
-      "wall_s": 632.22,
-      "fail_reason": "oracle_failed",
+      "wall_s": 480.12,
+      "fail_reason": null,
       "prompt_chars": 29124,
       "kind": "calibration"
     },
@@ -867,26 +834,15 @@
       "task_id": "p5-039-acb63022",
       "arm": "control",
       "model": "qwen3-coder-next",
-      "passed": false,
-      "infra_error": null,
+      "passed": null,
+      "infra_error": "ollama call failed: TimeoutError: timed out",
       "tests_tampered": [],
-      "oracle": {
-        "rc": 2,
-        "passed": 0,
-        "timed_out": false,
-        "ok": false,
-        "wall_s": 0.31,
-        "tail": "n importlib._bootstrap>:1360: in _find_and_load\n    ???\n<frozen importlib._bootstrap>:1331: in _find_and_load_unlocked\n    ???\n<frozen importlib._bootstrap>:935: in _load_unlocked\n    ???\n/home/user/miniconda3/lib/python3.13/site-packages/_pytest/assertion/rewrite.py:197: in exec_module\n    exec(co, module.__dict__)\ntests/test_aios_organism_phase2.py:32: in <module>\n    import aios_head as H\nE     File \"/tmp/phase5-ws-84bgmii4/scripts/aios_head.py\", line 121\nE       text = re.sub(r\"\nE                     ^\nE   SyntaxError: unterminated string literal (detected at line 121)\n=========================== short test summary info ============================\nERROR tests/test_aios_organism_phase2.py\n!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n1 error in 0.13s\n"
-      },
-      "tokens": {
-        "prompt_tokens": 20988,
-        "output_tokens": 16384,
-        "model_wall_ns": 1894922382023
-      },
+      "oracle": null,
+      "tokens": {},
       "injected_chars": 0,
       "injection_nonempty": false,
-      "wall_s": 1895.34,
-      "fail_reason": "oracle_failed",
+      "wall_s": 480.11,
+      "fail_reason": null,
       "prompt_chars": 85938,
       "kind": "calibration"
     }
@@ -927,15 +883,15 @@
       "qwen3-coder-next": {
         "params_b": 79.7,
         "attempts": 8,
-        "infra_errors": 0,
-        "scored": 8,
+        "infra_errors": 4,
+        "scored": 4,
         "passes": 3,
-        "P_auto": 0.375,
-        "in_band": true
+        "P_auto": 0.75,
+        "in_band": false
       }
     },
-    "selected_student": "qwen3-coder-next",
-    "verdict": "selected qwen3-coder-next (smallest model with P_auto in [0.2, 0.6])",
+    "selected_student": null,
+    "verdict": "EXPERIMENT NOT RUN — no candidate has measurable headroom",
     "holdout_task_ids": [
       "p5-000-fe70dc5b",
       "p5-006-6db52ee4",

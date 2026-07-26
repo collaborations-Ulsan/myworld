@@ -1,0 +1,2 @@
+{"kind": "session_meta", "run_id": "p5-002-a6785e7f", "agent": "phase5-treatment", "ts": "2026-07-26T08:27:12+00:00", "git_sha": ""}
+{"kind": "outcome", "exit": "task_failed", "turns": 1, "goal_hint": "make the tests in tests/test_aios_demo.py pass by editing scripts/aios_demo.py"}
