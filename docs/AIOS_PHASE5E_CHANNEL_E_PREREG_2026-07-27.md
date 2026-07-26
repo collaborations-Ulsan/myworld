@@ -1,0 +1,121 @@
+# Channel-E pre-registration — the program's LAST SHOT (frozen 2026-07-27)
+
+**FROZEN BEFORE ANY CELL IS RUN.** Amendments only in the append-only Errata. Written by claude@myworld.
+Supersedes nothing; it is the successor experiment to the X-channel pilot
+(`experiments/phase5/PILOT_RESULTS.md`) under the taxonomy adopted from the operator-led
+gemini-3.1-pro-high dialogue (`docs/consultations/…3-turn-dialogue…md`).
+
+## 0. Standing (why this is the last shot)
+
+Accumulated experience can reach system behavior through exactly three physical transports:
+
+| channel | mechanism | status |
+|---|---|---|
+| **θ — weights** | fine-tune / distil the model | **DEAD** — five well-powered nulls (LoRA distillation +2.9pp ± 8.1 over 5 seeds, etc.) |
+| **X — context** | inject accumulated artifacts into the prompt | **DEAD** — case-retrieval (+13pp @N=90 → ~0 @N=300) and the Phase-5 pilot (`n01 = 0` across 23 paired tasks with a median 61,688 chars injected) |
+| **E — runtime environment / control flow** | accumulated artifacts mutate the environment, the action space, or the execution path *before/around* model inference | **UNTESTED — this document** |
+
+**MORTUARY CLAUSE (binding).** This pre-registration names **ONE** unified Channel-E architecture. When it
+is evaluated, **every unselected E-mechanism is declared dead by the same result** — no "dispatch failed
+but routing is also E". Sequential testing inside E is structural p-hacking. **Inventing a fourth
+transport is unfalsifiable goalpost-moving.** If this trial returns null, **the "compound in the OS"
+thesis is dead, and this program publishes the null and re-scopes to what it has actually earned**
+(an enforced-sovereignty, externally-verified execution substrate with a tamper-evident record).
+
+## 1. The instrument fix — and the constraints that stop it being a rescue
+
+The pilot's benchmark was D=1: one episode, whole-file regeneration. That gives an OS runtime **zero
+execution steps in which to intervene**, so it is structurally incapable of exhibiting Channel-E
+compounding *even if it exists*. The interface therefore changes. To prevent "the old shape couldn't show
+it" from becoming an unfalsifiable instrument, the following are **frozen now**:
+
+1. **Immutable task set** — the SAME private-repo commits, reverted files, and post-commit pytest oracles
+   as the pilot's task pool (`experiments/phase5/tasks.json`, holdout excluded). No repo, history, or test
+   edits. Only the *execution interface* changes.
+2. **K-turn loop with K fixed GLOBALLY, in advance: `K = 5`.** Never per-task, never adjusted post-hoc.
+   A turn = one model call plus its tool results.
+3. **Zero intermediate oracle leakage** — neither arm may run, read, or infer the external post-commit
+   oracle during turns 1…K. Agents may run their own commands inside the sandbox (that is the point of a
+   multi-turn loop), but the **grading** oracle executes once, outside the sandbox, after the episode ends.
+   The harness asserts the oracle command never appears in any tool invocation; a violation voids the task.
+4. **Identical interface for BOTH arms.** Control also gets the K-turn loop. The arms differ ONLY in the
+   Channel-E substrate below. (This is what makes the result attributable to E rather than to multi-turn.)
+
+## 2. The ONE Channel-E architecture under test
+
+**`E := Verified Sub-routine Dispatch + Stack-Trace AST-Closure Masking`** — a single unified mechanism
+with two inseparable halves, chosen because each addresses a distinct, pre-identified failure:
+
+**(a) Verified sub-routine dispatch.** Skills in the registry (already gated: registered only if their unit
+test passes inside the OS-enforced sandbox) are exposed as **callable primitives in the loop's tool
+surface**, not as prompt text. The OS executes the primitive; the model chooses among a small named set.
+*Constraint against trivial-skill inflation (pilot prereg §6.2, and conceded in the dialogue): only
+**atomic sub-routine primitives** count — a skill that solves a whole task end-to-end is excluded from the
+dispatch surface and reported separately. Dispatch must collapse search depth, not launder a lookup.*
+
+**(b) Stack-trace AST-closure masking.** From the FAILING TEST'S stack trace — which is given in the
+initial task state, never derived from the solution — extract the frame set `F`, compute the k-hop static
+call-graph closure `C(F)` over an offline-built AST index of the repo, and **restrict the agent's
+edit/inspect surface to files containing nodes in `C(F) ∪ imports(C(F))`** (`k = 2`, fixed now).
+*Non-circular by construction: the trace is an input, not the answer.*
+
+Neither half enters the context window as accumulated prose. **No experience-log injection in either arm** —
+that transport is dead and is not being retested.
+
+## 3. Arms
+
+| | Control | Treatment |
+|---|---|---|
+| student model | frozen `qwen3-coder-next`, identical | identical |
+| interface | K=5 turn loop | K=5 turn loop |
+| sandbox / egress / escalation | identical, escalation OFF | identical, escalation OFF |
+| skill registry | wiped before every task | persists; verified skills exposed as dispatch primitives |
+| edit/inspect surface | whole repo | **restricted to the stack-trace AST closure** |
+| prompt injection of experience | none | **none** (X is dead) |
+
+**Run-validity gate:** the harness must record, per treatment task, (i) the number of dispatch primitives
+actually invoked and (ii) the closure size vs repo size. If dispatch is invoked zero times across the run
+**and** the closure never differs from the whole repo, the treatment is inert and the run is **VOID**, not
+a null — reported as a harness failure, exactly as the X-pilot's injection gate was.
+
+## 4. Metric, power, and the stopping rule
+
+- **Primary metric unchanged: `P_auto`** — first-attempt-episode autonomous resolution under the external
+  deterministic oracle, escalations = 0. "First attempt" now means *one K-turn episode*, not one call.
+- **Secondary (pre-registered, reported, never substituted for the primary):** turns-to-solution among
+  solved tasks (Channel E's predicted mechanism is turn compression: T > K collapsed to T ≤ K), dispatch
+  invocation count, closure precision (did the true fix lie inside `C(F)`?).
+- **Analysis:** paired one-sided exact (McNemar) on discordant pairs, α = 0.05; per-epoch `C_k` and its
+  slope; infra failures dropped and reported (never counted as losses).
+- **N:** the pilot's 4.3 % discordance rate makes small-effect confirmation infeasible; this trial is
+  therefore powered for the effect size the mechanism *claims* — a **≥15 pp** improvement. Pre-registered
+  **N = 40 paired tasks** (the full non-holdout pool), reported with its exact power. If the observed
+  discordance is again ≲5 %, that is itself the finding and no larger N is run: **a mechanism that barely
+  changes outcomes in either direction is not a compounding mechanism.**
+- **KILL RULE:** if `C_overall ≤ 0`, or the CI excludes a ≥5 pp advantage, or the run-validity gate shows
+  the mechanism fired but discordance stayed ≲5 % — **Channel E is falsified, and with it (Mortuary Clause)
+  the entire "compound in the OS" thesis.** The program then reports the three-channel null publicly and
+  re-scopes. No re-run with a new mechanism, a new metric, or a new task shape.
+
+## 5. What each outcome means (written before the data)
+
+- **`C ≥ +15 pp`, significant, with dispatch demonstrably invoked and turn-compression visible** → the
+  first earned evidence that an OS-level substrate compounds. Immediately followed by the Scaffolding-Swap
+  falsification (bare frontier model vs the accumulated OS on a cheap frozen local model) before any
+  external claim.
+- **`C > 0` but < 15 pp / not significant** → not sufficient. Reported as an unconfirmed hint; the thesis
+  does NOT survive on it, because the kill rule was set in advance.
+- **`C ≈ 0` or `C < 0`** → **thesis dead.** Publish the null across all three transports.
+- **Pre-registered prior (carried from the adversarial gap audit, unchanged): 20 % compounds / 80 %
+  well-instrumented null.**
+
+## 6. Guards (carried from the pilot, still in force)
+Test-file tampering ⇒ task fail · leakage-free retrieval index (nothing derived from target commits) ·
+identical task order in both arms · oracle command frozen and hashed at construction · infra failures
+recorded separately and dropped from the paired analysis · trivial/whole-task skills excluded from the
+dispatch surface and reported.
+
+---
+## Errata (append-only)
+- 2026-07-27 — Frozen. No cell has been run. Predecessor: X-channel pilot complete (`89a190f`),
+  C_overall −4.3 pp, n01 = 0, X declared dead by operator decision recorded in that document.
