@@ -358,3 +358,33 @@ def test_generate_variants_validates_inputs():
     with pytest.raises(ValueError):
         aios_evolve.generate_variants(ARTIFACT, 3, substrate="warp-drive",
                                       model=None, now=NOW)
+
+
+class ScalarAndStringExampleInputsTest(unittest.TestCase):
+    """Regression for a defect found by the operator's adversarial probe, NOT by the
+    original suite: `_fuzz_probes` did `tuple(example)` on every example, so a scalar
+    example crashed with TypeError and a string example was silently exploded into
+    per-character arguments (wrong arity => a correct candidate looked fragile).
+    An example is an ARGUMENT TUPLE: only tuple/list is multi-arg."""
+
+    def test_scalar_example_inputs_do_not_crash_and_discriminate(self):
+        overfit = {"code": "def double(x):\n    return {1:2,2:4,3:6}[x]\n",
+                   "unit_test": "assert double(1)==2\nassert double(2)==4\nassert double(3)==6\n",
+                   "example_inputs": [1, 2, 3]}
+        honest = {"code": "def double(x):\n    return x*2\n",
+                  "unit_test": "assert double(1)==2\nassert double(2)==4\nassert double(3)==6\n",
+                  "example_inputs": [1, 2, 3]}
+        rob_overfit = aios_evolve.contrastive_robustness(overfit, k=8)
+        rob_honest = aios_evolve.contrastive_robustness(honest, k=8)
+        # both pass their OWN test; only fuzzing separates them
+        self.assertTrue(rob_overfit["fragile"])
+        self.assertFalse(rob_honest["fragile"])
+        self.assertLess(rob_overfit["robustness"], rob_honest["robustness"])
+
+    def test_string_example_is_one_argument_not_characters(self):
+        cand = {"code": "def upper(s):\n    return s.upper()\n",
+                "unit_test": "assert upper('ab')=='AB'\n",
+                "example_inputs": ["ab", "xyz"]}
+        rob = aios_evolve.contrastive_robustness(cand, k=6)
+        self.assertFalse(rob["fragile"])
+        self.assertEqual(rob["robustness"], 1.0)

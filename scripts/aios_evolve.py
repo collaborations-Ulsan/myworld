@@ -552,7 +552,12 @@ def _fuzz_probes(example_inputs: list, k: int, seed: int) -> list[tuple]:
         pool.append(args)
 
     for example in example_inputs:
-        base = tuple(example)
+        # An example is an ARGUMENT TUPLE. Only an explicit tuple/list is treated as
+        # multi-arg; everything else is a single argument. Without this, a scalar
+        # example (1) raised TypeError and a string example ("abc") was silently
+        # exploded into per-character args — inflating arity and making a correct
+        # candidate look fragile. Found by an adversarial probe, not by the unit tests.
+        base = tuple(example) if isinstance(example, (tuple, list)) else (example,)
         add(base)
         for idx, value in enumerate(base):
             for transformed in _value_transforms(value):
