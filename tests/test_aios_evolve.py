@@ -272,6 +272,35 @@ def test_evolve_report_numbers_are_real(paths):
     assert summary["diversity_retained"]["origins_retained"] == ["offline-perturb"]
 
 
+def _row(origin, h, combined):
+    return {"candidate": {"origin": origin, "hash": h}, "combined": combined}
+
+
+def test_select_retained_single_group_tie_breaks_on_raw_score():
+    # Live-run finding (2026-07-27): with ONE group the Sinkhorn 1xN balanced
+    # matrix is uniform — without the raw-score tie-break the FIRST index was
+    # retained instead of the best candidate.
+    rows = [_row("nim", "aaa", 0.93), _row("nim", "bbb", 0.93),
+            _row("nim", "ccc", 1.0)]
+    retained, sk = aios_evolve.select_retained(rows)
+    assert retained == [2], "the most robust candidate must win the tie"
+    assert sk is not None
+    assert aios_evolve.select_retained([]) == ([], None)
+
+
+def test_select_retained_keeps_one_per_group_not_winner_take_all():
+    # A dominant group must not sweep retention: each origin group retains
+    # its own best (the Sinkhorn anti-degeneracy role).
+    rows = [_row("nim", "n1", 1.0), _row("nim", "n2", 0.99),
+            _row("offline-perturb", "o1", 0.6),
+            _row("offline-perturb", "o2", 0.55)]
+    retained, _ = aios_evolve.select_retained(rows)
+    origins = {rows[j]["candidate"]["origin"] for j in retained}
+    assert origins == {"nim", "offline-perturb"}
+    hashes = {rows[j]["candidate"]["hash"] for j in retained}
+    assert hashes == {"n1", "o1"}, "each group retains its best member"
+
+
 # ── (vii) sandbox unavailable -> refuse to evaluate (nothing executed) ───────
 
 def test_sandbox_unavailable_refuses_everything(paths, monkeypatch):

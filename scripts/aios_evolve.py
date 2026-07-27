@@ -744,6 +744,35 @@ def _combined_score(fit: float | None, rob: float | None) -> float | None:
     return fit * (0.5 + 0.5 * rob)
 
 
+def select_retained(rows: list[dict]) -> tuple[list[int], dict | None]:
+    """Sinkhorn-diversified retention over deduped FULL-PASS rows
+    ({"candidate": {...}, "combined": float}). One retained candidate per
+    origin group: argmax of the group's Sinkhorn-normalized row, with ties
+    broken by the RAW combined score.
+
+    The tie-break is load-bearing, found by a live run (2026-07-27): with a
+    SINGLE group the doubly-balanced 1xN matrix is exactly uniform — Sinkhorn
+    balancing is vacuous there and had silently retained the first index
+    instead of the most robust candidate. Sinkhorn arbitrates ACROSS groups;
+    the raw score must still decide WITHIN a tie."""
+    if not rows:
+        return [], None
+    groups = sorted({row["candidate"]["origin"] for row in rows})
+    floor = min(row["combined"] for row in rows) - 5.0
+    matrix = [[row["combined"] if row["candidate"]["origin"] == g else floor
+               for row in rows] for g in groups]
+    sk = sinkhorn_normalize(matrix, iters=100, epsilon=0.25)
+    retained: list[int] = []
+    for r, g in enumerate(groups):
+        members = [j for j, row in enumerate(rows)
+                   if row["candidate"]["origin"] == g]
+        best = max(members, key=lambda j: (sk["matrix"][r][j],
+                                           rows[j]["combined"]))
+        if best not in retained:
+            retained.append(best)
+    return retained, sk
+
+
 def evolve(artifact: dict, *, rounds: int, n: int, substrate: str,
            model: str | None = None, now: float, lineage=LINEAGE,
            sandbox_timeout: float = DEFAULT_SANDBOX_TIMEOUT,
@@ -894,18 +923,7 @@ def evolve(artifact: dict, *, rounds: int, n: int, substrate: str,
             best_by_hash[h] = row
     passing = list(best_by_hash.values())
     if passing:
-        groups = sorted({row["candidate"]["origin"] for row in passing})
-        floor = min(row["combined"] for row in passing) - 5.0
-        matrix = [[row["combined"] if row["candidate"]["origin"] == g else floor
-                   for row in passing] for g in groups]
-        sk = sinkhorn_normalize(matrix, iters=100, epsilon=0.25)
-        retained_idx: list[int] = []
-        for r, g in enumerate(groups):
-            members = [j for j, row in enumerate(passing)
-                       if row["candidate"]["origin"] == g]
-            best = max(members, key=lambda j: sk["matrix"][r][j])
-            if best not in retained_idx:
-                retained_idx.append(best)
+        retained_idx, sk = select_retained(passing)
         for j in retained_idx:
             row = passing[j]
             _append_lineage(lineage, {
