@@ -2848,3 +2848,16 @@ localStorage 히스토리 → 페이지 새로고침 후 대화 복원
 - key_decision: Weaver 배선을 additive/opt-in으로 유지(`_demo_scorer` 여전히 기본값, `verifier="weaver"`로만 활성화) — 라이브 검증에서 discrimination이 학습 분포(다단계 추론 trace)에 국한됨을 확인했으므로 무조건 기본값 교체는 하지 않음.
 - new_invariant_or_pattern_discovered: **"진짜" 검증기도 도메인-바운드다.** 실 held-out MATH500 데이터(학습 분포와 일치: 경쟁수학 다단계 풀이)에서는 5쌍 중 4쌍 정답>오답(평균 점수 갭 +0.036)이지만, 손수 제작한 단문 사실/산술 QA 쌍에서는 3회 독립 시도 합산 4/12(chance 이하) — Weaver 증류 모델 하나만으로도 "real verifier" 라벨은 정당하지만 무조건 신뢰는 금물. `weak_ensemble()`로 여러 약한 신호(멀티기질 리뷰, H0 일관성, 기능테스트)를 융합하는 설계가 바로 이 발견에서 실증적으로 정당화됨 — 단일 검증기 의존이 이번 프로그램의 핵심 발견(검증기 계층이 자기개선 강도를 결정)의 축소판으로 재확인됨.
 - self-correction-of-prior-observation: 초안 module docstring이 WebFetch의 모델 카드 요약을 그대로 인용했다가(`sigmoid`, `AutoModelForSequenceClassification`) raw 소스 검증 후 GROUNDING 섹션을 전면 정정하고 "CORRECTION" 블록으로 명시 — 2차 소스 요약과 1차 소스 코드가 다를 수 있다는 원칙을 실전에서 재확인.
+
+## 2026-07-28 02:05 KST — claude@myworld (operator) — Channel-E 하네스 빌드→3라운드 스모크→본런 런치
+
+- session_id: "AIOS for AGI" founder 지시 세션 (Channel-E = 프로그램 마지막 샷)
+- mode_breakdown: verify:decide:intervene ≈ 30:20:50 (기록검증→errata 동결→빌드→스모크 루프→인프라 수술→런치)
+- tools_used: Read/Bash(기록 검증·홀드아웃 캘리브레이션), Write/Edit(하네스 3모듈+테스트 29개), Monitor(셀 단위 JSONL tail — stdout은 파이프 버퍼링으로 죽은 신호, 증분 JSONL이 유일한 라이브 신호), 백그라운드 Bash(스모크/본런), systemctl --user(ollama 유닛 수술)
+- tools_NOT_used: Agent 위임 없음 — 하네스 설계는 judgment 작업(라우팅 표: craft는 main context), 위임했으면 사전등록 미묘함(oracle-block 의미론, 마스크 target-blindness)이 깨졌을 것
+- substrate_specific_behaviors_observed: (1) **qwen3-coder-next가 지시문 플레이스홀더를 문자 그대로 복사** (`ACTION: read <path>` → 리터럴 `<>`) — 로컬 모델용 툴 프로토콜은 꺾쇠 없는 구체 예시 + 파서측 장식 래핑 제거가 필수. (2) **ollama GPU-핀의 조용한 CPU 스필**: 31.5GB 모델이 32.6GB 카드에 "로드됨"으로 보이나 KV/연산이 CPU로 흘러 ~8 tok/s(GPU 0%, CPU 25코어) — nvidia-smi "로드됨"은 "GPU에서 돈다"가 아니다. SCHED_SPREAD로 양 5090 분산 후 115.7 tok/s (14×). (3) 클라이언트 타임아웃된 ollama 생성이 서버측 고아로 남아 후속 요청을 직렬 블록 — 타임아웃 후 서버 상태를 항상 의심할 것.
+- failures_recovered: 스모크 3라운드가 각각 다른 결함을 잡음 — R1: 프로토콜 리터럴리즘+무력 마스크(클로저 98% 커버), R2: 서빙 인프라(위), R3: 클린 패스 양팔. 클로저는 무방향·전역이름 → **방향성+import-스코프 해석**으로 3-5/338 파일(홀드아웃 4/4 target 포함)로 조임.
+- failures_escalated_to_founder: 없음 (전부 가역·기록됨; GPU-핀 revert는 유닛 주석의 자체 레시피 + 세입자 부재 증거로 결정)
+- key_decision: (1) 사전등록 N=40이 §1.1과 내부 모순 → 데이터 보기 전 N=32로 errata 수정. (2) oracle-block 의미론: 차단된 시도≠void(기록), 실제 누출만 void — 아니면 pytest 습관이 태스크를 대량 태움. (3) 마스킹 집행 경계(run은 전체 ws)를 정직한 한계로 사전 기록.
+- new_invariant_or_pattern_discovered: **스모크는 홀드아웃에서, 하네스 결함은 본런 전에만 고칠 수 있다** — 3라운드 스모크가 잡은 결함 중 어느 하나라도 본런에서 발견됐으면 실험 전체가 오염되거나(프로토콜 혼란 측정) VOID였다(무력 마스크). 사전등록의 "run-validity gate"가 설계 시점에 이미 이 사고를 예견했음이 실증됨. 또: **substrate-calibration 벽의 재발** (2026-07-18 메타교훈의 세 번째 사례) — 이번엔 태스크가 아니라 서빙층이 미스캘리브레이션.
+- self-correction-of-prior-observation: 2026-07-26 캘리브레이션의 "2400s 예산 필요"는 모델 능력이 아니라 GPU-핀 서빙 아티팩트였음을 정정 기록(완료된 결과 자체는 유효).
