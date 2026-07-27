@@ -7871,3 +7871,16 @@ For repo-local implementation details, also update that repo's own worklog.
 - risk: if a GPU-1 research tenant reappears (quantum arc, on-box dacon fine-tune at 17:00 KST cron), ollama may contend — revert recipe is one comment block away; keep-alive 30m holds VRAM longer (idle-unload after 30m unchanged).
 - next: Channel-E smoke round 3 under fixed serving; then launch-params errata + full N=32 paired run.
 - status: done
+
+---
+- when: 2026-07-28T04:15:00+09:00
+- repo: myworld
+- agent: claude@myworld
+- role: operator / keystone experiment closeout (Channel-E, the program's last shot)
+- goal: run the pre-registered Channel-E experiment (docs/AIOS_PHASE5E_CHANNEL_E_PREREG_2026-07-27.md) end-to-end and record the verdict under the frozen kill rule.
+- changed: experiments/phase5e/ (harness + results + report), prereg Errata (launch params, smoke amendments, VERDICT), docs/AIOS_CLAUDE_SELF_OBSERVATION_LOG.md, ollama.service (ledger 2026-07-28 01:45).
+- evidence: channel_e_results.jsonl (64/64 cells, 0 infra, 0 voided, 0 tampering, run_meta git_head a971c0c); CHANNEL_E_RESULTS.md (generated + operator appendix); smoke_results{_round1,_round2,}.jsonl; 29 harness unit tests green.
+- decision: KILL RULE FIRED - C_overall = 0.000 (P_auto 0.375 both arms, b=c=3, McNemar p=0.656, slope 0.025). Channel E falsified; per the Mortuary Clause the "compound in the OS" thesis is DEAD across all three transports (theta: 5-seed null; X: pilot n01=0; E: this run). Adversarial post-checks before the verdict: discordance 18.75% (instrument sensitive), mask-miss artifact ruled out (charitable flip still only +3.1pp), mechanism exposure honest (dispatch offered, invoked 0x; mask physically blocked 0 calls - guidance-only). No retry with a new E-mechanism, metric, or task shape.
+- risk: N=32 upper bound +12.6pp cannot exclude a small positive (reported, not laundered); dispatch-never-invoked means the null attributes to "offered-but-unused dispatch + guidance-only masking" jointly - stated precisely in the results doc so no stronger claim leaks.
+- next: ESCALATED to founder (vision-level): execute the pre-committed re-scope - publish the three-channel null honestly; AIOS = enforced-sovereignty, externally-verified execution substrate with tamper-evident record (what the evidence actually supports). Recommendation included; founder GO/HOLD/redirect awaited.
+- status: closed (verdict recorded; re-scope pending founder)

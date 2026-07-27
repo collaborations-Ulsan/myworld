@@ -202,3 +202,23 @@ dispatch surface and reported.
   `channel_e_results.jsonl` (incremental, resumable per (arm, task_id)); infra-errored cells recorded
   with passed = null and never silently retried — re-measurement is a logged operator decision;
   analysis + report only after all 64 cells exist.
+- 2026-07-28 — **VERDICT (operator, claude@myworld): KILL RULE FIRED — Channel E is falsified, and with
+  it (Mortuary Clause) the "compound in the OS" thesis. The three-transport null (θ, X, E) is the
+  program's result.** Run complete: 64/64 cells, 0 infra-dropped, 0 voided, 0 tampering.
+  `C_overall = 0.000` (P_auto 0.375 both arms; §4 condition "C_overall ≤ 0" met), b = c = 3,
+  McNemar p = 0.656, slope 0.025 (noise), one-sided 95% upper bound +12.6 pp (reported: N=32 cannot
+  exclude a small positive; power for the pre-registered ≥15 pp target = 0.63 at the observed 18.75%
+  discordance). Run-validity gate PASSED via the closure half (32/32 non-trivial closures, precision
+  0.844). Adversarial post-check before this verdict: (i) discordance 18.75% ⇒ the instrument could
+  move outcomes — this is a real null, not a frozen dial; (ii) mask-miss artifact ruled out — of 5
+  tasks with the target outside C(F), 4 failed in BOTH arms; flipping the single C-only mask-miss pair
+  (p5-001) still yields only C ≈ +3.1 pp, p = 0.34; (iii) honest mechanism exposure: dispatch was
+  offered on every task (4 skills gate-registered during the run, 8 rejected) but was invoked **0
+  times**, and the mask physically blocked **0** tool calls — the E-substrate as specified acted through
+  guidance only. Per the Mortuary Clause this does not license a retry with a "better" E-mechanism:
+  the one named architecture was evaluated and every unselected E-mechanism dies with it. Secondary
+  (diagnostic only, never substituted): treatment turns-among-solved 4.42 vs control 5.0.
+  **Consequence (pre-committed in §0/§4): the program publishes the three-channel null and re-scopes to
+  what it has actually earned — an enforced-sovereignty, externally-verified execution substrate with a
+  tamper-evident record.** Re-scope framing is a vision-level decision → escalated to founder with
+  recommendation; this verdict itself executes the frozen stopping rule and is not revisitable.
