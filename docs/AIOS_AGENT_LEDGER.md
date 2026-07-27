@@ -7858,3 +7858,16 @@ For repo-local implementation details, also update that repo's own worklog.
 - risk: native provider session ids for CLI resume are observed in current CLI help but not fully wired into Council execution yet; current durability is universal transcript rehydration plus browser URL handle reuse, not guaranteed native conversation-id resume for every provider. Cross-user federation still needs explicit identity, consent, audit, and revocation contracts before production exposure.
 - next: create an AgentNet contract to implement `agentnetd` with identity, consent, envelopes, federation relay, and per-adapter durable session handles; then extend Council adapters to capture native CLI conversation/session ids where each provider safely exposes them.
 - status: closed
+
+---
+- when: 2026-07-28T01:45:00+09:00
+- repo: myworld (device-global: ~/.config/systemd/user/ollama.service)
+- agent: claude@myworld
+- role: operator / infra intervention (Channel-E arc)
+- goal: unblock Channel-E smoke — both round-2 cells hit 2400 s ollama call timeouts; a trivial 800-token probe also hung >10 min.
+- changed: ollama.service — reverted the 2026-07-18 CUDA_VISIBLE_DEVICES=0 pin (its protected tenant is gone: GPU 1 idle at 15 MiB, dacon training moved to remote labserver1_ts); added OLLAMA_SCHED_SPREAD=1 + OLLAMA_KEEP_ALIVE=30m; revert recipe kept in the unit comment.
+- evidence: pinned single-GPU state = qwen3-coder-next 31.5 GB on GPU 0 with KV/compute spilled to CPU (runner at ~25 cores, GPU 0%, ~8 tok/s; measured smoke call: 4867 tok in ~620 s). After spread: 26.8+27.0 GB across both 5090s, probe 115.7 tok/s (14x). Note: Phase-5 calibration and pilot ran under the degraded ~8 tok/s serving — their completed results stand, but the 2400 s budget origin (calibration timeouts) was a serving artifact, not model capability.
+- decision: spread-across-both-GPUs is the standing config; it also removes the original qwen3:30b OOM-conflict motive (headroom now exists for concurrent loads).
+- risk: if a GPU-1 research tenant reappears (quantum arc, on-box dacon fine-tune at 17:00 KST cron), ollama may contend — revert recipe is one comment block away; keep-alive 30m holds VRAM longer (idle-unload after 30m unchanged).
+- next: Channel-E smoke round 3 under fixed serving; then launch-params errata + full N=32 paired run.
+- status: done
