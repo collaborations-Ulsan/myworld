@@ -277,13 +277,16 @@ def _row(origin, h, combined):
 
 
 def test_select_retained_single_group_tie_breaks_on_raw_score():
-    # Live-run finding (2026-07-27): with ONE group the Sinkhorn 1xN balanced
-    # matrix is uniform — without the raw-score tie-break the FIRST index was
-    # retained instead of the best candidate.
-    rows = [_row("nim", "aaa", 0.93), _row("nim", "bbb", 0.93),
-            _row("nim", "ccc", 1.0)]
+    # Live-run findings (2026-07-27): with ONE group the Sinkhorn 1xN balanced
+    # matrix is uniform, so without the raw-score tie-break the FIRST index
+    # was retained; worse, the uniformity holds only up to ~1e-17 FP residue
+    # from column scaling, which INVERTED a naive lexicographic tie-break.
+    # These are the EXACT combined scores from the second live NIM round.
+    c = 0.9285714285714286
+    rows = [_row("nim", "aaa", c), _row("nim", "bbb", c), _row("nim", "ccc", c),
+            _row("nim", "ddd", c), _row("nim", "eee", 1.0)]
     retained, sk = aios_evolve.select_retained(rows)
-    assert retained == [2], "the most robust candidate must win the tie"
+    assert retained == [4], "the most robust candidate must win the tie"
     assert sk is not None
     assert aios_evolve.select_retained([]) == ([], None)
 

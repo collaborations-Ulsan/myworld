@@ -750,11 +750,14 @@ def select_retained(rows: list[dict]) -> tuple[list[int], dict | None]:
     origin group: argmax of the group's Sinkhorn-normalized row, with ties
     broken by the RAW combined score.
 
-    The tie-break is load-bearing, found by a live run (2026-07-27): with a
-    SINGLE group the doubly-balanced 1xN matrix is exactly uniform — Sinkhorn
+    The tie-break is load-bearing, found by TWO live runs (2026-07-27): with a
+    SINGLE group the doubly-balanced 1xN matrix is uniform — Sinkhorn
     balancing is vacuous there and had silently retained the first index
-    instead of the most robust candidate. Sinkhorn arbitrates ACROSS groups;
-    the raw score must still decide WITHIN a tie."""
+    instead of the most robust candidate; and the uniformity is only
+    up-to-FP-noise (column scaling leaves ~1e-17 residues that INVERT a naive
+    lexicographic tie-break), so the mass is quantized to 9 decimals before
+    the raw score decides. Sinkhorn arbitrates ACROSS groups; the raw score
+    decides WITHIN a tie."""
     if not rows:
         return [], None
     groups = sorted({row["candidate"]["origin"] for row in rows})
@@ -766,7 +769,7 @@ def select_retained(rows: list[dict]) -> tuple[list[int], dict | None]:
     for r, g in enumerate(groups):
         members = [j for j, row in enumerate(rows)
                    if row["candidate"]["origin"] == g]
-        best = max(members, key=lambda j: (sk["matrix"][r][j],
+        best = max(members, key=lambda j: (round(sk["matrix"][r][j], 9),
                                            rows[j]["combined"]))
         if best not in retained:
             retained.append(best)
