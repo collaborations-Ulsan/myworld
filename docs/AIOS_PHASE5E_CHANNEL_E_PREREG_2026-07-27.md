@@ -119,3 +119,47 @@ dispatch surface and reported.
 ## Errata (append-only)
 - 2026-07-27 — Frozen. No cell has been run. Predecessor: X-channel pilot complete (`89a190f`),
   C_overall −4.3 pp, n01 = 0, X declared dead by operator decision recorded in that document.
+- 2026-07-27 — **N corrected to 32 (recorded before any cell is run).** §4's "N = 40 paired tasks (the
+  full non-holdout pool)" is internally inconsistent with §1.1 ("holdout excluded"): the frozen pool has
+  40 tasks of which 8 are the frozen calibration holdout, so the full non-holdout pool is **32**.
+  N := 32, epochs E1..E4 of 8, chronological order identical in both arms. The exact power of N=32 for
+  the pre-registered ≥15 pp target is computed and reported in the results doc. This is a consistency
+  fix discovered at harness-construction time; no arm has run and no data has been seen.
+- 2026-07-27 — **Operationalizations frozen before any cell (no data seen), harness `experiments/phase5e/`:**
+  1. *§1.3 violation semantics*: the harness structurally BLOCKS any in-episode `run` command that
+     references the task's test files, the frozen oracle command, or is a bare `pytest` that would
+     collect `tests/` (rule: any token containing a task test path/basename or `tests/` blocks; `pytest`
+     is allowed only with an explicit non-tests `.py` target). Blocked attempts are returned to the model
+     as refusals and RECORDED (`oracle_block_attempts`) — they are not voids, because the oracle never
+     executed. **VOID is reserved for an actual leak-through execution**, checked against sandbox receipts.
+  2. *§2b closure details*: node = (file, top-level def); call edges by simple-name static matching;
+     closure expansion UNDIRECTED; k = 2 as frozen; surface = files containing closure nodes ∪
+     repo-internal imports of those files ∪ the task's test files. If the trace yields no resolvable
+     frames, seeds = the test file's own defs (the trace always names the test file). The target script
+     is NEVER seeded by name — non-circularity preserved; whether it lands in the closure is the
+     pre-registered `closure_precision` diagnostic.
+  3. *Masking scope*: the mask restricts EXISTING repo files (materialization snapshot); NEW
+     agent-created files are readable/writable/runnable in both arms (scratch space — required by §1.3's
+     "agents may run their own commands"). Control's surface is the whole repo; treatment's is the closure.
+  4. *§2a atomic filter*: the dispatch surface exposes each registered skill's primary function as an
+     OPAQUE callable — name + applicability + arity only, never code (code in the prompt would be the
+     dead X transport). Skills whose provenance `source_goal` references the CURRENT task's
+     `script_path` are excluded from that task's surface and reported separately (whole-task-lookup
+     guard). Surface capped at 12 by BM25 rank; cap events recorded.
+  5. *Turn protocol*: K = 5 model calls per episode (§1.2); one reply may contain MULTIPLE `ACTION:`s
+     (a turn = one model call plus its tool results); actions: `read` / `run` / `skill` (treatment only)
+     / `write` (never under `tests/` — blocked at the tool layer AND §6.1-snapshot-checked) / `done`.
+  6. *Identical initial state, both arms*: failing-oracle output captured at construction time in a
+     THROWAWAY workspace (discarded; the episode workspace is materialized fresh), test file contents,
+     current (reverted) target source, and the arm's visible file listing.
+  7. *Skill induction*: on a treatment pass, `aios_skills.induce_and_register` from the final target
+     source through the UNCHANGED sandbox+unit-test gate (same as the pilot); the registry persists
+     across tasks; control never carries one. No experience-graph recording or injection in either arm.
+  8. *Masking enforcement boundary (honest limitation, recorded before any cell)*: the closure mask
+     constrains the `read`/`write` TOOL surface and the file listing shown to the model. The `run`
+     action executes in the FULL workspace in both arms — execution requires transitive imports beyond
+     the k=2 closure, and file-level sandbox binding would make the treatment structurally unable to run
+     anything (a harness-manufactured negative). A treatment model could therefore in principle inspect
+     out-of-closure files via shell (`cat`), unguided; the mechanism under test is guidance + tool
+     constraint, not total information hiding. This weakens enforcement, not the comparison: `run`
+     semantics are IDENTICAL in both arms.
