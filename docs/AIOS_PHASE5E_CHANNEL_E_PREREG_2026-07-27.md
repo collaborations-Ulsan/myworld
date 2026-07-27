@@ -182,3 +182,23 @@ dispatch surface and reported.
      fallback, target-blindness, and the `closure_precision` diagnostic are unchanged. Rationale: §2b's
      stated intent is to "restrict the agent's edit/inspect surface"; the amendment makes the frozen
      mechanism real rather than vacuous, and was fixed before any main-run cell.
+- 2026-07-28 — **Smoke round-2/3 (infra + validation) and LAUNCH PARAMETERS (recorded before launch;
+  still no main-run cell run).**
+  *Round 2 (holdout p5-000): both cells infra-timeout — root cause was SERVING, not the model: the
+  2026-07-18 ollama GPU-0 pin forced qwen3-coder-next to spill KV/compute to CPU (~8 tok/s, GPU idle).
+  Fixed device-globally (dual-GPU spread, 115.7 tok/s measured, 14×) — ledger entry 2026-07-28
+  01:45 KST, commit `52cf236`. Consequence recorded honestly: Phase-5 calibration/pilot ran under the
+  degraded ~8 tok/s serving; their completed results stand, but the 2400 s per-call budget originated
+  from a serving artifact, not model capability.*
+  *Round 3 (same holdout task): BOTH arms clean end-to-end pass — protocol followed (no literalism),
+  oracle guard blocked an in-episode pytest attempt in each arm (recorded, not void), treatment closure
+  3/338 files with the true fix inside, skill induction attempted on pass and honestly REJECTED by the
+  sandbox unit-test gate. Harness validated; smoke evidence: `smoke_results{_round1,_round2,}.jsonl`.*
+  **Launch parameters (frozen now):** driver `experiments/phase5e/run_arms_e.py`; N = 32 = ALL
+  non-holdout tasks, chronological, epochs E1..E4 of 8; task-major order (control then treatment per
+  task); student `qwen3-coder-next`, temperature 0, seed 7, num_ctx 32768, num_predict 16384; K = 5;
+  per-model-call budget 2400 s (ample at repaired serving speed), oracle 300 s, run-action 120 s,
+  skill-dispatch 60 s; treatment state dir `channel_e_state` starts EMPTY (asserted); results
+  `channel_e_results.jsonl` (incremental, resumable per (arm, task_id)); infra-errored cells recorded
+  with passed = null and never silently retried — re-measurement is a logged operator decision;
+  analysis + report only after all 64 cells exist.
