@@ -132,22 +132,33 @@ def call_chat(model: str, messages: list[dict], timeout: float = 2400.0,
 # Action parsing (Errata op-5)
 # ---------------------------------------------------------------------------
 
+def _unwrap(s: str) -> str:
+    """Strip decorative wrapping the model copies from instructions —
+    matching <...>, "...", '...', `...` pairs (repeatedly). Deterministic,
+    applied identically in both arms."""
+    s = s.strip()
+    pairs = {("<", ">"), ('"', '"'), ("'", "'"), ("`", "`")}
+    while len(s) >= 2 and (s[0], s[-1]) in pairs:
+        s = s[1:-1].strip()
+    return s
+
+
 def parse_actions(text: str) -> list[dict]:
     """All ACTION lines in order; `write` consumes the first fenced block
     between it and the next ACTION line (or end of text)."""
     matches = list(_ACTION_RE.finditer(text))
     out: list[dict] = []
     for i, m in enumerate(matches):
-        kind, arg = m.group(1), m.group(2).strip()
+        kind, arg = m.group(1), _unwrap(m.group(2))
         seg_end = matches[i + 1].start() if i + 1 < len(matches) else len(text)
         if kind == "write":
             fence = _FENCE_RE.search(text, m.end(), seg_end)
-            out.append({"kind": "write", "path": arg,
+            out.append({"kind": "write", "path": _unwrap(arg),
                         "content": fence.group(1) if fence else None})
         elif kind == "skill":
             parts = arg.split(None, 1)
             out.append({"kind": "skill",
-                        "id": parts[0] if parts else "",
+                        "id": _unwrap(parts[0]) if parts else "",
                         "args_json": parts[1] if len(parts) > 1 else "[]"})
         elif kind == "done":
             out.append({"kind": "done"})
@@ -276,18 +287,21 @@ def system_prompt(arm: str, task: dict, dispatch: dict | None) -> str:
         f"editing the source (NEVER the tests).",
         f"You have at most {K_TURNS} replies. Each reply may contain one or "
         "more ACTION commands; I execute them in order and return the "
-        "results. Actions:",
+        "results. Write real paths and commands directly after the colon — "
+        "never placeholders, never angle brackets.",
         "",
-        "ACTION: read <path>",
-        "ACTION: run <shell command>",
+        "The five actions, shown as concrete examples:",
+        "",
+        "ACTION: read scripts/example_module.py",
+        "ACTION: run python -c 'import example_module'",
     ]
     if arm == "treatment":
-        lines.append("ACTION: skill <skill_id> <json_args>")
+        lines.append('ACTION: skill skill-0123abcd ["first_arg", 2]')
     lines += [
-        "ACTION: write <path>",
+        "ACTION: write scripts/example_module.py",
         "```python",
-        "<COMPLETE new file content in a fenced block right after the "
-        "write line>",
+        "# the COMPLETE new content of that file goes in this fenced block,",
+        "# immediately after the write line",
         "```",
         "ACTION: done",
         "",
@@ -307,7 +321,8 @@ def system_prompt(arm: str, task: dict, dispatch: dict | None) -> str:
             lines.append(f"- id={e['id']} call={e['call_name']}"
                          f"({e['n_required_args']} required args) — "
                          f"{_truncate(e['applicability'], 200)}")
-        lines.append('Example: ACTION: skill <id> ["arg1", 2]')
+        lines.append("Invoke one by its id, e.g.: ACTION: skill "
+                     f"{dispatch['entries'][0]['id']} []")
     return "\n".join(lines)
 
 

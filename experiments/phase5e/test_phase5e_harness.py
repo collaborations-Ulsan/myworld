@@ -64,6 +64,20 @@ def test_parse_actions_none():
     assert turn_loop.parse_actions("I think the fix is obvious.") == []
 
 
+def test_parse_actions_unwraps_decorative_brackets():
+    """Smoke round 1 finding: the model copies template placeholders
+    literally (`ACTION: read <path>`); wrapping is stripped, both arms."""
+    text = ("ACTION: read <scripts/util.py>\n"
+            "ACTION: run `python -c 'print(1)'`\n"
+            "ACTION: skill <skill-abc> [1]\n"
+            "ACTION: write '<a.py>'\n```python\nA = 1\n```\n")
+    acts = turn_loop.parse_actions(text)
+    assert acts[0]["arg"] == "scripts/util.py"
+    assert acts[1]["arg"] == "python -c 'print(1)'"
+    assert acts[2]["id"] == "skill-abc"
+    assert acts[3]["path"] == "a.py"
+
+
 # ---------------------------------------------------------------------------
 # §1.3 oracle-block rule (Errata op-1)
 # ---------------------------------------------------------------------------

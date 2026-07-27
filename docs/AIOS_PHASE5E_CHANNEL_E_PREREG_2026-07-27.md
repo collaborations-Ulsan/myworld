@@ -155,6 +155,7 @@ dispatch surface and reported.
   7. *Skill induction*: on a treatment pass, `aios_skills.induce_and_register` from the final target
      source through the UNCHANGED sandbox+unit-test gate (same as the pilot); the registry persists
      across tasks; control never carries one. No experience-graph recording or injection in either arm.
+  8a. *(superseded in part by the 2026-07-27 smoke amendments below — closure direction/resolution)*
   8. *Masking enforcement boundary (honest limitation, recorded before any cell)*: the closure mask
      constrains the `read`/`write` TOOL surface and the file listing shown to the model. The `run`
      action executes in the FULL workspace in both arms — execution requires transitive imports beyond
@@ -163,3 +164,21 @@ dispatch surface and reported.
      out-of-closure files via shell (`cat`), unguided; the mechanism under test is guidance + tool
      constraint, not total information hiding. This weakens enforcement, not the comparison: `run`
      semantics are IDENTICAL in both arms.
+- 2026-07-27 — **Smoke amendments (holdout task p5-000 only — NO main-run cell has been run; no C data
+  seen).** The smoke run exists to validate the instrument; it found two harness defects, both fixed
+  identically for BOTH arms before launch:
+  1. *Action-protocol literalism*: the student copies template placeholders verbatim
+     (`ACTION: read <path>` → literal `<...>` paths/commands), burning all K turns on refusals. Fix:
+     the system prompt now uses concrete bracket-free examples, and the parser deterministically strips
+     decorative wrapping (`<>`, quotes, backticks) from arguments. Interface change only; identical in
+     both arms.
+  2. *Closure rule was an inert mask*: op-2's UNDIRECTED, global simple-name closure covered ~98% of the
+     repo (332/338 files on p5-000; 342/348, 345/353 on two further holdout tasks) — a mask that does
+     not mask, structurally courting the §3 VOID. Measured on HOLDOUT tasks only (instrument
+     calibration): directed global-name = ~56% of repo; **directed + import-scoped resolution (same
+     file → imported files → global only when unique) + `<module>` pseudo-nodes excluded = 3–5 files,
+     with the true fix inside C(F) on 4/4 holdout tasks.** The import-scoped directed rule is ADOPTED as
+     the §2b operationalization, superseding op-2's direction/resolution sentence. k = 2, seeds,
+     fallback, target-blindness, and the `closure_precision` diagnostic are unchanged. Rationale: §2b's
+     stated intent is to "restrict the agent's edit/inspect surface"; the amendment makes the frozen
+     mechanism real rather than vacuous, and was fixed before any main-run cell.

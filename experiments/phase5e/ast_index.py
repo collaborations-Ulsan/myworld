@@ -6,8 +6,9 @@ FROZEN PROTOCOL: docs/AIOS_PHASE5E_CHANNEL_E_PREREG_2026-07-27.md.
 Builds an offline AST index of a task workspace's Python files, extracts the
 frame set F from the FAILING TEST'S output (given in the initial task state,
 never derived from the solution), computes the k-hop static call-graph closure
-C(F) (k=2, frozen; UNDIRECTED expansion; simple-name edge resolution), and
-returns the treatment arm's visible file surface:
+C(F) (k=2, frozen; DIRECTED callee expansion with import-scoped name
+resolution — see the Errata closure amendment), and returns the treatment
+arm's visible file surface:
 
     files(C(F)) ∪ repo-internal imports(files(C(F))) ∪ task test files
 
@@ -151,9 +152,15 @@ def trace_frames(oracle_output: str, ws: Path | str) -> list[tuple[str, str]]:
 
 def closure_nodes(ix: Index, frames: list[tuple[str, str]],
                   test_paths: list[str], k: int = K_HOPS) -> set[tuple[str, str]]:
-    """k-hop UNDIRECTED closure over the call graph from the seed frames.
-    Fallback (Errata op-2): no resolvable frames -> the test files' own defs.
-    The target script is never seeded by name."""
+    """k-hop DIRECTED (callee-direction), IMPORT-SCOPED closure from the seed
+    frames (Errata closure amendment, measured on holdout tasks only: the
+    original undirected/global-name rule covered ~98% of the repo — an inert
+    mask — while this rule yields 3–5 files with the true fix inside on 4/4
+    holdout tasks). Callee names resolve in Python scope order: same file →
+    files the caller imports → global only when the name is defined in exactly
+    ONE file. `<module>` pseudo-nodes are excluded. Fallback: no resolvable
+    frames -> the test files' own defs. The target script is never seeded by
+    name (non-circularity preserved)."""
     seeds: set[tuple[str, str]] = set()
     for rel, fn in frames:
         if rel not in ix.defs_by_file:
@@ -161,28 +168,30 @@ def closure_nodes(ix: Index, frames: list[tuple[str, str]],
         if fn and fn in ix.defs_by_file[rel]:
             seeds.add((rel, fn))
         else:
-            seeds.update((rel, d) for d in ix.defs_by_file[rel])
+            seeds.update((rel, d) for d in ix.defs_by_file[rel]
+                         if d != "<module>")
     if not seeds:
         for tp in test_paths:
-            seeds.update((tp, d) for d in ix.defs_by_file.get(tp, set()))
+            seeds.update((tp, d) for d in ix.defs_by_file.get(tp, set())
+                         if d != "<module>")
 
-    # reverse edge map: called simple name -> caller nodes
-    callers_of: dict[str, set[tuple[str, str]]] = {}
-    for node, names in ix.calls.items():
-        for nm in names:
-            callers_of.setdefault(nm, set()).add(node)
+    def resolve(caller_file: str, nm: str) -> set[tuple[str, str]]:
+        if nm in ix.defs_by_file.get(caller_file, set()):
+            return {(caller_file, nm)}
+        hits = {(f, nm) for f in ix.imports.get(caller_file, set())
+                if nm in ix.defs_by_file.get(f, set())}
+        if hits:
+            return hits
+        g = ix.files_by_name.get(nm, set())
+        return {(f, nm) for f in g} if len(g) == 1 else set()
 
     frontier, cover = set(seeds), set(seeds)
     for _ in range(k):
         nxt: set[tuple[str, str]] = set()
         for node in frontier:
-            # forward: defs matching names this node calls
             for nm in ix.calls.get(node, ()):
-                for f in ix.files_by_name.get(nm, ()):
-                    nxt.add((f, nm))
-            # backward: nodes that call this node's name
-            nxt.update(callers_of.get(node[1], ()))
-        nxt -= cover
+                nxt |= resolve(node[0], nm)
+        nxt = {n for n in nxt if n[1] != "<module>"} - cover
         if not nxt:
             break
         cover |= nxt
