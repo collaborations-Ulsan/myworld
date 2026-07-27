@@ -152,3 +152,17 @@ plus a results doc reporting the numbers straight, whichever way they fall.
   preserved at `calibration_results.json.pre_recal_backup`; only the four `infra_error` records were
   cleared for re-measurement. If the re-measured value lands out of band, NOT-RUN is frozen then, and that
   is the reported result.
+- 2026-07-26 — **Re-measurement complete; STUDENT FROZEN (§4.3).** With the 2400 s per-call budget,
+  `qwen3-coder-next` calibration P_auto = **0.375 (3/8), 8/8 scored, 0 infra** — IN band [0.20, 0.60].
+  The three ≤30B candidates remain 0.00. The pre-registered rule (smallest model in band) therefore
+  selects **`qwen3-coder-next` as the frozen student for BOTH arms**. Recorded before any main-run arm
+  is started; not revisited. Evidence: `experiments/phase5/calibration_results.json` (summary block).
+- 2026-07-26 — **PILOT arms launch parameters (recorded before launch, §5).** Driver
+  `experiments/phase5/run_arms.py`. N = 24 = the first 24 non-holdout tasks in chronological order
+  (holdout ids excluded per §4.1; §2 does not pin which 24 of the 32 non-holdout tasks — "first 24
+  chronological" is fixed here, before any arm runs), epochs E1..E4 of 6, identical order both arms.
+  Per-model-call budget 2400 s (the re-measurement budget above), oracle budget 300 s. Treatment state
+  dir starts EMPTY (asserted by the driver, §6.3); control runs with no state dir at all (structurally
+  wiped). Infra-errored cells are recorded (`passed = null`) and NOT silently retried — any
+  re-measurement is a logged operator decision, as with calibration. Incremental per-task records:
+  `experiments/phase5/pilot_results.jsonl`; analysis + report generation only after all 48 cells exist.

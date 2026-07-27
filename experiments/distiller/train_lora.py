@@ -165,7 +165,7 @@ def _cuda_kernels_usable() -> bool:
         return False
 
 
-def _run_real_training(arm: str, dataset_path: Path, output_dir: Path, base_model_id: str, epochs: int) -> dict:
+def _run_real_training(arm: str, dataset_path: Path, output_dir: Path, base_model_id: str, epochs: int, seed: int = 1) -> dict:
     """Actual peft/transformers LoRA SFT loop. Only ever called when trainer_available() is True
     (gated in main()) -- never imported/executed otherwise, so this module still loads cleanly
     with zero optional dependencies installed."""
@@ -178,7 +178,7 @@ def _run_real_training(arm: str, dataset_path: Path, output_dir: Path, base_mode
     )
 
     examples = [json.loads(line) for line in dataset_path.read_text(encoding="utf-8").splitlines() if line.strip()]
-    rng = random.Random(f"aios-distiller:split:{arm}")
+    rng = random.Random(f"aios-distiller:split:{arm}:{seed}")
     rng.shuffle(examples)
     n_eval = max(1, len(examples) // 10)
     eval_examples, train_examples = examples[:n_eval], examples[n_eval:]
@@ -217,6 +217,7 @@ def _run_real_training(arm: str, dataset_path: Path, output_dir: Path, base_mode
         gradient_accumulation_steps=8, learning_rate=2e-4, logging_steps=10,
         eval_strategy="epoch", save_strategy="epoch", load_best_model_at_end=True,
         metric_for_best_model="eval_loss", report_to=[], use_cpu=not use_cuda,
+        seed=seed, data_seed=seed,
     )
     trainer = Trainer(
         model=model, args=args, train_dataset=train_ds, eval_dataset=eval_ds,
@@ -249,7 +250,7 @@ def main(argv: list[str] | None = None) -> int:
                   "train_command": documented_train_command(arm, out_dir, args.base_model_id)}
         if available and n_examples > 1:
             print(f"[train_lora] trainer present -- running real LoRA SFT for arm={arm} ({n_examples} examples)")
-            entry["result"] = _run_real_training(arm, export_path, out_dir / f"lora_{arm}", args.base_model_id, args.epochs)
+            entry["result"] = _run_real_training(arm, export_path, out_dir / f"lora_{arm}", args.base_model_id, args.epochs, seed=args.seed)
             entry["status"] = "trained"
         else:
             entry["status"] = "NOT-RUN"

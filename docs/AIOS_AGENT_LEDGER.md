@@ -5,6 +5,36 @@ cross-repo decisions, OS-boundary changes, and final-AIOS design records.
 
 For repo-local implementation details, also update that repo's own worklog.
 
+## 2026-07-25 16:58 KST — codex@myworld — aiosd architecture adversarial review
+
+- repo: myworld
+- role: research / architecture challenge
+- goal: adversarially test the 2026-07-22 decision that AIOS should become one
+  resident local daemon with thin CLI/MCP clients.
+- changed: `docs/AIOS_AGENT_LEDGER.md`
+- evidence: local sources `docs/AIOS_FORM_FACTOR_DECISION_2026-07-22.md`,
+  `docs/AIOS_SUBSTRATE_BOUNDARY.md`, `docs/AIOS_BUILD_METHOD.md`,
+  `docs/AIOS_WORK_DISPATCH.md`; classifier receipt:
+  `python scripts/aios_boundary_classifier.py --question "...one local daemon
+  aiosd..." --json` returned `layer=execution_substrate`,
+  `owner_repo=hivemind`, `authority=execute_with_receipt`; current public
+  sources checked: MCP Authorization 2025-11-25, MCP Security Best Practices,
+  Linux Landlock docs dated June 2026, systemd socket activation docs, Docker
+  Engine daemon security docs, Linux unix(7), A2A project docs.
+- decision: proposed verdict is `SURVIVES-WITH-CONDITIONS`, not confirmed.
+  A resident all-authority daemon is premature and creates a local control
+  socket attack surface; the minimum defensible shape is socket-activated or
+  idle-exiting, file-canonical, unprivileged, least-authority, receipt-first,
+  and unable to execute provider/tool work without per-request contract gates.
+- risk: if `aiosd` holds live authoritative state separate from append-only
+  files, AIOS gains cache-coherence bugs and an always-on compromise target
+  before proving impossible-to-get capabilities.
+- next: Hive should draft an experiment contract for a minimal
+  socket-activated coordinator and prove at least one capability impossible
+  with fast-start CLI plus file-backed MCP before promoting `aiosd` to kernel
+  architecture.
+- status: proposed
+
 ## 2026-06-21 KST — codex@myworld — AIOS canonical shape disambiguation
 
 - repo: myworld
@@ -7802,3 +7832,29 @@ For repo-local implementation details, also update that repo's own worklog.
 - risk: NIM key confirmed never logged (grepped all 120 receipts + run log for the key prefix, zero matches); H2 secondary metric shows a labeling-artifact false-positive (an arm that rarely commits any action looks "cheap" under the wrong-action cost model) -- flagged explicitly in the results doc so it is not misread as calibration-gated abstention working
 - next: per prereg SS7, STOP -> propose scope-reduced redefinition to founder; separately, the doom-loop/frozen-agent-resampling-fragility finding suggests a targeted follow-up (does a less brittle resample policy change the verdict) before concluding the epistemic-gate concept itself is dead, per the negative-is-pivot-not-terminus principle
 - status: Stage-1 keystone run CLOSED (STOP / FAIL, both bars) -- honest negative, no-launder; full receipts + traces committed for re-analysis
+
+---
+- when: 2026-07-22T00:00:00+09:00
+- repo: myworld
+- agent: codex@myworld
+- role: research / methodology divergence
+- goal: answer the operator's 2026 request for alternatives to small-N LoRA SFT distillation for externally verified sovereign AIOS compounding.
+- changed: docs/AIOS_AGENT_LEDGER.md
+- evidence: current web-primary/source-backed scan of GEPA, AlphaEvolve, ShinkaEvolve, evolutionary model merging/MERGE3, online/test-time RL and GRPO agent papers, Voyager/ExpeL/case-based memory, AB-MCTS/weak-verifier ensembles, diffusion/world-model/active-inference lines, ToolMaker/neurosymbolic program synthesis, MoE/model-merging surveys, and self-play/environment-generation work; no code or contract execution.
+- decision: near-term strongest methodological bets are verifier-gated non-weight skill/case memory, evolutionary program/prompt/tool search with island/Pareto selection, and inference-time search plus weak-verifier ensembles; small-N SFT distillation is likely under-performing because the learned signal is mostly in external search/control/verification traces, not in next-token imitation labels.
+- risk: source landscape is fast-moving and several 2026 items are preprints; proposed tests must use external/held-out verifiers and task manifests to avoid self-scoring reward hacking.
+- next: if accepted, draft a bounded AIOS contract to run the top-3 falsification tests on one workstation with frozen task manifests, independent verifier ownership, and result-packet receipts.
+- status: done
+
+---
+- when: 2026-07-24T19:11:35+09:00
+- repo: myworld (+ council, prizehunter, prizehunter_ship, prizehunter-public)
+- agent: codex@jaewon
+- role: session-persistence / agent-networking bridge implementer
+- goal: make browser-provided chatbots and heterogeneous CLI agents share durable Council threads, then route PrizeHunter and AIOS provider loops through that persistence layer.
+- changed: council/hub.py; prizehunter_ship/tools/council.sh; prizehunter/control_tower/tools/agent_dispatch.sh; prizehunter_ship/tools/agent_dispatch.sh; prizehunter-public/tools/agent_dispatch.sh; myworld/hivemind/hivemind/provider_loop.py; myworld/hivemind/hivemind/run_validation.py; myworld/hivemind/tests/test_provider_loop.py; myworld/docs/AIOS_AGENTNET_DESIGN.md
+- evidence: `python3 -m py_compile council/hub.py myworld/hivemind/hivemind/provider_loop.py myworld/hivemind/hivemind/run_validation.py` passed; `bash -n` passed for all touched PrizeHunter shell bridges; isolated Council smoke confirmed prior-thread prompt rehydration plus browser URL session handle persistence; `python3 -m pytest myworld/hivemind/tests/test_provider_loop.py -q` passed 17/17; three PrizeHunter dry-runs emitted `hub.py ask codex ... --thread ph_dispatch_smoke_to_codex`; diff checks passed for touched files.
+- decision: Council is now the first virtual-thread persistence substrate. Browser sessions retain URL handles when available; CLI substrates receive bounded prior transcript context when a `--thread` is reused. PrizeHunter dispatch uses Council by default for codex/claude/gemini/agy-compatible routes and can opt out with `PH_USE_COUNCIL=0`. Hive provider loops can opt in with `AIOS_USE_COUNCIL=1`, producing `council_virtual_thread` receipts.
+- risk: native provider session ids for CLI resume are observed in current CLI help but not fully wired into Council execution yet; current durability is universal transcript rehydration plus browser URL handle reuse, not guaranteed native conversation-id resume for every provider. Cross-user federation still needs explicit identity, consent, audit, and revocation contracts before production exposure.
+- next: create an AgentNet contract to implement `agentnetd` with identity, consent, envelopes, federation relay, and per-adapter durable session handles; then extend Council adapters to capture native CLI conversation/session ids where each provider safely exposes them.
+- status: closed
