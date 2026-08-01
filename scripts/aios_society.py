@@ -297,8 +297,24 @@ def _with_arc_lock(arc_id: str, fn, *, locks_dir: Path | str = LOCKS_DIR,
 # Operations
 # ---------------------------------------------------------------------------
 
-def new_arc_id(goal: str, *, now: float) -> str:
-    return "arc-" + _sha256(f"{now}:{goal}")[:12]
+def new_arc_id(goal: str, *, now: float,
+               arcs_dir: Path | str = ARCS_DIR) -> str:
+    """A fresh, unused arc id.
+
+    NOT a pure hash of (now, goal): two arcs with the same goal at the same
+    timestamp would collide, and the second `open_arc` would silently append a
+    second `arc_opened` event to the FIRST arc's log — two work arcs fused into
+    one, the worst possible corruption for a substrate whose whole promise is
+    that a record can be resumed. Found by
+    tests/test_aios_takeover_verify.py::test_KNOWN_LIMITATION_parroting_...
+    Entropy makes collisions vanishing; the existence check makes them
+    impossible.
+    """
+    for _ in range(64):
+        arc_id = "arc-" + _sha256(f"{now}:{goal}:{os.urandom(8).hex()}")[:12]
+        if not arc_path(arc_id, arcs_dir).exists():
+            return arc_id
+    raise RuntimeError("could not mint an unused arc id")
 
 
 def open_arc(goal: str, *, agent: str, now: float,
@@ -307,7 +323,7 @@ def open_arc(goal: str, *, agent: str, now: float,
              arcs_dir: Path | str = ARCS_DIR) -> dict:
     if not goal.strip():
         raise ValueError("an arc needs a goal")
-    arc_id = new_arc_id(goal, now=now)
+    arc_id = new_arc_id(goal, now=now, arcs_dir=arcs_dir)
     append_event(arc_id, {"kind": "arc_opened", "agent": agent, "goal": goal,
                           "constraints": constraints or [],
                           "oracle_cmd": oracle_cmd}, now=now, arcs_dir=arcs_dir)

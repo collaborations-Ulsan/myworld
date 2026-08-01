@@ -1,0 +1,1 @@
+{"ts": 1785614318.475401, "arc_id": "arc-1ed520f47e14", "ok": true, "substrate": "local", "agent": "watchdog:local@myworld", "tip_seq": 2, "acked": true, "ack_reason": null, "mttr_s": 19.95, "prior_reclaims": 0}

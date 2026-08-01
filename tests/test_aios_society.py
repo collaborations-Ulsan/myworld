@@ -258,6 +258,17 @@ def test_verify_catches_tampering(arcs: Path, locks: Path):
     assert bad["ok"] is False and any("seq" in s for s in bad["problems"])
 
 
+def test_same_goal_same_instant_gets_distinct_arcs(arcs: Path):
+    """Regression: a pure hash of (now, goal) fused two arcs into one log."""
+    a1 = soc.open_arc("identical goal", agent="a", now=T0, arcs_dir=arcs)["arc_id"]
+    a2 = soc.open_arc("identical goal", agent="a", now=T0, arcs_dir=arcs)["arc_id"]
+    assert a1 != a2
+    for arc in (a1, a2):
+        ev = soc.read_events(arc, arcs)
+        assert len(ev) == 1 and ev[0]["kind"] == "arc_opened"
+        assert soc.verify_arc(arc, arcs_dir=arcs)["ok"]
+
+
 def test_unknown_event_kind_refused(arcs: Path):
     arc = _open(arcs)
     with pytest.raises(ValueError):
