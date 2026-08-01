@@ -7897,3 +7897,16 @@ For repo-local implementation details, also update that repo's own worklog.
 - risk: north-star doc now carries a dual-era structure (re-scope banner + historical body) - readers must not quote the historical framing as current; the null report's external posting is an outward-facing send and remains founder-gated.
 - next: (a) founder decision on freezing/running the active-inference probe; (b) optional scrub-pass + venue choice if the null report goes public; (c) OSS-release framing update to match the re-scoped identity.
 - status: closed
+
+---
+- when: 2026-08-02T00:00:00+09:00
+- repo: myworld
+- agent: claude@myworld
+- role: operator / new arc — AI Society build (founder directive)
+- goal: answer the founder's no-society diagnosis (context-reset amnesia + no availability) by building the society layer, converging every idea on one point (AGI as AI-society), with council + subagent grounding.
+- changed: docs/AIOS_SOCIETY_GOALTREE_2026-08-02.md (G0 convergence point + G1-G5 subgoals + council landscape/red-team sections); scripts/aios_society.py + tests (G1 arc kernel); scripts/aios_takeover_verify.py + tests (G2); scripts/aios_society_watchdog.py + tests (G3); .aios/society/ (live arcs).
+- evidence: 43 tests green (3 suites); LIVE loop on arc-1ed520f47e14 — claude@myworld worked then died, watchdog reclaimed via local qwen3-coder-next MTTR 19.95s, local model restated goal/next-step/constraints from the record alone, separate verifier returned faithful with the arc's pytest oracle green; arc integrity verify ok (9 events, root sha256:8a4155db...); grounding = perplexity landscape (A2A v1.0/LF, Letta, LangGraph, AgentFS, ESAA; 69 sources) + deepseek red-team (6 goodhart attacks, each mapped to INV-1..INV-6) + Explore subagent inventory of existing assets; commits ee42861, 2e5cec3.
+- decision: society claims are exactly continuity + availability + verified handoff — the three-channel null forbids any "makes agents smarter" claim, and that boundary is written into the goal tree as an auto-reject test for new ideas. Lease semantics split (write=TTL, takeover=TTL+derived liveness) after a real test failure; arc-id collision bug found by a test and fixed.
+- risk: continuity check is lexical (parroting passes) — documented + tested, oracle is the only defence; cross-host liveness has no heartbeat yet (TTL-trusted, recorded honestly); the society's own value claim is UNPROVEN until G5's 3-arm test runs.
+- next: G5 pre-registration — 3 arms (solo-restart no-record / solo + ledger / society with handoff+watchdog) under forced context death, primary metric arc completion + MTTR, with the pre-committed concession: if solo+ledger ~= society, dissolve the society and re-converge on storage redesign alone.
+- status: in progress (G1-G3 landed, G4-G5 open)
