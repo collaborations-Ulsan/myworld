@@ -7884,3 +7884,16 @@ For repo-local implementation details, also update that repo's own worklog.
 - risk: N=32 upper bound +12.6pp cannot exclude a small positive (reported, not laundered); dispatch-never-invoked means the null attributes to "offered-but-unused dispatch + guidance-only masking" jointly - stated precisely in the results doc so no stronger claim leaks.
 - next: ESCALATED to founder (vision-level): execute the pre-committed re-scope - publish the three-channel null honestly; AIOS = enforced-sovereignty, externally-verified execution substrate with tamper-evident record (what the evidence actually supports). Recommendation included; founder GO/HOLD/redirect awaited.
 - status: closed (verdict recorded; re-scope pending founder)
+
+---
+- when: 2026-08-01T00:00:00+09:00
+- repo: myworld
+- agent: claude@myworld
+- role: operator / program re-scope execution (founder GO)
+- goal: execute the pre-committed re-scope after the three-transport null: publish-ready consolidated report, identity redefinition, and the boundary for future intelligence-layer claims.
+- changed: docs/AIOS_THREE_CHANNEL_NULL_REPORT_2026-08-01.md (new; publication-ready draft, external posting still founder-gated); docs/AIOS_NORTHSTAR.md (RE-SCOPE section prepended - AIOS = enforced-sovereignty, externally-verified execution substrate with tamper-evident record; memory framing marked historical); docs/AIOS_ACTIVE_INFERENCE_PROBE_PREREG_DRAFT_2026-08-01.md (new; status PROPOSED, NOT RUN - tests autonomy, not compounding; Mortuary boundary stated inside).
+- evidence: founder GO 2026-08-01 on the 3-part recommendation (re-scope GO / optional probe draft / leaps 2-3 rejected on measured negatives); operator assessment of the founder-supplied 4-gap diagnosis + reframing report against records: Channel-E C=0.000, H1=0 non-vacuous (AIOS_AGENT_INDUCED_H1_RESULTS.md), doom-loop monotone 4->29->42->75%.
+- decision: re-scope executed. Leap-2 (runtime H1 forcing) and leap-3 (typed skill compiler) NOT adopted - each collides with a measured negative (no obstruction to repair; friction harms frozen agents; dispatch unused). Active-inference probe left as PROPOSED draft with three open design questions; freezing it is a separate decision.
+- risk: north-star doc now carries a dual-era structure (re-scope banner + historical body) - readers must not quote the historical framing as current; the null report's external posting is an outward-facing send and remains founder-gated.
+- next: (a) founder decision on freezing/running the active-inference probe; (b) optional scrub-pass + venue choice if the null report goes public; (c) OSS-release framing update to match the re-scoped identity.
+- status: closed

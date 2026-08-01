@@ -1,5 +1,27 @@
 # AIOS North Star
 
+## RE-SCOPE — 2026-08-01 (founder GO; supersedes the compounding framing below)
+
+**AIOS is an enforced-sovereignty, externally-verified execution substrate with a
+tamper-evident record.** It verifies and constrains intelligence; it does not manufacture it.
+This identity is what the evidence supports after the pre-registered three-transport null
+(θ weights / X context / E runtime — `docs/AIOS_THREE_CHANNEL_NULL_REPORT_2026-08-01.md`):
+on a frozen model, OS-side accumulated experience did not compound first-attempt autonomous
+performance under external oracles, and the Mortuary Clause bars relitigating that thesis.
+
+What AIOS therefore IS (each earned on its own evidence): kernel-enforced sandboxing with an
+inviolable privacy boundary; external-oracle verification gates (skills register only through
+sandbox+unit-test; execution closes only with receipts); an append-only, Merkle-rooted,
+pre-registration-disciplined record. The memory/capability/genesis organs remain as
+*bookkeeping and routing* for that substrate — their value claim is provenance and control,
+NOT model improvement. Intelligence-layer claims (world models, drive, distillation) belong to
+the model layer and must earn separate pre-registered evidence.
+
+The sections below predate the re-scope and are retained for the organ/role map and the
+task flow; read their "memory makes agents better" framing as historical.
+
+---
+
 AIOS is a local-first **memory layer for AI agents**: it keeps a behavioral-memory
 ledger across runs and models so your agents carry forward what worked instead of
 starting each session from zero. Concretely, it turns a user goal into planned work,
