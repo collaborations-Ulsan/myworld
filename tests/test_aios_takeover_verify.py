@@ -252,6 +252,36 @@ def test_KNOWN_LIMITATION_parroting_passes_continuity_needs_the_oracle(
     assert with_oracle["verdict"] == "drifted"
 
 
+def test_revision_used_to_erase_a_predecessor_is_caught(arcs: Path,
+                                                        locks: Path):
+    """D2 guard: supersede is for correcting a wrong turn, not for quietly
+    deleting the previous agent's work out of the resume pack."""
+    arc = _handed_off_arc(arcs, locks)
+    prior_seq = next(e["seq"] for e in soc.read_events(arc, arcs)
+                     if e["kind"] == "progress")
+    _take(arc, arcs, locks)
+    soc.supersede(arc, prior_seq, "I disagree with this", agent="b@two",
+                  now=T0 + 4, arcs_dir=arcs)          # and contributes nothing
+    out = tv.verify(arc, now=T0 + 5, arcs_dir=arcs, run_oracle=False)
+    rev = next(c for c in out["checks"] if c["name"] == "revision")
+    assert rev["ran"] and rev["passed"] is False and rev["n_of_others_work"] == 1
+    assert out["verdict"] == "drifted"
+
+
+def test_revision_with_own_work_is_legitimate(arcs: Path, locks: Path):
+    arc = _handed_off_arc(arcs, locks)
+    prior_seq = next(e["seq"] for e in soc.read_events(arc, arcs)
+                     if e["kind"] == "progress")
+    _take(arc, arcs, locks)
+    soc.supersede(arc, prior_seq, "that repro was on the wrong branch",
+                  agent="b@two", now=T0 + 4, arcs_dir=arcs)
+    soc.note(arc, "added regression test for stale lease reclaim on main",
+             agent="b@two", now=T0 + 5, evidence=["tests/x.py"], arcs_dir=arcs)
+    out = tv.verify(arc, now=T0 + 6, arcs_dir=arcs, run_oracle=False)
+    rev = next(c for c in out["checks"] if c["name"] == "revision")
+    assert rev["passed"] is True and out["verdict"] == "faithful"
+
+
 def test_verdict_records_into_the_arc_after_the_fact(arcs: Path, locks: Path):
     """INV-6: the verdict lands on the arc without ever having gated it."""
     arc = _handed_off_arc(arcs, locks)

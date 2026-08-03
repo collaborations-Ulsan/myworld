@@ -37,6 +37,11 @@ council red-team; see the goal tree table):
                        owner at any time; takeover writes an ownership transfer.
   INV-5 continuous     Progress is appended as it happens, not only at handoff
                        boundaries, so death costs at most the last step.
+  INV-7 revisable      An arc can RETRACT a wrong step (`supersede`) without
+                       rewriting history: the log is immutable, the projection
+                       is current. Append-only alone let a mistake be inherited
+                       as fact by every later agent. A supersession must name
+                       its reason — an unexplained retraction is hiding.
   INV-6 non-blocking   Verification NEVER blocks a resume (a verifier must not
                        be a single point of failure). Verdicts land after the
                        fact and flag the arc.
@@ -52,6 +57,7 @@ CLI (the impure edge — supplies the real clock):
   python3 scripts/aios_society.py claim  --arc ARC --agent ID [--ttl 3600] [--substrate claude]
   python3 scripts/aios_society.py note   --arc ARC --agent ID --text "..." [--evidence REF]...
   python3 scripts/aios_society.py pack   --arc ARC            # resume pack (JSON)
+  python3 scripts/aios_society.py supersede --arc ARC --agent ID --target-seq N --reason "..."
   python3 scripts/aios_society.py resume --arc ARC --agent ID --pack-tip N  # freshness-gated
   python3 scripts/aios_society.py handoff --arc ARC --agent ID --reason "..."
   python3 scripts/aios_society.py close  --arc ARC --agent ID --status done|abandoned
@@ -80,7 +86,7 @@ DEFAULT_TTL = 3600.0
 
 # Event kinds. `progress` is the continuous one (INV-5).
 KINDS = ("arc_opened", "claimed", "claim_refused", "progress", "handoff_offered",
-         "released", "takeover_verdict", "arc_closed")
+         "released", "takeover_verdict", "superseded", "arc_closed")
 
 
 # ---------------------------------------------------------------------------
@@ -171,7 +177,7 @@ def project(events: list[dict], *, now: float) -> dict:
         "status": "open", "owner": None, "owner_substrate": None,
         "lease_until": None, "owner_pid": None,
         "progress": [], "handoff": None, "closed": None,
-        "takeover_verdicts": [], "contested": 0,
+        "takeover_verdicts": [], "contested": 0, "supersessions": [],
         "tip_seq": events[-1]["seq"], "n_events": len(events),
     }
     for e in events:
@@ -188,7 +194,22 @@ def project(events: list[dict], *, now: float) -> dict:
             st["progress"].append({"seq": e["seq"], "ts": e["ts"],
                                    "agent": e.get("agent"),
                                    "text": e.get("text", ""),
-                                   "evidence": e.get("evidence", [])})
+                                   "evidence": e.get("evidence", []),
+                                   "superseded_by": None, "reason": None})
+        elif k == "superseded":
+            # Revision without amnesia: history is never rewritten, the
+            # PROJECTION stops treating the target as current. This is the
+            # operator an append-only society lacked — it could add and hand
+            # off, but never undo a wrong turn (temporal supersession, the
+            # shape Zep/Graphiti and Governed Shared Memory converged on).
+            tgt = e.get("target_seq")
+            for p in st["progress"]:
+                if p["seq"] == tgt:
+                    p["superseded_by"] = e["seq"]
+                    p["reason"] = e.get("reason", "")
+            st["supersessions"].append({"seq": e["seq"], "target_seq": tgt,
+                                        "agent": e.get("agent"),
+                                        "reason": e.get("reason", "")})
         elif k == "handoff_offered":
             st["handoff"] = {"seq": e["seq"], "by": e.get("agent"),
                              "reason": e.get("reason", ""),
@@ -381,6 +402,57 @@ def note(arc_id: str, text: str, *, agent: str, now: float,
     return {"schema": SCHEMA, "ok": True, "seq": rec["seq"]}
 
 
+def supersede(arc_id: str, target_seq: int, reason: str, *, agent: str,
+              now: float, arcs_dir: Path | str = ARCS_DIR) -> dict:
+    """Mark an earlier progress event as no longer current (D2).
+
+    An append-only society could only ADD and HAND OFF; it could not undo a
+    wrong turn, so a mistaken step stayed in every resume pack forever and the
+    next agent inherited it as fact. `supersede` is the missing operator:
+    history is preserved byte-for-byte (the audit trail is untouched) and only
+    the PROJECTION changes — superseded progress is excluded from the pack's
+    current view and reported separately.
+
+    Guards: only the lease holder may revise (same rule as writing); the target
+    must exist, be a progress event, and not already be superseded; and a
+    reason is mandatory — an unexplained retraction is indistinguishable from
+    hiding a mistake, which is exactly what the record exists to prevent.
+    """
+    if not reason.strip():
+        return {"schema": SCHEMA, "ok": False,
+                "reason": "a supersession must state why (unexplained "
+                          "retraction is hiding, not revising)"}
+    events = read_events(arc_id, arcs_dir)
+    if not events:
+        return {"schema": SCHEMA, "ok": False, "reason": "no such arc"}
+    st = project(events, now=now)
+    if st["owner"] != agent or not st["lease_live"]:
+        return {"schema": SCHEMA, "ok": False, "reason": "not the lease holder",
+                "owner": st["owner"]}
+    target = next((e for e in events if e["seq"] == int(target_seq)), None)
+    if target is None:
+        return {"schema": SCHEMA, "ok": False,
+                "reason": f"no event at seq {target_seq}"}
+    if target["kind"] != "progress":
+        return {"schema": SCHEMA, "ok": False,
+                "reason": f"only progress events can be superseded "
+                          f"(seq {target_seq} is {target['kind']})"}
+    if any(e["kind"] == "superseded" and e.get("target_seq") == int(target_seq)
+           for e in events):
+        return {"schema": SCHEMA, "ok": False,
+                "reason": f"seq {target_seq} is already superseded"}
+    rec = append_event(arc_id, {"kind": "superseded", "agent": agent,
+                                "target_seq": int(target_seq),
+                                "reason": reason}, now=now, arcs_dir=arcs_dir)
+    return {"schema": SCHEMA, "ok": True, "seq": rec["seq"],
+            "target_seq": int(target_seq)}
+
+
+def current_progress(state: dict) -> list[dict]:
+    """The progress a taker should act on: superseded steps excluded."""
+    return [p for p in state["progress"] if p["superseded_by"] is None]
+
+
 def resume_pack(arc_id: str, *, now: float, tail: int = 12,
                 arcs_dir: Path | str = ARCS_DIR) -> dict:
     """Everything a NEW agent needs to continue — plus its causal position
@@ -397,8 +469,14 @@ def resume_pack(arc_id: str, *, now: float, tail: int = 12,
         "oracle_cmd": st["oracle_cmd"], "status": st["status"],
         "owner": st["owner"], "lease_live": st["lease_live"],
         "handoff": st["handoff"],
-        "recent_progress": st["progress"][-tail:],
-        "n_progress": len(st["progress"]),
+        # Only CURRENT progress is handed to a taker; retracted steps are
+        # reported separately so a revision is visible as a revision and never
+        # silently re-inherited as fact.
+        "recent_progress": current_progress(st)[-tail:],
+        "n_progress": len(current_progress(st)),
+        "superseded": [{"seq": p["seq"], "text": p["text"][:200],
+                        "reason": p["reason"]}
+                       for p in st["progress"] if p["superseded_by"]],
         "open_verdicts": [v for v in st["takeover_verdicts"]
                           if v.get("verdict") not in ("faithful", None)],
         # causal position — the freshness gate
@@ -549,6 +627,27 @@ def verify_arc(arc_id: str, *, arcs_dir: Path | str = ARCS_DIR) -> dict:
             problems.append(f"event {e.get('seq')} has no agent (INV-4)")
     if sum(1 for e in events if e["kind"] == "arc_opened") != 1:
         problems.append("more than one arc_opened")
+    by_seq = {e.get("seq"): e for e in events}
+    seen_targets: set[int] = set()
+    for e in events:
+        if e["kind"] != "superseded":
+            continue
+        t = e.get("target_seq")
+        tgt = by_seq.get(t)
+        if tgt is None:
+            problems.append(f"supersession at seq {e['seq']} targets missing "
+                            f"seq {t}")
+        elif tgt["kind"] != "progress":
+            problems.append(f"supersession at seq {e['seq']} targets a "
+                            f"{tgt['kind']}, not progress")
+        elif t >= e["seq"]:
+            problems.append(f"supersession at seq {e['seq']} targets a "
+                            f"non-earlier seq {t}")
+        if t in seen_targets:
+            problems.append(f"seq {t} superseded more than once")
+        seen_targets.add(t)
+        if not str(e.get("reason", "")).strip():
+            problems.append(f"supersession at seq {e['seq']} states no reason")
     closed_at = [e["seq"] for e in events if e["kind"] == "arc_closed"]
     if closed_at and closed_at[0] != events[-1]["seq"]:
         problems.append("events appended after arc_closed")
@@ -582,6 +681,11 @@ def main(argv: list[str] | None = None) -> int:
 
     p = sub.add_parser("pack"); p.add_argument("--arc", required=True)
     p.add_argument("--tail", type=int, default=12)
+
+    p = sub.add_parser("supersede"); p.add_argument("--arc", required=True)
+    p.add_argument("--agent", required=True)
+    p.add_argument("--target-seq", type=int, required=True)
+    p.add_argument("--reason", required=True)
 
     p = sub.add_parser("resume"); p.add_argument("--arc", required=True)
     p.add_argument("--agent", required=True); p.add_argument("--pack-tip", type=int, required=True)
@@ -618,6 +722,9 @@ def main(argv: list[str] | None = None) -> int:
                    arcs_dir=ad)
     elif a.cmd == "pack":
         out = resume_pack(a.arc, now=now, tail=a.tail, arcs_dir=ad)
+    elif a.cmd == "supersede":
+        out = supersede(a.arc, a.target_seq, a.reason, agent=a.agent, now=now,
+                        arcs_dir=ad)
     elif a.cmd == "resume":
         out = resume(a.arc, agent=a.agent, pack_tip_seq=a.pack_tip, now=now,
                      ttl=a.ttl, substrate=a.substrate, arcs_dir=ad)

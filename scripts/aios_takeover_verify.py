@@ -159,6 +159,33 @@ def check_continuity(state: dict, win: dict) -> dict:
                        else "continues the arc")}
 
 
+def check_revisions(state: dict, win: dict) -> dict:
+    """Revision must not become an escape hatch (D2 guard).
+
+    `supersede` lets an arc retract a wrong step — which is also the perfect
+    way to erase an inconvenient one. The log still holds it (nothing is
+    deletable), so the check is: did the TAKER retract steps written by someone
+    ELSE, without adding any progress of its own? That is not revision, it is
+    quietly rewriting the predecessor's work out of the resume pack.
+    """
+    taker = win["taker"]
+    mine = [s for s in state.get("supersessions", [])
+            if s["seq"] > win["transfer_seq"] and s["agent"] == taker]
+    if not mine:
+        return {"name": "revision", "ran": False, "passed": None,
+                "detail": "taker superseded nothing"}
+    by_seq = {p["seq"]: p for p in state["progress"]}
+    others = [s for s in mine
+              if by_seq.get(s["target_seq"], {}).get("agent") not in (taker, None)]
+    added = [e for e in win["taker_events"] if e["kind"] == "progress"]
+    passed = not (others and not added)
+    return {"name": "revision", "ran": True, "passed": passed,
+            "n_supersessions": len(mine), "n_of_others_work": len(others),
+            "detail": ("taker retracted a predecessor's work and contributed "
+                       "no progress of its own"
+                       if not passed else "revisions accompanied by own work")}
+
+
 def check_constraints(state: dict, win: dict) -> list[dict]:
     """Machine-check `forbid:<regex>` / `require:<regex>` clauses against the
     taker's own events. Prose constraints are reported UNENFORCEABLE, never
@@ -226,7 +253,7 @@ def verify(arc_id: str, *, now: float, verifier: str = DEFAULT_VERIFIER,
                 "reason": "verifier must not be the taker (self-judging is "
                           "not verification)"}
 
-    checks = [check_continuity(state, win)]
+    checks = [check_continuity(state, win), check_revisions(state, win)]
     checks += check_constraints(state, win)
     if run_oracle:
         checks.append(check_oracle(state, cwd=Path(cwd), timeout=oracle_timeout))

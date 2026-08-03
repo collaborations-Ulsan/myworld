@@ -258,6 +258,89 @@ def test_verify_catches_tampering(arcs: Path, locks: Path):
     assert bad["ok"] is False and any("seq" in s for s in bad["problems"])
 
 
+# --- INV-7 revision without amnesia (D2 supersede operator) ---------------
+
+def _worked_arc(arcs: Path, locks: Path, agent="a@one") -> tuple[str, int]:
+    arc = _open(arcs)
+    soc.claim(arc, agent=agent, now=T0, ttl=600, arcs_dir=arcs, locks_dir=locks)
+    soc.note(arc, "took the JSON-schema approach", agent=agent, now=T0 + 1,
+             evidence=["commit:aaa"], arcs_dir=arcs)
+    r = soc.note(arc, "wrong turn: schema cannot express the union type",
+                 agent=agent, now=T0 + 2, evidence=["commit:bbb"], arcs_dir=arcs)
+    return arc, r["seq"]
+
+
+def test_inv7_supersede_hides_a_wrong_step_from_the_pack_but_not_the_log(
+        arcs: Path, locks: Path):
+    arc, bad_seq = _worked_arc(arcs, locks)
+    before = len(soc.read_events(arc, arcs))
+    ok = soc.supersede(arc, bad_seq, "union type made the schema approach dead",
+                       agent="a@one", now=T0 + 3, arcs_dir=arcs)
+    assert ok["ok"] and ok["target_seq"] == bad_seq
+
+    events = soc.read_events(arc, arcs)
+    assert len(events) == before + 1                     # history only grows
+    assert any(e["seq"] == bad_seq and e["kind"] == "progress" for e in events)
+
+    pack = soc.resume_pack(arc, now=T0 + 4, arcs_dir=arcs)
+    texts = [p["text"] for p in pack["recent_progress"]]
+    assert "took the JSON-schema approach" in texts
+    assert all("wrong turn" not in t for t in texts)     # not inherited as fact
+    assert pack["n_progress"] == 1
+    assert pack["superseded"][0]["seq"] == bad_seq
+    assert "union type" in pack["superseded"][0]["reason"]
+    assert soc.verify_arc(arc, arcs_dir=arcs)["ok"]
+
+
+def test_inv7_supersede_requires_a_reason(arcs: Path, locks: Path):
+    arc, bad_seq = _worked_arc(arcs, locks)
+    out = soc.supersede(arc, bad_seq, "   ", agent="a@one", now=T0 + 3,
+                        arcs_dir=arcs)
+    assert out["ok"] is False and "why" in out["reason"]
+
+
+def test_inv7_supersede_guards(arcs: Path, locks: Path):
+    arc, bad_seq = _worked_arc(arcs, locks)
+    # non-holder may not revise
+    assert soc.supersede(arc, bad_seq, "r", agent="b@two", now=T0 + 3,
+                         arcs_dir=arcs)["ok"] is False
+    # target must exist and be a progress event
+    assert soc.supersede(arc, 999, "r", agent="a@one", now=T0 + 3,
+                         arcs_dir=arcs)["ok"] is False
+    assert soc.supersede(arc, 0, "r", agent="a@one", now=T0 + 3,
+                         arcs_dir=arcs)["ok"] is False   # seq 0 = arc_opened
+    # no double supersession
+    assert soc.supersede(arc, bad_seq, "first", agent="a@one", now=T0 + 3,
+                         arcs_dir=arcs)["ok"]
+    assert soc.supersede(arc, bad_seq, "again", agent="a@one", now=T0 + 4,
+                         arcs_dir=arcs)["ok"] is False
+
+
+def test_inv7_verify_catches_forged_supersessions(arcs: Path, locks: Path):
+    arc, bad_seq = _worked_arc(arcs, locks)
+    soc.append_event(arc, {"kind": "superseded", "agent": "a@one",
+                           "target_seq": 999, "reason": "nonexistent target"},
+                     now=T0 + 3, arcs_dir=arcs)
+    bad = soc.verify_arc(arc, arcs_dir=arcs)
+    assert bad["ok"] is False and any("missing seq" in p for p in bad["problems"])
+
+
+def test_inv7_revision_survives_a_takeover(arcs: Path, locks: Path):
+    """The point of the operator: the NEXT agent does not inherit the mistake."""
+    arc, bad_seq = _worked_arc(arcs, locks)
+    soc.supersede(arc, bad_seq, "dead end", agent="a@one", now=T0 + 3,
+                  arcs_dir=arcs)
+    soc.offer_handoff(arc, agent="a@one", now=T0 + 4, next_step="try codegen",
+                      arcs_dir=arcs)
+    pack = soc.resume_pack(arc, now=T0 + 5, arcs_dir=arcs)
+    assert soc.resume(arc, agent="b@two", pack_tip_seq=pack["tip_seq"],
+                      now=T0 + 6, arcs_dir=arcs, locks_dir=locks)["ok"]
+    taker_pack = soc.resume_pack(arc, now=T0 + 7, arcs_dir=arcs)
+    assert all("wrong turn" not in p["text"]
+               for p in taker_pack["recent_progress"])
+    assert taker_pack["superseded"]          # visible as a revision, not erased
+
+
 def test_same_goal_same_instant_gets_distinct_arcs(arcs: Path):
     """Regression: a pure hash of (now, goal) fused two arcs into one log."""
     a1 = soc.open_arc("identical goal", agent="a", now=T0, arcs_dir=arcs)["arc_id"]
