@@ -5,7 +5,13 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "aios-os"
 version = "0.2.0"
-description = "AIOS — a local-first memory layer for AI agents: keeps a behavioral-memory ledger across runs and models so your agents carry forward what worked instead of starting from zero"
+# CLAIM HYGIENE (2026-08-03): the previous description advertised "your agents
+# carry forward what worked" — the exact claim our own pre-registered experiments
+# FALSIFIED (three transports, C_overall = 0.000; see
+# docs/AIOS_THREE_CHANNEL_NULL_REPORT_2026-08-01.md). Shipping it would sell a
+# disproven claim. What we actually earned is below; keep it that way.
+# Unrelated to arXiv:2403.16971 "AIOS: LLM Agent Operating System".
+description = "AIOS — a sovereign sidecar for AI agents: your work survives the agent. Tamper-evident work ledger, freshness-gated resume after a context death, orphan reclaim onto any live substrate, and externally-verified handoff, all local-first and sandbox-enforced"
 readme = "README.md"
 requires-python = ">=3.10"
 authors = [{name = "Jaewon Choi", email = "cjw070690@gmail.com"}]
@@ -92,6 +98,36 @@ py-modules  = [
     "aios_agent_self",
     "aios_acp_drive",
     "aios_mcp_server",
+    # --- 2026-08-03 packaging repair -------------------------------------
+    # Found by walking the import graph of the modules listed above: these were
+    # imported by shipped code but never packaged, so `pip install aios-os`
+    # produced a wheel whose core paths raise ImportError. Notably it shipped
+    # WITHOUT aios_egress_gate and aios_authority — i.e. the package made a
+    # sovereignty claim it could not enforce. Re-run the check before every
+    # release: walk imports from py-modules and assert nothing is missing.
+    "aios_authority",
+    "aios_egress_gate",
+    "aios_freshness",
+    "aios_turn_loop",
+    "aios_tools",
+    "aios_agent_registry",
+    "aios_akashic_guard",
+    "aios_llm_client",
+    "aios_self_audit",
+    "aios_skills_loader",
+    "aios_stakes",
+    "aios_trace_interior",
+    "aios_work_history",
+    # --- society layer (G1-G3 + D2, 2026-08) -----------------------------
+    # Ships as mechanism only. The society's VALUE claim is unproven until the
+    # frozen G5 experiment runs (docs/AIOS_G5_SOCIETY_PREREG_2026-08-03.md);
+    # product copy must not claim it beats a single agent with a ledger.
+    "aios_society",
+    "aios_takeover_verify",
+    "aios_society_watchdog",
+    "aios_sandbox",
+    "aios_skills",
+    "aios_experience",
 ]
 # aios_primitives is a stdlib-only PACKAGE (not a flat module): aios_runtime does
 # `from aios_primitives import events`, so it must ship as a package, not via
