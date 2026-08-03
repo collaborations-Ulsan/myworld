@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "aios-os"
-version = "0.2.0"
+version = "0.3.0"
 # CLAIM HYGIENE (2026-08-03): the previous description advertised "your agents
 # carry forward what worked" — the exact claim our own pre-registered experiments
 # FALSIFIED (three transports, C_overall = 0.000; see

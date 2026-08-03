@@ -4,27 +4,33 @@
 [![docker](https://github.com/cjw0076/myworld/actions/workflows/docker.yml/badge.svg)](https://github.com/cjw0076/myworld/actions/workflows/docker.yml)
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/cjw0076/myworld)
 
-**Your AI agents learn from every run — instead of starting from zero.**
+**Your work survives the agent.**
 
-Most AI agents are stateless: each session starts over. AIOS keeps a local behavioral-memory ledger across runs and across models, so your agents carry forward what worked instead of repeating the same mistakes. (The longer-term vision — a shared ledger where every agent's runs help every other's — is below; today the value is single-user and local.)
+Your agent dies — context reset, crashed process, exhausted session — and the work dies with it. AIOS is a sovereign sidecar that keeps the *work* alive: a tamper-evident ledger of what you were doing, so any agent (the same one tomorrow, a different CLI, a local model) can pick it up from the record alone and prove it took over faithfully.
+
+> **What this README used to claim, and why it changed (2026-08).** Earlier versions said AIOS makes your agents "learn from every run" and get "smarter" from accumulated memory. We ran the experiment on ourselves — pre-registered, externally graded, three separate ways — and **it was not true**: injecting accumulated experience into a frozen model did not improve its task performance (overall effect **0.000**; a promising +13pp at n=90 *reversed* to −0.3pp at n=300). We publish the null rather than keep selling it: [`docs/AIOS_THREE_CHANNEL_NULL_REPORT_2026-08-01.md`](docs/AIOS_THREE_CHANNEL_NULL_REPORT_2026-08-01.md). What survived that audit is what this README now claims — and nothing more.
 
 ---
 
 ## The problem
 
-You run Claude Code or Codex to fix a bug. It works. Tomorrow you run it again on a similar problem. It makes the same mistakes, takes the same wrong turns. **Nothing carried over.**
+You run Claude Code or Codex on a long task. Halfway through, the context resets, the process dies, or the session ends. The agent does not know what it was doing, what it already ruled out, or what constraint it was under. **You re-explain everything, or you start over.**
 
-Multiply this by a team. Or by every developer running AI agents today. Billions of execution minutes, zero learning transfer.
+Nothing today owns the *work* — every tool owns a *session*.
 
 ---
 
 ## What AIOS does
 
-**1. Remembers what worked** — Every agent session is distilled into a behavioral signature: what tools were used, in what order, for what kind of task. Stored in a global ledger with a Merkle-verified audit trail.
+**1. Keeps the work, not the chat** — Each unit of work is an **arc**: an append-only event log (goal, constraints, the external check that decides "done", every step with its evidence). The log is the state; the agent is disposable.
 
-**2. Predicts what comes next** — Given your current context ("just ran a failing test, need to fix the import"), AIOS finds similar past sessions and tells you which tool to reach for next — before you waste tokens on wrong turns.
+**2. Resumes from the record, freshness-gated** — A new agent gets a resume pack carrying its causal position. If the arc moved since the pack was read, the takeover is **refused** until it re-syncs — a checkpoint that loads is not the same thing as a state that is current.
 
-**3. Transfers knowledge across providers** — A Codex session that found an efficient debugging pattern makes the Claude agent smarter. A local LLM run that hit a doom loop prevents the next agent from repeating it.
+**3. Reclaims orphaned work** — When the owner's process dies, its lease is void immediately (liveness is derived, never taken on trust) and a watchdog hands the arc to whatever substrate is alive — local model, Codex, Claude.
+
+**4. Verifies the handoff** — A separate verifier judges the takeover by what the new agent **did** against the arc's goal and constraints, and by the arc's own external oracle — never by a checksum on the handoff packet. An unverifiable takeover is reported as unverifiable, never as success.
+
+Everything runs locally, in an OS-enforced sandbox with no network by default and your private directories invisible to executed code.
 
 ---
 
@@ -55,7 +61,18 @@ Output (abridged):
     Checker says: CAUGHT ✗ — the AI scheduled work after the deadline
 ```
 
-Act one is the headline: the ledger turns run 1's experience into run 2's head start — offline, deterministic, using the real ingest/predict machinery. Act two shows the safety idea: AI proposes, deterministic code verifies, wrong answers are rejected. Every run leaves a provenance record.
+Act one shows the ledger machinery end to end — ingest, retrieve, provenance — offline and deterministic. Read it as *"the record works"*, **not** as *"the agent got better"*: we measured the latter and it did not hold (see the null report above). Act two is the part that survived the audit: AI proposes, deterministic code verifies, wrong answers are rejected, and every run leaves a provenance record.
+
+For the machinery this README actually claims, the arc CLI is the shortest demo:
+
+```sh
+aios-society open --goal "fix the retry bug" --oracle "pytest -q tests/test_retry.py"
+aios-society claim --arc <id> --agent me@laptop        # take ownership (leased)
+aios-society note  --arc <id> --agent me@laptop --text "reproduced" --evidence commit:abc123
+# ... your agent dies here ...
+aios-society list --orphans                            # the work is still there, unowned
+aios-society pack  --arc <id>                          # what a new agent needs, + its causal position
+```
 
 ---
 
@@ -70,7 +87,7 @@ The primary zero-config path. No `pip`, no venv, no PyPI, no `claude mcp add` �
 
 That's the whole install. You get, on the next session:
 
-- **Composite self on every session** — a `SessionStart` hook auto-births your SELF (identity + accepted behavioral memory + last checkpoint) and injects it as session context, so the agent carries forward what worked instead of starting from zero.
+- **Composite self on every session** — a `SessionStart` hook auto-births your SELF (identity + accepted learnings + last checkpoint) and injects it as session context, so a new session opens knowing **what it committed to and where it left off**. (Continuity of commitment — not a performance claim: see the null report.)
 - **The AIOS MCP server** — `route` / `helper_run` / `retrieve` / `challenge` / `observe` plus the 5 self tools (`aios_self_status/birth/learn/checkpoint/carry`) show up in your tool list.
 
 Everything runs from the plugin's own bundled copy via `${CLAUDE_PLUGIN_ROOT}` and bare `python3` — nothing to install at runtime. (The marketplace becomes live once this repo is pushed to `cjw0076/myworld`; until then, add it from a local clone with `/plugin marketplace add /path/to/myworld`.)
@@ -81,7 +98,7 @@ Everything runs from the plugin's own bundled copy via `${CLAUDE_PLUGIN_ROOT}` a
 
 ## Your agent, continuous — the composite self
 
-A frozen model is born amnesiac every session. The **composite self** fixes that: a portable, white-box SELF any agent loads at birth — identity + limits, human-reviewed learnings, and the last checkpoint (where you left off) — carried across sessions *and* substrates (Claude Code / Codex / any MCP client).
+A frozen model is born amnesiac every session. The **composite self** carries the part that does not need the model to change: a portable, white-box SELF any agent loads at birth — identity + measured limits, human-reviewed learnings, and the last checkpoint (where you left off) — across sessions *and* substrates (Claude Code / Codex / any MCP client). It makes a new session **accountable to what the last one committed to**; it does not make the model better at the task.
 
 ```sh
 aios self birth            # compile your SELF.md (identity + accepted learnings + last checkpoint)
@@ -173,7 +190,7 @@ In GitHub Codespaces: add your key under **Settings → Codespaces → Secrets**
 
 ## Contribute your agent sessions
 
-Every session you run makes the global ledger smarter for everyone:
+The shared ledger is an **audit and provenance** substrate, not a performance one — contributing does not make anyone's agent better (we measured that; it did not hold). What it does give is a public, Merkle-verified record of how agents actually behave:
 
 ```sh
 # Opt-in: send your local behavioral patterns (tool names only, no content)
@@ -236,11 +253,13 @@ docker run --rm -e GEMINI_API_KEY=your_key -p 8741:8741 \
 
 ## Current state
 
-The ledger has **~1,400 behavioral entries** from real agent sessions. Prediction accuracy improves with scale — the network effect becomes visible above 10,000 entries. This is early, but the Akashic infrastructure is production-grade (Cloudflare Workers + D1, Merkle-verified, globally distributed).
+The ledger has **~1,400 behavioral entries** from real agent sessions, and the Akashic infrastructure is production-grade (Cloudflare Workers + D1, Merkle-verified, globally distributed).
 
-Precise status: AIOS is kernel-complete, self-maintaining locally, world-service-objective-ready, and has live public infrastructure. Public-product readiness still needs real-user validation. See [`docs/AIOS_CANONICAL_SHAPE.md`](docs/AIOS_CANONICAL_SHAPE.md) for the required vocabulary.
+**Retracted claim (2026-08):** this section used to say *"prediction accuracy improves with scale — the network effect becomes visible above 10,000 entries."* Our own measurement points the other way: a +13pp effect at n=90 became **−0.3pp at n=300**. More entries did not help; the small-n result was a mirage. We do not claim a data network effect, and we will not claim one again without a pre-registered test that survives.
 
-If you run AI agents regularly, contributing your session patterns (opt-in, tool names only) is the fastest way to make the predictions useful.
+Precise status: the arc/continuity layer is implemented and tested (open → claim → resume → orphan reclaim → verified handoff, with a live end-to-end reclaim in **19.95s**). Whether an agent *society* beats a single agent with the same ledger is **not yet known** — that experiment is frozen and unrun ([`docs/AIOS_G5_SOCIETY_PREREG_2026-08-03.md`](docs/AIOS_G5_SOCIETY_PREREG_2026-08-03.md)), and its kill rule can retire the society layer entirely. See [`docs/AIOS_CANONICAL_SHAPE.md`](docs/AIOS_CANONICAL_SHAPE.md) for vocabulary.
+
+**Not to be confused with** arXiv:2403.16971 "AIOS: LLM Agent Operating System" — an unrelated project with the same name.
 
 ---
 

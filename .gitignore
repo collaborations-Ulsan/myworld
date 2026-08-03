@@ -58,3 +58,8 @@ docs/imports/
 
 # generated ontology pack (regenerable via pack_export.py)
 docs/ontology/ledger/aios_ontology_pack_v1.zip
+
+# operational artifacts (not product)
+.omc/
+.wrangler/
+**/.wrangler/

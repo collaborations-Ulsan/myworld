@@ -417,3 +417,45 @@ provider_harness:
 
 This is replayable as a contract-level capability observation, not as a claim
 that any provider authentication state is durable or transferable.
+
+## 2026-08-03 Native Stop Hook Session-Pointer Mismatch
+
+A native OMX Stop hook rejected a stop authorization because the hook payload
+referred to a session identifier that did not match the currently selected
+session pointer. The runtime explicitly preserved the selected pointer as the
+authoritative session. The underlying child-repo work and artifacts were not
+invalidated by this hook result.
+
+Classify this behavior as:
+
+```yaml
+failure_class: stop_hook_session_pointer_mismatch
+surface: native_hook
+authority_result: stop_not_authorized
+authoritative_state: selected_session_pointer
+task_result_effect: none_without_separate_execution_failure
+privacy:
+  persist_raw_session_id: false
+```
+
+Required wrapper behavior:
+
+1. Do not treat the message as proof that the task failed, stopped, or lost its
+   artifacts.
+2. Do not retry Stop against guessed or transcript-derived session ids.
+3. Resolve the active selected-session pointer through the runtime-owned state
+   surface before any later stop/cancel request.
+4. Emit a structured degraded receipt containing the failure class, hook
+   surface, and authority result, but omit raw provider session identifiers
+   from shared docs and packets.
+5. If a stop remains operator-required, hold at an operator/runtime checkpoint
+   rather than widening authority or switching pointers silently.
+
+This is a provider/runtime coordination observation, not a model-capability
+failure. A replayable contract test should later cover selected pointer A with
+an unmatched Stop payload B and assert that A remains authoritative, B is not
+stopped, and no task-completion claim is downgraded without separate evidence.
+
+- next: locate or recreate the provider-fallback execution-binding contract
+  referenced as ASC-0081, then add this mismatch case to its hook lifecycle
+  verification matrix without recording raw session identifiers.
