@@ -7910,3 +7910,16 @@ For repo-local implementation details, also update that repo's own worklog.
 - risk: continuity check is lexical (parroting passes) — documented + tested, oracle is the only defence; cross-host liveness has no heartbeat yet (TTL-trusted, recorded honestly); the society's own value claim is UNPROVEN until G5's 3-arm test runs.
 - next: G5 pre-registration — 3 arms (solo-restart no-record / solo + ledger / society with handoff+watchdog) under forced context death, primary metric arc completion + MTTR, with the pre-committed concession: if solo+ledger ~= society, dissolve the society and re-converge on storage redesign alone.
 - status: in progress (G1-G3 landed, G4-G5 open)
+
+---
+- when: 2026-08-05T16:10:00+00:00
+- repo: myworld
+- agent: claude@myworld
+- role: operator / N1 gate experiment closeout
+- goal: settle the founder's either/or (an agent SOCIETY, or a storage redesign) with the pre-registered G5 experiment, the gate on which the network and compute-system layers depended.
+- changed: experiments/phase5g/ (driver, death injector, 12 tests, results + operator verdict); docs/AIOS_G5_SOCIETY_PREREG_2026-08-03.md (Errata verdict); docs/AIOS_SOCIETY_GOALTREE_2026-08-02.md (goal tree CLOSED banner).
+- evidence: 128/128 cells, 0 infra-dropped, 0 tampering, run-validity gate PASSED (ownership transferred 32/32 in society arms, 0/32 in solo arms). P_complete: solo_norecord 0.375, solo_ledger 0.4688, society 0.4062, society_rev 0.3438. THE contrast C vs B = -6.25pp, McNemar one-sided p 0.856, discordance 0.25, one-sided 95% upper bound +8.17pp. Secondary: solo_ledger vs solo_norecord +9.38pp (p 0.227, NOT established); society_rev vs society -6.25pp. Adversarial checks before the verdict: equal recovery turns across arms (2.44-2.50), treatment fired 32/32, discordant pairs spread across both death turns, control's pack from the same generator (build_pack takes no arm argument), clean run.
+- decision: KILL RULE FIRED (condition 1, C <= B). The society layer is NOT justified at this scale. Dissolve it; re-converge on the storage redesign (arm B); do NOT build network N2-N4 or compute-system C1-C3; QEL absorption reduced to the B1 privacy architecture only; supersede stays as code but its value claim is withdrawn (it was 6.25pp worse than society without it). No retry with a new society mechanism - that is what the pre-registration foreclosed.
+- risk: the ledger's own value (+9.38pp over no-record) is the largest positive in the table but p=0.227 at n=32 - NOT established, and explicitly not claimed. A society might still pay off at longer horizons, with more deaths, or with heterogeneous specialists; none of that was tested and none of it may be built on that hypothesis now.
+- next: the answer to the founder's either/or is the STORAGE REDESIGN. What survives: the arc ledger as a single agent's durable memory (best-performing arm), the sovereignty sandbox, external-oracle verification, the tamper-evident record, and the B1 privacy design received from the QEL author. Escalated to founder: whether to run a powered test of the ledger's own value, and what to do with the now-unused society modules.
+- status: closed (verdict recorded; re-scope pending founder)
