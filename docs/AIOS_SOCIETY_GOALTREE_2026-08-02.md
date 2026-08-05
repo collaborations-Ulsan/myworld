@@ -110,6 +110,44 @@ state bloat, 동시쓰기 race, 의도적 삭제 실패(ForgetEval 52.7%). 우�
 (c) 프라이버시 디렉터리 경로가 아크에 나타나면 거부. **이 항목이 해결되기 전에는 아크 원장을
 다기기·연합(N2 이상)으로 확장하지 않는다** — 확장이 위험을 곱하기 때문.
 
+### B1 해제 경로 확보 (2026-08-05) — 설계는 있고, 구현은 N1 이후
+
+QEL 저자에게 우리 원장 구조를 그대로 제시하고 **재설계가 아닌 최소 개조**를 물어 받은 답
+(`docs/external/gpt/qel_author_response_to_our_null_2026-08-05.md`). 요지만:
+
+1. **먼저, 피할 수 없는 사실**: 이미 평문으로 쓰인 기존 JSONL은 **키를 폐기해도 삭제되지 않는다.**
+   crypto-shredding은 처음부터 암호화된 데이터에만 통한다 ⟹ **1회성 epoch migration + 원본
+   물리 삭제**가 반드시 필요하다(백업·WAL·인덱스·투영·벡터DB·크래시덤프·타 기기 복제본 전부).
+2. **`arc.event.v2` 공개 envelope**: state_code · 무작위 task_token(해시 아님) · pairwise
+   pseudonymous key_id · causal(parent/supersedes) · **commitments만**. 자유 텍스트·경로·이유·
+   stdout 전부 암호화 artifact로.
+3. **blinded commitment**: `C = H("ARC-PAYLOAD-V2" || event_id || r || canonical(payload))`,
+   `r`은 256비트 비밀로 **암호화 artifact 안에만** 저장. 평문의 단순 SHA-256을 commitment로 쓰면
+   추측 공격에 뚫린다. **우리 Merkle position salt는 프라이버시 salt가 아니다** — 이 구분을
+   놓쳤으면 그대로 사고였다.
+4. **event별 DEK**(사용자·epoch 단위 공유 금지) — 그래야 한 이벤트만 골라 shred할 수 있다.
+5. **`supersede` ≠ `erase`, 축이 둘이다**: `semantic_state: active|superseded|withdrawn` ×
+   `availability_state: available|expired|shredded`. 네 조합이 전부 의미를 갖는다
+   (예: `active + shredded` = 공개 판정은 남고 근거 원문은 삭제됨). 새 이벤트 타입은
+   **`erase` 하나만** 추가하면 된다(target·scope·result_code·deletion_report_commitment).
+   순서: supersede/withdraw → 투영 의미 변경 → shred → erase 영수증 → availability=shredded.
+   **삭제가 의미론적 철회를 암묵적으로 일으켜서는 안 되고, 그 역도 안 된다.**
+6. **shred 이후 Merkle 증명이 계속 증명하는 것**: 그 envelope가 특정 seq에 포함돼 있었고,
+   그 시점에 이 commitment/ciphertext digest가 등록돼 있었고, 타입·역할·supersede 엣지·공개
+   verdict 코드가 변조되지 않았고, 서명자가 서명했다는 것. **잃는 것**: commitment의 원문이
+   무엇이었는지, 판정 근거를 재실행할 수 있는지, 그 판정이 옳았는지, 어딘가에 복사본이 없는지.
+   ⟹ Merkle은 *"이 commitment를 가진 영수증이 로그에 있었다"* 만 말한다.
+7. **우리 불변식 하나가 프라이버시와 양립 불가**: "투영은 cold ledger에서 완전히 재생성 가능"
+   → **"보존된 증거에 대해서는 완전 재생성, shred된 것에 대해서는 결정적 `Shredded<Commitment>`
+   tombstone 재생성"** 으로 바꿔야 한다. Cold Ledger 정의 자체도 "원문 전체"가 아니라
+   "공개 영수증 + 증거 commitment + availability 전이 + 보존된 암호화 증거 참조"가 된다.
+8. **경고**: 이벤트 텍스트로 LoRA 등 가중치 적응을 만들었다면 원문 삭제로 그 영향이 제거되지
+   않는다 ⟹ 삭제 가능한 이벤트는 가중치 갱신에 쓰지 않는 것이 가장 단순한 방어.
+
+**상태 변경: B1은 "미해결"에서 "설계 확보, 구현 대기"로.** 다만 게이트는 그대로 — N1(G5)이
+먼저이고, 구현은 그 뒤다. 그리고 **연합 재개 전에 평문 복제 경로가 존재하지 않음을 먼저
+확인**해야 한다(이미 나간 평문은 로컬 shred로 회수되지 않는다).
+
 ## 선행 자산 (재사용, 재발명 금지)
 
 AgentNet 설계 + envelope 스키마(`docs/AIOS_AGENTNET_DESIGN.md`) · council 가상 스레드

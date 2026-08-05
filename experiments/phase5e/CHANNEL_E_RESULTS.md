@@ -73,6 +73,31 @@ Adversarial post-checks run BEFORE recording the verdict (all factual, from `cha
    as specified therefore acted purely through guidance (the restricted listing), and that guidance
    produced no net advantage. This is reported so the null is attributed precisely: *offered-but-unused
    dispatch + guidance-only masking*, evaluated jointly per the frozen Mortuary Clause.
+
+### 3b. Correction to the attribution above (2026-08-05)
+
+The statement in (a) was imprecise and is corrected here rather than quietly edited. Sharpened by the
+author of the QEL design when we put these numbers to it
+(`docs/external/gpt/qel_author_response_to_our_null_2026-08-05.md`):
+
+> **With 0 invocations, the sub-routines' own efficacy was NOT measured.** No episode is
+> "as-treated", so the intrinsic effect of verified dispatch is *unidentified*, not falsified. What
+> this run falsified is a narrower and different proposition: **"show a model a verified dispatch
+> surface and it will recognise and call it."** That design failed.
+
+Two consequences we adopt:
+- **The 0/32 is itself a statistic.** Under an i.i.d. Bernoulli assumption the one-sided 95% upper
+  bound on the invocation rate is ≈ **8.9%** — and since the instrument WAS sensitive (18.75%
+  discordance), "no applicable occasion arose" is a strained explanation.
+- **An operator claim needs three stages, and we failed at the first:** (i) does invocation happen at
+  all, (ii) is the invoked operator better than the primitive, (iii) is there a net system-level
+  improvement. Failing (i) means this run **may not be counted as a test of a runtime experience
+  transport at all** — which does not rescue Channel E (the Mortuary Clause evaluated the named
+  architecture as a whole, and the masking half fired on 32/32 tasks and still produced C = 0.000),
+  but it does mean the honest claim is narrower than "verified sub-routine dispatch does not help".
+- The missing piece is an **activation policy**: our design had *capability* (may) and *receipt* (what
+  happened) but no *when/who selects*. Channel E used the weakest possible mode — model-optional. A
+  host-auto or mandatory-preflight mode was never tested.
 4. **Small-N honesty**: the one-sided 95% upper bound (+12.6 pp) does not exclude a small real
    advantage; power for ≥15 pp at the observed discordance was 0.63. What N=32 does settle, under the
    pre-registered kill rule, is that the claimed ≥15 pp mechanism effect is absent.
