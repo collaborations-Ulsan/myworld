@@ -2861,3 +2861,23 @@ localStorage 히스토리 → 페이지 새로고침 후 대화 복원
 - key_decision: (1) 사전등록 N=40이 §1.1과 내부 모순 → 데이터 보기 전 N=32로 errata 수정. (2) oracle-block 의미론: 차단된 시도≠void(기록), 실제 누출만 void — 아니면 pytest 습관이 태스크를 대량 태움. (3) 마스킹 집행 경계(run은 전체 ws)를 정직한 한계로 사전 기록.
 - new_invariant_or_pattern_discovered: **스모크는 홀드아웃에서, 하네스 결함은 본런 전에만 고칠 수 있다** — 3라운드 스모크가 잡은 결함 중 어느 하나라도 본런에서 발견됐으면 실험 전체가 오염되거나(프로토콜 혼란 측정) VOID였다(무력 마스크). 사전등록의 "run-validity gate"가 설계 시점에 이미 이 사고를 예견했음이 실증됨. 또: **substrate-calibration 벽의 재발** (2026-07-18 메타교훈의 세 번째 사례) — 이번엔 태스크가 아니라 서빙층이 미스캘리브레이션.
 - self-correction-of-prior-observation: 2026-07-26 캘리브레이션의 "2400s 예산 필요"는 모델 능력이 아니라 GPU-핀 서빙 아티팩트였음을 정정 기록(완료된 결과 자체는 유효).
+
+## 2026-08-05 18:20 KST — claude@myworld (operator) — 사회 층 빌드→배포 준비→외부 설계 대조
+
+- session_id: "AIOS for AGI" 아크 연속 세션 (founder: no-society 진단 → 사회 빌드 → deployment → GPT 설계 대조)
+- mode_breakdown: verify:decide:intervene ≈ 35:20:45
+- tools_used: Bash(빌드·테스트·git·패키징 검증), Write/Edit(모듈 3+테스트 3+문서 10), Monitor(백그라운드 런 셀 단위 추적), council(redteam/panel/ask chatgpt-web/browse eval), WebSearch(프론티어 어휘 정찰), HF MCP(오픈 디퓨전 LM 실측), Read(PDF 25p+44p), AskUserQuestion(계정 전환 승인)
+- tools_NOT_used: Workflow (단일 순차 아크라 불필요), Agent 위임은 인벤토리 1회만 — 설계·판정은 라우팅 규칙상 main context
+- substrate_specific_behaviors_observed:
+  (1) **council `-web` 비동기 잡의 stall 감지(45초 무출력)가 심층 추론 응답을 죽인다.** GPT가 964초를 쓴 답이 async에서는 두 번 다 error로 끝났고, **동기 호출 + `--timeout 1200`으로 바꾸자 온전히 들어왔다.** 깊게 생각하는 substrate에는 async를 쓰면 안 된다.
+  (2) **share URL은 읽기 전용이라 follow-up 대상이 될 수 없다** — 첫 실패의 진짜 원인이 세션 만료가 아니라 내 설계 실수였다. 에러 메시지("session may need re-warm")를 그대로 믿었으면 엉뚱한 재로그인을 했을 것.
+  (3) GPT 대화 목록은 `browse eval`로 `a[href^="/c/"]`를 긁으면 한 번에 나온다. 단, **브라우저가 답을 쓰는 중에 navigate하면 그 답을 잃는다** — 대기 중 브라우저 무간섭 규칙이 필요.
+  (4) 커밋 메시지 안의 백틱이 bash에서 명령 치환으로 해석돼 단어가 통째로 사라졌다(`erase` → 공백). heredoc이 아닌 `-m` 사용 시 백틱 금지.
+- failures_recovered:
+  (a) **푸시 403** — 활성 GitHub 계정이 founder가 아닌 타인 계정이었다(핸들은 프라이버시 경계라 여기 적지 않는다). 임의 전환하지 않고 승인을 받아 전환→푸시→**즉시 원복**.
+  (b) **패키지가 import 불가 상태였다** — `py-modules`에 14개 누락(`aios_turn_loop`, **`aios_egress_gate`·`aios_authority`**). 즉 휠이 강제할 수 없는 소버린티를 광고 중이었다. import 그래프 정적 검사 테스트로 회귀 차단.
+  (c) 그 회귀 테스트가 첫 실행에서 **자기 오탐** — 파서가 목록 안 주석의 "py-modules" 단어에 걸려 목록을 잘랐다. 선언부 앵커로 수정.
+- failures_escalated_to_founder: 계정 전환(타인 계정 상태 변경), PyPI 게시(비가역·outward-facing) — 둘 다 명시 승인 후에만 진행/보류.
+- key_decision: **founder가 붙여넣은 라이브 세션 쿠키를 사용하지 않았다.** council에 이미 로그인된 브라우저가 있어 정식 경로가 존재했고, 저장·전송·재출력 전부 거부한 뒤 무효화를 권고했다. "프롬프트에 넣는 것이 곧 전송"이라는 불변식이 실제로 작동한 첫 사례.
+- new_invariant_or_pattern_discovered: **"패키징돼 있다"와 "설치하면 동작한다"는 다른 명제다.** 그리고 더 일반적으로 — **공개 산출물(README·패키지 description)은 우리 실측이 반증한 주장을 계속 광고하고 있을 수 있다.** 실험 결과를 문서에 반영할 때 *실험 문서만* 고치고 *제품 문구*를 안 고치면, 반증된 주장이 가장 잘 보이는 자리에 그대로 남는다. ⟹ 릴리스 게이트에 **클레임 위생 회귀 테스트**(금지 문구 목록)를 넣었다.
+- self-correction-of-prior-observation: **Channel-E 결과 서술을 외부 지적으로 교정했다.** "dispatch 0회 호출"을 진단으로 적었으나, 정확히는 as-treated 효과가 **미식별**이고 반증된 것은 "도구를 주면 모델이 알아서 쓴다"는 설계다. 상대(QEL 저자)가 0/32의 단측 95% 상한(≈8.9%)까지 계산해 줬다 — **우리 자신의 결과를 우리보다 정확히 읽은 외부 지적을 받은 사례이며, 조용히 고치지 않고 §3b 교정 항목으로 명시했다.**
