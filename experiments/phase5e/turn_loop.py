@@ -370,11 +370,19 @@ def run_episode(task: dict, arm: str, model: str,
                 state_dir: Path | str | None = None,
                 call_timeout: float = 2400.0, oracle_timeout: float = 300.0,
                 ws: Path | str | None = None, model_fn=None,
-                induce: bool = True) -> dict:
+                induce: bool = True, max_turns: int | None = None,
+                extra_context: str = "") -> dict:
     """Run ONE K-turn episode; return the per-task record.
 
     arm='control' -> state_dir forced None (registry structurally wiped).
     model_fn(messages)->text overrides the ollama call (tests only).
+
+    `max_turns` caps the loop below K (default K_TURNS). G5 uses it to split one
+    episode around a forced death: j turns before, K-j after, with the budget
+    identical across arms so no arm can win by thinking longer.
+    `extra_context` is appended to the opening state — G5 puts the recovering
+    agent's resume pack there. Both default to the plain K-turn behaviour, so
+    the Channel-E protocol is unchanged.
     """
     assert arm in ("control", "treatment"), arm
     if arm == "control":
@@ -444,13 +452,17 @@ def run_episode(task: dict, arm: str, model: str,
 
         sys_msg = system_prompt(arm, task, dispatch)
         init_msg = initial_state(task, ws, trace, listing)
+        if extra_context:
+            init_msg = init_msg + "\n\n" + extra_context
         record["prompt_chars"] = len(sys_msg) + len(init_msg)
         messages = [{"role": "system", "content": sys_msg},
                     {"role": "user", "content": init_msg}]
 
         # -- K-turn loop --
         done = False
-        for turn in range(1, K_TURNS + 1):
+        turn_budget = K_TURNS if max_turns is None else max(0, int(max_turns))
+        record["turn_budget"] = turn_budget
+        for turn in range(1, turn_budget + 1):
             try:
                 if model_fn is not None:
                     text = model_fn(messages)
