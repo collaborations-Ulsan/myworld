@@ -72,16 +72,26 @@ def _git_head() -> str:
         return ""
 
 
-def main_tasks(n: int = N_TASKS) -> list[dict]:
-    doc = json.loads(TASKS_JSON.read_text(encoding="utf-8"))
-    holdout = set(json.loads(HOLDOUT_JSON.read_text(encoding="utf-8"))["task_ids"])
+def main_tasks(n: int = N_TASKS, tasks_file: Path | str | None = None
+               ) -> list[dict]:
+    """G5's task selection, or a pre-built manifest for a later experiment.
+
+    `tasks_file` exists so G6 can run on its own frozen manifest through THIS
+    verified driver instead of a fresh copy (a new runner would mean new bugs
+    deciding a result). Default arguments reproduce G5 exactly.
+    """
+    src = Path(tasks_file) if tasks_file else TASKS_JSON
+    doc = json.loads(src.read_text(encoding="utf-8"))
     tasks = sorted(doc["tasks"], key=lambda t: (t["ts_epoch"], t["task_id"]))
-    kept = [t for t in tasks if t["task_id"] not in holdout]
-    if len(kept) != n:
-        raise SystemExit(f"expected {n} non-holdout tasks, have {len(kept)}")
-    for i, t in enumerate(kept):
+    if tasks_file is None:
+        holdout = set(json.loads(HOLDOUT_JSON.read_text(
+            encoding="utf-8"))["task_ids"])
+        tasks = [t for t in tasks if t["task_id"] not in holdout]
+    if len(tasks) != n:
+        raise SystemExit(f"expected {n} tasks in {src.name}, have {len(tasks)}")
+    for i, t in enumerate(tasks):
         t["seq"] = i
-    return kept
+    return tasks
 
 
 def load_records(path: Path) -> list[dict]:
@@ -247,14 +257,21 @@ def contrast(atts: dict, tasks: list[dict], treat: str, ctrl: str) -> dict:
 
 
 def write_report(atts: dict, tasks: list[dict], records: list[dict],
-                 path: Path = REPORT) -> dict:
+                 path: Path = REPORT, arms: tuple = death.ARMS) -> dict:
     gate = death.validity(records)
-    main = contrast(atts, tasks, "society", "solo_ledger")       # THE contrast
-    others = [contrast(atts, tasks, "solo_ledger", "solo_norecord"),
-              contrast(atts, tasks, "society_rev", "society"),
-              contrast(atts, tasks, "society", "solo_norecord")]
+    # The primary contrast follows the arms actually run: with the society arms
+    # present it is society vs solo+ledger (G5); with only the solo arms it is
+    # ledger vs no-record (G6). Chosen by which arms exist, never post hoc.
+    if "society" in arms:
+        main = contrast(atts, tasks, "society", "solo_ledger")
+        others = [contrast(atts, tasks, "solo_ledger", "solo_norecord"),
+                  contrast(atts, tasks, "society_rev", "society"),
+                  contrast(atts, tasks, "society", "solo_norecord")]
+    else:
+        main = contrast(atts, tasks, "solo_ledger", "solo_norecord")
+        others = []
     rates = {}
-    for arm in death.ARMS:
+    for arm in arms:
         cells = [r for r in atts.values() if r["arm"] == arm
                  and not r.get("infra_error")]
         rates[arm] = (round(sum(1 for r in cells if r["passed"]) / len(cells), 4)
@@ -328,7 +345,11 @@ def write_report(atts: dict, tasks: list[dict], records: list[dict],
 
 
 def run(args: argparse.Namespace) -> int:
-    tasks = main_tasks()[: args.n_tasks]
+    arms = tuple(a.strip() for a in args.arms.split(",") if a.strip())
+    bad = [a for a in arms if a not in death.ARMS]
+    if bad:
+        raise SystemExit(f"unknown arm(s) {bad}; known: {list(death.ARMS)}")
+    tasks = main_tasks(args.n_tasks, args.tasks_file or None)[: args.n_tasks]
     results, arcs_dir, locks_dir = Path(args.results), Path(args.arcs_dir), Path(args.locks_dir)
     records = load_records(results)
     atts = {(r["arm"], r["task_id"]): r for r in records
@@ -336,16 +357,16 @@ def run(args: argparse.Namespace) -> int:
     if not records:
         append_line(results, {
             "kind": "run_meta", "schema": SCHEMA, "ts": _now_iso(),
-            "model": MODEL, "k_turns": K_TURNS, "arms": list(death.ARMS),
+            "model": MODEL, "k_turns": K_TURNS, "arms": list(arms),
             "n_tasks": len(tasks), "prereg": PREREG, "git_head": _git_head(),
             "death_turns": {t["task_id"]: death.death_turn(t["task_id"])
                             for t in tasks}})
-    todo = sum(1 for t in tasks for a in death.ARMS
+    todo = sum(1 for t in tasks for a in arms
                if (a, t["task_id"]) not in atts)
     print(f"[g5] {_now_iso()} start: {todo} cells, {len(atts)} done", flush=True)
 
     for t in tasks:
-        for arm in death.ARMS:
+        for arm in arms:
             if (arm, t["task_id"]) in atts:
                 continue
             if STOP_FILE.exists():
@@ -365,9 +386,10 @@ def run(args: argparse.Namespace) -> int:
                   f"transfer={rec['ownership_transferred']} "
                   f"wall={rec['wall_s']}s", flush=True)
 
-    if any((a, t["task_id"]) not in atts for t in tasks for a in death.ARMS):
+    if any((a, t["task_id"]) not in atts for t in tasks for a in arms):
         return 3
-    summary = write_report(atts, tasks, load_records(results))
+    summary = write_report(atts, tasks, load_records(results),
+                           path=Path(args.report), arms=arms)
     append_line(results, {"kind": "run_summary", "ts": _now_iso(),
                           **{k: v for k, v in summary.items()
                              if k in ("gate", "main", "kill_rule", "rates")}})
@@ -382,23 +404,30 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--arcs-dir", default=str(ARCS_DIR))
     ap.add_argument("--locks-dir", default=str(LOCKS_DIR))
     ap.add_argument("--n-tasks", type=int, default=N_TASKS)
+    ap.add_argument("--tasks-file", default="",
+                    help="pre-built manifest (G6); default = G5's pool")
+    ap.add_argument("--arms", default=",".join(death.ARMS),
+                    help="subset of arms to run, comma-separated")
+    ap.add_argument("--report", default=str(REPORT))
     ap.add_argument("--call-timeout", type=float, default=2400.0)
     ap.add_argument("--oracle-timeout", type=float, default=300.0)
     ap.add_argument("--report-only", action="store_true")
     a = ap.parse_args(argv)
     if a.report_only:
-        tasks = main_tasks()[: a.n_tasks]
+        arms = tuple(x.strip() for x in a.arms.split(",") if x.strip())
+        tasks = main_tasks(a.n_tasks, a.tasks_file or None)[: a.n_tasks]
         recs = load_records(Path(a.results))
         atts = {(r["arm"], r["task_id"]): r for r in recs
                 if r.get("kind") == "attempt"}
-        missing = [(x, t["task_id"]) for t in tasks for x in death.ARMS
+        missing = [(x, t["task_id"]) for t in tasks for x in arms
                    if (x, t["task_id"]) not in atts]
         if missing:
             print(json.dumps({"status": "incomplete — no report",
                               "cells_done": len(atts),
                               "cells_missing": len(missing)}, indent=1))
             return 3
-        print(json.dumps(write_report(atts, tasks, recs)["main"], indent=1))
+        print(json.dumps(write_report(atts, tasks, recs, path=Path(a.report),
+                                      arms=arms)["main"], indent=1))
         return 0
     return run(a)
 
