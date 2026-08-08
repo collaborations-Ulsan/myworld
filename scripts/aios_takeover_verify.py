@@ -1,5 +1,34 @@
 #!/usr/bin/env python3
-"""G2 — Verified handoff: was the TAKEOVER faithful to the arc?
+"""Arc conformance checker — did the work match what the arc declared?
+
+**VALUE CLAIM WITHDRAWN 2026-08-05.** This module was built as "G2 — verified
+handoff" for an agent society. G5 falsified the society: handing work to a
+second agent scored 6.25pp WORSE than the same agent resuming from the same
+record (128 cells, McNemar p = 0.856; `experiments/phase5g/G5_RESULTS.md`).
+The society layer is dissolved and will not be rebuilt, so **"verified handoff"
+is no longer a capability this project claims.**
+
+What survives, and all this module may now be described as: a **conformance
+checker** that judges whether the work recorded on an arc matches the goal,
+constraints and external oracle that arc declared. That is useful for a single
+agent resuming its own work — the configuration G5 actually favoured — and it
+is the shape our sovereignty identity supports (verify and constrain, do not
+claim to improve).
+
+Two honest consequences of the withdrawal:
+  * The `takeover_window` machinery still identifies an ownership transfer, but
+    a transfer between DIFFERENT agents is now a rare/legacy case rather than
+    the point. Applied to a single agent resuming itself, the verifier is
+    checking that agent against its own prior declaration — which is weaker
+    evidence than an independent check, and must be reported as such.
+  * Nothing here should be cited as evidence that verification improves task
+    outcomes. It does not; it makes outcomes *checkable*.
+
+Original design notes follow, kept because the mechanism is unchanged.
+
+---
+
+G2 — Verified handoff: was the TAKEOVER faithful to the arc?
 
 Goal tree: `docs/AIOS_SOCIETY_GOALTREE_2026-08-02.md` (G2). This module is the
 society's answer to the sharpest red-team attack (2026-08-02, deepseek, lens

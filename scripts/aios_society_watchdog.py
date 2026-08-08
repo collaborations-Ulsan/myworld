@@ -1,5 +1,28 @@
 #!/usr/bin/env python3
-"""G3 — Availability: nobody's arc stays nobody's.
+"""Orphan-arc reclaimer — work whose owner died gets picked up again.
+
+**SCOPE NARROWED 2026-08-05.** Built as "G3 — availability" for an agent
+society. G5 falsified the society: routing work to a DIFFERENT agent scored
+6.25pp worse than the same agent resuming from the same record
+(`experiments/phase5g/G5_RESULTS.md`). So the multi-substrate routing below —
+picking whichever of local/codex/claude is alive — **is no longer the point and
+is not a claimed capability.**
+
+What survives is the half that the winning configuration actually needs:
+**detecting that an arc has no live owner and getting it resumed at all.** Arm B
+(a single agent resuming its own record) still requires something to notice the
+owner died — that is this module's remaining job. Prefer reclaiming the arc for
+the SAME agent identity; handing it to a different substrate is a fallback of
+last resort, not an improvement, and must not be described as one.
+
+Nothing here should be cited as evidence that multi-agent availability improves
+outcomes. It was measured, and it did not.
+
+Original design notes follow, kept because the mechanism is unchanged.
+
+---
+
+G3 — Availability: nobody's arc stays nobody's.
 
 Goal tree: `docs/AIOS_SOCIETY_GOALTREE_2026-08-02.md` (G3). A society is only
 available if an arc whose worker died gets picked up WITHOUT a human noticing.
