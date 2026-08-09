@@ -300,7 +300,7 @@ def write_report(atts: dict, tasks: list[dict], records: list[dict],
         "",
         "| arm | P_complete |", "|---|---|",
     ]
-    for arm in death.ARMS:
+    for arm in arms:            # only the arms this run executed (G6 runs 2 of 4)
         lines.append(f"| {arm} | {rates[arm]} |")
     lines += [
         "",
