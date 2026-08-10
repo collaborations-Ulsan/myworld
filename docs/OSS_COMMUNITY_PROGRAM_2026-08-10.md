@@ -147,6 +147,19 @@ machine still runs all of them.
    reset would still stop at TOTP and would break the founder's credential for nothing.
 2. **Start the external PR stream** (criterion #3, currently 0/100). Target MCP servers, Claude Code
    plugins and agent-memory repos so each merge doubles as distribution.
+
+   Scouted 2026-08-10 — open, unassigned, `good first issue`, all verified live:
+
+   | repo | ★ | issue | why this one |
+   |---|---|---|---|
+   | `anthropics/claude-code-action` | 8.6k | [#242](https://github.com/anthropics/claude-code-action/issues/242) — surface syntax errors in `.claude/settings.json` and workflow fields | **First pick.** Anthropic's own repo, actively pushed. Unassigned with **zero comments since 2025-07-10** — a year unclaimed. Bounded spec with worked examples. TypeScript. And the defect *is* silent failure on bad config, which is the thing this project argues about; we work in these files daily. |
+   | `grafana/mcp-grafana` | 3.3k | [#813](https://github.com/grafana/mcp-grafana/issues/813) `update_alert_group` tool, [#814](https://github.com/grafana/mcp-grafana/issues/814) | Real MCP server, recent issues (2026-04), Go. |
+   | `MemMachine/MemMachine` | 3.4k | [#784](https://github.com/MemMachine/MemMachine/issues/784) LlamaIndex integration guide | Direct agent-memory peer — a merge here is distribution in front of exactly our users. Doc-heavy. |
+   | `czlonkowski/n8n-mcp` | 22.6k | [#433](https://github.com/czlonkowski/n8n-mcp/issues/433) integration test coverage | Large audience; testing work, which is our demonstrated strength today. |
+
+   Honest read on #242: `p3` and a year old can mean low maintainer appetite, so the PR may sit
+   regardless of quality. It is still the right first move — the cost is one bounded change and the
+   upside is a merge in the program owner's own repo.
 3. **Write the null-result piece** in Vox style. GitHub-native first (Release + Discussion) — there
    are no social accounts yet.
 4. Re-measure §2 monthly against this file.
