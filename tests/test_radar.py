@@ -8,12 +8,18 @@ dedupe, keyword scoring/ranking, digest generation shape, and dry-run behavior.
 """
 from __future__ import annotations
 
+import importlib.util
 import json
 import sys
 import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import MagicMock, patch
+
+# Patching an attribute on scrapling.fetchers imports scrapling, so these
+# mocked tests need the package even though they never hit the network.
+# See the same note in tests/test_aios_scrape.py.
+_HAS_SCRAPLING = importlib.util.find_spec("scrapling") is not None
 
 sys.path.insert(0, (Path(__file__).resolve().parents[1] / "experiments" / "radar").as_posix())
 
@@ -132,6 +138,11 @@ class SourceParsingTests(unittest.TestCase):
         self.assertEqual(items[0]["date"], "2026-07-07")
 
 
+@unittest.skipUnless(
+    _HAS_SCRAPLING,
+    "requires the scrapling package to patch scrapling.fetchers "
+    "(pip install 'scrapling[fetchers]')",
+)
 class ScraplingFetchTests(unittest.TestCase):
     """fetch_page_via_scrapling (2026-07-22 scrapling absorption) -- mocked at the
     scrapling.fetchers call boundary, no live network. Optional escalation path,

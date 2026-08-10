@@ -297,8 +297,18 @@ class SovereignHeadTest(unittest.TestCase):
 
     def test_default_adapters_non_sovereign_provider_unaffected(self):
         # Regression: adding the `goal` kwarg must not change existing providers.
-        adapters = self.head._default_adapters("ollama_local")
-        self.assertIn("ollama_local", adapters)
+        #
+        # This used to assert `"ollama_local" in adapters`, which is a claim
+        # about the MACHINE (build_adapters filters to providers whose binary is
+        # actually present), not about the kwarg. On any host without ollama —
+        # every CI runner — it returned {} and failed, for a reason that had
+        # nothing to do with the regression being guarded.
+        #
+        # Compare the two call shapes instead: whatever this host offers, the
+        # `goal` kwarg must not change it for a non-sovereign provider.
+        without_goal = self.head._default_adapters("ollama_local")
+        with_goal = self.head._default_adapters("ollama_local", goal="inspect the repo")
+        self.assertEqual(sorted(without_goal), sorted(with_goal))
 
     def test_env_aios_sovereign_selects_sovereign_without_explicit_flag(self):
         import os

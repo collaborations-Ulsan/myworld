@@ -29,6 +29,7 @@ Each value is a repo-root-relative path present on a full checkout and absent on
 a clean public clone, plus a human reason naming the missing prerequisite.
 """
 
+import importlib.util
 from pathlib import Path
 
 import pytest
@@ -47,6 +48,8 @@ _DISPATCH_STATE = (".aios/state/dispatches.jsonl", "operator-machine AIOS dispat
 _SERVING_GATE = (".aios/serving/design_gate.json", "operator-machine AIOS serving-gate state")
 _PAPER_0160 = (".aios/invocations/asc-0160-paper-refinement", "operator-machine AIOS invocation receipts")
 _PAPER_0163 = (".aios/invocations/asc-0163-negative-evidence-creativity", "operator-machine AIOS invocation receipts")
+_MCP_CONFIG = (".aios/mcp_servers.json", "operator-machine MCP server config")
+_DOGFOOD_SKILL = (".aios/skills/aios-driftbench-prereg/SKILL.md", "operator-machine AIOS skill state")
 
 # ── node-id fragment -> (relative path, reason) ──────────────────────────────
 _REQUIREMENTS: dict[str, tuple[str, str]] = {
@@ -99,11 +102,42 @@ _REQUIREMENTS: dict[str, tuple[str, str]] = {
     "test_aios_uri_filter.py::AiosUriFilterTest::test_doc_scout_reports_uri_filter_counts": _URI,
     "test_aios_uri_filter.py::AiosUriFilterTest::test_real_uri_examples_classify_expected_paths": _URI,
     "test_aios_world_readiness.py::AiosWorldReadinessTest::test_current_repo_world_readiness_achieved": _SERVING_GATE,
+    "test_aios_mcp_client.py::ConfigTests::test_load_server_config_reads_aios_self_entry": _MCP_CONFIG,
+    "test_aios_mcp_client.py::ConnectNamedLiveTests::test_connect_named_reaches_the_real_aios_mcp_server": _MCP_CONFIG,
+    "test_aios_skills_loader.py::ToolSkillUseTests::test_tool_skill_use_finds_the_dogfood_skill": _DOGFOOD_SKILL,
+    "test_aios_tools.py::SkillUseWiringTests::test_loads_the_dogfood_driftbench_skill": _DOGFOOD_SKILL,
+}
+
+# ── node-id fragment -> (importable module, reason) ──────────────────────────
+# Some prerequisites are not files but *packages*. The CI job installs pytest
+# and nothing else on purpose: that is what proves the "no required
+# dependencies" promise, and weakening it to make tests pass would throw away
+# the guarantee the job exists to protect.
+#
+# 2026-08-10: the APEX/DescentNet certifiers need numpy. Without it the gate
+# correctly reports the organ as `unavailable` — the honest degradation the
+# design calls for — but nine tests asserted the organ had actually RUN, so
+# they failed on every clean-environment run. Skipping with the reason named
+# keeps CI honest about what it did and did not check; on a dev machine, where
+# numpy is present, all nine run.
+_NUMPY = ("numpy", "numpy, required by the APEX/DescentNet certifiers")
+
+_MODULE_REQUIREMENTS: dict[str, tuple[str, str]] = {
+    "test_aios_epistemic_gate.py::OrgansModeTests": _NUMPY,
+    "test_aios_epistemic_gate.py::DisabledOrganTests": _NUMPY,
+    "test_m2_driftbench_smoke.py": _NUMPY,
 }
 
 
 def _missing(relative_path: str) -> bool:
     return not (_REPO_ROOT / relative_path).exists()
+
+
+def _module_missing(name: str) -> bool:
+    try:
+        return importlib.util.find_spec(name) is None
+    except (ImportError, ValueError):  # present but unimportable == unusable
+        return True
 
 
 def _selector_matches(nodeid: str, selector: str) -> bool:
@@ -115,12 +149,25 @@ def _selector_matches(nodeid: str, selector: str) -> bool:
 
 def pytest_collection_modifyitems(config, items):
     for item in items:
+        skipped = False
         for selector, (relative_path, reason) in _REQUIREMENTS.items():
             if _selector_matches(item.nodeid, selector) and _missing(relative_path):
                 item.add_marker(
                     pytest.mark.skip(
                         reason=f"requires {reason} at '{relative_path}' "
                         "(absent on a clean public clone / operator machine)"
+                    )
+                )
+                skipped = True
+                break
+        if skipped:
+            continue
+        for selector, (module_name, reason) in _MODULE_REQUIREMENTS.items():
+            if _selector_matches(item.nodeid, selector) and _module_missing(module_name):
+                item.add_marker(
+                    pytest.mark.skip(
+                        reason=f"requires {reason} "
+                        "(not installed in this environment)"
                     )
                 )
                 break

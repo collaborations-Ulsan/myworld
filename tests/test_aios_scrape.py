@@ -11,10 +11,20 @@ web.fetch/web.search have no live-network unit tests either.
 """
 from __future__ import annotations
 
+import importlib.util
 import sys
 import unittest
 from pathlib import Path
 from unittest.mock import MagicMock, patch
+
+# `patch("scrapling.fetchers.Fetcher.get")` has to IMPORT scrapling to replace
+# an attribute on it, so the mocked tests below need the package present even
+# though they never touch the network. The module docstring above claimed they
+# ran either way; they did not, and on CI — where scrapling is not installed —
+# eight of them failed with ModuleNotFoundError. Skip with the reason stated,
+# per the policy in tests/conftest.py. MissingDependencyTests deliberately
+# forces the import to fail and still runs everywhere.
+_HAS_SCRAPLING = importlib.util.find_spec("scrapling") is not None
 
 sys.path.insert(0, (Path(__file__).resolve().parents[1] / "scripts").as_posix())
 
@@ -73,6 +83,11 @@ class ArgShapeAndDenialTests(unittest.TestCase):
         self.assertEqual(r["status"], "denied")
 
 
+@unittest.skipUnless(
+    _HAS_SCRAPLING,
+    "requires the scrapling package to patch scrapling.fetchers "
+    "(pip install 'scrapling[fetchers]')",
+)
 class MockedFetchTests(unittest.TestCase):
     """Mocked at the scrapling.fetchers.Fetcher/StealthyFetcher call boundary --
     no live network. Verifies success shape, HTTP-error degrade, exception/timeout
