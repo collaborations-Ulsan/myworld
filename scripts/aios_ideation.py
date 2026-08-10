@@ -30,20 +30,23 @@ trusting a row):
      it cannot smuggle an invention past a substring test.
   2. FALSIFIER PRESENT — a claim with no named way to kill it is not an asset,
      it is a quote. Rejected.
-  3. NOVELTY NEEDS A WITNESS — every claim is reduced to its nearest existing
-     framing in OUR corpus. Above the dedup threshold it is recorded as
-     `rename`, not as a discovery. The threshold is CALIBRATED, not guessed:
-     `auto` takes the 95th percentile of our corpus's own
-     nearest-neighbour similarity, i.e. "as close as our own documents already
-     are to each other 95% of the time".
+  3. NOVELTY NEEDS A WITNESS — and right now we do not have one. Every claim is
+     still reduced to its nearest framing in OUR corpus and the score is
+     recorded, but the threshold is MEASURED against two controls (`calibrate`:
+     positives = local-model paraphrases of our own sentences, negatives =
+     abstracts from an unrelated field) and as of 2026-08-10 it does not
+     separate them — three statistics, Youden J = 0.5167 (document-level max
+     cosine), 0.5673 (passage-level max cosine), 0.4476 (passage-level peak-z).
+     So a well-formed row is labelled `grounded`, NOT `novel`, and `rename` is
+     only ever emitted when a calibration with separated=true exists.
 
 HONEST LIMITS, stated where they cannot be missed:
-  - The oracle proves the quote is real and the claim is not a restatement of
-    something we already wrote. It does NOT prove the claim is TRUE. That is
-    what the `falsifier` field is for, and why `epistemic_type` starts at
-    `Proposal` and only a run receipt can raise it.
-  - Dedup is only as good as the corpus and the embedder. `dedup_method` is
-    recorded on every row; a `lexical` row is much weaker than an `embed` row.
+  - The oracle proves the quote is REAL. It does not prove the claim is TRUE,
+    and — until dedup separates — it does not prove the claim is NEW either.
+    `epistemic_type` starts at `Proposal` and only a run receipt raises it.
+  - `dedup_method`, `dedup_trusted` and `novelty_assessed` are recorded on every
+    row. A row with novelty_assessed=false says nothing about novelty; do not
+    read `grounded` as a weaker word for `novel`.
   - Nothing private leaves the box: queries are constants or CLI arguments,
     never file content; distillation and embedding are local (ollama).
 
@@ -184,7 +187,49 @@ def harvest_github(query: str, limit: int) -> list[dict]:
     return out
 
 
+ARXIV_ID = re.compile(r"arxiv\.org/(?:abs|pdf|html)/([0-9]{4}\.[0-9]{4,5})")
+
+
+def harvest_url(url: str) -> list[dict]:
+    """Absorb one specific source the operator points at.
+
+    The founder handing over a link is a recurring move, and a ledger that can
+    only ingest its own queries would send that link to a chat message instead
+    of to the record. For arXiv we go through the API rather than scraping the
+    page: the grounding oracle needs the exact text the claim must quote, and
+    a rendered page's whitespace and boilerplate would make a true quote fail.
+    """
+    m = ARXIV_ID.search(url)
+    if m:
+        raw = _get("http://export.arxiv.org/api/query?"
+                   + urllib.parse.urlencode({"id_list": m.group(1)})
+                   ).decode("utf-8", "replace")
+        entry = re.search(r"<entry>(.*?)</entry>", raw, re.S)
+        if not entry:
+            raise ValueError(f"arXiv returned no entry for {m.group(1)}")
+        body = entry.group(1)
+
+        def tag(t):
+            g = re.search(rf"<{t}>(.*?)</{t}>", body, re.S)
+            return re.sub(r"\s+", " ", g.group(1)).strip() if g else ""
+        return [_item("arxiv", f"https://arxiv.org/abs/{m.group(1)}",
+                      tag("title"), tag("summary"))]
+    html = _get(url, timeout=30.0).decode("utf-8", "replace")
+    text = re.sub(r"<(script|style)[^>]*>.*?</\1>", " ", html, flags=re.S | re.I)
+    text = re.sub(r"<[^>]+>", " ", text)
+    text = re.sub(r"\s+", " ", text).strip()
+    if len(text) < 200:
+        raise ValueError(f"fetched {url} but got {len(text)} chars of text")
+    return [_item("url", url, url, text[:20000])]
+
+
 HARVESTERS = {"arxiv": harvest_arxiv, "hn": harvest_hn, "github": harvest_github}
+
+# Politeness delay per source, seconds. arXiv's terms ask for roughly one
+# request every 3 seconds and GitHub's unauthenticated search allows ~10/min;
+# a full sweep is 8 topics x 3 sources, so firing them back-to-back would get us
+# throttled and, worse, would look like an empty result rather than a refusal.
+COURTESY = {"arxiv": 3.0, "github": 6.0, "hn": 0.5}
 
 
 # ---------------------------------------------------------------------------
@@ -270,16 +315,22 @@ def embed(texts: list[str], model: str = EMBED_MODEL,
     """
     global EMBED_ERROR, EMBED_FAILED
     EMBED_ERROR, EMBED_FAILED = None, []
-    out, dim = [], None
 
     # Fast path: ollama /api/embed takes a list. Passage-level dedup means
     # thousands of vectors, and one call per passage turns a 3-minute job into
-    # half an hour. A batch that trips the NaN defect falls back to per-item so
-    # one bad passage cannot void the batch.
+    # half an hour. A batch that trips the NaN defect falls back to the SERIAL
+    # path so one bad passage cannot void the batch.
+    #
+    # The fallback must be _embed_serial, NOT embed: a sub-batch of 32 is still
+    # > 8, so re-entering embed() took the batch path again, failed again, and
+    # recursed until `RecursionError` — which surfaced as two calibration runs
+    # dying at their timeout and made vectorising the cosine maths look
+    # ineffective. The cost was never in the maths; the process was spinning.
     if len(texts) > 8:
-        acc, ok = [], True
+        acc, failed, ok = [], [], True
         for i in range(0, len(texts), 32):
-            group = [(t or "").strip()[:2000] or " " for t in texts[i:i + 32]]
+            chunk = texts[i:i + 32]
+            group = [(t or "").strip()[:2000] or " " for t in chunk]
             try:
                 r = _ollama("/api/embed", {"model": model, "input": group},
                             timeout=300.0)
@@ -289,19 +340,30 @@ def embed(texts: list[str], model: str = EMBED_MODEL,
                 acc.extend(vs)
             except (urllib.error.URLError, OSError, json.JSONDecodeError,
                     ValueError):
-                sub = embed(texts[i:i + 32], model, allow_partial)
+                sub = _embed_serial(chunk, model, allow_partial)
                 if sub is None:
                     ok = False
                     break
-                bad = list(EMBED_FAILED)
+                failed.extend({**b, "index": b["index"] + i}
+                              for b in EMBED_FAILED)
                 acc.extend(sub)
-                EMBED_FAILED = [{**b, "index": b["index"] + i} for b in bad]
         if ok and len(acc) == len(texts):
-            if EMBED_FAILED:
-                EMBED_ERROR = (f"{len(EMBED_FAILED)}/{len(texts)} inputs "
+            EMBED_FAILED = failed
+            if failed:
+                EMBED_ERROR = (f"{len(failed)}/{len(texts)} inputs "
                                f"unembeddable (zero-vectored)")
             return acc
+        EMBED_FAILED = failed
 
+    return _embed_serial(texts, model, allow_partial)
+
+
+def _embed_serial(texts: list[str], model: str,
+                  allow_partial: bool) -> list[list[float]] | None:
+    """One call per text. Slow, but it isolates a single poisoned input."""
+    global EMBED_ERROR, EMBED_FAILED
+    EMBED_ERROR, EMBED_FAILED = None, []
+    out, dim = [], None
     for n, t in enumerate(texts):
         body = (t or "").strip()[:2000]
         if not body:
@@ -480,7 +542,8 @@ def _paraphrase(sentence: str, model: str = PARAPHRASE_MODEL) -> str:
         return ""
 
 
-def cmd_calibrate(n_pos: int = 40, n_neg: int = 40) -> dict:
+def cmd_calibrate(n_pos: int = 40, n_neg: int = 40,
+                  verbose: bool = True) -> dict:
     """Measure the dedup threshold instead of declaring it.
 
     positive = a sentence we wrote, from a part of a doc the corpus vector did
@@ -513,8 +576,23 @@ def cmd_calibrate(n_pos: int = 40, n_neg: int = 40) -> dict:
         if sents:
             originals.append(sents[len(sents) // 2])
             done.add(c["path"])
-    pos_texts = [_paraphrase(s) for s in originals]
-    pos_texts = [p for p in pos_texts if p]
+    # Instrumented on purpose. Two calibration runs died at their 1500s
+    # timeout and vectorising the cosine maths did not help, which means the
+    # cost was never where it was assumed to be. Guessing again would be a
+    # third wasted run, so the loop now says where the time goes.
+    pos_texts, t_para = [], time.time()
+    for n, s in enumerate(originals, 1):
+        t1 = time.time()
+        p = _paraphrase(s)
+        if p:
+            pos_texts.append(p)
+        if verbose:
+            print(f"  [paraphrase {n:>2}/{len(originals)}] "
+                  f"{round(time.time() - t1, 1)}s "
+                  f"{'ok' if p else 'EMPTY'}", flush=True)
+    if verbose:
+        print(f"  paraphrase total {round(time.time() - t_para, 1)}s "
+              f"({len(pos_texts)}/{len(originals)} usable)", flush=True)
     neg_items = harvest_arxiv(NEG_QUERY, n_neg)
     neg_texts = [f"{i['title']}. {i['text'][:400]}" for i in neg_items]
     pv = embed(pos_texts)
@@ -528,8 +606,9 @@ def cmd_calibrate(n_pos: int = 40, n_neg: int = 40) -> dict:
     # those samples from the statistics rather than let them bias the cut.
     bad_p = {b["index"] for b in pv_bad}
     bad_n = {b["index"] for b in nv_bad}
-    pos = sorted(_peak_z(v, vecs)[1] for i, v in enumerate(pv) if i not in bad_p)
-    neg = sorted(_peak_z(v, vecs)[1] for i, v in enumerate(nv) if i not in bad_n)
+    M = _as_matrix(vecs)
+    pos = sorted(_peak_z(v, vecs, M)[1] for i, v in enumerate(pv) if i not in bad_p)
+    neg = sorted(_peak_z(v, vecs, M)[1] for i, v in enumerate(nv) if i not in bad_n)
 
     lo, hi = min(pos + neg), max(pos + neg)
     best, best_j = lo, -1.0
@@ -569,17 +648,48 @@ def cmd_calibrate(n_pos: int = 40, n_neg: int = 40) -> dict:
     return out
 
 
-def load_threshold() -> float | None:
+def load_calibration() -> dict | None:
     p = ASSET / "calibration.json"
     if not p.exists():
         return None
     try:
-        return float(json.loads(p.read_text())["threshold"])
-    except (json.JSONDecodeError, KeyError, ValueError, OSError):
+        return json.loads(p.read_text())
+    except (json.JSONDecodeError, OSError):
         return None
 
 
-def _peak_z(claim_vec, vecs) -> tuple[float, float, int]:
+def load_threshold() -> tuple[float | None, bool]:
+    """(threshold, trusted). `trusted` is False unless the calibration that
+    produced the threshold actually separated its two controls — a threshold
+    from an unseparated calibration is a number, not a decision boundary."""
+    c = load_calibration()
+    if not c:
+        return None, False
+    try:
+        return float(c["threshold"]), bool(c.get("separated"))
+    except (KeyError, ValueError, TypeError):
+        return None, False
+
+
+def _as_matrix(vecs):
+    """Unit-normalised corpus matrix, numpy if available.
+
+    Pure Python cost this: a full calibration is ~80 samples x ~2100 passages x
+    1024 dims, which timed out at 1500s on 2026-08-10. numpy turns it into one
+    matmul. The stdlib path is kept because this module is otherwise dependency
+    -free and must still run in a bare wheel — it is slower, not different.
+    """
+    try:
+        import numpy as np
+    except ImportError:
+        return None
+    m = np.asarray(vecs, dtype="float32")
+    n = np.linalg.norm(m, axis=1, keepdims=True)
+    n[n < 1e-9] = 1.0
+    return m / n
+
+
+def _peak_z(claim_vec, vecs, matrix=None) -> tuple[float, float, int]:
     """(raw max, z-score of the max against its own background, argmax).
 
     Why z and not the raw max: the max over ~2000 passages is a tail statistic,
@@ -590,6 +700,16 @@ def _peak_z(claim_vec, vecs) -> tuple[float, float, int]:
     "does the best match STAND OUT from this claim's own background", which is
     exactly a z-score and is invariant to how big the corpus is.
     """
+    if matrix is not None:
+        import numpy as np
+        v = np.asarray(claim_vec, dtype="float32")
+        nrm = float(np.linalg.norm(v))
+        if nrm < 1e-9:
+            return 0.0, 0.0, 0
+        sims = matrix @ (v / nrm)
+        i = int(sims.argmax())
+        top, mean, sd = float(sims[i]), float(sims.mean()), float(sims.std())
+        return top, ((top - mean) / sd if sd > 1e-9 else 0.0), i
     sims = [_cos(claim_vec, w) for w in vecs]
     if not sims:
         return 0.0, 0.0, 0
@@ -601,9 +721,9 @@ def _peak_z(claim_vec, vecs) -> tuple[float, float, int]:
     return top, ((top - mean) / sd if sd > 1e-9 else 0.0), i
 
 
-def nearest(claim: str, corpus: list[dict], vecs, claim_vec) -> dict:
+def nearest(claim: str, corpus: list[dict], vecs, claim_vec, matrix=None) -> dict:
     if vecs is not None and claim_vec is not None:
-        top, z, i = _peak_z(claim_vec, vecs)
+        top, z, i = _peak_z(claim_vec, vecs, matrix)
         return {"method": f"embed:{EMBED_MODEL}/peak-z", "similarity": round(z, 4),
                 "raw_max_cosine": round(top, 4),
                 "path": corpus[i]["path"], "title": corpus[i]["title"]}
@@ -632,8 +752,25 @@ LEXICAL_RENAME_THRESHOLD = 0.45
 UNCALIBRATED_Z = 3.5
 
 
-def verify(item: dict, prop: dict, near: dict, threshold: float) -> dict:
-    """The oracle. It never calls a model and never sees the generator's name."""
+def verify(item: dict, prop: dict, near: dict, threshold: float,
+           dedup_trusted: bool = False) -> dict:
+    """The oracle. It never calls a model and never sees the generator's name.
+
+    `dedup_trusted` is what stops this function from making a claim it cannot
+    back. MEASURED 2026-08-10, three ways, on 2127 passages of our own docs
+    (positives = local-model paraphrases of our sentences, negatives = an
+    unrelated field):
+
+        raw max cosine, document-level gist   Youden J = 0.5167
+        raw max cosine, passage-level         Youden J = 0.5673
+        peak-z, passage-level                 Youden J = 0.4476
+
+    None separates. So the verdict for a well-formed row is `grounded` — the
+    quote is real and a falsifier is present — and NOT `novel`, because we
+    cannot currently tell "nobody here said this" from "our embedder cannot
+    see that we did". `novel`/`rename` are only emitted when a calibration
+    with separated=true exists.
+    """
     reasons = []
     claim, ev, fal = prop.get("claim", ""), prop.get("evidence", ""), prop.get("falsifier", "")
     if not claim:
@@ -652,9 +789,12 @@ def verify(item: dict, prop: dict, near: dict, threshold: float) -> dict:
     # Jaccard score would mean the lexical path never fires at all.
     cut = threshold if str(near.get("method", "")).startswith("embed") \
         else LEXICAL_RENAME_THRESHOLD
-    verdict = "novel"
-    if not reasons and near.get("similarity", 0.0) >= cut:
+    if not dedup_trusted:
+        verdict = "grounded"
+    elif near.get("similarity", 0.0) >= cut:
         verdict = "rename"
+    else:
+        verdict = "novel"
     return {
         "oracle": "grounding_v1",
         "verifier_identity": "aios_ideation.verify (deterministic code)",
@@ -663,6 +803,8 @@ def verify(item: dict, prop: dict, near: dict, threshold: float) -> dict:
                    "claim_bounded": not any(r.startswith("claim") for r in reasons)},
         "reasons": reasons,
         "dedup": near, "dedup_threshold": threshold,
+        "dedup_trusted": dedup_trusted,
+        "novelty_assessed": dedup_trusted,
         "pass": not reasons, "verdict": "reverted" if reasons else verdict,
     }
 
@@ -712,19 +854,29 @@ def seen_ids(path: Path | None = None) -> set[str]:
 
 def run_cycle(sources: list[str], topics: list[str], limit: int,
               per_source: int, threshold_arg: str, model: str,
-              verbose: bool = True) -> dict:
+              verbose: bool = True, urls: list[str] | None = None) -> dict:
     t0 = time.time()
     known = seen_ids()
 
     # --- SENSE: a deterministic predicate over source state. No model. -------
     fetched, errors = [], []
+    for u in (urls or []):
+        try:
+            fetched.extend(harvest_url(u))
+        except (urllib.error.URLError, OSError, json.JSONDecodeError,
+                ValueError) as exc:
+            errors.append({"source": "url", "topic": u,
+                           "error": f"{type(exc).__name__}: {exc}"[:160]})
     for label, aq, kq in TOPICS:
+        if urls and not topics and not sources:
+            break
         if topics and label not in topics:
             continue
         for src in sources:
             try:
                 got = HARVESTERS[src](aq if src == "arxiv" else kq, per_source)
                 fetched.extend(got)
+                time.sleep(COURTESY.get(src, 1.0))
             except (urllib.error.URLError, OSError, json.JSONDecodeError,
                     ValueError) as exc:
                 # A source that failed is NOT a source that found nothing.
@@ -750,16 +902,19 @@ def run_cycle(sources: list[str], topics: list[str], limit: int,
 
     corpus = load_corpus()
     vecs = corpus_vectors(corpus)
+    matrix = _as_matrix(vecs) if vecs is not None else None
     if threshold_arg == "auto":
         # Prefer a MEASURED cut (positive/negative controls) over the corpus
         # self-similarity fallback. The fallback is conservative by
         # construction — our docs are all about one subject, so their mutual
         # similarity is high and almost nothing outside gets flagged.
-        measured = load_threshold()
+        measured, trusted = load_threshold()
         threshold = measured if measured is not None else UNCALIBRATED_Z
-        tsrc = "calibrated" if measured is not None else "UNCALIBRATED"
+        tsrc = ("calibrated+separated" if trusted else
+                ("calibrated but NOT separated" if measured is not None
+                 else "UNCALIBRATED"))
     else:
-        threshold, tsrc = float(threshold_arg), "explicit"
+        threshold, trusted, tsrc = float(threshold_arg), False, "explicit"
     if verbose:
         print(f"[dedup] corpus={len(corpus)} docs, method="
               f"{'embed' if vecs else 'lexical (embedder unavailable)'}, "
@@ -780,8 +935,8 @@ def run_cycle(sources: list[str], topics: list[str], limit: int,
         if vecs is not None and prop.get("claim"):
             got = embed([prop["claim"]])
             cvec = got[0] if got else None
-        near = nearest(prop.get("claim", ""), corpus, vecs, cvec)
-        ver = verify(item, prop, near, threshold)
+        near = nearest(prop.get("claim", ""), corpus, vecs, cvec, matrix)
+        ver = verify(item, prop, near, threshold, trusted)
 
         # --- SETTLE: committed or reverted; both change the root -------------
         root_before = ledger_root()
@@ -815,7 +970,8 @@ def run_cycle(sources: list[str], topics: list[str], limit: int,
                         "similarity": near.get("similarity"),
                         "claim": prop.get("claim", "")[:110]})
         if verbose:
-            mark = {"novel": "NOVEL ", "rename": "rename", "reverted": "REVERT"}[ver["verdict"]]
+            mark = {"novel": "NOVEL ", "rename": "rename",
+                    "grounded": "ground", "reverted": "REVERT"}[ver["verdict"]]
             why = "" if ver["pass"] else " <- " + ",".join(ver["reasons"][:2])
             print(f"  [{n:>2}/{len(fresh)}] {mark} sim={near.get('similarity'):.3f} "
                   f"{item['source_kind']:<6} {prop.get('claim','')[:64]}{why}")
@@ -909,10 +1065,13 @@ def main(argv: list[str] | None = None) -> int:
     r.add_argument("--threshold", default="auto",
                    help="'auto' = p95 of our corpus self-similarity")
     r.add_argument("--model", default=DISTILL_MODEL)
+    r.add_argument("--url", action="append", default=[],
+                   help="absorb this specific source (repeatable)")
     r.add_argument("--json", action="store_true")
     c = sub.add_parser("calibrate", help="measure the dedup threshold")
     c.add_argument("--n-pos", type=int, default=40)
     c.add_argument("--n-neg", type=int, default=40)
+    c.add_argument("--quiet", action="store_true")
     sub.add_parser("stats", help="what the asset holds")
     sub.add_parser("export", help="render ideation/DIGEST.md")
     v = sub.add_parser("verify-ledger", help="recompute the Merkle root")
@@ -920,18 +1079,21 @@ def main(argv: list[str] | None = None) -> int:
     a = ap.parse_args(argv)
 
     if a.cmd == "run":
+        # --url alone means "just this source": do not also sweep the topics.
+        srcs = [] if (a.url and a.sources == "arxiv,hn,github") else \
+            [s for s in a.sources.split(",") if s in HARVESTERS]
         res = run_cycle(
-            [s for s in a.sources.split(",") if s in HARVESTERS],
-            [t for t in a.topics.split(",") if t], a.limit, a.per_source,
-            a.threshold, a.model, verbose=not a.json)
+            srcs, [t for t in a.topics.split(",") if t], a.limit,
+            a.per_source, a.threshold, a.model, verbose=not a.json,
+            urls=a.url)
         if a.json:
             print(json.dumps(res, ensure_ascii=False, indent=1))
         else:
             print(f"\ncounts={res.get('counts')} root={res.get('ledger_root','')[:23]}…")
         return 0
     if a.cmd == "calibrate":
-        print(json.dumps(cmd_calibrate(a.n_pos, a.n_neg), ensure_ascii=False,
-                         indent=1))
+        print(json.dumps(cmd_calibrate(a.n_pos, a.n_neg, not a.quiet),
+                         ensure_ascii=False, indent=1))
         return 0
     if a.cmd == "stats":
         print(json.dumps(cmd_stats(), ensure_ascii=False, indent=1))

@@ -1,0 +1,31 @@
+{
+ "schema": "aios.ideation.calibration.v1",
+ "statistic": "peak-z (max cosine, z-scored against the claim's own similarity distribution over the whole corpus)",
+ "embedder": "bge-m3",
+ "corpus_docs": 2127,
+ "corpus_passages": 2127,
+ "positive": {
+  "n": 28,
+  "p05": 3.2129,
+  "p50": 4.3388,
+  "p95": 5.461,
+  "source": "local-model PARAPHRASES of sentences from our docs (past char 1200) — same idea, different words"
+ },
+ "negative": {
+  "n": 30,
+  "p05": 3.2427,
+  "p50": 3.6813,
+  "p95": 4.4751,
+  "source": "arxiv: protein crystallography diffraction phase retrieval"
+ },
+ "threshold": 3.8665806968579366,
+ "youden_j": 0.4476,
+ "separated": false,
+ "unembeddable": {
+  "positive": 2,
+  "negative": 0,
+  "cause": "HTTP 500: {\"error\":\"failed to encode response: json: unsupported value: NaN\"}",
+  "effect": "dropped from the statistics; in the corpus they become zero vectors, which can only inflate novelty, never fake a duplicate"
+ },
+ "note": "youden_j < 0.8 means the distributions overlap: the `rename` verdict is then weak evidence, not a finding"
+}

@@ -22,6 +22,12 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 import aios_ideation as I  # noqa: E402
 
+@pytest.fixture(autouse=True)
+def _no_courtesy_delay(monkeypatch):
+    """Production politeness to arXiv/GitHub must not be paid by the test suite."""
+    monkeypatch.setattr(I, "COURTESY", {k: 0.0 for k in I.COURTESY})
+
+
 SOURCE_TEXT = (
     "We introduce a policy layer that intercepts every tool call an agent "
     "emits and evaluates it against a declarative contract before execution. "
@@ -47,7 +53,10 @@ def test_verbatim_evidence_passes():
             "evidence": "intercepts every tool call an agent emits and evaluates it"}
     v = I.verify(_item(), prop, _near(), 0.9)
     assert v["pass"] is True
-    assert v["verdict"] == "novel"
+    # NOT "novel": with dedup uncalibrated the oracle can only vouch that the
+    # quote is real and a falsifier is present.
+    assert v["verdict"] == "grounded"
+    assert v["novelty_assessed"] is False
 
 
 def test_paraphrase_is_rejected():
@@ -86,13 +95,41 @@ def test_overlong_claim_is_rejected():
     assert any(r.startswith("claim_too_long") for r in v["reasons"])
 
 
-def test_similar_claim_is_filed_as_rename_not_novel():
+def test_similar_claim_is_filed_as_rename_when_dedup_is_trusted():
     prop = {"claim": "Tool calls can be intercepted and denied before they run.",
             "falsifier": "run an agent with a deny-all contract; a call reaches the runtime",
             "evidence": "intercepts every tool call an agent emits and evaluates it"}
-    v = I.verify(_item(), prop, _near(sim=0.95), 0.9)
+    v = I.verify(_item(), prop, _near(sim=0.95), 0.9, dedup_trusted=True)
     assert v["pass"] is True          # it is well-formed...
     assert v["verdict"] == "rename"   # ...but it is not news to us
+
+
+def test_untrusted_dedup_never_claims_novelty():
+    """The rule the 2026-08-10 calibration forced, pinned so it cannot drift.
+
+    Three statistics were measured against a positive and a negative control
+    (J = 0.5167 / 0.5673 / 0.4476) and none separated. Until one does, no row
+    may be labelled `novel` — neither the near ones nor the far ones.
+    """
+    prop = {"claim": "Tool calls can be intercepted and denied before they run.",
+            "falsifier": "run an agent with a deny-all contract; a call reaches the runtime",
+            "evidence": "intercepts every tool call an agent emits and evaluates it"}
+    for sim in (0.01, 0.5, 0.95, 99.0):
+        v = I.verify(_item(), prop, _near(sim=sim), 0.9, dedup_trusted=False)
+        assert v["verdict"] == "grounded", f"sim={sim} leaked a novelty claim"
+        assert v["dedup_trusted"] is False
+
+
+def test_unseparated_calibration_is_not_trusted(tmp_path, monkeypatch):
+    """A threshold from an unseparated calibration is a number, not a boundary."""
+    monkeypatch.setattr(I, "ASSET", tmp_path)
+    (tmp_path / "calibration.json").write_text(json.dumps(
+        {"threshold": 3.87, "separated": False, "youden_j": 0.4476}))
+    thr, trusted = I.load_threshold()
+    assert thr == 3.87 and trusted is False
+    (tmp_path / "calibration.json").write_text(json.dumps(
+        {"threshold": 3.87, "separated": True, "youden_j": 0.91}))
+    assert I.load_threshold() == (3.87, True)
 
 
 # --- the ledger -----------------------------------------------------------
@@ -171,6 +208,46 @@ def test_source_failure_is_not_reported_as_empty(monkeypatch, tmp_path):
                       verbose=False)
     assert res["sense"]["source_errors"], "a failed source must be recorded"
     assert res["sense"]["fresh"] == 0
+
+
+def test_numpy_and_stdlib_peak_z_agree():
+    """The numpy path is an optimisation, so it must not be a second algorithm.
+
+    A bare wheel with no numpy takes the pure-Python branch; if the two branches
+    disagreed, the same claim would be judged `novel` on one install and
+    `rename` on another.
+    """
+    vecs = [[1.0, 0.0, 0.0], [0.9, 0.1, 0.0], [0.0, 1.0, 0.0],
+            [0.2, 0.2, 0.9], [-1.0, 0.0, 0.0]]
+    claim = [0.95, 0.05, 0.1]
+    slow = I._peak_z(claim, vecs, None)
+    fast = I._peak_z(claim, vecs, I._as_matrix(vecs))
+    assert fast[2] == slow[2], "argmax differs"
+    assert abs(fast[0] - slow[0]) < 1e-5, "max cosine differs"
+    assert abs(fast[1] - slow[1]) < 1e-4, "z-score differs"
+
+
+def test_batch_embed_falls_back_without_recursing(monkeypatch):
+    """A failing batch must degrade to serial, not re-enter the batch path.
+
+    Regression: the fallback used to call embed() with a 32-item sub-batch,
+    which is still above the batch threshold, so it failed and recursed until
+    RecursionError. It looked like a slow calibration, not a crash.
+    """
+    seen = {"batch": 0, "single": 0}
+
+    def fake(path, body, timeout=0):
+        if isinstance(body.get("input"), list):
+            seen["batch"] += 1
+            raise OSError("batch endpoint unavailable")
+        seen["single"] += 1
+        return {"embeddings": [[1.0, 0.0]]}
+
+    monkeypatch.setattr(I, "_ollama", fake)
+    out = I.embed([f"text {i}" for i in range(20)])
+    assert out is not None and len(out) == 20
+    assert seen["single"] == 20, "should have fallen back to one call per text"
+    assert seen["batch"] == 1, "should not have retried the batch path"
 
 
 def test_embed_marks_unembeddable_inputs(monkeypatch):
