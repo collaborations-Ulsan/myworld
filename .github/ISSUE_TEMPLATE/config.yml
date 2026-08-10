@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/cjw0076/myworld/security/advisories/new
+    about: Please report privately, not as a public issue. See SECURITY.md.
+  - name: Question or idea
+    url: https://github.com/cjw0076/myworld/discussions
+    about: Open-ended questions, design discussion, and "is this a bug or am I holding it wrong?"

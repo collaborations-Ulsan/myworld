@@ -1,0 +1,61 @@
+name: Bug report
+description: Something behaves differently than documented
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. The most useful thing you can give us is a reproduction —
+        even a rough one beats a perfect description.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you ran, and what AIOS did.
+      placeholder: |
+        I ran `aios ...` and got ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+      description: If the README or a doc says otherwise, link it — a claim/behaviour mismatch is a bug we especially want.
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction
+      description: |
+        Smallest steps that show it. If you can reproduce in a scrubbed environment, that rules out local-state leakage and helps a lot:
+
+        ```sh
+        env -i HOME=$(mktemp -d) PATH=/usr/bin:/bin python -m pytest tests/ -q
+        ```
+      render: shell
+    validations:
+      required: false
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, Python version, and how you installed AIOS (`pip install -e .`, plain `pip install .`, Claude Code plugin, Docker).
+      placeholder: |
+        OS: Ubuntu 24.04
+        Python: 3.12.3
+        Install: pip install -e .
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: no-secrets
+    attributes:
+      label: Before you submit
+      options:
+        - label: I have removed any private paths, API keys, or session material from the output I pasted.
+          required: true

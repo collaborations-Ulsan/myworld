@@ -15,7 +15,7 @@ description = "AIOS — a sovereign sidecar for AI agents: your work survives th
 readme = "README.md"
 requires-python = ">=3.10"
 authors = [{name = "Jaewon Choi", email = "cjw070690@gmail.com"}]
-license = { text = "MIT" }
+license = { text = "Apache-2.0" }
 keywords = ["ai", "agent", "llm", "local-first", "personal-ai", "aios", "autonomous-agent"]
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -23,7 +23,7 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
-    "License :: OSI Approved :: MIT License",
+    "License :: OSI Approved :: Apache Software License",
     "Operating System :: OS Independent",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
     "Environment :: Console",

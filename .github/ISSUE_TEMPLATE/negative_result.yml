@@ -1,0 +1,45 @@
+name: Negative result
+description: You tried something and it did not work — that is a contribution here
+labels: ["negative-result"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This project publishes its own nulls. We advertised that AIOS made agents
+        "carry forward what worked", tested it, measured an effect of `0.000`, and
+        [published the null](../../blob/main/docs/AIOS_THREE_CHANNEL_NULL_REPORT_2026-08-01.md)
+        instead of quietly dropping the claim.
+
+        So: "I tried this and it didn't help" is a real report. Please file it.
+
+  - type: textarea
+    id: claim
+    attributes:
+      label: What claim or expectation were you testing?
+      description: Quote the README, a doc, or your own hypothesis.
+    validations:
+      required: true
+
+  - type: textarea
+    id: method
+    attributes:
+      label: What you did
+      description: Enough that someone else could run it. Sample size and conditions if you measured something.
+    validations:
+      required: true
+
+  - type: textarea
+    id: result
+    attributes:
+      label: What you got
+      description: Numbers if you have them. "No visible difference" is a fine answer.
+    validations:
+      required: true
+
+  - type: textarea
+    id: confidence
+    attributes:
+      label: How confident are you, and what would change your mind?
+      description: Small-n results reverse — ours did. Saying "this could be noise" costs you nothing here.
+    validations:
+      required: false

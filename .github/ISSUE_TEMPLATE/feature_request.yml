@@ -1,0 +1,39 @@
+name: Feature request
+description: Propose something AIOS should be able to do
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to do?
+      description: The situation, not the solution. What breaks or costs you time today?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What you have in mind
+    validations:
+      required: false
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: How would we know it worked?
+      description: |
+        The house rule is that we don't ship a claim the tests don't support, so
+        features arrive with a way to check them. Even a rough "success looks like X"
+        is enough to start.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: constraints
+    attributes:
+      label: Design constraints this would touch
+      description: Tick anything you think applies — it is fine to be unsure.
+      options:
+        - label: Would need a new required dependency (the core is stdlib-only on purpose)
+        - label: Would need network access at runtime (the sandbox is no-network by default)
+        - label: Would change the on-disk record format (records are append-only)

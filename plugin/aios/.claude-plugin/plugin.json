@@ -9,6 +9,6 @@
   },
   "homepage": "https://github.com/cjw0076/myworld",
   "repository": "https://github.com/cjw0076/myworld",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "keywords": ["ai", "agent", "memory", "local-first", "aios", "mcp", "self"]
 }

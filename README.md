@@ -270,3 +270,26 @@ Precise status: the arc/continuity layer is implemented and tested (open → cla
 - [`docs/AIOS_CANONICAL_SHAPE.md`](docs/AIOS_CANONICAL_SHAPE.md) — what "AIOS", "complete", "production", and "service" mean
 - [`docs/AIOS_AKASHIC_DISTRIBUTED_DESIGN.md`](docs/AIOS_AKASHIC_DISTRIBUTED_DESIGN.md) — ledger design and roadmap
 - [`CLAUDE.md`](CLAUDE.md) / [`AGENTS.md`](AGENTS.md) — operator entry points
+
+---
+
+## Contributing
+
+Contributions are welcome, including the awkward kind. This project publishes its own
+negative results, and **"I tried this and it didn't work" is a valid report** — there
+is [an issue template for exactly that](.github/ISSUE_TEMPLATE/negative_result.yml).
+
+The core has no required dependencies, so getting started is short:
+
+```sh
+git clone https://github.com/cjw0076/myworld.git && cd myworld
+python -m pip install -e . pytest && python -m pytest tests/ -q   # expect 0 failed
+```
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the house rules — the main one being that
+we don't add a claim the tests don't support. Security issues go
+[here](SECURITY.md), privately.
+
+## Licence
+
+[Apache License 2.0](LICENSE). © 2026 Jaewon Choi.
