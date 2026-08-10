@@ -129,9 +129,22 @@ machine still runs all of them.
 
 ## 5. Next
 
-1. **Publish `aios-os` to PyPI.** The name is free; `publish.yml` exists but needs PyPI OIDC set up
-   under the founder's account. This is the only thing that starts a download counter, i.e. the only
-   thing that can ever move criterion #1.
+1. **Publish `aios-os` to PyPI.** Corrected account of the blocker, from the mail record
+   (2026-08-10): the founder **has** a PyPI account (`jaewon02`, TOTP 2FA since 2026-06-04), and a
+   pending trusted publisher for `aios-os` **was already registered** — then **expired on
+   2026-07-20**, because "the project was not created within 30 days". The setup was never the
+   problem; not shipping inside the window was. So re-registering without releasing immediately
+   just repeats it.
+
+   Release readiness verified on 2026-08-10 so the window cannot lapse again: a clean checkout
+   builds `aios_os-0.3.0-py3-none-any.whl` + sdist, the wheel installs into an empty venv, and
+   `aios --version` / `aios behavior status` run from outside the repo under a fresh HOME with both
+   entry points present. Everything after the registration is a tag push.
+
+   Not automatable from here: PyPI login needs a password and a TOTP code, and neither is on this
+   machine (checked: no `.pypirc`, no TWINE/PYPI env, empty vault `secrets/`, zero pypi.org cookies
+   across five local browser profiles, council browser not logged in). A Gmail-driven password
+   reset would still stop at TOTP and would break the founder's credential for nothing.
 2. **Start the external PR stream** (criterion #3, currently 0/100). Target MCP servers, Claude Code
    plugins and agent-memory repos so each merge doubles as distribution.
 3. **Write the null-result piece** in Vox style. GitHub-native first (Release + Discussion) — there
