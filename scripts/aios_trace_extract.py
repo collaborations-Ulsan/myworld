@@ -39,7 +39,7 @@ from typing import Iterator
 try:
     import openai
     _HAS_OPENAI = True
-except ImportError:
+except Exception:  # broken install must degrade to unavailable, not crash
     _HAS_OPENAI = False
 
 SCHEMA = "aios.hivemind.trace_extract.v1"

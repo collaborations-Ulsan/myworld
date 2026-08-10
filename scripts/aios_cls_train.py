@@ -173,8 +173,12 @@ def train(dataset_path: Path, *, apply: bool = False, base_model: str | None = N
         from peft import LoraConfig  # noqa: PLC0415
         from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig  # noqa: PLC0415
         from trl import SFTConfig, SFTTrainer  # noqa: PLC0415
-    except ImportError as e:  # noqa: BLE001
-        return {"status": "deps_missing", "ran": False, "error": str(e),
+    # Exception, not ImportError: torch raises OSError when its CUDA shared
+    # objects are missing or mismatched — an unusable install, which is the
+    # same outcome for us as an absent one, and must not become a traceback.
+    except Exception as e:  # noqa: BLE001
+        return {"status": "deps_missing", "ran": False,
+                "error": f"{type(e).__name__}: {e}",
                 "hint": "pip install torch transformers peft trl datasets bitsandbytes (NOT litellm)"}
     # Real training body intentionally minimal here — wired when founder gives GO and
     # the corpus is at scale. The scaffold above is what is verifiable without a GPU.

@@ -119,8 +119,11 @@ def run_server() -> None:
     """Start the MCP stdio server. Requires `pip install mcp>=1.0`."""
     try:
         from mcp.server.fastmcp import FastMCP  # type: ignore[import]
-    except ImportError:
-        raise SystemExit("MCP SDK not installed. Run: pip install mcp>=1.0")
+    except Exception as e:  # installed-but-broken must report, not traceback
+        raise SystemExit(
+            f"MCP SDK unavailable ({type(e).__name__}: {e}). "
+            "Run: pip install --upgrade 'mcp>=1.0'"
+        )
     server = FastMCP("aios.capability")
     for name, fn in TOOL_REGISTRY.items():
         server.add_tool(fn, name=name)

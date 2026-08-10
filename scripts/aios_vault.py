@@ -30,9 +30,12 @@ try:
     from argon2 import low_level as argon2_ll
     from cryptography.hazmat.primitives.ciphers.aead import AESGCM
     import keyring
-except ImportError as e:
-    print(f"ERROR: missing dependency — {e}")
-    print("  pip install cryptography argon2-cffi keyring")
+except Exception as e:
+    # Exception, not ImportError: `keyring` can raise from a platform backend
+    # at import time when it is installed but unusable. Report that as an
+    # actionable dependency problem rather than an unhandled traceback.
+    print(f"ERROR: dependency unavailable — {type(e).__name__}: {e}")
+    print("  pip install --upgrade cryptography argon2-cffi keyring")
     sys.exit(1)
 
 # ── vault layout ──────────────────────────────────────────────────────────────

@@ -376,8 +376,10 @@ def _h_web_scrape(a: dict) -> dict:
 
     try:
         from scrapling.fetchers import Fetcher, StealthyFetcher  # noqa: PLC0415 -- optional dep, lazy import
-    except ImportError:
-        return {"status": "unavailable", "reason": "scrapling not installed (pip install \"scrapling[fetchers]\")"}
+    except Exception as e:  # broken install degrades to unavailable, never crashes
+        return {"status": "unavailable",
+                "reason": f"scrapling unavailable ({type(e).__name__}: {e}) — "
+                          "pip install \"scrapling[fetchers]\""}
 
     stealth = bool(a.get("stealth", False))
     try:

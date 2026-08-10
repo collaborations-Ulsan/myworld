@@ -36,7 +36,7 @@ from typing import Any
 try:  # optional — see module docstring; never used by this client, only reported
     import mcp as _mcp_sdk  # noqa: F401
     HAS_MCP_SDK = True
-except ImportError:
+except Exception:  # broken install must degrade to unavailable, not crash
     HAS_MCP_SDK = False
 
 ROOT = Path(__file__).resolve().parents[1]

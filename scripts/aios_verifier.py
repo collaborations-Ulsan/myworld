@@ -186,7 +186,10 @@ def _select_device() -> str:
     """
     try:
         import torch
-    except ImportError:
+    # Not just ImportError: torch raises OSError when its CUDA shared objects
+    # are missing or mismatched, and falling back to CPU is the right answer
+    # in that case too.
+    except Exception:
         return "cpu"
     if not torch.cuda.is_available():
         return "cpu"

@@ -49,10 +49,18 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable, Optional
 
+# OPTIONAL-DEP GUARD (2026-08-10): catch Exception, not ImportError.
+# An optional dependency that is *absent* raises ImportError; one that is
+# *present but broken* raises whatever its own import chain raises, and that
+# took the whole module down. Reproduced here: treequest imports jax, and a
+# jax/ml_dtypes version conflict raises ValueError at import time — enough to
+# abort collection of the entire test suite on a machine that merely happens
+# to have treequest installed. A core that advertises "no required
+# dependencies" must degrade to unavailable, never crash.
 try:
     import treequest as _tq
     _HAVE_TREEQUEST = True
-except ImportError:  # pragma: no cover — exercised via monkeypatch in tests
+except Exception:  # pragma: no cover — exercised via monkeypatch in tests
     _tq = None
     _HAVE_TREEQUEST = False
 
