@@ -37,6 +37,14 @@ python -m pytest tests/ -q
 You should see **0 failed**. If you don't, that's a bug in our setup, not yours —
 please open an issue with the output.
 
+**Do not clone with `--recursive`, and do not use `pip install git+…`.** This repo
+declares four git submodules and three of them (`memoryOS`, `CapabilityOS`,
+`GenesisOS`) are private research repos — a recursive clone will stop and ask you
+for credentials you cannot have. The plain clone above is the supported path and
+needs none of them: the submodule directories stay empty and the tests that would
+have used them skip with the reason printed. This is tracked in
+[#3](https://github.com/cjw0076/myworld/issues/3).
+
 Some tests are environment-gated (they need Ollama, a provider CLI, or a GPU).
 Those are skipped with a stated reason via the requirement map in
 [`tests/conftest.py`](tests/conftest.py) — skipping is deliberate, never silent.
