@@ -128,6 +128,12 @@ py-modules  = [
     "aios_sandbox",
     "aios_skills",
     "aios_experience",
+    # --- ideation absorption (2026-08-10) --------------------------------
+    # Harvests ideas from public sources and admits them to a ledger ONLY if a
+    # deterministic oracle can find the quoted span verbatim in the source.
+    # Ships as mechanism: a `novel` row means "not already in our docs", never
+    # "true" — epistemic_type stays Proposal until a run receipt raises it.
+    "aios_ideation",
 ]
 # aios_primitives is a stdlib-only PACKAGE (not a flat module): aios_runtime does
 # `from aios_primitives import events`, so it must ship as a package, not via

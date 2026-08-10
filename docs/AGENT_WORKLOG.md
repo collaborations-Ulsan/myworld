@@ -6393,3 +6393,34 @@ oversight once their dependencies close.
 - Operator/delegated controller may accept and dispatch ASC-0272..ASC-0275 to
   Claude in the owning child repos.
 - ASC-0276 remains docs-only until visual target selection opens Gate B.
+
+## 2026-08-09 · memoryOS 소비자 리포트 (claude@prizehunter → claude@myworld)
+- **핸드오프**: `docs/MEMORYOS_CONSUMER_REPORT_2026-08-09.md`
+- prizehunter 가 `memoryos import/search` 를 실사용하고 왕복 검증(114 nodes/137 edges, rc=0).
+- 요청 6건. 우선순위 ①**임베딩 0% 백필 + 한국어 모델 실측 선정**(nomic 실패·bge-m3 채택 근거 포함)
+  ②**outcome 엣지(`refuted_by`/`confirmed_by`)** — 공급원(전이율표)이 이미 존재
+  ③`healthy=0.0%` 원인 규명 ④검색 신뢰등급 ⑤`law` 타입+반증조건 ⑥프로그램 회수 인터페이스.
+- 연결의 가치 실증: prizehunter 의 막힌 지점이 재원 온톨로지의 `GenesisOS`(ASC-0065)에 이미 매핑돼 있었다.
+
+## 2026-08-10 · 아이디어 흡수 organ + 미래 목표 (claude@myworld)
+- **지시**: *"what is the future goal of us"* + *"인터넷에 방대하게 흩어진 Ideation들을 흡수해서 자산화 해"*
+- **목표 문서**: `docs/AIOS_FUTURE_GOAL_2026-08-10.md` — 목표 자체의 반증 조건 4개 포함.
+  한 줄: *모델이 거절할 수 없는 행위(host 발화 · 외부 오라클 판정 · 거부 시 revert)를 OS의 기본 단위로.*
+- **흡수 organ**: `scripts/aios_ideation.py` (`aios.ideation.v1`), 자산 `ideation/`.
+  요약 문서가 아니라 **원장**: 각 행이 축자 근거 + 반증자 + 재명명 판정을 가진다.
+  오라클은 결정적 코드이고 생성기(로컬 30B)를 통과시키지 않는다 — 패러프레이즈는 substring 검사에서 죽는다.
+- **M0 연결**: 이 사이클이 최소동작 4항을 전부 요구하며 Channel-E `dispatch`가 아니므로
+  Mortuary Clause와 무관. §3 판정 규칙을 `tests/test_ideation.py::test_receipt_satisfies_M0_judgment_rule`에
+  실행 가능한 단언으로 고정(12 tests green).
+- **실측 결함 3건**:
+  ① qwen3 계열은 `format:json`에서도 답을 `thinking`으로 보내 `response`가 비어 옴 → 전 행 `empty_claim`.
+     오라클이 내용이 아니라 **전송을 거부**하고 있었다. `think:false` + fallback.
+  ② **ollama+bge-m3가 특정 입력에서 HTTP 500 `unsupported value: NaN`** (3/3 재현 = 결정적 결함).
+     zero-vector 대체 + 건수 보고(코사인 0이라 가짜 중복은 못 만들고 novelty만 부풀림).
+     ⚠ memoryOS 리랭크도 같은 임베더를 쓰면 동일 결함에 노출된다 — 별도 확인 필요.
+  ③ `ledger_root(path=LEDGER)` 기본값이 import 시점 바인딩 → 원장 경로를 바꾸면 엉뚱한 파일을 해싱,
+     `root_before == root_after`가 되어 M0 영수증이 조용히 무효화됨. 호출 시점 해석으로 수정.
+- **정직한 미결**: 첫 캘리브레이션(문서 단위 임베딩 + 원문 문장 양성대조)은 **Youden J=0.52, separated=false** —
+  우리 문장(0.58)과 무관 분야 초록(0.50)이 거의 안 갈렸다. granularity 불일치(문장↔문서)와
+  잘못된 양성대조(표절 탐지지 재명명 탐지가 아님)를 고쳐 passage 단위 + 로컬 모델 패러프레이즈로 재측정 중.
+  **재측정도 separated=false면 `rename` 판정은 근거 없음으로 표기한다.**

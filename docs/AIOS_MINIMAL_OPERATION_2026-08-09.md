@@ -96,6 +96,16 @@ OS는 모델에게 묻지 않고 행동하고, 오라클은 OS에게 묻지 않�
 
 **M0 이전에는 아무 칸도 짓지 않는다.** 그리고 M0는 통계가 아니라 영수증 하나로 결정된다.
 
+> **2026-08-10 갱신 — 첫 술어가 정해졌다.** founder 지시(*"인터넷에 방대하게 흩어진
+> Ideation들을 흡수해서 자산화 해"*)로 만든 **아이디어 흡수 사이클**
+> (`scripts/aios_ideation.py`)이 네 항을 전부 요구한다: ①소스에 커서보다 새 항목이 있는가(정책)
+> ②host가 고정 distiller에 넘김(모델은 실행 여부를 선택하지 않음) ③**축자 그라운딩** — 인용
+> span이 원문에 바이트 단위로 존재해야 함(생성기가 통과시킬 수 없음) ④통과 시 커밋, 실패 시
+> **revert**(둘 다 루트 변경). §3의 판정 규칙은
+> `tests/test_ideation.py::test_receipt_satisfies_M0_judgment_rule`에 **실행 가능한 단언으로**
+> 고정했다 — 규칙이 코드에서 조용히 떠내려갈 수 없다. 이 술어는 Channel-E가 명명한 `dispatch`
+> 기제가 아니므로 Mortuary Clause와 충돌하지 않는다(§6이 예고한 경로).
+
 ## 6. 남은 충돌 — 정직하게
 
 ②의 host-mandated 실행은 **Channel-E Mortuary Clause와 충돌**하며 그 판단은 founder에게 올라가
