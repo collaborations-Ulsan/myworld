@@ -3,6 +3,55 @@
 All notable changes to AIOS (`aios-os`). Format: themed summaries per release.
 Tag `vX.Y.Z` → `publish.yml` builds + publishes to PyPI.
 
+## [Unreleased] — contributable for the first time (2026-08-10)
+
+The repo was public but not actually open source, and the badge at the top of
+the README was lying. Both fixed.
+
+### Licence and contribution surface
+- **Apache-2.0 `LICENSE` added.** The repo had no licence file at all, which
+  means all rights reserved — nobody could legally contribute. `pyproject`
+  separately declared MIT, so metadata and reality disagreed; both now say
+  Apache-2.0. Nothing had been published to PyPI and there were no external
+  contributors, so no one had relied on the MIT declaration.
+- `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md`, issue forms and a PR
+  template. Includes a `negative_result` issue form — this project publishes
+  its own nulls, so "I tried this and it didn't work" gets a front door.
+
+### CI was red, and had been since 2026-08-03
+- **Stale assertion.** `test_aios_provider_prompts` asserted the literal string
+  `"AIOS Provider Contract"`, which the claude template stopped emitting when it
+  was slimmed to a pointer in v2 (2026-07-11). The assertions now check durable
+  properties — the block points at *this* install and carries the privacy
+  invariant — instead of echoing template prose, which is what made it rot.
+- **Test isolation.** `experiments/*/` ship modules with generic names
+  (`tasks.py`, `schema.py`, …) and several experiments use the same ones.
+  `sys.modules` is keyed on the bare name, so in a full-suite run
+  `tests/test_driftbench_harness.py` was silently handed
+  `experiments/learnos/tasks.py` and **34 assertions failed** — while running
+  that file alone passed 49/49. New `tests/_experiment_imports.load_from()`
+  claims the right directory explicitly and raises if a name resolves
+  elsewhere. Full suite: **2558 passed, 0 failed**.
+
+### Optional dependencies can no longer take the core down
+- Optional third-party imports were guarded with `except ImportError`, which
+  catches an *absent* package but not a *broken* one. Reproduced: `treequest`
+  imports jax, a jax/ml_dtypes version conflict raises `ValueError` at import
+  time, and that aborted collection of the entire test suite. CI never saw it
+  because on a clean runner the package is simply missing. Guards for
+  `treequest`, `openai`, `mcp`, `torch`, `scrapling`, `keyring` and the QLoRA
+  stack now catch `Exception` and degrade to unavailable.
+- New `tests/test_optional_dependency_guards.py` fails the build if a
+  third-party optional import is guarded by `ImportError` alone.
+
+### Nothing personal ships to users any more
+- The claude provider template hardcoded the author's absolute home path and
+  the author's own list of private directory names, and `aios ... bootstrap`
+  wrote that into every user's global `~/.claude/CLAUDE.md`. The path is now
+  substituted per machine (`{{root}}`) and the privacy clause is generic, with
+  a test that fails if anything personal reappears in a shipped template.
+  Prompt version `asc-0087.v2` → `asc-0087.v3`.
+
 ## [0.2.0] — OSS-release addendum (2026-07-01)
 
 The open-source readiness pass — one identity, a real installable package, and a

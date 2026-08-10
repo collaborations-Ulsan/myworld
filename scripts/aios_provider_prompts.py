@@ -14,7 +14,7 @@ from typing import Any
 
 
 SCHEMA_VERSION = "aios.provider_prompts.v1"
-PROMPT_VERSION = "asc-0087.v2"  # v2 2026-07-11: claude template slimmed to pointer+invariants (full contract lives in myworld/CLAUDE.md)
+PROMPT_VERSION = "asc-0087.v3"  # v3 2026-08-10: {{root}} substitution replaces the hardcoded author path; privacy list de-personalised. v2 2026-07-11: claude template slimmed to pointer+invariants (full contract lives in the repo's CLAUDE.md)
 BEGIN_RE = re.compile(r"<!-- AIOS BEGIN v=([^ ]+) generated_at=([^ ]+) -->")
 END_MARKER = "<!-- AIOS END -->"
 TEMPLATE_DIR = Path(__file__).resolve().parent / "templates" / "provider_prompts"
@@ -72,7 +72,11 @@ def load_template(name: str, seen: set[str] | None = None) -> str:
 
 
 def render_provider(provider: Provider, *, root: Path) -> str:
-    body = load_template(provider.template).strip()
+    # `{{root}}` is substituted here rather than baked into the template.
+    # v2 hardcoded the author's own absolute path, so every user who ran
+    # bootstrap got a pointer to a directory that does not exist on their
+    # machine written into their global provider config.
+    body = load_template(provider.template).strip().replace("{{root}}", root.as_posix())
     generated_at = now_iso()
     return (
         f"<!-- AIOS BEGIN v={PROMPT_VERSION} generated_at={generated_at} -->\n"

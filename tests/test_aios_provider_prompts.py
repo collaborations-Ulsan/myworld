@@ -62,7 +62,36 @@ class ProviderPromptBootstrapTest(unittest.TestCase):
             text = target.read_text(encoding="utf-8")
             self.assertIn("<!-- AIOS BEGIN", text)
             self.assertIn("<!-- AIOS END -->", text)
-            self.assertIn("AIOS Provider Contract", text)
+
+            # This used to assert the literal string "AIOS Provider Contract".
+            # The claude template was deliberately slimmed to a pointer in v2
+            # (2026-07-11) and the assertion was left behind, so it failed on
+            # every run from then on — which is why CI went red and stayed red.
+            #
+            # Echoing template prose just recreates that trap. Assert the two
+            # properties the block must hold whatever its wording becomes:
+            # it points at THIS install, and it carries the privacy invariant.
+            self.assertIn(ROOT.as_posix(), text)
+            self.assertIn("Privacy boundary inviolable", text)
+
+    def test_templates_contain_nothing_personal_to_the_author(self) -> None:
+        """A shipped template is written into every user's global config.
+
+        v2 hardcoded the author's absolute home path and the author's own list
+        of private directory names, so running bootstrap on any other machine
+        wrote a pointer to a directory that does not exist there, plus two
+        personal names. The rendered block may of course contain the *local*
+        install root — that is substituted per machine — but the template on
+        disk must carry none of it.
+        """
+        templates = sorted((ROOT / "scripts" / "templates" / "provider_prompts").glob("*.tmpl"))
+        self.assertTrue(templates, "no provider templates found")
+
+        forbidden = ("/home/user/", "workspaces/jaewon", "minyoung", "dain/", "_from_desktop")
+        for path in templates:
+            body = path.read_text(encoding="utf-8")
+            for token in forbidden:
+                self.assertNotIn(token, body, f"{path.name} ships {token!r} to every user")
 
     def test_bootstrap_is_idempotent_no_duplicate_marker(self) -> None:
         with tempfile.TemporaryDirectory() as td:
@@ -87,7 +116,9 @@ class ProviderPromptBootstrapTest(unittest.TestCase):
             text = target.read_text(encoding="utf-8")
             self.assertTrue(text.startswith("personal rule\n"))
             self.assertIn("<!-- AIOS BEGIN", text)
-            self.assertIn("AIOS Provider Contract", text)
+            # See the note in test_temp_home_bootstrap_creates_marker_block:
+            # assert the durable property, not the template's current prose.
+            self.assertIn("Privacy boundary inviolable", text)
 
     def test_status_reports_drift_for_old_marker_version(self) -> None:
         with tempfile.TemporaryDirectory() as td:

@@ -16,12 +16,17 @@ from pathlib import Path
 import pytest
 
 _LEARNOS_DIR = Path(__file__).resolve().parents[1] / "experiments" / "learnos"
-sys.path.insert(0, str(_LEARNOS_DIR))
+sys.path.insert(0, Path(__file__).resolve().parent.as_posix())
 
-import improve  # noqa: E402
-import ledger  # noqa: E402
-import tasks  # noqa: E402
-import verify  # noqa: E402
+from _experiment_imports import load_from  # noqa: E402
+
+# Bare names like `tasks` collide across experiments/ — claim ours explicitly
+# rather than inheriting whatever ran first. See tests/_experiment_imports.py.
+_mods = load_from(_LEARNOS_DIR, "improve", "ledger", "tasks", "verify")
+improve = _mods["improve"]
+ledger = _mods["ledger"]
+tasks = _mods["tasks"]
+verify = _mods["verify"]
 
 
 # ── scripted (no-LLM) proposer ───────────────────────────────────────────────

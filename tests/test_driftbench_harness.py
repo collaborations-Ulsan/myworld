@@ -12,13 +12,22 @@ import unittest
 from fractions import Fraction
 from pathlib import Path
 
-sys.path.insert(0, (Path(__file__).resolve().parents[1] / "experiments" / "driftbench").as_posix())
+sys.path.insert(0, Path(__file__).resolve().parent.as_posix())
 
-import analyze  # noqa: E402
-import arms  # noqa: E402
-import grader as grader_mod  # noqa: E402
-import schema  # noqa: E402
-import tasks  # noqa: E402
+from _experiment_imports import load_from  # noqa: E402
+
+# `import tasks` here used to pick up experiments/learnos/tasks.py, because
+# tests/test_distiller.py is collected first and pulls that module into
+# sys.modules. See tests/_experiment_imports.py for the full account.
+_mods = load_from(
+    Path(__file__).resolve().parents[1] / "experiments" / "driftbench",
+    "analyze", "arms", "grader", "schema", "tasks",
+)
+analyze = _mods["analyze"]
+arms = _mods["arms"]
+grader_mod = _mods["grader"]
+schema = _mods["schema"]
+tasks = _mods["tasks"]
 
 
 def _snapshot_workspace(ws: Path) -> dict:

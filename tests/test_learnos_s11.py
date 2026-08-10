@@ -26,16 +26,23 @@ from pathlib import Path
 import pytest
 
 _LEARNOS_DIR = Path(__file__).resolve().parents[1] / "experiments" / "learnos"
-sys.path.insert(0, str(_LEARNOS_DIR))
+sys.path.insert(0, Path(__file__).resolve().parent.as_posix())
 
-import archive as archive_mod  # noqa: E402
-import causal_gate  # noqa: E402
-import evolve_s11  # noqa: E402
-import gene_pool as gene_pool_mod  # noqa: E402
-import improve  # noqa: E402
-import ledger  # noqa: E402
-import search  # noqa: E402
-import tasks  # noqa: E402
+from _experiment_imports import load_from  # noqa: E402
+
+# See tests/_experiment_imports.py — bare names collide across experiments/.
+_mods = load_from(
+    _LEARNOS_DIR, "archive", "causal_gate", "evolve_s11", "gene_pool",
+    "improve", "ledger", "search", "tasks",
+)
+archive_mod = _mods["archive"]
+causal_gate = _mods["causal_gate"]
+evolve_s11 = _mods["evolve_s11"]
+gene_pool_mod = _mods["gene_pool"]
+improve = _mods["improve"]
+ledger = _mods["ledger"]
+search = _mods["search"]
+tasks = _mods["tasks"]
 
 
 def _fence(source: str) -> str:
