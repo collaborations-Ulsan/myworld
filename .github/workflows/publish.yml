@@ -3,9 +3,22 @@ name: publish
 # Trigger: push a semver tag (e.g. v0.1.0)
 #   git tag -a v0.1.0 -m "v0.1.0" && git push origin v0.1.0
 #
-# OIDC Trusted Publisher setup (no API token needed):
-#   pypi.org → aios-os project → Publishing → Add Publisher
-#   owner=cjw0076  repo=myworld  workflow=publish.yml  env=pypi
+# OIDC Trusted Publisher setup (no API token needed).
+#
+# aios-os does not exist on PyPI yet, so the project-level "Publishing" tab
+# does not apply — that page only exists once a project does. Use the PENDING
+# publisher flow, which pre-authorises the very first upload and creates the
+# project on it:
+#
+#   pypi.org → account → Publishing → "Add a new pending publisher"
+#     PyPI Project Name: aios-os
+#     Owner:             cjw0076
+#     Repository:        myworld
+#     Workflow name:     publish.yml
+#     Environment:       pypi
+#
+# After the first successful release it converts to a normal trusted publisher.
+# The `pypi` GitHub environment this job targets already exists.
 on:
   push:
     tags: ["v*.*.*"]
