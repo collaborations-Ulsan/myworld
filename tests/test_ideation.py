@@ -287,10 +287,17 @@ def test_a_prose_falsifier_is_not_liftable():
     assert I.liftable({"falsifier": "x", "falsifier_exec": {"cmd": "not a list"}}) is False
 
 
-def test_a_runnable_falsifier_is_liftable():
-    assert I.liftable({"falsifier": "x",
-                       "falsifier_exec": {"cmd": ["python3", "probe.py"],
-                                          "ro": ["/repo"], "net_decoy": False}}) is True
+def test_runnable_is_necessary_but_not_sufficient():
+    """Tightened 2026-08-13: runnable AND authored by someone other than the
+    claim's proposer. A runnable test its own proposer wrote is still
+    self-ratification, so being executable is no longer enough on its own."""
+    runnable = {"falsifier": "x", "claim_author": "claude@myworld",
+                "falsifier_exec": {"cmd": ["python3", "probe.py"],
+                                   "ro": ["/repo"], "net_decoy": False}}
+    assert I.falsifier_exec_ok(runnable) is True
+    assert I.liftable(runnable) is False          # no independent author
+    runnable["falsifier_exec"]["author"] = "chatgpt"
+    assert I.liftable(runnable) is True
 
 
 def test_falsifier_exec_stays_optional():
@@ -301,3 +308,35 @@ def test_falsifier_exec_stays_optional():
             "falsifier": "run an agent with a deny-all contract; a call reaches the runtime",
             "evidence": "intercepts every tool call an agent emits and evaluates it"}
     assert I.verify(item, prop, _near(), 0.9)["pass"] is True
+
+
+def test_a_claim_cannot_be_lifted_by_its_own_proposers_test():
+    """Self-ratification is the real disqualifier, not the use of a model.
+
+    Running a test its own proposer wrote proves only that the proposer can
+    write a test it passes.
+    """
+    row = {"claim_author": "claude@myworld",
+           "falsifier_exec": {"cmd": ["python3", "p.py"],
+                              "author": "claude@myworld"}}
+    assert I.author_independent(row) is False
+    assert I.liftable(row) is False
+
+
+def test_a_heterogeneous_adversary_may_write_the_test():
+    """FE-1 in the base layer's ledger: ChatGPT wrote the falsifier that killed
+    a theorem claude@myworld_computation had proposed, and it died on execution
+    rather than on ChatGPT's opinion."""
+    row = {"claim_author": "claude@myworld_computation",
+           "falsifier_exec": {"cmd": ["python3", "xor_counterexample.py"],
+                              "author": "chatgpt"}}
+    assert I.author_independent(row) is True
+    assert I.liftable(row) is True
+
+
+def test_an_unattributed_test_is_not_independent():
+    """Absent authorship is not innocent authorship."""
+    assert I.author_independent(
+        {"claim_author": "a", "falsifier_exec": {"cmd": ["x"]}}) is False
+    assert I.author_independent(
+        {"falsifier_exec": {"cmd": ["x"], "author": "b"}}) is False

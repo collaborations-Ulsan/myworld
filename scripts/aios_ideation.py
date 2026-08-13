@@ -821,7 +821,44 @@ def nearest(claim: str, corpus: list[dict], vecs, claim_vec, matrix=None) -> dic
 # us recording that they exist. What must NOT happen is calling such a row part
 # of a compounding loop, so `liftable` states the difference and `stats` reports
 # the fraction, turning a one-off finding into a standing metric.
+# AUTHORSHIP (2026-08-13, after the base layer's reframe — accepted).
+# The thing we refused was never "a model wrote it". It was SELF-RATIFICATION:
+# the same thing that proposed a claim also writing the test it must pass. A
+# model-translator violates that twice over — same family as the proposer, and
+# its faithfulness judged by nobody. A HETEROGENEOUS ADVERSARY writing a
+# falsifier to KILL the claim violates neither: different substrate, and the
+# verdict is an exit code rather than its opinion.
+#
+# Existence proof in the base layer's own ledger: FE-1's falsifier was written
+# by ChatGPT attacking a theorem claude@myworld_computation had proposed, and it
+# died on execution (agreement to 1e-12), not on ChatGPT's say-so.
+#
+# So two fields, and only ONE of the two conditions is mechanically checkable:
+#
+#   claim_author            who proposed it
+#   falsifier_exec.author   who wrote the test
+#
+#   CHECKABLE      author_independent := falsifier author != claim author
+#   NOT CHECKABLE  faithfulness — whether the test actually tests THE CLAIM
+#                  rather than something adjacent to it
+#
+# The second is stated here rather than pretended away, exactly as the seam spec
+# does for capability claims: an unfaithful falsifier is a lie this code cannot
+# detect, and only a human or a precise enough claim can catch it.
+#
+# One failure the reframe does NOT cover, so it is named: an adversary can also
+# be WEAK. A falsifier that is easy to survive yields a cheap `Attested`, which
+# is not self-ratification but is still a weak result. That is why the attesting
+# falsifier's author and command are recorded on the row — the strength of an
+# Attested must remain inspectable rather than collapsing into a label.
 EXEC_KEYS = ("cmd",)
+
+
+def author_independent(row: dict) -> bool:
+    """Did someone other than the claim's proposer write its test?"""
+    fx = row.get("falsifier_exec") or {}
+    a, b = fx.get("author"), row.get("claim_author")
+    return bool(a) and bool(b) and a != b
 
 
 def falsifier_exec_ok(row: dict) -> bool:
@@ -839,7 +876,11 @@ def liftable(row: dict) -> bool:
     and saying so is the honest alternative to either discarding it or pretending
     it participates.
     """
-    return falsifier_exec_ok(row)
+    # Author independence is part of liftability, not a separate nicety: a row
+    # whose test was written by its own proposer cannot be raised above
+    # Proposal by running it, because running it proves only that the proposer
+    # can write a test it passes.
+    return falsifier_exec_ok(row) and author_independent(row)
 
 
 MIN_EVIDENCE = 40
@@ -1148,10 +1189,16 @@ def cmd_stats() -> dict:
     return {"schema": SCHEMA, "rows": len(rows), "by_verdict": by_verdict,
             "by_source": by_source, "by_operator": per_model,
             "liftable": lift, "liftable_fraction": round(lift / len(rows), 3) if rows else None,
-            "liftable_note": ("rows that can ever leave Proposal, i.e. that carry "
-                              "a runnable falsifier_exec. Measured 0/49 on "
-                              "2026-08-13: the compounding loop is not lit, and "
-                              "a ledger of unliftable rows is an archive"),
+            "liftable_note": ("rows that can ever leave Proposal: a runnable "
+                              "falsifier_exec whose author differs from the "
+                              "claim's proposer. Measured 0/49 on 2026-08-13"),
+            "liftability_is_a_domain_property": (
+                "0/49 is not a missing translator. Claims whose oracle is code "
+                "or mathematics are liftable by construction; claims about "
+                "chemists, web-scale corpora and physical magnets have their "
+                "oracle in a laboratory and are structurally unliftable on this "
+                "executor. Cleverness that appears to bridge that gap is "
+                "theatre. The fix is different FUEL, not a better translator."),
             "ledger_root": ledger_root(),
             "revert_ever_executed": reverted > 0,
             "note": ("revert_ever_executed=false means the rejection path is "
