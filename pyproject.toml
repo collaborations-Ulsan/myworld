@@ -138,6 +138,7 @@ py-modules  = [
     "aios_conform",
     "aios_gpu_arbiter",
     "aios_contracts",
+    "aios_peer_bind",
 ]
 # aios_primitives is a stdlib-only PACKAGE (not a flat module): aios_runtime does
 # `from aios_primitives import events`, so it must ship as a package, not via
