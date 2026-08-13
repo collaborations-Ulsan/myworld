@@ -111,6 +111,20 @@ def check_receipt(r: dict) -> list[str]:
     if t["outcome"] != expect:
         bad.append(f"verdict={v['verdict']} but outcome={t['outcome']} — the "
                    "verdict is decoration if it does not bind the outcome")
+    # spec §2b — separation. Optional members, but once `executes_code` is
+    # declared true the isolation claim becomes load-bearing and is enforced.
+    ISOLATION = {"same_process", "separate_process", "remote", "sandboxed"}
+    iso = v.get("isolation")
+    if iso is not None and iso not in ISOLATION:
+        bad.append(f"verify.isolation not in {sorted(ISOLATION)}: {iso!r}")
+    if a.get("executes_code") is True:
+        if iso is None:
+            bad.append("act.executes_code=true but verify.isolation is absent — "
+                       "an executor that runs code must show the boundary")
+        elif iso == "same_process":
+            bad.append("act.executes_code=true with verify.isolation="
+                       "'same_process' — the verifier is inside the trust "
+                       "domain it judges and can be rewritten by it")
     for member, key in (("sense", "input_digest"), ("verify", "oracle_cmd_digest"),
                         ("settle", "root_before"), ("settle", "root_after")):
         val = r[member][key]

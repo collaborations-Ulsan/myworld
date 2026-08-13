@@ -101,6 +101,34 @@ that a condition was judged without asking a model, something ran without a
 model selecting it, a separate judge ruled, and the ruling changed a durable
 record. Nothing more is asserted, and a participant MUST NOT read more into it.
 
+## 2b. Separation — the verifier must live below what it judges
+
+A string comparison of `verifier_identity != operator` catches a receipt that
+*names* the executor as its own judge. It does not catch a verifier the executor
+can **rewrite**, and those are different failures. Enforcement is not a matter of
+speed or language; it is a matter of who can modify whom, and a check running
+inside the trust domain it checks is not a check.
+
+Two extra members make the separation explicit and refusable:
+
+| member | values | meaning |
+|---|---|---|
+| `act.executes_code` | bool | the operator ran code supplied by an untrusted party (a falsifier, a fetched script, a model-authored program) |
+| `verify.isolation` | `same_process` · `separate_process` · `remote` · `sandboxed` | how the verifier was kept out of the executor's reach |
+
+**Rule.** `act.executes_code = true` ⟹ `verify.isolation ≠ same_process`.
+
+A text-only operator (a remote model returning a string) may honestly declare
+`same_process`, because a string cannot reach into the verifier. The moment the
+operator RUNS something, that stops being true, and the receipt must show the
+boundary rather than assert good intentions.
+
+This clause exists because it will be violated by the obvious next step. A
+ledger row already carries a `falsifier`; the design's whole direction is to make
+those runnable. On the day a falsifier executes, the executor becomes untrusted
+code inside our own process, and without this clause the receipt would look
+exactly as conforming as it does today.
+
 ## 3. Artifact C — the enforcement boundary
 
 `aios.sandbox_receipt.v1`, referenced from `act.receipt` when the act ran

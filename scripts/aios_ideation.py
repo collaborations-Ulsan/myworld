@@ -1020,10 +1020,16 @@ def run_cycle(sources: list[str], topics: list[str], limit: int,
                       "model_consulted": False},
             "act": {"operator": act["operator"], "invoked_by": "host",
                     "model_offered_choice": False,
-                    "operator_digest": act["operator_digest"]},
+                    "operator_digest": act["operator_digest"],
+                    # The distiller returns TEXT over HTTP and runs nothing of
+                    # ours, so the verifier sharing this process is safe. Stated
+                    # rather than assumed: the day a falsifier is executed this
+                    # flips to true and spec 2b refuses `same_process`.
+                    "executes_code": False},
             "verify": {"oracle_cmd_digest": "sha256:" + _sha256("grounding_v1"),
                        "verdict": "pass" if ver["pass"] else "fail",
-                       "verifier_identity": ver["verifier_identity"]},
+                       "verifier_identity": ver["verifier_identity"],
+                       "isolation": "same_process"},
             "settle": {"outcome": "committed" if ver["pass"] else "reverted",
                        "ledger_seq": seq, "root_before": root_before,
                        "root_after": root_after},

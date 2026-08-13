@@ -129,3 +129,83 @@ def test_checker_imports_nothing_from_aios():
     body = "\n".join(l for l in src.splitlines()
                      if l.startswith(("import ", "from ")))
     assert "aios_" not in body, body
+
+
+# --- spec §2b: the verifier must live below what it judges ------------------
+
+def test_executing_code_in_the_verifier_s_process_is_refused():
+    """The clause that will be violated by the obvious next step.
+
+    A ledger row already carries a `falsifier`; the whole direction of the
+    design is to make those runnable. On that day the executor becomes
+    untrusted code inside our own process, and without this clause the receipt
+    would look exactly as conforming as a text-only one does today.
+    """
+    r = valid()
+    r["act"]["executes_code"] = True
+    r["verify"]["isolation"] = "same_process"
+    assert any("trust domain it judges" in m for m in K.check_receipt(r))
+
+
+def test_executing_code_without_declaring_isolation_is_refused():
+    r = valid()
+    r["act"]["executes_code"] = True
+    assert any("must show the boundary" in m for m in K.check_receipt(r))
+
+
+@pytest.mark.parametrize("iso", ["separate_process", "remote", "sandboxed"])
+def test_a_real_boundary_is_accepted(iso):
+    r = valid()
+    r["act"]["executes_code"] = True
+    r["verify"]["isolation"] = iso
+    assert K.check_receipt(r) == []
+
+
+def test_text_only_operator_may_honestly_share_a_process():
+    """A string cannot reach into the verifier, so this is not a violation —
+    the clause must not fire on the honest case or producers will stop
+    declaring it."""
+    r = valid()
+    r["act"]["executes_code"] = False
+    r["verify"]["isolation"] = "same_process"
+    assert K.check_receipt(r) == []
+
+
+def test_an_invented_isolation_value_is_refused():
+    r = valid()
+    r["verify"]["isolation"] = "very_isolated_trust_me"
+    assert any("verify.isolation not in" in m for m in K.check_receipt(r))
+
+
+# --- the seam's own claim: a foreign implementation can conform -------------
+
+def test_posix_shell_producer_conforms_and_agrees_on_the_root(tmp_path):
+    """The spec says the seam is real only if something outside our stack can
+    pass. This runs `spec/examples/producer.sh` — /bin/sh and sha256sum, no
+    Python — and requires both that its receipts conform AND that the Merkle
+    root it computed in shell equals the one recomputed here. If these ever
+    diverge, the written rule is underspecified and the seam is only a codebase.
+    """
+    import shutil
+    import subprocess
+    if not shutil.which("sha256sum"):
+        pytest.skip("sha256sum not available")
+    script = ROOT / "spec" / "examples" / "producer.sh"
+    out = tmp_path / "participant"
+    proc = subprocess.run(["sh", str(script), str(out)], capture_output=True,
+                          text=True, timeout=120)
+    assert proc.returncode == 0, proc.stderr
+
+    receipts = [json.loads(l) for l in (out / "receipts.jsonl").open()]
+    assert len(receipts) == 2
+    for r in receipts:
+        assert K.check_receipt(r) == [], r
+
+    shell_root = [l for l in proc.stdout.splitlines()
+                  if l.startswith("final root:")][0].split(": ", 1)[1]
+    assert K.ledger_root(out / "ledger.jsonl") == shell_root
+    assert receipts[-1]["settle"]["root_after"] == shell_root
+
+    outcomes = {r["settle"]["outcome"] for r in receipts}
+    assert outcomes == {"committed", "reverted"}, \
+        "a producer that never exercises rejection has not shown a verified cycle"
