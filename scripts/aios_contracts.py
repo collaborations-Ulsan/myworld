@@ -127,7 +127,8 @@ def enforcement_gap(grant: dict) -> dict:
     }
 
 
-def proven(grant: dict, sandbox_receipt: dict | None) -> dict:
+def proven(grant: dict, sandbox_receipt: dict | None,
+           now: float | None = None) -> dict:
     """Is this grant backed by something that actually refused?
 
     Declaration is not enforcement. The sandbox receipt must show an
@@ -135,6 +136,14 @@ def proven(grant: dict, sandbox_receipt: dict | None) -> dict:
     exactly this, using a loopback positive control so a host firewall could not
     be mistaken for the cage doing its job.
     """
+    # A grant that does not validate cannot be proven, however well the cage
+    # behaved. Found when the base layer's G-B — refused by validate for
+    # forbidding L7 without acknowledgement — still came back proven=True,
+    # because this function looked only at the receipt. "The cage refused what
+    # it promised" is not a defence for a promise the schema rejects.
+    errs = validate(grant, now=now)
+    if errs:
+        return {"proven": False, "reason": f"grant does not validate: {errs[0]}"}
     if not sandbox_receipt:
         return {"proven": False, "reason": "no sandbox receipt accompanies this "
                                            "grant, so nothing was shown to refuse"}
@@ -151,6 +160,54 @@ def proven(grant: dict, sandbox_receipt: dict | None) -> dict:
                                "produces the same observation")}
     return {"proven": True, "engine": sandbox_receipt.get("engine"),
             "note": "proven for the scope keys this receipt covers, no further"}
+
+
+def verify_human_grant(obj: dict, *, verifier=None,
+                       now: float | None = None) -> dict:
+    """Is this a human decision, or a string that says it is?
+
+    The base layer asked for a signed human-grant object to close the L5+ gate,
+    and the honest version has to refuse its own strongest-sounding case: with no
+    key material there is nothing to check a signature against, and returning
+    `verified: true` for an unverifiable string would put the word "signed" in
+    front of an unchecked field. That is worse than no signature, because a
+    reader stops looking.
+
+    `verifier` is a callable (payload, signature) -> bool supplied by whatever
+    actually holds the key. Absent one, this reports UNVERIFIED with the reason,
+    and callers must treat the object as an audit trail rather than as authority.
+    """
+    now = time.time() if now is None else now
+    missing = [k for k in ("subject", "actions", "signed_by", "signature",
+                           "expires_at") if k not in obj]
+    if missing:
+        return {"verified": False, "reason": f"missing {missing}"}
+    if obj.get("trust_class") not in APPROVAL_TRUST:
+        return {"verified": False,
+                "reason": ("only a human-authenticated decision approves; an "
+                           "agent writing 'approved' is an agent writing a string")}
+    try:
+        if float(obj["expires_at"]) <= now:
+            return {"verified": False, "reason": "expired"}
+    except (TypeError, ValueError):
+        return {"verified": False, "reason": "expires_at is not a timestamp"}
+    above = [a for a in obj["actions"] if a in LADDER and a not in ENFORCEABLE_BY_CAGE]
+    if verifier is None:
+        return {"verified": False, "unverifiable": True,
+                "covers_rungs_no_cage_can_refuse": above,
+                "reason": ("no verifier supplied — the signature is an "
+                           "unchecked field, so this is an audit trail and not "
+                           "authority")}
+    ok = bool(verifier(_canon_payload(obj), obj["signature"]))
+    return {"verified": ok, "covers_rungs_no_cage_can_refuse": above,
+            "signed_by": obj["signed_by"],
+            "reason": "" if ok else "signature did not verify"}
+
+
+def _canon_payload(obj: dict) -> str:
+    """What a signature covers: everything except the signature itself."""
+    return json.dumps({k: v for k, v in sorted(obj.items()) if k != "signature"},
+                      sort_keys=True, ensure_ascii=False, separators=(",", ":"))
 
 
 def _rung(level: str) -> int:

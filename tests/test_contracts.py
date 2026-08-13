@@ -234,7 +234,25 @@ def test_unknown_scope_keys_and_net_values_are_refused():
 
 def test_a_grant_is_not_proven_without_a_receipt():
     g = grant(scope={"net": "denied"})
-    assert C.proven(g, None)["proven"] is False
+    assert C.proven(g, None, now=NOW)["proven"] is False
+
+
+def test_the_clock_footgun_bit_a_third_time():
+    """Recorded because documenting it twice did not stop it.
+
+    proven() gained a validate() call and immediately inherited the same trap:
+    two functions that each default `now` to the wall clock, so a caller fixing
+    the clock for one silently compares a fixture timestamp against real time.
+    It cost a debugging pass in claim/note over locks_dir, another in
+    authorize/validate, and this one. Three occurrences is a design smell, not
+    three accidents.
+    """
+    g = grant(scope={"net": "denied"})
+    receipt = {"network": "denied", "engine": "cage",
+               "network_evidence": {"attributable_to_cage": True}}
+    assert C.proven(g, receipt, now=NOW)["proven"] is True
+    late = C.proven(g, receipt)                       # wall clock
+    assert late["proven"] is False and "expired" in late["reason"]
 
 
 def test_a_denial_not_attributed_to_the_cage_does_not_prove_the_grant():
@@ -243,9 +261,58 @@ def test_a_denial_not_attributed_to_the_cage_does_not_prove_the_grant():
     g = grant(scope={"net": "denied"})
     bare = {"network": "denied", "engine": "userns-netns+landlock",
             "network_evidence": {"attributable_to_cage": False}}
-    assert C.proven(g, bare)["proven"] is False
+    assert C.proven(g, bare, now=NOW)["proven"] is False
     controlled = {"network": "denied", "engine": "userns-netns+landlock",
                   "network_evidence": {"attributable_to_cage": True,
                                        "control_uncaged": "OPEN",
                                        "cage_result": "REFUSED 101"}}
-    assert C.proven(g, controlled)["proven"] is True
+    assert C.proven(g, controlled, now=NOW)["proven"] is True
+
+
+def test_an_invalid_grant_cannot_be_proven():
+    """Surfaced by the base layer's G-B: refused by validate for forbidding L7
+    unacknowledged, yet proven() said True because it read only the receipt.
+    A well-behaved cage is not a defence for a promise the schema rejects."""
+    good_receipt = {"network": "denied", "engine": "cage",
+                    "network_evidence": {"attributable_to_cage": True}}
+    bad = grant(forbidden=["L7"], scope={"net": "denied"})
+    assert C.proven(bad, good_receipt, now=NOW)["proven"] is False
+    bad["acknowledged_unenforceable"] = True
+    assert C.proven(bad, good_receipt, now=NOW)["proven"] is True
+
+
+def human(**over):
+    g = {"subject": "agent:executor-7", "actions": ["L7"],
+         "signed_by": "jaewon", "signature": "sig", "expires_at": NOW + 600,
+         "trust_class": "human_authenticated"}
+    g.update(over)
+    return g
+
+
+def test_an_unverifiable_signature_is_never_reported_as_verified():
+    """With no key material there is nothing to check against, and 'signed'
+    in front of an unchecked field is worse than no signature at all."""
+    out = C.verify_human_grant(human(), now=NOW)
+    assert out["verified"] is False and out["unverifiable"] is True
+    assert out["covers_rungs_no_cage_can_refuse"] == ["L7"]
+
+
+def test_a_supplied_verifier_decides():
+    assert C.verify_human_grant(human(), verifier=lambda p, s: True,
+                                now=NOW)["verified"] is True
+    assert C.verify_human_grant(human(), verifier=lambda p, s: False,
+                                now=NOW)["verified"] is False
+
+
+def test_an_agent_cannot_issue_a_human_grant():
+    out = C.verify_human_grant(human(trust_class="internal_agent"),
+                               verifier=lambda p, s: True, now=NOW)
+    assert out["verified"] is False and "writing a string" in out["reason"]
+
+
+def test_the_signature_covers_everything_but_itself():
+    a = C._canon_payload(human(signature="one"))
+    b = C._canon_payload(human(signature="two"))
+    assert a == b, "signature must not cover itself"
+    c = C._canon_payload(human(actions=["L8"]))
+    assert c != a, "changing the granted rungs must change what is signed"
