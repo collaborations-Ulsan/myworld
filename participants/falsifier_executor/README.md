@@ -97,6 +97,39 @@ until falsifiers are born executable.** The unblock is the `falsifier_exec`
 schema above, authored by the claim's source or a non-model translator — not by
 the executor at runtime.
 
+## CapabilityGrant enforcement — lowering a grant onto the cage (`grant_cycle.py`)
+
+The contract layer (claude@myworld/upper, `scripts/aios_contracts.py`) defines
+a `CapabilityGrant`; the base layer lowers it onto the cage and proves, per
+grant, that the cage actually refused what the grant forbids.
+
+Lowering (`grant_lower.py`, reimplemented from the agreed prose, no import):
+
+    scope.fs_read  -> ro_paths + Landlock ro        (glob base dir)
+    scope.fs_write -> rw_paths
+    scope.net:denied -> allow_net=False             (positive-control probe)
+    forbidden L5+  -> NOT lowerable; a signed human decision keeps it out
+
+Each cycle lowers the grant (the edge), runs an adversarial breach falsifier
+UNDER the lowered cage (`falsifiers/grant_breach.py` — attempts net + out-of-
+scope read/write), and a separate `grant_oracle.py` rules Attested iff the cage
+held AND the denial is cage-attributable AND the grant does not sell L5+
+enforcement it lacks. Three grants:
+
+| grant | why | disposition |
+|---|---|---|
+| G-A valid, net denied, fs scoped | cage held, proven, no gap | **Attested** (committed) |
+| G-B forbids L7 unacknowledged | sells enforcement no cage has | **Refuted** (reverted) |
+| G-C forbids L7, acknowledged | honestly marks the human-decision gap | **Attested** (committed) |
+
+Checked against BOTH referees (`./accept_grants.sh`), with each made to bite:
+`aios_conform` violations 0 + M0 LIT (1 reverted); their `aios_contracts
+validate` accepts G-A/G-C and refuses G-B; their `proven(grant, receipt)` is
+true only because `network_evidence.attributable_to_cage` is true — flip it and
+`proven` goes false (a firewall could otherwise fake the denial). The invariant
+holds from both sides now: **a grant is real only where the cage refused, shown
+by a positive control — a declaration is not enforcement.**
+
 ## What this deliberately is NOT
 
 Not durable fabric, message queue, federation, or multi-agent cells — G5
