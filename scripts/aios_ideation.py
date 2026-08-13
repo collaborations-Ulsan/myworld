@@ -799,6 +799,49 @@ def nearest(claim: str, corpus: list[dict], vecs, claim_vec, matrix=None) -> dic
 # VERIFY — deterministic, and blind to who generated the claim
 # ---------------------------------------------------------------------------
 
+# --- falsifier_exec (2026-08-13) -------------------------------------------
+# MEASURED by the base layer against this very ledger: of 49 rows, **0** carried
+# a falsifier that could be executed as authored. Every one was a natural-language
+# experiment sketch pointing at something outside this machine — a chemist, a
+# web-scale corpus, a physical 2D magnet, a search that is self-contained in
+# theory and infeasible in practice. It refused to have a model translate them,
+# which was right: a generator writing its own test is the thing our null report
+# says does not work.
+#
+# So the compounding loop does not light until falsifiers are BORN executable,
+# and that is a property of the row, not of the executor. This field is how a row
+# says it can be run:
+#
+#   "falsifier_exec": {"cmd": [...], "ro": [...], "net_decoy": false}
+#       exit 3 -> the claim survived the attempt  -> Attested
+#       exit 0 -> the claim was killed            -> Refuted
+#
+# OPTIONAL on purpose. Requiring it would refuse every row harvested from an
+# abstract, which would not make those falsifiers executable — it would only stop
+# us recording that they exist. What must NOT happen is calling such a row part
+# of a compounding loop, so `liftable` states the difference and `stats` reports
+# the fraction, turning a one-off finding into a standing metric.
+EXEC_KEYS = ("cmd",)
+
+
+def falsifier_exec_ok(row: dict) -> bool:
+    fx = row.get("falsifier_exec")
+    if not isinstance(fx, dict):
+        return False
+    cmd = fx.get("cmd")
+    return isinstance(cmd, list) and bool(cmd) and all(isinstance(c, str) for c in cmd)
+
+
+def liftable(row: dict) -> bool:
+    """Can this row ever leave Proposal?
+
+    A row whose falsifier is prose cannot be raised by any amount of execution,
+    and saying so is the honest alternative to either discarding it or pretending
+    it participates.
+    """
+    return falsifier_exec_ok(row)
+
+
 MIN_EVIDENCE = 40
 MIN_FALSIFIER = 20
 MAX_CLAIM = 280
@@ -1089,6 +1132,7 @@ def cmd_stats() -> dict:
         k = (r.get("source") or {}).get("kind")
         by_source[k] = by_source.get(k, 0) + 1
     reverted = by_verdict.get("reverted", 0)
+    lift = sum(1 for r in rows if liftable(r))
     # Per-operator revert rate: the arbiter is allowed to swap in a smaller
     # distiller, so the price of that swap has to be visible here rather than
     # taken on trust.
@@ -1103,6 +1147,11 @@ def cmd_stats() -> dict:
         d["revert_rate"] = round(d["reverted"] / d["cycles"], 3) if d["cycles"] else None
     return {"schema": SCHEMA, "rows": len(rows), "by_verdict": by_verdict,
             "by_source": by_source, "by_operator": per_model,
+            "liftable": lift, "liftable_fraction": round(lift / len(rows), 3) if rows else None,
+            "liftable_note": ("rows that can ever leave Proposal, i.e. that carry "
+                              "a runnable falsifier_exec. Measured 0/49 on "
+                              "2026-08-13: the compounding loop is not lit, and "
+                              "a ledger of unliftable rows is an archive"),
             "ledger_root": ledger_root(),
             "revert_ever_executed": reverted > 0,
             "note": ("revert_ever_executed=false means the rejection path is "

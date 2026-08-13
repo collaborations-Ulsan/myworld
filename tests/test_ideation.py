@@ -272,3 +272,32 @@ def test_embed_marks_unembeddable_inputs(monkeypatch):
     assert out[1] == [0.0, 0.0, 0.0]
     assert len(I.EMBED_FAILED) == 1 and I.EMBED_FAILED[0]["index"] == 1
     assert I.EMBED_ERROR and "unembeddable" in I.EMBED_ERROR
+
+
+# --- falsifier_exec: can a row ever leave Proposal? -------------------------
+
+def test_a_prose_falsifier_is_not_liftable():
+    """Measured 0/49 on this ledger. A row whose falsifier names a chemist, a
+    physical magnet or a web-scale corpus cannot be raised by any executor, and
+    calling it part of a compounding loop would be the claim the null report
+    already refused."""
+    assert I.liftable({"falsifier": "run an agent with a deny-all contract"}) is False
+    assert I.liftable({"falsifier": "x", "falsifier_exec": {}}) is False
+    assert I.liftable({"falsifier": "x", "falsifier_exec": {"cmd": []}}) is False
+    assert I.liftable({"falsifier": "x", "falsifier_exec": {"cmd": "not a list"}}) is False
+
+
+def test_a_runnable_falsifier_is_liftable():
+    assert I.liftable({"falsifier": "x",
+                       "falsifier_exec": {"cmd": ["python3", "probe.py"],
+                                          "ro": ["/repo"], "net_decoy": False}}) is True
+
+
+def test_falsifier_exec_stays_optional():
+    """Requiring it would refuse every row harvested from an abstract, which
+    would not make those falsifiers executable — only unrecorded."""
+    item = I._item("arxiv", "http://x.invalid/a", "T", SOURCE_TEXT)
+    prop = {"claim": "Tool calls can be intercepted and denied before they run.",
+            "falsifier": "run an agent with a deny-all contract; a call reaches the runtime",
+            "evidence": "intercepts every tool call an agent emits and evaluates it"}
+    assert I.verify(item, prop, _near(), 0.9)["pass"] is True
