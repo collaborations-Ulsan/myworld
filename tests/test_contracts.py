@@ -192,3 +192,60 @@ def test_every_trust_class_has_a_ceiling_on_the_ladder():
     """A class with no ceiling would default to unlimited somewhere later."""
     for tc, ceiling in C.TRUST_CEILING.items():
         assert ceiling in C.LADDER, tc
+
+
+# --- CapabilityGrant scope and the cage's actual reach ----------------------
+
+def test_a_forbidden_rung_a_cage_cannot_refuse_must_be_acknowledged():
+    """A grant listing forbidden:[L7] reads as protection while being, at cage
+    level, a comment. It may be issued; it must not pass silently."""
+    g = grant(forbidden=["L7"])
+    errs = C.validate(g, now=NOW)
+    assert any("cage cannot refuse" in m for m in errs)
+    g["acknowledged_unenforceable"] = True
+    assert C.validate(g, now=NOW) == []
+
+
+def test_forbidding_only_cage_rungs_needs_no_acknowledgement():
+    assert C.validate(grant(forbidden=["L2", "L3"]), now=NOW) == []
+
+
+def test_enforcement_gap_splits_the_ladder_at_L5():
+    gap = C.enforcement_gap(grant(forbidden=["L2", "L4", "L6", "L8"]))
+    assert gap["cage_enforceable"] == ["L2", "L4"]
+    assert gap["needs_signed_human_grant"] == ["L6", "L8"]
+    assert gap["honest"] is False
+
+
+def test_relative_globs_are_refused():
+    """A relative glob means something different in every worker's cwd."""
+    g = grant(scope={"fs_read": ["src/**"]})
+    assert any("absolute path" in m for m in C.validate(g, now=NOW))
+    g["scope"]["fs_read"] = ["/repo/src/**"]
+    assert C.validate(g, now=NOW) == []
+
+
+def test_unknown_scope_keys_and_net_values_are_refused():
+    assert any("unknown key" in m
+               for m in C.validate(grant(scope={"gpu": ["all"]}), now=NOW))
+    assert any("scope.net must be" in m
+               for m in C.validate(grant(scope={"net": "maybe"}), now=NOW))
+
+
+def test_a_grant_is_not_proven_without_a_receipt():
+    g = grant(scope={"net": "denied"})
+    assert C.proven(g, None)["proven"] is False
+
+
+def test_a_denial_not_attributed_to_the_cage_does_not_prove_the_grant():
+    """The base layer's own catch: this host already blocks outbound, so a bare
+    'denied' is the firewall's proof, not the cage's."""
+    g = grant(scope={"net": "denied"})
+    bare = {"network": "denied", "engine": "userns-netns+landlock",
+            "network_evidence": {"attributable_to_cage": False}}
+    assert C.proven(g, bare)["proven"] is False
+    controlled = {"network": "denied", "engine": "userns-netns+landlock",
+                  "network_evidence": {"attributable_to_cage": True,
+                                       "control_uncaged": "OPEN",
+                                       "cage_result": "REFUSED 101"}}
+    assert C.proven(g, controlled)["proven"] is True

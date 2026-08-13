@@ -141,6 +141,7 @@ py-modules  = [
     "aios_peer_bind",
     "aios_doc_harvest",
     "aios_diagnose",
+    "aios_session_name",
 ]
 # aios_primitives is a stdlib-only PACKAGE (not a flat module): aios_runtime does
 # `from aios_primitives import events`, so it must ship as a package, not via

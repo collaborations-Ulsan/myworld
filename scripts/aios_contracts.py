@@ -84,6 +84,74 @@ TRUST_CEILING = {
 # ratifying itself: an agent writing "approved" is an agent writing a string.
 APPROVAL_TRUST = {"human_authenticated"}
 
+# --- what a cage can actually enforce (2026-08-13) --------------------------
+# Requested by the base layer, which lowers a grant to cage flags and reported
+# the boundary precisely: namespaces, Landlock and rlimits deterministically
+# enforce reading, sandbox modification and patch production. They cannot
+# enforce "do not open a pull request" or "do not deploy", because those are not
+# operations the kernel mediates — nothing in a cage stands between an agent and
+# a remote it is allowed to reach.
+#
+# Marking that split in the schema matters more than it looks. A grant listing
+# `forbidden: ["deploy"]` reads as protection while being, at cage level, a
+# comment. The rungs below L5 are refusable by machine; the rest are refusable
+# only by a signed human decision, and a grant that mixes them without saying so
+# is selling enforcement it does not have.
+ENFORCEABLE_BY_CAGE = {"L0", "L1", "L2", "L3", "L4"}
+
+# A scope is the part a cage can lower directly to flags.
+SCOPE_KEYS = ("fs_read", "fs_write", "net")
+NET_VALUES = ("denied", "allowed")
+
+
+def enforcement_gap(grant: dict) -> dict:
+    """Which of this grant's promises a cage cannot keep.
+
+    The base layer's invariant, made checkable from this side: a grant is REAL
+    only where something refuses. Everything else is a declaration, and the
+    schema should say which is which rather than letting a reader assume the
+    whole object is enforced.
+    """
+    forbidden = [a for a in grant.get("forbidden", []) if a in LADDER]
+    unenforceable = [a for a in forbidden if a not in ENFORCEABLE_BY_CAGE]
+    unknown = [a for a in grant.get("forbidden", []) if a not in LADDER]
+    return {
+        "cage_enforceable": [a for a in forbidden if a in ENFORCEABLE_BY_CAGE],
+        "needs_signed_human_grant": unenforceable,
+        "not_on_the_ladder": unknown,
+        "honest": not unenforceable,
+        "reading": ("a forbidden rung above L4 cannot be refused by a cage; it "
+                    "is kept out by a signed human decision or it is not kept "
+                    "out at all" if unenforceable else
+                    "every forbidden rung here is refusable by the cage"),
+    }
+
+
+def proven(grant: dict, sandbox_receipt: dict | None) -> dict:
+    """Is this grant backed by something that actually refused?
+
+    Declaration is not enforcement. The sandbox receipt must show an
+    attempted-and-refused probe attributable to the cage — the base layer built
+    exactly this, using a loopback positive control so a host firewall could not
+    be mistaken for the cage doing its job.
+    """
+    if not sandbox_receipt:
+        return {"proven": False, "reason": "no sandbox receipt accompanies this "
+                                           "grant, so nothing was shown to refuse"}
+    scope = grant.get("scope") or {}
+    if scope.get("net") == "denied":
+        ev = (sandbox_receipt.get("network_evidence") or {})
+        if sandbox_receipt.get("network") != "denied":
+            return {"proven": False, "reason": "grant says net denied; receipt "
+                                               "does not"}
+        if not ev.get("attributable_to_cage"):
+            return {"proven": False,
+                    "reason": ("denial is not attributed to the cage — without a "
+                               "positive control an already-firewalled host "
+                               "produces the same observation")}
+    return {"proven": True, "engine": sandbox_receipt.get("engine"),
+            "note": "proven for the scope keys this receipt covers, no further"}
+
 
 def _rung(level: str) -> int:
     return int(level[1:])
@@ -202,6 +270,32 @@ def validate(obj: dict, *, now: float | None = None,
         for a in obj["actions"]:
             if a not in LADDER:
                 bad.append(f"grant names a rung outside the ladder: {a!r}")
+        sc = obj.get("scope")
+        if sc is not None:
+            if not isinstance(sc, dict):
+                bad.append("grant.scope must be an object")
+            else:
+                for k in sc:
+                    if k not in SCOPE_KEYS:
+                        bad.append(f"grant.scope has unknown key {k!r}; "
+                                   f"known: {SCOPE_KEYS}")
+                if "net" in sc and sc["net"] not in NET_VALUES:
+                    bad.append(f"grant.scope.net must be one of {NET_VALUES}")
+                for k in ("fs_read", "fs_write"):
+                    if k in sc and not (isinstance(sc[k], list)
+                                        and all(isinstance(g, str) and g.startswith("/")
+                                                for g in sc[k])):
+                        bad.append(f"grant.scope.{k} must be absolute path "
+                                   f"globs — a relative glob means something "
+                                   f"different in every worker's cwd")
+        # A grant that forbids what no cage can refuse must not read as
+        # protection. It may still be issued; it must be marked.
+        gap = enforcement_gap(obj)
+        if gap["needs_signed_human_grant"] and not obj.get("acknowledged_unenforceable"):
+            bad.append(f"grant forbids {gap['needs_signed_human_grant']} which a "
+                       f"cage cannot refuse; set acknowledged_unenforceable=true "
+                       f"to state that this relies on a signed human decision "
+                       f"rather than on enforcement")
 
     if kind == "verdict":
         if obj["outcome"] not in ("pass", "fail"):
