@@ -129,6 +129,53 @@ those runnable. On the day a falsifier executes, the executor becomes untrusted
 code inside our own process, and without this clause the receipt would look
 exactly as conforming as it does today.
 
+## 2c. Binding — an edge that fired but was ignored is a new zero
+
+Forcing an invocation is not enough. A mandatory operator can be called on every
+single cycle and still change nothing, because the caller is free to drop what it
+returned:
+
+```
+operator invoked   32/32
+primary ignores the output
+effect on outcome  none
+```
+
+That is the same failure as an unused offer wearing a receipt. `sense`/`act`
+prove the host DECIDED and RAN; nothing so far proves the result was USED.
+
+A receipt therefore MAY carry an `edge` — a host-mandated sub-step whose output
+feeds the act — and when it does, the binding is enforced:
+
+| member | meaning |
+|---|---|
+| `edge.edge_id` | which mandatory edge this is |
+| `edge.invoked_by` | must be `host`; an edge the model chose to call is an offer |
+| `edge.output_digest` | digest of what the edge produced |
+| `act.context_components` | digests of everything that composed this act's input |
+
+**Rule.** `edge` present ⟹ `edge.invoked_by == "host"` **and**
+`edge.output_digest ∈ act.context_components`.
+
+Read it as the difference between four things a receipt could mean, which must
+not be conflated:
+
+```
+Activation   the edge fired                    ← sense/act already prove this
+Delivery     its output entered the next input ← THIS clause
+Uptake       the information changed behaviour ← not provable from a receipt
+Value        the change improved the oracle    ← an experiment, not a schema
+```
+
+The clause buys Delivery and nothing more, and the honesty is the point: a
+conforming receipt still does not show that the information mattered. Separating
+Uptake from Value needs a **sham edge** — the same call, the same latency, the
+same token volume, carrying a schema-matched pack with no information — because
+without it a real edge's effect cannot be told apart from extra compute, extra
+delay, longer context, or the framing that someone reviewed the work. The seam
+deliberately does NOT encode which arm a receipt belongs to; blinding is the
+experiment's business, and a checker that could read the arm would leak it.
+
 ## 3. Artifact C — the enforcement boundary
 
 `aios.sandbox_receipt.v1`, referenced from `act.receipt` when the act ran

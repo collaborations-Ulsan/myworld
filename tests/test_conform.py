@@ -209,3 +209,73 @@ def test_posix_shell_producer_conforms_and_agrees_on_the_root(tmp_path):
     outcomes = {r["settle"]["outcome"] for r in receipts}
     assert outcomes == {"committed", "reverted"}, \
         "a producer that never exercises rejection has not shown a verified cycle"
+
+
+# --- spec §2c: an edge that fired but was ignored is a new zero -------------
+
+def with_edge(**over):
+    r = valid()
+    d = "sha256:" + "c" * 64
+    r["edge"] = {"edge_id": "memory-after-verify-fail", "invoked_by": "host",
+                 "output_digest": d}
+    r["act"]["context_components"] = [d, "sha256:" + "e" * 64]
+    for k, v in over.items():
+        r["edge"][k] = v
+    return r, d
+
+
+def test_a_bound_edge_passes():
+    r, _ = with_edge()
+    assert K.check_receipt(r) == []
+
+
+def test_edge_output_dropped_from_the_act_is_refused():
+    """The failure this clause exists for: called 32/32, ignored 32/32."""
+    r, d = with_edge()
+    r["act"]["context_components"] = [x for x in r["act"]["context_components"]
+                                      if x != d]
+    assert any("ignored" in m for m in K.check_receipt(r))
+
+
+def test_edge_without_any_declared_act_context_is_refused():
+    r, _ = with_edge()
+    del r["act"]["context_components"]
+    assert any("nothing shows the edge output reached the act" in m
+               for m in K.check_receipt(r))
+
+
+def test_a_model_chosen_edge_is_an_offer_not_an_edge():
+    r, _ = with_edge(invoked_by="model")
+    assert any("is an offer" in m for m in K.check_receipt(r))
+
+
+def test_edge_output_digest_must_be_a_digest():
+    r, _ = with_edge(output_digest="whatever-i-retrieved")
+    assert any("edge.output_digest is not sha256" in m
+               for m in K.check_receipt(r))
+
+
+@pytest.mark.parametrize("missing", ["edge_id", "invoked_by", "output_digest"])
+def test_incomplete_edge_is_refused(missing):
+    r, _ = with_edge()
+    del r["edge"][missing]
+    assert any(f"edge.{missing} missing" in m for m in K.check_receipt(r))
+
+
+def test_receipts_without_an_edge_are_unaffected():
+    """The clause must stay optional, or every existing producer breaks and the
+    seam stops being adoptable."""
+    assert K.check_receipt(valid()) == []
+    assert K.check_receipt(valid("reverted")) == []
+
+
+def test_the_seam_cannot_read_which_experimental_arm_a_receipt_is():
+    """Blinding is the experiment's business. A checker that could tell a sham
+    edge from a real one would leak the arm into a file both arms produce.
+    """
+    real, _ = with_edge()
+    sham, _ = with_edge()          # identical shape, information-free payload
+    assert K.check_receipt(real) == K.check_receipt(sham) == []
+    src = (ROOT / "scripts" / "aios_conform.py").read_text(encoding="utf-8")
+    for leak in ("sham", "arm", "treatment", "control"):
+        assert leak not in src.lower(), f"checker mentions {leak!r}"

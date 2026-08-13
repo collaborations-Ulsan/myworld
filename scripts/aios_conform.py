@@ -125,6 +125,30 @@ def check_receipt(r: dict) -> list[str]:
             bad.append("act.executes_code=true with verify.isolation="
                        "'same_process' — the verifier is inside the trust "
                        "domain it judges and can be rewritten by it")
+    # spec §2c — binding. An edge that fired and was then dropped is a new
+    # zero, so the receipt has to show its output entering the act's input.
+    e = r.get("edge")
+    if isinstance(e, dict):
+        for k in ("edge_id", "invoked_by", "output_digest"):
+            if k not in e:
+                bad.append(f"edge.{k} missing")
+        if not bad:
+            if e["invoked_by"] != "host":
+                bad.append("edge.invoked_by must be 'host' — an edge the model "
+                           "chose to call is an offer, and offers measured zero")
+            if not DIGEST.match(str(e["output_digest"])):
+                bad.append(f"edge.output_digest is not sha256:<64 hex>: "
+                           f"{e['output_digest']!r}")
+            ctx = a.get("context_components")
+            if not isinstance(ctx, list):
+                bad.append("edge present but act.context_components missing — "
+                           "nothing shows the edge output reached the act")
+            elif e["output_digest"] not in ctx:
+                bad.append("edge.output_digest not in act.context_components — "
+                           "the edge fired and its result was ignored, which is "
+                           "an invocation without a use")
+    elif e is not None:
+        bad.append(f"edge must be an object, got {type(e).__name__}")
     for member, key in (("sense", "input_digest"), ("verify", "oracle_cmd_digest"),
                         ("settle", "root_before"), ("settle", "root_after")):
         val = r[member][key]
