@@ -137,10 +137,15 @@ def run_cycle(grant, ws, ledger_lines, sb_fh):
     d2 = tempfile.NamedTemporaryFile(prefix="fe-d2-", delete=False)
     d2.write(b"x"); d2.close()
     pd = cage.path_denial_probe([d2.name]); os.unlink(d2.name)
+    # enforcement_gap on the receipt (producer-side field, requested by
+    # claude@myworld/upper): a receipt that does not name the gap looks like a
+    # receipt with no gap. This surfaces, in the durable record, which of the
+    # grant's forbidden rungs the cage could NOT refuse.
     sandbox_receipt = {
         "schema": "aios.sandbox_receipt.v1", "grant_id": gid,
         "engine": res.engine, "network": net["network"],
         "network_evidence": net, "paths_denied": pd["paths_denied"],
+        "enforcement_gap": flags["enforcement_gap"],
         "cage_ran": res.ran, "breach_exit": breach_exit}
     sb_line = json.dumps(sandbox_receipt, ensure_ascii=False, sort_keys=True)
     sb_fh.write(sb_line + "\n"); sb_fh.flush()
