@@ -167,7 +167,22 @@ Uptake       the information changed behaviour ← not provable from a receipt
 Value        the change improved the oracle    ← an experiment, not a schema
 ```
 
-The clause buys Delivery and nothing more, and the honesty is the point: a
+**Correction (2026-08-13).** An earlier version of this section claimed the
+clause buys Delivery. It does not — it buys **D0, declared coupling**. Listing a
+digest in `act.context_components` does not show that the bytes that digest
+names were assembled into the input, so a producer can name the edge and omit
+its content. §2d adds the step that closes that gap. The ladder below is the
+honest decomposition:
+
+```
+D0  manifest inclusion            the digest was declared      ← this section
+D1  exact-byte delivery           the bytes were assembled     ← §2d
+U0  canary processed              the content passed through   ← §2d
+U1  decision changed under intervention                        ← counterfactual replay
+V   external oracle improved                                   ← an experiment
+```
+
+The clause buys D0 and nothing more, and the honesty is the point: a
 conforming receipt still does not show that the information mattered. Separating
 Uptake from Value needs a **sham edge** — the same call, the same latency, the
 same token volume, carrying a schema-matched pack with no information — because
@@ -175,6 +190,67 @@ without it a real edge's effect cannot be told apart from extra compute, extra
 delay, longer context, or the framing that someone reviewed the work. The seam
 deliberately does NOT encode which arm a receipt belongs to; blinding is the
 experiment's business, and a checker that could read the arm would leak it.
+
+## 2d. Exact-byte delivery and the uptake canary
+
+D0 is cheap to forge. Two additions make the next two rungs checkable.
+
+### D1 — the input manifest must tile the input
+
+```json
+"act_input": {
+  "serialized_request_digest": "sha256:R",
+  "length": 6960,
+  "assembled_by": "host-adapter",
+  "components": [
+    {"kind": "edge_output", "digest": "sha256:E", "start": 4812, "end": 6960}
+  ]
+}
+```
+
+**Rules.** Components MUST be ordered, non-overlapping, and their spans MUST
+tile `[0, length)` with no gap. `edge.output_digest` MUST appear as a component
+with a byte range. `assembled_by` MUST NOT be the act's operator.
+
+Why tiling: an offset list that need not cover the input lets a producer declare
+a range for the edge and quietly assemble something else. Requiring the spans to
+account for every byte means naming the edge without carrying it forces a lie
+about the rest of the input as well.
+
+Why `assembled_by`: the manifest has to come from whatever actually serialises
+the request onto stdin or the wire, not from the component being attested. This
+is §2b's principle applied to the manifest — a description of the input written
+by the thing being described is not evidence.
+
+**What this still does not prove**: that the serialised request reached a model.
+A receipt cannot show that, and the spec says so rather than implying otherwise.
+
+### U0 — the canary
+
+The edge payload carries a random nonce, and the act's structured output must
+return
+
+```
+uptake_commitment = SHA256(nonce || act_id || selected_action)
+```
+
+The checker recomputes it. A matching commitment proves the act **read a value
+that existed only inside the edge** and carried it into its structured output —
+channel uptake, which is strictly more than delivery.
+
+**It does not prove the advice was used.** Copying a nonce that sat beside the
+content is exactly what a model ignoring the content would still do. U0 is a
+floor, not a finding, and anything above it needs an intervention:
+
+```
+Run A   state S, edge E    -> projection (selected file, hypothesis id, tool)
+Run B   state S, edge E'   -> same projection
+        only the edge payload differs
+```
+
+Different projections mean the decision depended on the edge. That is U1, it
+costs two runs, and it belongs in an experiment rather than in a schema — a
+sampled 5-10% is enough while every run carries D1 and U0.
 
 ## 3. Artifact C — the enforcement boundary
 

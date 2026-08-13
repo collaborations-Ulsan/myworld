@@ -149,6 +149,62 @@ def check_receipt(r: dict) -> list[str]:
                            "an invocation without a use")
     elif e is not None:
         bad.append(f"edge must be an object, got {type(e).__name__}")
+    # spec §2d — exact-byte delivery (D1) and the uptake canary (U0).
+    ai = r.get("act_input")
+    if isinstance(ai, dict):
+        comps = ai.get("components")
+        if not isinstance(comps, list) or not comps:
+            bad.append("act_input.components missing — a manifest with no "
+                       "components tiles nothing")
+        elif not isinstance(ai.get("length"), int):
+            bad.append("act_input.length missing — spans cannot be checked "
+                       "against an unknown input size")
+        else:
+            if ai.get("assembled_by") == a.get("operator"):
+                bad.append("act_input.assembled_by == act.operator — a "
+                           "description of the input written by the thing being "
+                           "described is not evidence")
+            cursor, ok = 0, True
+            for c_ in sorted(comps, key=lambda x: x.get("start", -1)):
+                st, en = c_.get("start"), c_.get("end")
+                if not isinstance(st, int) or not isinstance(en, int) or en <= st:
+                    bad.append(f"act_input component has no usable span: {c_!r}")
+                    ok = False
+                    break
+                if st != cursor:
+                    bad.append(f"act_input components do not tile the input: "
+                               f"gap or overlap at byte {cursor} (next starts "
+                               f"{st}) — an untiled manifest lets a producer "
+                               f"name the edge and assemble something else")
+                    ok = False
+                    break
+                cursor = en
+            if ok and cursor != ai["length"]:
+                bad.append(f"act_input components cover {cursor} of "
+                           f"{ai['length']} bytes — the manifest must account "
+                           f"for every byte of the input")
+            if isinstance(e, dict) and e.get("output_digest"):
+                spans = [c_ for c_ in comps if c_.get("digest") == e["output_digest"]]
+                if not spans:
+                    bad.append("edge.output_digest has no byte range in "
+                               "act_input.components — declared, not delivered")
+    elif ai is not None:
+        bad.append(f"act_input must be an object, got {type(ai).__name__}")
+
+    up = r.get("uptake")
+    if isinstance(up, dict):
+        need = ("nonce", "act_id", "selected_action", "commitment")
+        miss = [k for k in need if k not in up]
+        if miss:
+            bad.append(f"uptake missing {miss} — the canary is unverifiable")
+        else:
+            want = _h(f"{up['nonce']}{up['act_id']}{up['selected_action']}")
+            if want != up["commitment"]:
+                bad.append("uptake.commitment does not recompute — the act did "
+                           "not carry a value that existed only inside the edge")
+    elif up is not None:
+        bad.append(f"uptake must be an object, got {type(up).__name__}")
+
     for member, key in (("sense", "input_digest"), ("verify", "oracle_cmd_digest"),
                         ("settle", "root_before"), ("settle", "root_after")):
         val = r[member][key]

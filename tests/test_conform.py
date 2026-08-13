@@ -279,3 +279,63 @@ def test_the_seam_cannot_read_which_experimental_arm_a_receipt_is():
     src = (ROOT / "scripts" / "aios_conform.py").read_text(encoding="utf-8")
     for leak in ("sham", "arm", "treatment", "control"):
         assert leak not in src.lower(), f"checker mentions {leak!r}"
+
+
+# --- spec §2d: exact-byte delivery (D1) and the uptake canary (U0) ---------
+
+def with_manifest(**over):
+    r, d = with_edge()
+    r["act_input"] = {"serialized_request_digest": D, "length": 100,
+                      "assembled_by": "host-adapter",
+                      "components": [{"kind": "system", "digest": D2,
+                                      "start": 0, "end": 40},
+                                     {"kind": "edge_output", "digest": d,
+                                      "start": 40, "end": 100}]}
+    r["act_input"].update(over)
+    return r, d
+
+
+def test_a_tiling_manifest_passes():
+    r, _ = with_manifest()
+    assert K.check_receipt(r) == []
+
+
+def test_a_manifest_with_a_gap_is_refused():
+    """An untiled manifest lets a producer name the edge and assemble something
+    else in the space the manifest never accounts for."""
+    r, d = with_manifest()
+    r["act_input"]["components"][1]["start"] = 50      # 40..50 unaccounted
+    assert any("do not tile" in m for m in K.check_receipt(r))
+
+
+def test_a_manifest_that_stops_short_of_the_input_is_refused():
+    r, _ = with_manifest(length=200)
+    assert any("account for every byte" in m for m in K.check_receipt(r))
+
+
+def test_the_edge_must_own_a_byte_range_not_just_a_mention():
+    """D0 vs D1: being listed is not being delivered."""
+    r, d = with_manifest()
+    r["act_input"]["components"][1]["digest"] = D2      # edge no longer spans
+    assert any("declared, not delivered" in m for m in K.check_receipt(r))
+
+
+def test_the_operator_may_not_describe_its_own_input():
+    r, _ = with_manifest(assembled_by="distill@m")      # == act.operator
+    assert any("not evidence" in m for m in K.check_receipt(r))
+
+
+def test_the_uptake_canary_must_recompute():
+    r, _ = with_manifest()
+    r["uptake"] = {"nonce": "n-123", "act_id": "act-7",
+                   "selected_action": "edit:src/lease.py",
+                   "commitment": K._h("n-123act-7edit:src/lease.py")}
+    assert K.check_receipt(r) == []
+    r["uptake"]["commitment"] = K._h("something-else")
+    assert any("did not carry a value" in m for m in K.check_receipt(r))
+
+
+def test_receipts_without_a_manifest_still_pass():
+    """§2d must stay optional or every existing participant breaks — including
+    the base layer that shipped conforming receipts an hour ago."""
+    assert K.check_receipt(valid()) == []
