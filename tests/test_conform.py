@@ -339,3 +339,28 @@ def test_receipts_without_a_manifest_still_pass():
     """§2d must stay optional or every existing participant breaks — including
     the base layer that shipped conforming receipts an hour ago."""
     assert K.check_receipt(valid()) == []
+
+
+def test_an_overstated_enforcement_gap_is_refused():
+    """Claiming a cage cannot refuse L2 hides where enforcement really stops."""
+    r = valid()
+    r["enforcement_gap"] = {"needs_signed_human_grant": ["L2"],
+                            "fully_cage_enforceable": False, "honest": True}
+    assert any("refuses those deterministically" in m for m in K.check_receipt(r))
+
+
+def test_a_self_contradictory_gap_is_refused():
+    r = valid()
+    r["enforcement_gap"] = {"needs_signed_human_grant": ["L7"],
+                            "fully_cage_enforceable": True, "honest": True}
+    assert any("while listing rungs no cage can refuse" in m
+               for m in K.check_receipt(r))
+    r["enforcement_gap"] = {"needs_signed_human_grant": [],
+                            "fully_cage_enforceable": True, "honest": False}
+    assert any("nothing unenforceable to be dishonest about" in m
+               for m in K.check_receipt(r))
+
+
+def test_a_receipt_without_a_gap_field_is_unaffected():
+    """Optional, or every receipt written before the field breaks."""
+    assert K.check_receipt(valid()) == []

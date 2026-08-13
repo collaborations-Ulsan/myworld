@@ -252,6 +252,24 @@ Different projections mean the decision depended on the edge. That is U1, it
 costs two runs, and it belongs in an experiment rather than in a schema — a
 sampled 5-10% is enough while every run carries D1 and U0.
 
+## 2e. A declared enforcement gap must be internally consistent
+
+A receipt MAY carry `enforcement_gap` — which forbidden rungs a cage actually
+refuses and which it cannot. Optional, because requiring it would invalidate
+every receipt written before the field existed. What is checked is what is
+CLAIMED:
+
+- listing a rung at or below L4 as needing a human grant is refused; a cage
+  refuses those deterministically, and overstating the gap hides where
+  enforcement really stops
+- `fully_cage_enforceable: true` alongside a non-empty gap is refused
+- reporting dishonesty with nothing unenforceable to be dishonest about is refused
+
+**`honest` and `fully_cage_enforceable` are different questions.** A grant that
+forbids deployment and SAYS a cage cannot refuse it is honest and not fully
+enforceable at the same time. Collapsing the two makes candour look like a
+defect, which is how a schema teaches producers to stop declaring.
+
 ## 3. Artifact C — the enforcement boundary
 
 `aios.sandbox_receipt.v1`, referenced from `act.receipt` when the act ran

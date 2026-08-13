@@ -191,6 +191,32 @@ def check_receipt(r: dict) -> list[str]:
     elif ai is not None:
         bad.append(f"act_input must be an object, got {type(ai).__name__}")
 
+    # spec 2e — a declared enforcement gap must be internally consistent.
+    # OPTIONAL: requiring it would retroactively invalidate receipts that
+    # predate the field, which is the mistake 2d avoided. What is checked is
+    # what is CLAIMED, so a forged gap cannot pass as a candid one.
+    eg = r.get("enforcement_gap") or (r.get("act", {}) or {}).get("enforcement_gap")
+    if isinstance(eg, dict):
+        needs = eg.get("needs_signed_human_grant")
+        if not isinstance(needs, list):
+            bad.append("enforcement_gap.needs_signed_human_grant must be a list")
+        else:
+            CAGE = {"L0", "L1", "L2", "L3", "L4"}
+            stray = [x for x in needs if x in CAGE]
+            if stray:
+                bad.append(f"enforcement_gap lists {stray} as needing a human "
+                           f"grant, but a cage refuses those deterministically — "
+                           f"overstating the gap hides where enforcement really "
+                           f"stops")
+            if needs and eg.get("fully_cage_enforceable") is True:
+                bad.append("enforcement_gap says fully_cage_enforceable while "
+                           "listing rungs no cage can refuse")
+            if not needs and eg.get("honest") is False:
+                bad.append("enforcement_gap reports dishonest with nothing "
+                           "unenforceable to be dishonest about")
+    elif eg is not None:
+        bad.append(f"enforcement_gap must be an object, got {type(eg).__name__}")
+
     up = r.get("uptake")
     if isinstance(up, dict):
         need = ("nonce", "act_id", "selected_action", "commitment")

@@ -316,3 +316,16 @@ def test_the_signature_covers_everything_but_itself():
     assert a == b, "signature must not cover itself"
     c = C._canon_payload(human(actions=["L8"]))
     assert c != a, "changing the granted rungs must change what is signed"
+
+
+def test_acknowledging_an_unenforceable_rung_is_honest():
+    """Found by a second implementation disagreeing with mine about G-C.
+    `honest` must mean honest, not 'fully enforceable' — a grant that declares
+    what a cage cannot refuse is being candid, not evasive."""
+    strict = C.enforcement_gap(grant(forbidden=["L7"]))
+    assert strict["honest"] is False and strict["fully_cage_enforceable"] is False
+    ack = C.enforcement_gap(grant(forbidden=["L7"],
+                                  acknowledged_unenforceable=True))
+    assert ack["honest"] is True
+    assert ack["fully_cage_enforceable"] is False      # the fact is unchanged
+    assert ack["needs_signed_human_grant"] == ["L7"]

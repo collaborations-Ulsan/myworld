@@ -115,15 +115,29 @@ def enforcement_gap(grant: dict) -> dict:
     forbidden = [a for a in grant.get("forbidden", []) if a in LADDER]
     unenforceable = [a for a in forbidden if a not in ENFORCEABLE_BY_CAGE]
     unknown = [a for a in grant.get("forbidden", []) if a not in LADDER]
+    # `honest` once meant "nothing unenforceable is forbidden", which made a
+    # grant that DECLARES its unenforceable rungs read as dishonest — the exact
+    # opposite of what acknowledging them is for. Caught when the base layer's
+    # producer and this function disagreed about G-C: theirs said honest, mine
+    # said not, and theirs was right. Two implementations of one word is how the
+    # ambiguity became visible, which is what a second implementation is for.
+    acknowledged = bool(grant.get("acknowledged_unenforceable"))
     return {
         "cage_enforceable": [a for a in forbidden if a in ENFORCEABLE_BY_CAGE],
         "needs_signed_human_grant": unenforceable,
         "not_on_the_ladder": unknown,
-        "honest": not unenforceable,
-        "reading": ("a forbidden rung above L4 cannot be refused by a cage; it "
-                    "is kept out by a signed human decision or it is not kept "
-                    "out at all" if unenforceable else
-                    "every forbidden rung here is refusable by the cage"),
+        # the strict fact...
+        "fully_cage_enforceable": not unenforceable,
+        # ...and whether the grant is honest about the difference
+        "honest": (not unenforceable) or acknowledged,
+        "acknowledged": acknowledged,
+        "reading": (
+            "every forbidden rung here is refusable by the cage"
+            if not unenforceable else
+            "forbids rungs above L4 and says so — they are kept out by a signed "
+            "human decision, not by enforcement" if acknowledged else
+            "forbids rungs above L4 without saying so, which reads as protection "
+            "while being, at cage level, a comment"),
     }
 
 
