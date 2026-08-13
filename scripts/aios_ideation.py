@@ -85,6 +85,39 @@ DISTILL_MODEL = os.environ.get("AIOS_IDEATION_MODEL", "qwen3:30b-a3b")
 EMBED_MODEL = os.environ.get("AIOS_IDEATION_EMBED", "bge-m3")
 OLLAMA = os.environ.get("OLLAMA_HOST", "http://localhost:11434").rstrip("/")
 
+# Models that can all do the job, best-first. The arbiter picks whichever is
+# already resident, because on this box a mismatch costs a multi-GB load: two
+# calibration runs died at 25-minute timeouts over exactly this while the same
+# work finished in 40 seconds on a resident model.
+#
+# Swapping down trades output quality for latency, and that trade is SAFE HERE
+# for one specific reason: a weaker distiller does not smuggle bad rows in, it
+# just gets refused more often by the verbatim-grounding oracle. The cost lands
+# as a higher revert rate, which is visible — `stats` breaks reverts down per
+# operator so the trade is measured rather than assumed.
+DISTILL_CANDIDATES = [DISTILL_MODEL, "qwen3:8b", "qwen2.5-coder:14b",
+                      "qwen2.5:7b", "qwen3:4b"]
+PARAPHRASE_CANDIDATES = ["qwen3:8b", "qwen2.5:7b", "qwen2.5-coder:7b", "qwen3:4b"]
+
+
+def pick_model(candidates: list[str], verbose: bool = False) -> str:
+    """Host-mandated model choice. The generator is never asked which it wants.
+
+    Wiring this in is the whole point: an arbiter nothing calls is one more
+    offered mechanism, and offered mechanisms measured zero uses in 96 episodes.
+    """
+    try:
+        import aios_gpu_arbiter as arb
+        got = arb.cmd_advise(candidates, time.time())
+    except Exception as exc:                      # never block work on advice
+        if verbose:
+            print(f"[arbiter] unavailable ({type(exc).__name__}) — "
+                  f"using {candidates[0]}", flush=True)
+        return candidates[0]
+    if verbose:
+        print(f"[arbiter] {got['choose']} ({got['reason']})", flush=True)
+    return got["choose"] or candidates[0]
+
 # Queries are derived from OUR open problems, not from a generic trend feed.
 # Harvesting what is popular gives us popularity; harvesting what we are stuck
 # on gives us leverage. Each entry is (label, arxiv_query, keyword_query).
@@ -221,6 +254,31 @@ def harvest_url(url: str) -> list[dict]:
     if len(text) < 200:
         raise ValueError(f"fetched {url} but got {len(text)} chars of text")
     return [_item("url", url, url, text[:20000])]
+
+
+def harvest_peer(path: Path, sender: str, provenance: str) -> list[dict]:
+    """Absorb a message another agent session sent us.
+
+    Cross-session messaging (Claude Code v2.1.224+) carries plain text and no
+    history, so a consult's substance lives only in two transcripts and dies
+    with them. On 2026-08-10 four peers returned real refutations — one of them
+    cut a hypothesis of mine in half — and none of it is retrievable today
+    except from a conversation log. This turns a consult into a ledger row.
+
+    The oracle applies UNCHANGED: the distiller must quote the peer's message
+    verbatim, so it cannot invent an answer the peer did not give. What is
+    weaker here is PROVENANCE, not grounding — if the receiver transcribes the
+    message rather than capturing it at arrival, the sender's copy is the
+    authoritative one and was not consulted. That is recorded per row instead
+    of being smoothed over, because `transcribed_by_receiver` and
+    `captured_at_arrival` are not the same evidence.
+    """
+    text = path.read_text(encoding="utf-8", errors="replace").strip()
+    if len(text) < 120:
+        raise ValueError(f"{path} holds {len(text)} chars — too short to quote")
+    it = _item("peer", f"peer://{sender}", f"consult reply from {sender}", text)
+    it["provenance"] = provenance
+    return [it]
 
 
 HARVESTERS = {"arxiv": harvest_arxiv, "hn": harvest_hn, "github": harvest_github}
@@ -525,7 +583,8 @@ SENTENCE: {s}
 PARAPHRASE_MODEL = os.environ.get("AIOS_IDEATION_PARAPHRASE", "qwen3:8b")
 
 
-def _paraphrase(sentence: str, model: str = PARAPHRASE_MODEL) -> str:
+def _paraphrase(sentence: str, model: str | None = None) -> str:
+    model = model or PARAPHRASE_MODEL
     try:
         r = _ollama("/api/generate",
                     {"model": model, "prompt": PARAPHRASE_PROMPT.format(s=sentence),
@@ -580,10 +639,11 @@ def cmd_calibrate(n_pos: int = 40, n_neg: int = 40,
     # timeout and vectorising the cosine maths did not help, which means the
     # cost was never where it was assumed to be. Guessing again would be a
     # third wasted run, so the loop now says where the time goes.
+    para_model = pick_model(PARAPHRASE_CANDIDATES, verbose=verbose)
     pos_texts, t_para = [], time.time()
     for n, s in enumerate(originals, 1):
         t1 = time.time()
-        p = _paraphrase(s)
+        p = _paraphrase(s, para_model)
         if p:
             pos_texts.append(p)
         if verbose:
@@ -854,12 +914,13 @@ def seen_ids(path: Path | None = None) -> set[str]:
 
 def run_cycle(sources: list[str], topics: list[str], limit: int,
               per_source: int, threshold_arg: str, model: str,
-              verbose: bool = True, urls: list[str] | None = None) -> dict:
+              verbose: bool = True, urls: list[str] | None = None,
+              items: list[dict] | None = None) -> dict:
     t0 = time.time()
     known = seen_ids()
 
     # --- SENSE: a deterministic predicate over source state. No model. -------
-    fetched, errors = [], []
+    fetched, errors = list(items or []), []
     for u in (urls or []):
         try:
             fetched.extend(harvest_url(u))
@@ -868,7 +929,7 @@ def run_cycle(sources: list[str], topics: list[str], limit: int,
             errors.append({"source": "url", "topic": u,
                            "error": f"{type(exc).__name__}: {exc}"[:160]})
     for label, aq, kq in TOPICS:
-        if urls and not topics and not sources:
+        if (urls or items) and not topics and not sources:
             break
         if topics and label not in topics:
             continue
@@ -943,7 +1004,9 @@ def run_cycle(sources: list[str], topics: list[str], limit: int,
         rec = {"schema": SCHEMA, "ts": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
                "item_id": item["item_id"], "source": {
                    "kind": item["source_kind"], "url": item["url"],
-                   "title": item["title"], "digest": item["source_digest"]},
+                   "title": item["title"], "digest": item["source_digest"],
+                   **({"provenance": item["provenance"]}
+                      if "provenance" in item else {})},
                "claim": prop.get("claim", ""), "falsifier": prop.get("falsifier", ""),
                "evidence": prop.get("evidence", ""),
                "epistemic_type": "Proposal",   # only a run receipt raises this
@@ -1000,6 +1063,18 @@ def read_ledger() -> list[dict]:
     return out
 
 
+def read_receipts() -> list[dict]:
+    if not RECEIPTS.exists():
+        return []
+    out = []
+    for ln in RECEIPTS.open(encoding="utf-8"):
+        try:
+            out.append(json.loads(ln))
+        except json.JSONDecodeError:
+            continue
+    return out
+
+
 def cmd_stats() -> dict:
     rows = read_ledger()
     by_verdict, by_source = {}, {}
@@ -1008,8 +1083,21 @@ def cmd_stats() -> dict:
         k = (r.get("source") or {}).get("kind")
         by_source[k] = by_source.get(k, 0) + 1
     reverted = by_verdict.get("reverted", 0)
+    # Per-operator revert rate: the arbiter is allowed to swap in a smaller
+    # distiller, so the price of that swap has to be visible here rather than
+    # taken on trust.
+    per_model: dict[str, dict] = {}
+    for rec in read_receipts():
+        op = rec.get("act", {}).get("operator", "?")
+        d = per_model.setdefault(op, {"cycles": 0, "reverted": 0})
+        d["cycles"] += 1
+        if rec.get("settle", {}).get("outcome") == "reverted":
+            d["reverted"] += 1
+    for d in per_model.values():
+        d["revert_rate"] = round(d["reverted"] / d["cycles"], 3) if d["cycles"] else None
     return {"schema": SCHEMA, "rows": len(rows), "by_verdict": by_verdict,
-            "by_source": by_source, "ledger_root": ledger_root(),
+            "by_source": by_source, "by_operator": per_model,
+            "ledger_root": ledger_root(),
             "revert_ever_executed": reverted > 0,
             "note": ("revert_ever_executed=false means the rejection path is "
                      "code that has never run — do not call the cycle proven")}
@@ -1064,10 +1152,23 @@ def main(argv: list[str] | None = None) -> int:
     r.add_argument("--per-source", type=int, default=6)
     r.add_argument("--threshold", default="auto",
                    help="'auto' = p95 of our corpus self-similarity")
-    r.add_argument("--model", default=DISTILL_MODEL)
+    r.add_argument("--model", default=None,
+                   help="pin a distiller; default = whichever candidate the "
+                        "arbiter reports resident")
     r.add_argument("--url", action="append", default=[],
                    help="absorb this specific source (repeatable)")
     r.add_argument("--json", action="store_true")
+    pr = sub.add_parser("peer", help="absorb a peer session's reply")
+    pr.add_argument("--from", dest="sender", required=True,
+                    help="the peer session name, e.g. quantum-3e")
+    pr.add_argument("--text-file", type=Path, required=True,
+                    help="file holding the message text VERBATIM")
+    pr.add_argument("--provenance", default="transcribed_by_receiver",
+                    choices=["captured_at_arrival", "transcribed_by_receiver"],
+                    help="how the text got into that file; they are not the "
+                         "same evidence and the row says which")
+    pr.add_argument("--model", default=None)
+    pr.add_argument("--json", action="store_true")
     c = sub.add_parser("calibrate", help="measure the dedup threshold")
     c.add_argument("--n-pos", type=int, default=40)
     c.add_argument("--n-neg", type=int, default=40)
@@ -1082,14 +1183,26 @@ def main(argv: list[str] | None = None) -> int:
         # --url alone means "just this source": do not also sweep the topics.
         srcs = [] if (a.url and a.sources == "arxiv,hn,github") else \
             [s for s in a.sources.split(",") if s in HARVESTERS]
+        model = a.model or pick_model(DISTILL_CANDIDATES, verbose=not a.json)
         res = run_cycle(
             srcs, [t for t in a.topics.split(",") if t], a.limit,
-            a.per_source, a.threshold, a.model, verbose=not a.json,
+            a.per_source, a.threshold, model, verbose=not a.json,
             urls=a.url)
         if a.json:
             print(json.dumps(res, ensure_ascii=False, indent=1))
         else:
             print(f"\ncounts={res.get('counts')} root={res.get('ledger_root','')[:23]}…")
+        return 0
+    if a.cmd == "peer":
+        model = a.model or pick_model(DISTILL_CANDIDATES, verbose=not a.json)
+        got = harvest_peer(a.text_file, a.sender, a.provenance)
+        res = run_cycle([], [], 1, 1, "auto", model, verbose=not a.json,
+                        items=got)
+        if a.json:
+            print(json.dumps(res, ensure_ascii=False, indent=1))
+        else:
+            print(f"\ncounts={res.get('counts')} "
+                  f"root={res.get('ledger_root','')[:23]}…")
         return 0
     if a.cmd == "calibrate":
         print(json.dumps(cmd_calibrate(a.n_pos, a.n_neg, not a.quiet),
