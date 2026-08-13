@@ -135,6 +135,7 @@ py-modules  = [
     # "true" — epistemic_type stays Proposal until a run receipt raises it.
     "aios_ideation",
     "aios_claimcheck",
+    "aios_conform",
 ]
 # aios_primitives is a stdlib-only PACKAGE (not a flat module): aios_runtime does
 # `from aios_primitives import events`, so it must ship as a package, not via
