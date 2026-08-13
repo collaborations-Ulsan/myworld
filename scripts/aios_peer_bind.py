@@ -122,6 +122,20 @@ def discover() -> dict:
     derived = sum(1 for s in sessions if s.get("name_source") == "derived")
     return {
         "schema": SCHEMA,
+        # MEASURED 2026-08-13: ListAgents reported 34 peers while this registry
+        # held 19. The gap is not a bug here — Remote Control and cloud sessions
+        # never write to ~/.claude/sessions, so they are structurally invisible
+        # to anything reading disk. Reporting 19 as though it were the fleet
+        # would be the failure this repo has spent the day cataloguing, so the
+        # limit travels with the answer.
+        "coverage": {
+            "sees": "local CLI sessions that bound an inbox socket",
+            "blind_to": ["Remote Control sessions on this or other machines",
+                         "Claude Code on the web (cloud) sessions",
+                         "sessions started in bare mode, which bind no socket"],
+            "authoritative_source_for_those": "the ListAgents tool, not disk",
+            "self_excluded_by_ListAgents": True,
+        },
         "sessions_seen": len(sessions),
         "reachable": sum(1 for s in sessions if s["reachable"]),
         "stale_records": sum(1 for s in sessions if not s["process_alive"]),

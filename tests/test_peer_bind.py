@@ -126,3 +126,26 @@ def test_an_unreadable_record_is_surfaced_not_skipped(fleet):
     sessions, _ = fleet
     (sessions / "broken.json").write_text("{not json")
     assert any("broken.json" in p for p in P.discover()["problems"])
+
+
+def test_discover_declares_what_it_cannot_see(fleet):
+    """Measured 2026-08-13: 34 peers via ListAgents, 19 in the disk registry.
+    Reporting the 19 as the fleet would be a silent 44% under-count, so the
+    blind spot has to travel with the answer."""
+    sessions, ws = fleet
+    write_session(sessions, ws, name="quantum-fd", repo="quantum", pid=os.getpid())
+    cov = P.discover()["coverage"]
+    assert "Remote Control" in " ".join(cov["blind_to"])
+    assert "cloud" in " ".join(cov["blind_to"]).lower()
+    assert cov["authoritative_source_for_those"]
+
+
+def test_derived_names_collide_within_a_workspace(fleet):
+    """The naming failure, as data: two live sessions in one workspace differ
+    only by a random suffix, so neither name says which is which."""
+    sessions, ws = fleet
+    write_session(sessions, ws, name="quantum-fd", repo="quantum", pid=os.getpid())
+    write_session(sessions, ws, name="quantum-d4", repo="quantum", pid=os.getppid())
+    out = P.resolve("claude@quantum", None)
+    assert out["ambiguous"] is True
+    assert sorted(out["address"]) == ["quantum-d4", "quantum-fd"]
