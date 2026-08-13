@@ -144,7 +144,13 @@ def run_cycle(row, ledger_lines, sb_fh):
     else:
         transition = "Proposal->Proposal(undefended)"
     root_before = merkle.ledger_root(ledger_lines)
+    # Provenance is load-bearing for §2c honesty: a falsifier authored by the
+    # claim's own generator is self-confirmation. Recording both authors makes
+    # the non-generator property auditable in the durable record — a verdict
+    # only counts when falsifier_author != claim_author (or a human/upstream).
     event = {"claim_id": row.get("id"), "claim": stmt,
+             "claim_author": row.get("claim_author"),
+             "falsifier_author": row.get("falsifier_author"),
              "epistemic_before": "Proposal",
              "epistemic_transition": transition, "seam_outcome": outcome,
              "falsifier_exit": fal_exit, "reason": ruling["reason"],
