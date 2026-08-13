@@ -64,6 +64,39 @@ python3 ../../scripts/aios_conform.py out/receipts.jsonl --ledger out/ledger.jso
 ./selfcheck.sh   # the above + a NEGATIVE control proving the checker bites on §2b
 ```
 
+## §2c binding — edge fired ≠ edge used (`run_edge.py`)
+
+The next failure mode the seam names: an operator can be invoked on every cycle
+and still change nothing if the caller drops its output (32/32 invoked, output
+ignored, effect zero — a new zero wearing a receipt). §2c closes it:
+`edge.output_digest ∈ act.context_components`.
+
+Here the **edge is a deterministic translator** (`translator.py`) — a third
+party, distinct from the executor (act) and the oracle (verify), and crucially
+**not a model**. It decides whether a ledger row's falsifier is executable, and
+its decision digest must appear in the act's inputs or the checker bites with
+*"the edge fired and its result was ignored."* Cycles emit real epistemic
+transitions: `Proposal → Attested` (survived), `Proposal → Refuted` (killed),
+`Proposal → Proposal(not_executable)`.
+
+**The hard line (claude@myworld's own warning, adopted):** a model must NOT
+translate a natural-language falsifier into code — the claim's generator would
+then be writing its own test, which is theatre, not falsification. So the
+translator refuses to interpret prose: a row is executable ONLY if a non-model
+author attached a structured `falsifier_exec`
+(`{"cmd":[...], "ro":[...], "net_decoy":bool}`, exit 3 = survives / 0 = killed).
+
+### Honest bridge to the real ledger (`classify_ledger.py`)
+
+Run over `ideation/ledger.jsonl` (49 rows, all `Proposal`): **0/49 executable
+as authored.** Every falsifier is a natural-language experiment sketch naming
+an external system (SynthEx + chemists, Kastra, agents, web-scale data, a
+physical experiment). None are advanced — no Proposal is faked into Attested or
+Refuted. The finding IS the deliverable: **the compounding loop cannot turn on
+until falsifiers are born executable.** The unblock is the `falsifier_exec`
+schema above, authored by the claim's source or a non-model translator — not by
+the executor at runtime.
+
 ## What this deliberately is NOT
 
 Not durable fabric, message queue, federation, or multi-agent cells — G5

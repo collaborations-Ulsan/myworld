@@ -19,9 +19,11 @@ import sys
 def main():
     code = int(sys.argv[1])
     if code == 3:
-        v, r = "pass", "claim survived: falsifier found no counterexample"
+        v, r = "pass", "claim survived falsifier (Attested)"
     elif code == 0:
-        v, r = "fail", "claim killed: falsifier found a counterexample"
+        v, r = "fail", "claim killed by falsifier counterexample (Refuted)"
+    elif code == 88:
+        v, r = "fail", "not_executable: falsifier not runnable as authored — Proposal not advanced"
     else:
         v, r = "fail", f"claim undefended: falsifier exited {code}"
     print(json.dumps({"verdict": v, "reason": r}))
