@@ -386,20 +386,37 @@ def claim(arc_id: str, *, agent: str, now: float, ttl: float = DEFAULT_TTL,
 
 def note(arc_id: str, text: str, *, agent: str, now: float,
          evidence: list[str] | None = None,
-         arcs_dir: Path | str = ARCS_DIR) -> dict:
+         arcs_dir: Path | str = ARCS_DIR,
+         locks_dir: Path | str = LOCKS_DIR) -> dict:
     """Append progress as it happens (INV-5). Only the lease holder may write —
-    otherwise two agents could interleave a fiction."""
-    events = read_events(arc_id, arcs_dir)
-    if not events:
-        return {"schema": SCHEMA, "ok": False, "reason": "no such arc"}
-    st = project(events, now=now)
-    if st["owner"] != agent or not st["lease_live"]:
-        return {"schema": SCHEMA, "ok": False, "reason": "not the lease holder",
-                "owner": st["owner"], "lease_live": st["lease_live"]}
-    rec = append_event(arc_id, {"kind": "progress", "agent": agent,
-                                "text": text, "evidence": evidence or []},
-                       now=now, arcs_dir=arcs_dir)
-    return {"schema": SCHEMA, "ok": True, "seq": rec["seq"]}
+    otherwise two agents could interleave a fiction.
+
+    Guard and append run inside the SAME arc lock. They did not, and a bounded
+    model check (`verify/lease_smt.py`) reported the schedule: the writer passes
+    the ownership guard, another agent legitimately claims the arc in the gap
+    because the writer's process is gone, and the writer's progress lands
+    anyway — two writers on one arc. Reproduced against this code in
+    tests/test_lease_race.py before the lock was added.
+
+    The same window also let concurrent appends by the SAME owner collide on
+    `seq`, since the sequence is derived from the current event count: 22 events
+    were written with 20 distinct positions. An append-only log whose positions
+    are not unique cannot support a position-salted root.
+    """
+    def _do() -> dict:
+        events = read_events(arc_id, arcs_dir)
+        if not events:
+            return {"schema": SCHEMA, "ok": False, "reason": "no such arc"}
+        st = project(events, now=now)
+        if st["owner"] != agent or not st["lease_live"]:
+            return {"schema": SCHEMA, "ok": False,
+                    "reason": "not the lease holder",
+                    "owner": st["owner"], "lease_live": st["lease_live"]}
+        rec = append_event(arc_id, {"kind": "progress", "agent": agent,
+                                    "text": text, "evidence": evidence or []},
+                           now=now, arcs_dir=arcs_dir)
+        return {"schema": SCHEMA, "ok": True, "seq": rec["seq"]}
+    return _with_arc_lock(arc_id, _do, locks_dir=locks_dir)
 
 
 def supersede(arc_id: str, target_seq: int, reason: str, *, agent: str,
