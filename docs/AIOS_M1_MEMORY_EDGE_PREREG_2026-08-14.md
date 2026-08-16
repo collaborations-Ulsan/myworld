@@ -103,4 +103,10 @@ retracted/superseded 항목 주입 · 다른 아크의 private record 누출 · 
 
 ## Errata (append-only)
 
-*(없음)*
+**E1 · 2026-08-16 — §3 정직성 게이트 실행, 결과 NO-GO.**
+G5+G6 실패 164건에서 서명 엔트로피 **0.811 bits**(`fail_reason`은 전부 `oracle_failed`,
+0.000 bits). 진단 필드가 비어 있고 비트를 가진 것은 전부 실험 장부(`task_id` 6.09,
+`arm` 1.80). ⟹ 오프라인 테이블 재현율이 문턱 0.8을 넘고, 더 나쁘게는 `task_id` 인덱싱이
+arm D를 baseline이 아니라 **거의 오라클**로 만들어 `C vs D`가 계측에 의해 조작된다.
+**풀런하지 않는다.** 전문·재실행 조건: `docs/AIOS_M1_GATE_RESULT_2026-08-16.md`.
+프로토콜은 수정하지 않았다 — 게이트가 설계대로 작동해 실행을 막았다.
