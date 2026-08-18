@@ -107,6 +107,14 @@ from traces.
   `.gitmodules` entry (broken submodule on clone) and 0-byte junk files like
   `0`. Both bit us this session. Non-blocking by default; wireable as a git
   pre-commit hook (`git config core.hooksPath`) once the operator opts in.
+- **Orphan check (organism, not pile):** `python scripts/aios_graph_audit.py` —
+  the knowledge graph at `/data/jaewon/aios/index/aios.db` (built by
+  `scripts/aios_graph_build.py`, same layout as the robot-side paper graph).
+  Accumulation moves node count; organism moves connectivity. Before writing a new
+  artifact ask `--neighbors <name>` — if nothing would cite it, it is born an orphan.
+  `--orphans-in <layer>` lists one organ's disconnected artifacts.
+  Measured 2026-08-18: docs 0.0% orphan / hivemind 49.0% / GenesisOS 57.6% /
+  experiments 33.5%. Prose is connected; the executing organs and the evidence are not.
 - **Inward-growth alarm:** `python scripts/aios_memory_retrieval_audit.py` —
   product-domain memory coverage + `inward_growth_alarm`. Accepted memory that
   is 100% AIOS-internal = retrieve returns null on real work.
