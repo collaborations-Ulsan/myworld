@@ -91,3 +91,16 @@ agent보다 나아야** 한다. 그건 이 게이트 다음의 별도 실험이�
 *측정: `.aios/copyness/copyness_main.jsonl` (8 agent × 14 trial × 3문항 × 2조건 = 672 호출).
 도구: `scripts/aios_copyness.py`. 기록: `experiments/phase5g/g5_arcs/` 96개 실제 아크.
 근거: `docs/AIOS_RESIDUAL_DECISION_VALUE_2026-08-16.md` §5, `experiments/phase5g/G5_RESULTS.md`.*
+
+## Errata (append-only)
+
+**E1 · 2026-08-18 — §5 재실행 조건이 불충분하다. 진단도 불완전했다.**
+§3은 INDETERMINATE의 원인을 문항의 지배적 정답(RETRY 90/96%)으로 돌렸다. 그건 맞지만 전부가 아니다.
+
+> **동결 모델 + 텍스트 파일은 원리적으로 "무의식에 임베딩"될 수 없다 — 조회만 가능하다.**
+
+그러므로 *다른 기록을 읽고 같은 결정을 내림*은 **가소성 없는 시스템에서 예측되는 결과**다.
+문항을 고쳐도 이 실험은 *"사적 정보가 결정을 바꾸는가"*까지만 답할 수 있고,
+*"사적 정보가 agent를 비복사본으로 만드는가"*는 **동결 모델에서 시험 불가능한 가설**이다.
+후자는 가중치가 달라져야 성립한다. 재실행 시 이 경계를 명시하고, 넘는 주장은 하지 않는다.
+근거: `docs/AIOS_MEMORY_VS_BRAIN_2026-08-18.md` §4.
