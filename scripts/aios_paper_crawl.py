@@ -10,30 +10,39 @@ than a separate file, so external literature and our own artifacts are one graph
 the point: a paper is only useful here when something of ours can cite it.
 """
 from __future__ import annotations
-import argparse, json, os, sqlite3, sys, time, urllib.error, urllib.parse, urllib.request
+import argparse, json, os, re, sqlite3, sys, time, urllib.error, urllib.parse, urllib.request
 from pathlib import Path
 
 DB = Path(os.environ.get("AIOS_GRAPH_DEST", "/data/jaewon/aios")) / "index" / "aios.db"
-S2 = "https://api.semanticscholar.org/graph/v1"
-FIELDS = "paperId,externalIds,title,abstract,year,venue,citationCount,authors"
-UA = {"User-Agent": "aios-graph/1.0 (research; contact via repo)"}
+# Semantic Scholar without a key returns 429 immediately (measured 2026-08-18, twice,
+# on both a fresh and a decade-old paper). OpenAlex is keyless, asks only for a mailto,
+# and exposes referenced_works + cited_by directly.
+OA = "https://api.openalex.org"
+MAILTO = os.environ.get("OPENALEX_MAILTO", "cjw070690@gmail.com")
+UA = {"User-Agent": f"aios-graph/1.0 (mailto:{MAILTO})"}
 
 
-def get(url: str, tries: int = 4, timeout: int = 45) -> dict | None:
+def get(url: str, tries: int = 4, timeout: int = 45) -> dict:
+    """Always reports WHY. The first version collapsed every failure into
+    'retries exhausted', which hid a plain HTTP 429 and cost a whole run to diagnose —
+    a substrate that was rate-limited looked identical to one that was unreachable."""
+    sep = "&" if "?" in url else "?"
+    url = f"{url}{sep}mailto={MAILTO}"
+    last = "no attempt"
     for i in range(tries):
         try:
             req = urllib.request.Request(url, headers=UA)
             with urllib.request.urlopen(req, timeout=timeout) as r:
                 return json.loads(r.read())
         except urllib.error.HTTPError as e:
-            if e.code == 429:                      # documented rate limit: back off, do not spin
-                time.sleep(6 * (i + 1)); continue
-            return {"__error__": f"HTTP {e.code}"}
+            last = f"HTTP {e.code}"
+            if e.code in (429, 503):
+                time.sleep(5 * (i + 1)); continue
+            return {"__error__": last}
         except Exception as e:
+            last = f"{type(e).__name__}: {e}"[:120]
             time.sleep(2 * (i + 1))
-            if i == tries - 1:
-                return {"__error__": f"{type(e).__name__}"}
-    return {"__error__": "retries exhausted"}
+    return {"__error__": f"after {tries} tries: {last}"}
 
 
 def ensure_schema(con: sqlite3.Connection) -> None:
@@ -47,11 +56,12 @@ def ensure_schema(con: sqlite3.Connection) -> None:
 
 
 def store(con, p: dict, hop: int) -> str | None:
-    sid = p.get("paperId")
+    sid = (p.get("id") or "").rsplit("/", 1)[-1]        # OpenAlex work id, e.g. W2741809807
     if not sid:
         return None
-    ext = p.get("externalIds") or {}
-    arx = ext.get("ArXiv")
+    doi = (p.get("doi") or "")
+    m = re.search(r"arxiv\.(\d{4}\.\d{4,5})", doi, re.I)
+    arx = m.group(1) if m else None
     nid = f"paper:{arx or sid}"
     prev = con.execute("select hop from papers where id = ?", (nid,)).fetchone()
     if prev and prev[0] <= hop:
@@ -59,9 +69,9 @@ def store(con, p: dict, hop: int) -> str | None:
     con.execute("insert or replace into papers values (?,?,?,?,?,?,?,?,?,?,?)",
                 (nid, sid, arx, (p.get("title") or "")[:500],
                  (p.get("abstract") or "")[:8000], p.get("year"), (p.get("venue") or "")[:200],
-                 json.dumps([a.get("name") for a in (p.get("authors") or [])][:12],
-                            ensure_ascii=False),
-                 p.get("citationCount"), hop, int(time.time())))
+                 json.dumps([(a.get("author") or {}).get("display_name")
+                             for a in (p.get("authorships") or [])][:12], ensure_ascii=False),
+                 p.get("cited_by_count"), hop, int(time.time())))
     con.execute("insert or replace into nodes values (?,?,?,?,?,?)",
                 (nid, "paper", "literature", len(p.get("abstract") or ""),
                  int(time.time()), (p.get("title") or "")[:200]))
@@ -82,14 +92,17 @@ def main() -> int:
     frontier, expanded, added = [], 0, 0
 
     for s in a.seed:
-        d = get(f"{S2}/paper/arXiv:{s}?fields={FIELDS}")
+        ident = (f"{OA}/works/doi:10.48550/arXiv.{s}" if re.match(r"^\d{4}\.\d{4,5}$", s)
+                 else f"{OA}/works/doi:{s}" if s.startswith("10.")
+                 else f"{OA}/works/{s}")
+        d = get(ident)
         if not d or "__error__" in (d or {}):
             con.execute("insert into failures values (?,?,?)",
                         (f"seed:{s}", (d or {}).get("__error__", "no data"), int(time.time())))
             print(f"seed {s}: FAILED — {(d or {}).get('__error__')}", file=sys.stderr)
             continue
         nid = store(con, d, 0)
-        frontier.append((nid, d["paperId"], 0))
+        frontier.append((nid, (d.get("id") or "").rsplit("/", 1)[-1], 0))
         print(f"seed hop0  {d.get('title','')[:80]}")
     con.commit()
     if not frontier:
@@ -100,25 +113,46 @@ def main() -> int:
         nid, sid, hop = frontier.pop(0)
         if hop >= a.hops:
             continue
-        for direction, key in (("references", "citedPaper"), ("citations", "citingPaper")):
-            url = f"{S2}/paper/{sid}/{direction}?fields={FIELDS}&limit={a.per_node}"
-            d = get(url)
+        work = get(f"{OA}/works/{sid}")
+        if "__error__" in work:
+            con.execute("insert into failures values (?,?,?)",
+                        (nid, f"work: {work['__error__']}", int(time.time())))
+            expanded += 1
+            continue
+
+        # references: the work carries them as ids; fetch in batches of 40 (OpenAlex OR filter)
+        refs = [w.rsplit("/", 1)[-1] for w in (work.get("referenced_works") or [])][:a.per_node]
+        for i in range(0, len(refs), 40):
+            batch = "|".join(refs[i:i + 40])
+            d = get(f"{OA}/works?filter=openalex_id:{batch}&per-page=40")
             time.sleep(a.delay)
-            if not d or "__error__" in d:
+            if "__error__" in d:
                 con.execute("insert into failures values (?,?,?)",
-                            (nid, f"{direction}: {(d or {}).get('__error__','none')}",
-                             int(time.time())))
+                            (nid, f"refs: {d['__error__']}", int(time.time())))
                 continue
-            for row in d.get("data", []):
-                p = row.get(key) or {}
-                child = store(con, p, hop + 1)
-                if not child:
-                    continue
-                added += 1
-                src, dst = (nid, child) if direction == "references" else (child, nid)
-                con.execute("insert into edges values (?,?,?)", (src, dst, "cites"))
-                if hop + 1 < a.hops:
-                    frontier.append((child, p["paperId"], hop + 1))
+            for w in d.get("results", []):
+                child = store(con, w, hop + 1)
+                if child:
+                    added += 1
+                    con.execute("insert into edges values (?,?,?)", (nid, child, "cites"))
+                    if hop + 1 < a.hops:
+                        frontier.append((child, (w.get("id") or "").rsplit("/", 1)[-1], hop + 1))
+
+        # citations: who cites this work
+        d = get(f"{OA}/works?filter=cites:{sid}&per-page={min(a.per_node, 50)}")
+        time.sleep(a.delay)
+        if "__error__" in d:
+            con.execute("insert into failures values (?,?,?)",
+                        (nid, f"cites: {d['__error__']}", int(time.time())))
+        else:
+            for w in d.get("results", []):
+                child = store(con, w, hop + 1)
+                if child:
+                    added += 1
+                    con.execute("insert into edges values (?,?,?)", (child, nid, "cites"))
+                    if hop + 1 < a.hops:
+                        frontier.append((child, (w.get("id") or "").rsplit("/", 1)[-1], hop + 1))
+
         expanded += 1
         con.commit()
         if expanded % 10 == 0:
