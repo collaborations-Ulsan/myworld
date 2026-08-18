@@ -46,17 +46,19 @@ REGISTRY: dict[str, dict] = {
     # superseded within two days of being written. Three ~30B agent models shipped
     # 2026-08-10..14 (Meta / NVIDIA / Alibaba), so the entry below was stale on arrival —
     # which is exactly why every row carries a grounding date.
+    # installed and MEASURED 2026-08-18 (ollama upgraded 0.22.1 -> v0.32.14 to accept them)
     "qwen3.8:27b":      dict(transport="ollama", observable=True, local=True,
-                             candidate=True, vram_gb=20, context_k=262,
-                             note="dense multimodal, 262K native (1M via YaRN), Apache-2.0; "
-                                  "ollama tag verified 200 in the registry",
-                             blocked_by="local ollama 0.22.1 returns 412 on this manifest; "
-                                        "needs >= v0.32.14 (released 2026-08-15)"),
+                             vram_gb=17.7, params="27.3B", quant="Q4_K_M", context_k=262,
+                             tok_s=26.9, answer_overhead_tok=2,
+                             note="direct answerer: 2 tokens for a one-word reply. Slower "
+                                  "per token but ~27x faster end-to-end on short extraction"),
     "muse-glimmer:30b": dict(transport="ollama", observable=True, local=True,
-                             candidate=True, vram_gb=18,
-                             note="Meta, Apache-2.0, ~18GB, keeps persistent state across "
-                                  "restarts and does tool use without phoning home",
-                             blocked_by="same 412 — local ollama is ten minor versions stale"),
+                             vram_gb=18.2, params="27.9B", quant="Q4_K_M",
+                             tok_s=77.0, answer_overhead_tok=147, thinking=True,
+                             note="thinking model — spends ~147 tokens (599 chars) reasoning "
+                                  "before a one-word answer, and think:false does NOT "
+                                  "suppress it. 3x the tok/s and still slower on short work. "
+                                  "Read `thinking` when `response` is empty or it looks mute"),
     "glm-5.2":          dict(transport="api", observable=True, terminal_bench=81.0,
                              candidate=True, note="strongest open-weight agentic/terminal"),
     "deepseek-v4-pro-max": dict(transport="api", observable=True, swe_verified=80.6,
@@ -72,10 +74,15 @@ REGISTRY: dict[str, dict] = {
 }
 
 # The static baseline an adaptive router has to beat. Deliberately dumb and written down.
+# Measured, not assumed. The surprise worth encoding: throughput does not decide this.
+# muse-glimmer runs 3x the tokens per second and is ~27x SLOWER to answer a one-word
+# question, because it spends 147 tokens thinking first. Route by the shape of the answer.
 STATIC_ROUTE = {
     "code_edit":     "qwen3-coder-next",
     "tool_use":      "qwen3-coder:30b",
-    "short_extract": "qwen3-coder-next",
+    "short_extract": "qwen3.8:27b",      # 2-token answers; the overhead dominates here
+    "long_reason":   "muse-glimmer:30b", # its 147-token habit is the product, not the cost
+    "long_context":  "qwen3.8:27b",      # 262K native, 1M via YaRN
     "adversarial":   "chatgpt-web",      # divergence needs different weights, not a fork
 }
 
