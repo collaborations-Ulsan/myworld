@@ -33,6 +33,14 @@
             "command": "python3 \"$CLAUDE_PROJECT_DIR/scripts/aios_hive_verify_hook.py\" 2>/dev/null || true"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/scripts/aios_ambient_hook.py\" 2>/dev/null || true"
+          }
+        ]
       }
     ],
     "Stop": [
@@ -51,6 +59,46 @@
           {
             "type": "command",
             "command": "python3 \"$CLAUDE_PROJECT_DIR/scripts/aios_education_hook.py\" 2>/dev/null || true"
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/scripts/aios_ambient_hook.py\" 2>/dev/null || true"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/scripts/aios_ambient_hook.py\" 2>/dev/null || true"
+          }
+        ]
+      }
+    ],
+    "PostToolUseFailure": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/scripts/aios_ambient_hook.py\" 2>/dev/null || true"
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/scripts/aios_ambient_hook.py\" 2>/dev/null || true"
           }
         ]
       }

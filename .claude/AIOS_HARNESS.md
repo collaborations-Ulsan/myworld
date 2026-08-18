@@ -107,6 +107,21 @@ from traces.
   `.gitmodules` entry (broken submodule on clone) and 0-byte junk files like
   `0`. Both bit us this session. Non-blocking by default; wireable as a git
   pre-commit hook (`git config core.hooksPath`) once the operator opts in.
+- **Ambient organs (명시 없이):** `scripts/aios_ambient_hook.py` on SubagentStart/Stop,
+  PostToolUseFailure, PermissionRequest, PostToolUse. Measured 2026-08-18: eleven ambient
+  events exist and AIOS used five; three of the idle six mapped exactly onto holes measured
+  the same day. Now firing without being invoked:
+  · subagent birth/death -> mesh self-registration (`aios_mesh.py`), because 40 live
+    sessions were named "I cannot generate a specific coding task title" and no one was
+    ever going to register by hand;
+  · tool failure -> the diagnostic signature M1 died without
+    (`failing_test_id`/`assertion`/`file:line`/`traceback_head`/`exit_class`), captured at
+    the only moment it exists;
+  · retrieval tools -> the use signal, since memoryOS has 397,854 nodes and zero
+    retrieval counts and nothing gets filled by being remembered.
+  Ambient code must never raise, never block, never be slow — it pays on every tool call.
+  NOTE the seam: `.claude/settings.json` carries the working hooks; `~/.claude.json` has
+  none. An older memory said the reverse — verify before relying on it.
 - **Doc index is generated, never written:** `python3 scripts/aios_doc_index.py` rebuilds
   `docs/AIOS_DOC_INDEX.md` from the graph. Measured 2026-08-18: 600 docs, 6 actually OPEN,
   17/17 preregs closed, 0 graph orphans — the sprawl is closed documents without a map,
