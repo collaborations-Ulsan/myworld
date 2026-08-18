@@ -43,9 +43,20 @@ REGISTRY: dict[str, dict] = {
     "qwen3-coder:30b":  dict(transport="ollama", observable=True, swe_verified=None,
                              local=True, note="agentic tool-use verified locally"),
     # --- grounded as better than what we run; not installed yet, so marked candidate ---
-    "qwen3.6-27b":      dict(transport="ollama", observable=True, swe_verified=77.2,
-                             local=True, vram_gb=22, candidate=True,
-                             note="fits one 5090; we have two"),
+    # superseded within two days of being written. Three ~30B agent models shipped
+    # 2026-08-10..14 (Meta / NVIDIA / Alibaba), so the entry below was stale on arrival —
+    # which is exactly why every row carries a grounding date.
+    "qwen3.8:27b":      dict(transport="ollama", observable=True, local=True,
+                             candidate=True, vram_gb=20, context_k=262,
+                             note="dense multimodal, 262K native (1M via YaRN), Apache-2.0; "
+                                  "ollama tag verified 200 in the registry",
+                             blocked_by="local ollama 0.22.1 returns 412 on this manifest; "
+                                        "needs >= v0.32.14 (released 2026-08-15)"),
+    "muse-glimmer:30b": dict(transport="ollama", observable=True, local=True,
+                             candidate=True, vram_gb=18,
+                             note="Meta, Apache-2.0, ~18GB, keeps persistent state across "
+                                  "restarts and does tool use without phoning home",
+                             blocked_by="same 412 — local ollama is ten minor versions stale"),
     "glm-5.2":          dict(transport="api", observable=True, terminal_bench=81.0,
                              candidate=True, note="strongest open-weight agentic/terminal"),
     "deepseek-v4-pro-max": dict(transport="api", observable=True, swe_verified=80.6,
