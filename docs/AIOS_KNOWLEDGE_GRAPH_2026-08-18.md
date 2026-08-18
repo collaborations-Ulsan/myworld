@@ -101,6 +101,23 @@ myworld/docs/AIOS_M2_MEMORY_AS_COMPUTATION_PREREG_2026-08-16.md
 
 기존 것 위에 5개로 올라탔고 아직 아무것도 그 위에 없다 — 이틀 된 노드로는 정확한 모양이다.
 
+## 4b. 온톨로지의 정직한 한계 — 층별로만 읽힌다
+
+peer가 구(phrase) 단위였으므로 나도 bigram·trigram으로 바꿨다(단어 단위는 "run"·"status"·
+"use"가 상위였다 — 아무 말도 안 하는 어휘). 그러자 개념이 의미를 갖는다:
+
+```
+docs 층         stop conditions · verification gate · contract_id ·
+                allowed_files · forbidden_files          ← 진짜 도메인 개념
+experiments 층  make the tests · pass editing scripts ·
+                home user miniconda3                     ← 과제 템플릿 반복
+```
+
+**전역 df는 쓰면 안 된다.** hivemind 패킷(88k 중 다수)이 같은 템플릿을 1,000회 이상 반복해
+"context pack user request" 같은 조각이 상위를 먹는다. peer는 90k편의 *서로 다른 논문*이라
+전역 df가 의미가 있었지만, 내 코퍼스는 대부분 *생성된 패킷*이다. 그래서 `layers` 필드로
+층을 고정해 읽어야 하고, 이 한계는 지표가 아니라 코퍼스의 성질이다.
+
 ## 5. anti-theater
 
 노드 수는 축적이 움직이고 **연결성은 유기체가 움직인다.** 그래서 상시 점검이 보고하는 것은

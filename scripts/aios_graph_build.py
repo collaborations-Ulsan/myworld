@@ -189,9 +189,25 @@ def build(args) -> int:
                 edges.add((rel, dst, kind))
         # --- concepts ----------------------------------------------------------
         if rel in texts:
-            toks = {t.lower() for t in TOKEN_RE.findall(texts[rel])}
-            toks = {t for t in toks if t not in STOP and not t.isdigit() and len(t) > 2}
-            for t in toks:
+            # phrases, not tokens. Single tokens rank generic vocabulary ("run", "status",
+            # "use") at the top and say nothing; the peer paper graph keys on phrases
+            # ("robotic manipulation") for exactly this reason.
+            seq = [t.lower() for t in TOKEN_RE.findall(texts[rel])]
+            grams = set()
+            for n in (2, 3):
+                for i in range(len(seq) - n + 1):
+                    g = seq[i:i + n]
+                    if g[0] in STOP or g[-1] in STOP:
+                        continue          # phrases must not start or end on a stopword
+                    if any(x.isdigit() for x in g):
+                        continue
+                    grams.add(" ".join(g))
+            # keep a unigram only when it is not ordinary vocabulary
+            for t in set(seq):
+                if t not in STOP and not t.isdigit() and len(t) > 3 and (
+                        "_" in t or t.endswith("os") or re.match(r"^[a-z]+\d", t)):
+                    grams.add(t)
+            for t in grams:
                 concept_df[t] += 1
                 concept_layers[t][meta["layer"]] += 1
                 if len(concept_top[t]) < 5:
