@@ -107,6 +107,10 @@ from traces.
   `.gitmodules` entry (broken submodule on clone) and 0-byte junk files like
   `0`. Both bit us this session. Non-blocking by default; wireable as a git
   pre-commit hook (`git config core.hooksPath`) once the operator opts in.
+- **Doc index is generated, never written:** `python3 scripts/aios_doc_index.py` rebuilds
+  `docs/AIOS_DOC_INDEX.md` from the graph. Measured 2026-08-18: 600 docs, 6 actually OPEN,
+  17/17 preregs closed, 0 graph orphans — the sprawl is closed documents without a map,
+  not unprocessed TODOs. A hand-written index is stale next day and becomes doc 601.
 - **No hard timeouts on our own jobs — talk instead.** A timeout is a confession that
   the inside is invisible, so it guesses a duration and the guess is always wrong. Cost
   this session: the 1700s panel wall exited 124 and lost every partial result; a 45s
