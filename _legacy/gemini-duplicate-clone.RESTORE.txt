@@ -1,0 +1,5 @@
+0567b25a2688d6e753fa8b6061a5f6b323542712
+origin: https://github.com/google-gemini/gemini-cli.git
+reason: byte-identical duplicate of ./gemini-cli except gemini-cli/.gemini/skills/aios-operator
+        (ours). 0 uncommitted changes, 0 local commits. 132MB, 2862 files.
+restore: git clone https://github.com/google-gemini/gemini-cli.git gemini && git -C gemini checkout <sha above>

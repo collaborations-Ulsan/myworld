@@ -15,7 +15,7 @@ Output is a proposal, never a deletion. Archive (git mv) is the action, because 
 history and the founder can reverse it; rm is not offered.
 """
 from __future__ import annotations
-import argparse, json, os, re, sqlite3, subprocess, sys, time
+import argparse, functools, json, os, re, sqlite3, subprocess, sys, time
 from pathlib import Path
 
 WS = Path("/home/user/workspaces/jaewon")
@@ -34,6 +34,27 @@ def harness_text(repo: Path) -> str:
                 except OSError:
                     pass
     return "\n".join(out)
+
+
+@functools.lru_cache(maxsize=64)
+def is_vendored(repo_dir: str) -> bool:
+    """A clone of someone else's repo holds THEIR code, not our legacy. Triaging it would
+    propose archiving upstream files (measured: 8 google-gemini scripts surfaced as ours)."""
+    try:
+        url = subprocess.run(["git", "-C", repo_dir, "remote", "get-url", "origin"],
+                             capture_output=True, text=True, timeout=10).stdout.strip()
+    except Exception:
+        return False
+    return bool(url) and not any(o in url for o in ("cjw0076", "dipeen", "jaewon"))
+
+
+def owning_repo(rel: str) -> Path | None:
+    d = (WS / rel).parent
+    while d != WS.parent:
+        if (d / ".git").exists():
+            return d
+        d = d.parent
+    return None
 
 
 def main() -> int:
@@ -74,6 +95,9 @@ def main() -> int:
             continue
         if Path(rel).name in ("__init__.py", "conftest.py", "setup.py", "__main__.py"):
             continue                              # package machinery is used by import, not citation
+        own = owning_repo(rel)
+        if own is not None and is_vendored(str(own)):
+            continue                              # third-party clone: their code, not our legacy
         name = Path(rel).name
         stem = Path(rel).stem
         sig = {
@@ -111,14 +135,26 @@ def main() -> int:
         lines = ["#!/bin/sh",
                  "# PROPOSAL — review before running. git mv keeps history; nothing is rm'd.",
                  "set -eu", ""]
+        # The owning repo is the NEAREST .git above the file, not the first path segment.
+        # myworld gitignores uri/ and the vendored clones and holds memoryOS as a gitlink,
+        # so `git -C myworld mv` would have silently SKIPped almost every candidate.
+        def owner(rel: str) -> Path | None:
+            d = (WS / rel).parent
+            while d != WS.parent:
+                if (d / ".git").exists():
+                    return d
+                d = d.parent
+            return None
         for c in cands:
-            src = c["path"]
-            repo = src.split("/")[0]
-            inner = src[len(repo) + 1:]
-            dst = f"{repo}/_legacy/{inner}"
-            lines.append(f"mkdir -p '{WS}/{Path(dst).parent}'")
-            lines.append(f"git -C '{WS}/{repo}' mv '{inner}' '_legacy/{inner}' "
-                         f"|| echo 'SKIP {inner}'")
+            abs_p = WS / c["path"]
+            own = owner(c["path"])
+            if own is None:
+                lines.append(f"# untracked, no repo: {c['path']}")
+                continue
+            inner = str(abs_p.relative_to(own))
+            lines.append(f"mkdir -p '{own}/_legacy/{Path(inner).parent}'")
+            lines.append(f"git -C '{own}' mv '{inner}' '_legacy/{inner}' "
+                         f"|| mv '{abs_p}' '{own}/_legacy/{inner}'")
         Path(a.emit_archive_script).write_text("\n".join(lines) + "\n")
         os.chmod(a.emit_archive_script, 0o755)
         print(f"\nwrote proposal script: {a.emit_archive_script}  (NOT executed)")

@@ -107,6 +107,18 @@ from traces.
   `.gitmodules` entry (broken submodule on clone) and 0-byte junk files like
   `0`. Both bit us this session. Non-blocking by default; wireable as a git
   pre-commit hook (`git config core.hooksPath`) once the operator opts in.
+- **No hard timeouts on our own jobs — talk instead.** A timeout is a confession that
+  the inside is invisible, so it guesses a duration and the guess is always wrong. Cost
+  this session: the 1700s panel wall exited 124 and lost every partial result; a 45s
+  stall detector killed a session that was actively generating (it read the clock, not
+  the DOM); the 120s Bash wall killed the paper crawl. The replacement is three rules:
+  (1) the worker appends progress + partial results to a durable stream and flushes per
+  unit, so a kill can never destroy work that already happened;
+  (2) the supervisor kills on STALL (no new record in N), never on DURATION;
+  (3) the stall signal must be the real one — ask the process/DOM/db, never a proxy.
+  Wait with `Monitor` on the progress stream or `Bash run_in_background` + an `until`
+  loop; never `sleep`. Conforming: `aios_copyness.py` (flush per cell),
+  `aios_paper_crawl.py` (commit per expansion), `aios_ideation.py` (append per item).
 - **Orphan check (organism, not pile):** `python scripts/aios_graph_audit.py` —
   the knowledge graph at `/data/jaewon/aios/index/aios.db` (built by
   `scripts/aios_graph_build.py`, same layout as the robot-side paper graph).
