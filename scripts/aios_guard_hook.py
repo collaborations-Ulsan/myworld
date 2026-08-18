@@ -85,6 +85,29 @@ def main() -> int:
     ti = data.get("tool_input") or {}
     cmd = ti.get("command") or ""
 
+    # 0. shared-resource guard.
+    #
+    # 2026-08-18: I stopped and upgraded the ollama daemon, and only afterwards read the
+    # memory saying "Ollama 내리기 전 반드시 파운더에게 교수님 공유 여부 확인할 것" —
+    # this box may be shared with the professor. No one was connected, so the impact was
+    # zero, but that was luck rather than process: the constraint lived in a memory file
+    # that gets read when I happen to look, not at the moment of the action.
+    #
+    # So it fires here instead. A rule that depends on remembering is not a rule.
+    SHARED_STOP = re.compile(
+        r"(?:pkill|killall|kill\s+-9?)\s+.*ollama|ollama\s+(?:stop|serve)|"
+        r"systemctl\s+(?:stop|restart)\s+ollama")
+    if tool == "Bash" and SHARED_STOP.search(cmd):
+        inject(
+            "SHARED RESOURCE — the ollama daemon on this box may be shared with the "
+            "professor (memory: reference_local_llm_assets, 2026-06-21: confirm with the "
+            "founder before taking ollama down).\n"
+            "Before proceeding: check `ss -tn state established` for remote clients and "
+            "`curl -s localhost:11434/api/ps` for resident models someone else may be using. "
+            "Prefer `keep_alive=0` eviction (reversible, no downtime) over stopping the "
+            "daemon. If a restart is genuinely required, say so and confirm."
+        )
+
     # 1. commit guard
     if tool == "Bash" and "git commit" in cmd:
         try:
