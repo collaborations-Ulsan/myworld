@@ -157,6 +157,35 @@ upstreams:
       # service_account_id: svac_...   # optional expected-target check
 ```
 
+<a id="per-user-identity-headers-for-a-proxy-you-run" />
+
+##### Per-user identity headers for a proxy you run
+
+You can point a `provider: anthropic` upstream's `base_url` at a proxy you run instead of at the Anthropic API. To tell that proxy which developer sent each request, set `forward_user_identity: true` on that upstream. The proxy can then attribute spend per developer. Requires a gateway running Claude Code v2.1.233 or later.
+
+For example, for a proxy at `upstream-gateway.internal.example.com`:
+
+```yaml theme={null}
+upstreams:
+  - provider: anthropic
+    base_url: https://upstream-gateway.internal.example.com
+    auth:
+      api_key: ${PROXY_KEY}
+    forward_user_identity: true        # default false
+```
+
+The gateway adds these headers to every request it forwards to that upstream.
+
+| Header                        | Value                                                      |
+| ----------------------------- | ---------------------------------------------------------- |
+| `x-litellm-end-user-id`       | The developer's email, when the IdP supplied one.          |
+| `x-claude-gateway-user-id`    | The developer's IdP subject, from the token's `sub` claim. |
+| `x-claude-gateway-user-email` | The developer's email, when the IdP supplied one.          |
+
+When the IdP token carries no email, the gateway sends only `x-claude-gateway-user-id` and omits the two email headers. If your IdP puts the email in a different claim, set [`oidc.email_claim`](#oidc) to that claim.
+
+Set `forward_user_identity` only on an upstream whose `base_url` is a proxy you operate. The gateway sends developer emails to whatever server that `base_url` names. If the `base_url` is the Anthropic API, which is the default, the gateway refuses to start.
+
 #### Amazon Bedrock
 
 For the client-side Amazon Bedrock deployment that the gateway replaces or fronts, see [Claude Code on Amazon Bedrock](/docs/en/amazon-bedrock). The gateway-side upstream:
@@ -313,12 +342,7 @@ upstreams:
     auth:
       api_key: ${ANTHROPIC_API_KEY}
 
-# Per-upstream model IDs are keyed on the upstream's `name:`; an upstream
-# without a `name:` defaults to its provider string (e.g. `bedrock`). For a
-# built-in Claude model, an upstream you leave out of the map still serves it
-# with that provider's default ID; list the upstream to override the ID, for
-# example with a provisioned-throughput ARN. Only a custom `id` that isn't a
-# built-in model skips the upstreams missing from its map.
+# Per-upstream model IDs are keyed on the upstream's `name:`.
 models:
   - id: claude-opus-4-8
     label: Claude Opus 4.8
@@ -363,16 +387,16 @@ admin:
   blocked_message: request an increase at https://go.example.com/claude-limits
 ```
 
-| Field                     | Required | Description                                                                                                                                                                                                                                                                            |
-| ------------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `write_keys`              | No       | Array of `{id, key}`. An `x-api-key` matching one of these can list, set, and delete spend limits. Key values must be at least 32 characters; `id`s must be unique across `read_keys` and `write_keys`.                                                                                |
-| `read_keys`               | No       | Array of `{id, key}`. Read-only: every `GET` endpoint, including listing caps, fetching one by ID, and reading [`/effective`](/docs/en/claude-apps-gateway-spend-limits#%2Feffective) and [`/audit`](/docs/en/claude-apps-gateway-spend-limits#%2Faudit).                                        |
-| `admin_groups`            | No       | IdP group names. A gateway JWT whose `groups` claim includes one of these has full admin access, read and write, and audits as `oidc:<sub>`. Use this for human admins; use API keys for machines.                                                                                     |
-| `blocked_message`         | No       | Appended verbatim to the `429 billing_error` a blocked developer sees. Write the whole instruction, such as a URL or a Slack channel. When unset, the gateway sends only the default message. See [How enforcement works](/docs/en/claude-apps-gateway-spend-limits#how-enforcement-works). |
-| `audit_retention_days`    | No       | Default `365`. Older `admin_audit` rows are swept.                                                                                                                                                                                                                                     |
-| `spend_retention_months`  | No       | Default `13`. `spend` counter rows older than this are swept. The default keeps a full year plus the current partial month for year-over-year reporting.                                                                                                                               |
-| `identity_retention_days` | No       | Default `90`. Last-seen TTL for `principal_emails` rows, which hold each developer's email, display name, and groups (PII). Deliberately shorter than spend retention so a deprovisioned identity ages out while its anonymous spend counters remain.                                  |
-| `group_limit_mode`        | No       | `min` (default) or `max`. When a developer is in several groups with caps, `min` enforces the most restrictive and `max` the least. Used by both enforcement and `/effective`.                                                                                                         |
+| Field                     | Required | Description                                                                                                                                                                                                                                                                                                                                                  |
+| ------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `write_keys`              | No       | Array of `{id, key}`. An `x-api-key` matching one of these can list, set, and delete spend limits. Key values must be at least 32 characters; `id`s must be unique across `read_keys` and `write_keys`.                                                                                                                                                      |
+| `read_keys`               | No       | Array of `{id, key}`. Read-only: every `GET` endpoint, including listing caps, fetching one by ID, and reading [`/effective`](/docs/en/claude-apps-gateway-spend-limits#%2Feffective) and [`/audit`](/docs/en/claude-apps-gateway-spend-limits#%2Faudit).                                                                                                              |
+| `admin_groups`            | No       | IdP group names. A gateway JWT whose `groups` claim includes one of these has full admin access, read and write, and audits as `oidc:<sub>`. Use this for human admins; use API keys for machines. An empty entry in this list stops the gateway at boot. See [Matcher values that stop the gateway at boot](#matcher-values-that-stop-the-gateway-at-boot). |
+| `blocked_message`         | No       | Appended verbatim to the `429 billing_error` a blocked developer sees. Write the whole instruction, such as a URL or a Slack channel. When unset, the gateway sends only the default message. See [How enforcement works](/docs/en/claude-apps-gateway-spend-limits#how-enforcement-works).                                                                       |
+| `audit_retention_days`    | No       | Default `365`. Older `admin_audit` rows are swept.                                                                                                                                                                                                                                                                                                           |
+| `spend_retention_months`  | No       | Default `13`. `spend` counter rows older than this are swept. The default keeps a full year plus the current partial month for year-over-year reporting.                                                                                                                                                                                                     |
+| `identity_retention_days` | No       | Default `90`. Last-seen TTL for `principal_emails` rows, which hold each developer's email, display name, and groups (PII). Deliberately shorter than spend retention so a deprovisioned identity ages out while its anonymous spend counters remain.                                                                                                        |
+| `group_limit_mode`        | No       | `min` (default) or `max`. When a developer is in several groups with caps, `min` enforces the most restrictive and `max` the least. Used by both enforcement and `/effective`.                                                                                                                                                                               |
 
 ### `enforcement`
 
@@ -485,6 +509,22 @@ An authenticated user who matches no policy gets the gateway's defaults, which m
   * **Group membership**: changing a user's group membership changes which policy matches them. This takes effect on the next session re-mint, meaning the next silent refresh, bounded by `session.ttl_hours`.
 </Note>
 
+#### Matcher values that stop the gateway at boot
+
+At boot, the gateway checks the `match` block of every policy and the [`admin_groups`](#admin) list. Any of these values stops the gateway with an error that names the field:
+
+* An empty `groups` list
+* An empty entry in `groups` or in `admin_groups`
+* An empty `email_domain`
+* An `email_domain` that contains `@`, whitespace, or a comma. The gateway trims the value and strips one leading `@` before this check. Write one bare domain, such as `example.com`.
+
+Before v2.1.232, the gateway started with these values. Each value had this effect:
+
+* An empty `email_domain`: the gateway skipped the domain check, so a policy with an empty `email_domain` and no `groups` list matched every authenticated user
+* An empty `groups` list: the policy matched no one
+* An `email_domain` containing `@`, whitespace, or a comma: the policy matched no one
+* An empty entry in `groups` or in `admin_groups`: the entry matched a user only when that user's IdP `groups` claim also contained an empty entry. In `admin_groups`, that match granted admin access. If your `admin_groups` list never contained an empty entry, no one gained admin access this way.
+
 #### What goes in `cli`
 
 Each `cli` value is a complete Claude Code `managed-settings.json` document, the same schema you would deploy via MDM or `/etc/claude-code/managed-settings.json`, expressed here as YAML. The CLI applies the delivered document at the managed tier, above user and project settings.
@@ -541,6 +581,7 @@ Because these settings arrive over the network, the CLI shows each developer a s
 * `hooks`
 * `env` variables that require the developer's approval, such as proxy and base-URL variables
 * shell-execution settings such as `apiKeyHelper` and `statusLine`
+* the sandbox binary settings `sandbox.bwrapPath`, `sandbox.socatPath`, and `sandbox.ripgrep`
 * managed CLAUDE.md content
 
 [Approval memory](/docs/en/server-managed-settings#approval-memory) covers how long an approval lasts and when the dialog appears again.
@@ -568,13 +609,15 @@ If your organization also deploys [Claude Desktop](/docs/en/desktop), the same g
 The gateway derives much of the response from the matched policy's `cli` block and from top-level gateway config:
 
 * The model list, from `availableModels`
-* Disabled tools, from bare tool-name `permissions.deny` entries
-* The egress allowlist, from `sandbox.network.allowedDomains`
+* Disabled tools, from bare tool-name `permissions.deny` entries. If you set `disabledBuiltinTools` in the policy's `desktop` block, the gateway serves the union of your value and the derived list, so you can disable more tools this way but can't re-enable one you disabled through `permissions.deny`
+* The egress allowlist, from `sandbox.network.allowedDomains`. If you set `coworkEgressAllowedHosts` in the policy's `desktop` block, the gateway uses that value instead of the derived list
 * An OTLP endpoint that points at the gateway itself, which fans out to your destinations, included when [`telemetry`](#telemetry) forwarding is configured
+
+To set `disabledBuiltinTools` or `coworkEgressAllowedHosts` in a policy's `desktop` block, you need Claude Code v2.1.232 or later on the gateway server.
 
 The gateway omits keys with no Claude Desktop equivalent, such as `hooks` and scoped permission rules like `Bash(npm *)`, from the bootstrap response.
 
-The optional `desktop` block alongside `cli` holds the Claude Desktop feature gates that have no CLI equivalent:
+Add the optional `desktop` block alongside `cli` to set Claude Desktop settings directly. Write settings from Claude Desktop's [managed configuration reference](https://claude.com/docs/third-party/claude-desktop/configuration) as flat key names. Leave out keys Claude Desktop reads only from MDM or local files, such as `bootstrapUrl`; the gateway rejects them at boot. Before v2.1.232, the gateway accepted a fixed list of 11 feature-gate keys, such as `chatTabEnabled` and `disableAutoUpdates`, and rejected every other key at boot. Before v2.1.227, the gateway also rejected `chatTabEnabled` and `chatAdvancedFileAnalysisEnabled` at boot.
 
 ```yaml theme={null}
 managed:
@@ -588,27 +631,30 @@ managed:
         banner: { text: "Contractor build: internal use only" }
 ```
 
-| Key                                                                | Effect                                                                                                                                                                                                                                       |
-| ------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `modelDiscoveryEnabled`                                            | Whether Claude Desktop fetches `/v1/models` for its picker. Set `false` to rely solely on the policy's model list.                                                                                                                           |
-| `coworkTabEnabled`, `isClaudeCodeForDesktopEnabled`                | Show or hide the Cowork and Code tabs. Both show unless set `false`                                                                                                                                                                          |
-| `chatTabEnabled`                                                   | Show or hide the Chat tab. Hidden unless set `true`                                                                                                                                                                                          |
-| `chatAdvancedFileAnalysisEnabled`                                  | Let Claude run code in a local sandbox from the Chat tab to analyze attached files it can't read natively, such as spreadsheets and presentations. Off unless set `true`. Has no effect when the policy's `permissions.deny` disables `Bash` |
-| `isDesktopExtensionEnabled`, `isDesktopExtensionSignatureRequired` | Desktop extension loading and signature checks                                                                                                                                                                                               |
-| `isLocalDevMcpEnabled`                                             | Allow locally defined MCP servers                                                                                                                                                                                                            |
-| `disableAutoUpdates`, `autoUpdaterEnforcementHours`                | Auto-update policy                                                                                                                                                                                                                           |
-| `banner`                                                           | Persistent banner at the top of the app: `enabled`, `text`, `backgroundColor`, `textColor`, `linkUrl`                                                                                                                                        |
+Every key is optional; Claude Desktop applies its own default for any key you omit. The gateway validates each `desktop` block at boot against the configuration schema Claude Desktop itself uses, so a mistake surfaces at gateway start as an error naming the key rather than reaching every connected desktop. The gateway fails at boot when a block contains:
 
-`chatTabEnabled` and `chatAdvancedFileAnalysisEnabled` require Claude Code v2.1.227 or later on the gateway server. Earlier releases reject them at boot.
+* An unknown key
+* A recognized key whose value Claude Desktop would reject or silently drop, such as an empty value or a misspelled sub-key inside a nested entry
+* A key the gateway computes itself: the inference connection, the model list, and the OTLP relay. Configure those through [`upstreams`](#upstreams), [`models`](#models), and the [`telemetry`](#telemetry) section's `forward_to`.
+* A legacy alias of a current key. In the boot error, the gateway names the canonical key to write.
 
-Every key is optional; Claude Desktop applies its own default for any key you omit. The gateway rejects unknown keys at boot. If you don't deploy Claude Desktop, leave `desktop` out of your policies entirely; `/user/bootstrap` then returns 404 for every user.
+As with the `cli` block, the gateway validates against the schema bundled with its installed version. To deliver a setting introduced by a newer Claude Desktop release, upgrade the gateway first.
+
+The gateway fills in keys a policy's `desktop` block doesn't set from the `match: {}` catch-all's `desktop` block, the same way it fills in a policy's `cli` block from the base. If you set `disabledBuiltinTools` or `builtinToolPolicy` in both the base and a role policy, the gateway keeps the base's restriction:
+
+* `disabledBuiltinTools`: the gateway uses the union of the base's list and the policy's list
+* `builtinToolPolicy`: if you set a tool to a value other than `allow` in the base, the gateway keeps that value even if you set `allow` for the same tool in a role policy
+
+For every other key, if you set it in the role policy, the gateway uses the role policy's value. The gateway replaces an array or a nested object such as `banner` whole, so if you set `banner.text` in a role policy, the gateway drops the base's `banner.backgroundColor`.
+
+If you don't deploy Claude Desktop, leave `desktop` out of your policies entirely; the gateway then returns 404 from `/user/bootstrap` for every user.
 
 #### Precedence with other managed sources
 
 If a device also has a local `managed-settings.json` or MDM-delivered policy, the managed sources don't merge, with two per-key exceptions while no [policy helper](/docs/en/settings#compute-managed-settings-with-a-policy-helper) is supplying managed settings, since a helper's output replaces the managed sources entirely:
 
 * The `env` block, in Claude Code v2.1.223 or later
-* The [cross-source lock keys](/docs/en/settings#settings-precedence)
+* The [cross-source lock keys](/docs/en/settings#precedence-within-the-managed-tier)
 
 Both are covered in the list later in this section. The highest-priority source provides all policy settings, ranked in this order with highest priority first:
 
@@ -629,6 +675,7 @@ The following keys are honored when any admin source above the user-writable HKC
 * `sandbox.network.allowManagedDomainsOnly` and `sandbox.filesystem.allowManagedReadPathsOnly`: when locked, the corresponding allowlists are unioned across sources
 * [`allowAllClaudeAiMcps`](/docs/en/settings#available-settings): allow-only override for the claude.ai MCP server allowlist
 * `sandbox.bwrapPath` and `sandbox.socatPath`: filesystem paths to the [sandbox](/docs/en/sandboxing) helper binaries
+* [`sandbox.ripgrep`](/docs/en/settings#sandbox-settings): the `ripgrep` binary the sandbox uses
 * [`forceRemoteSettingsRefresh`](/docs/en/server-managed-settings): blocks startup until remote managed settings are freshly fetched, so an MDM or file policy that sets it is honored even when a cached remote payload that lacks the key is the highest-priority source
 * `env`: each variable comes from the highest-priority admin source that defines it, and lower admin sources fill in variables the higher sources leave unset. The telemetry unit and credential-paired routing variables follow their own rules; see [Per-key exceptions across managed sources](/docs/en/server-managed-settings#per-key-exceptions-across-managed-sources). Requires Claude Code v2.1.223 or later
 
@@ -641,7 +688,7 @@ See [Settings precedence](/docs/en/settings#settings-precedence) for the same ru
 Gateway policies apply to every Claude Code invocation on the machine, including non-interactive `claude -p` runs and sessions spawned by the Agent SDK. If the gateway is unreachable at startup, signed-in sessions exit with an error rather than running without their policy.
 
 <Warning>
-  `mcpServers` inside a policy's `cli` block is rejected at gateway boot. Per-group MCP distribution is not available; deploy MCP servers via the file-based `managed-mcp.json` on each device or let developers add them locally.
+  At boot, the gateway rejects `mcpServers` inside a policy's `cli` block. You can't distribute MCP servers per group to Claude Code clients; deploy MCP servers via the file-based `managed-mcp.json` on each device or let developers add them locally. You can deliver Claude Desktop's `managedMcpServers` setting to Claude Desktop clients through a policy's `desktop` block. To set it, you need Claude Code v2.1.232 or later on the gateway server.
 </Warning>
 
 ### `telemetry`
@@ -690,7 +737,7 @@ Telemetry is off in the CLI by default. Configuring `telemetry.forward_to` toget
 * `OTEL_EXPORTER_OTLP_ENDPOINT=<public_url>`
 * `OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf`
 
-The pushed endpoint is built from the public URL, so metrics and logs need no OTEL configuration from developers or policies. The pushed configuration is applied at the managed tier, overriding `OTEL_*` variables a developer sets locally. Independently of the push, a signed-in CLI that has OTLP/HTTP export enabled sends those exports to the gateway rather than to a locally configured endpoint, and without a `forward_to` destination for a signal the gateway accepts and discards it; if you already collect Claude Code telemetry directly, add your collector as a `forward_to` destination.
+The pushed endpoint is built from the public URL, so metrics and logs need no OTEL configuration from developers or policies. The pushed configuration is applied at the managed tier, overriding `OTEL_*` variables a developer sets locally. Whether or not the gateway pushes these variables, a CLI signed in through `/login` that has OTLP/HTTP export enabled sends its exports to the gateway rather than to a locally configured endpoint, and without a `forward_to` destination for a signal the gateway accepts and discards it; if you already collect Claude Code telemetry directly, add your collector as a `forward_to` destination.
 
 [Traces](/docs/en/monitoring-usage#traces-beta) additionally require `CLAUDE_CODE_ENHANCED_TELEMETRY_BETA=1` on each client. The gateway doesn't push that variable, so set it through a managed policy's `env` block. It isn't among the variables Claude Code applies without the developer's approval, so delivering it through a policy is covered by the same [security approval dialog](#managed) that the pushed OTLP endpoint already triggers.
 

@@ -26,7 +26,7 @@ Three more tools support this work without being a way to run agents themselves:
 A few other features run Claude without you driving each step, but they solve a different problem than splitting work across agents:
 
 * A [background bash command](/docs/en/interactive-mode#background-bash-commands) runs one shell command without blocking the conversation. It doesn't spawn an agent.
-* A [forked subagent](/docs/en/sub-agents#fork-the-current-conversation), started with `/subtask`, is a subagent that inherits your full conversation context instead of starting fresh. It's a way to spawn a subagent, not a separate surface. To copy the whole session into a new [background session](/docs/en/agent-view#from-inside-a-session) that runs alongside it, use `/fork`. With [agent view turned off](/docs/en/agent-view#turn-off-agent-view), the forked-subagent command is `/fork` instead and `/subtask` isn't available.
+* A [forked subagent](/docs/en/sub-agents#fork-the-current-conversation) is a subagent that inherits your full conversation context instead of starting fresh. It's a way to spawn a subagent, not a separate surface. Start one with `/subtask`. Claude also spawns one itself where [fork mode](/docs/en/sub-agents#turn-fork-mode-on-or-off) is on. To copy the whole session into a new [background session](/docs/en/agent-view#from-inside-a-session) that runs alongside it, use `/fork`. With [agent view turned off](/docs/en/agent-view#turn-off-agent-view), the forked-subagent command is `/fork` instead and `/subtask` isn't available.
 * A [routine](/docs/en/routines) runs a session on a schedule in the cloud, not in parallel on your machine.
 
 <Note>
@@ -42,7 +42,7 @@ The right approach depends on who coordinates the work, whether the workers need
   * You hand off independent tasks and check back later: [agent view](/docs/en/agent-view)
   * Claude plans, assigns, and supervises a group of workers: [agent teams](/docs/en/agent-teams), experimental and disabled by default
   * A script holds the plan instead of Claude's turn-by-turn judgment: [dynamic workflows](/docs/en/workflows). See [how workflows compare to subagents and skills](/docs/en/workflows#when-to-use-a-workflow)
-* **Do the workers need to talk to each other?** Subagents report results back to the conversation that spawned them, and agent view sessions report only to you, though separate sessions can pass messages with [cross-session messaging](/docs/en/cross-session-messaging). Teammates in an agent team share a task list and message each other directly.
+* **Do the workers need to talk to each other?** Subagents report results back to the conversation that spawned them, and agent view sessions report only to you, though separate sessions can pass messages with [cross-session messaging](/docs/en/cross-session-messaging). Teammates in an agent team message each other directly and, when they [have the Task tools](/docs/en/tools-reference#task-tool-availability), share a task list.
 * **Do the tasks touch the same files?** Isolate the work with [worktrees](/docs/en/worktrees). Subagents and sessions you run yourself can each use a separate worktree. Agent teams don't isolate teammates in worktrees, so [partition the work](/docs/en/agent-teams#avoid-file-conflicts) so each teammate owns a different set of files.
 
 ## Check on running work

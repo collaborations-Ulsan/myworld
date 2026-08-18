@@ -39,8 +39,6 @@ A few providers handle email and group claims differently:
 * **Microsoft Entra ID**: `issuer` = `https://login.microsoftonline.com/<tenant-id>/v2.0`. Entra emits group Object IDs rather than names, so use the GUIDs in `managed.policies.match.groups`, or use App Roles for human-readable names. If your tenant emits roles under `roles` instead of `groups`, set `oidc.groups_claim: roles`.
 * **Google Workspace**: `issuer` = `https://accounts.google.com`. Google's id\_token doesn't carry groups. To use group-based `allowed_groups` or `managed.policies` with Google as the IdP, configure [`oidc.google_groups`](/docs/en/claude-apps-gateway-config#oidc), which looks up each user's groups through the Admin SDK Directory API using a service account with domain-wide delegation. Without it, use `oidc.allowed_email_domains` for membership gating and `managed.policies.match.email_domain` for policy assignment. Google also ignores the standard `offline_access` scope. For refresh tokens, set `oidc.scopes: [openid, profile, email]` and `oidc.extra_auth_params: { access_type: offline, prompt: consent }`.
 
-For support with an identity provider not covered above, see [Troubleshooting](#troubleshooting).
-
 <Warning>
   Refresh tokens let the gateway renew a developer's session silently, without sending the developer back to the browser. They also drive deprovisioning, because when the IdP disables a user, the next refresh fails and the session ends within `ttl_hours`. The gateway requests `offline_access` by default to get a refresh token. If your IdP requires explicit consent for offline access, configure the OAuth client to allow it.
 
@@ -49,18 +47,23 @@ For support with an identity provider not covered above, see [Troubleshooting](#
 
 ## Deployment
 
-The gateway is a single Linux binary. It scales horizontally because replicas are stateless and Postgres is the shared coordination layer. Run it however you run stateless services in your environment. The rest of this section states what the image needs, with short notes for Kubernetes and Cloud Run.
-
-The gateway is designed to run inside your network, because it holds your upstream credential and acts as the single egress point for inference. It can run anywhere your developers and your IdP can reach over HTTPS; treat it like any other service holding a production credential.
+The gateway is a single stateless Linux binary that coordinates through Postgres, so deploy it the way you deploy any other stateless service in your environment. Keep it inside your network, where your developers and IdP can reach it over HTTPS, and treat it like any service holding a production credential.
 
 A few decisions shape the deployment beyond where it runs:
 
-* **Cost**: there is no separate license or per-seat fee for the gateway; it's part of the `claude` binary. You pay for inference through your existing cloud or Anthropic commitment, plus the compute for the container and your telemetry collector.
-* **Bypass**: the gateway doesn't enforce that the only route to a model goes through it. A developer with their own credential can still call the provider directly, so closing that path is a network policy decision, for example blocking egress to `api.anthropic.com` except from the gateway. Blocking that egress also breaks the [WebFetch domain safety check](/docs/en/data-usage#webfetch-domain-safety-check), which calls `api.anthropic.com` from each developer's machine; set `skipWebFetchPreflight: true` in the managed policy to disable it.
-* **Multiple gateways**: each gateway is a separate deployment with its own config. The CLI stores its trust fingerprint and credentials per gateway hostname, so different teams can connect to different gateways without conflict. To serve multiple OIDC issuers, run separate instances.
-* **Serverless**: Cloud Run works; set `min-instances: 1` to avoid cold OIDC discovery. Lambda and Cloud Functions don't, because the gateway is a long-running HTTP server.
+* **Cost**: no separate license or per-seat fee. The gateway is part of the `claude` binary, so you pay for inference through your existing commitment, plus the compute it runs on.
+* **Bypass**: the gateway doesn't enforce that the only route to a model goes through it. A developer with their own credential can still call the provider directly, so closing that path is a network policy decision, for example blocking egress to `api.anthropic.com` except from the gateway. Blocking that egress also breaks the [WebFetch domain safety check](/docs/en/data-usage#webfetch-domain-safety-check), which calls `api.anthropic.com` from each developer's machine. Set `skipWebFetchPreflight: true` in the managed policy to disable it.
+* **Multiple gateways**: each is a separate deployment with its own config, and the CLI stores trust and credentials per gateway hostname, so teams can use different gateways without conflict. To serve multiple OIDC issuers, run separate instances.
+* **Serverless**: Cloud Run works if you set `min-instances: 1` to avoid cold OIDC discovery. Lambda and Cloud Functions don't work, because the gateway is a long-running HTTP server.
 
-Every production topology here puts an L7 proxy, such as an Ingress, Cloud Run's front end, or an ALB, in front of plain-HTTP replicas. Set [`listen.trusted_proxies`](/docs/en/claude-apps-gateway-config#listen) to the proxy's source ranges so the gateway reads client IPs from `X-Forwarded-For`. The gateway honors the header only when the TCP peer is trusted; the [Google Cloud](/docs/en/claude-apps-gateway-on-gcp) and [AWS](/docs/en/claude-apps-gateway-on-aws) worked examples have concrete values per topology. Without trusted proxies, every request appears to come from the proxy's IP, which collapses per-IP rate limits into one shared bucket and records the proxy's IP in audit events.
+Every production topology here puts an L7 proxy, such as an Ingress, Cloud Run's front end, or an ALB, in front of plain-HTTP replicas. Set [`listen.trusted_proxies`](/docs/en/claude-apps-gateway-config#listen) to the proxy's source ranges so the gateway reads client IPs from `X-Forwarded-For`. The gateway honors the header only when the TCP peer is trusted. The [Google Cloud](/docs/en/claude-apps-gateway-on-gcp) and [AWS](/docs/en/claude-apps-gateway-on-aws) worked examples have concrete values per topology. Without trusted proxies, every request appears to come from the proxy's IP, which collapses per-IP rate limits into one shared bucket and records the proxy's IP in audit events.
+
+Give the proxy any idle timeout longer than the gateway's keepalive interval, which depends on the upstream:
+
+* On every upstream except `provider: anthropic`, the gateway writes an SSE `ping` once a stream has been silent for about 15 seconds.
+* On `provider: anthropic`, the gateway passes the response through unchanged, including the Anthropic API's own pings.
+
+A default such as the ALB's 60 seconds is enough to keep a quiet stream open. The [AWS worked example](/docs/en/claude-apps-gateway-on-aws#troubleshooting) raises it to an hour anyway, and its troubleshooting row covers gateways older than v2.1.229, which sent nothing during quiet periods on the upstreams that now get pings.
 
 ### Container image
 
@@ -88,11 +91,7 @@ Run the gateway as a Deployment, like any stateless service:
 
 For a complete worked example on AWS, covering ECS Fargate or EKS, Amazon RDS, and AWS Secrets Manager, see [Deploy on AWS](/docs/en/claude-apps-gateway-on-aws).
 
-<Note>
-  **Workload identity**
-
-  Prefer the platform's workload identity over static keys: IRSA on EKS for Amazon Bedrock and for Claude Platform on AWS, Workload Identity on GKE for Google Cloud's Agent Platform, and workload identity on AKS for Microsoft Foundry. Set `auth: {}` in the upstream block, or `use_azure_ad: true` for Microsoft Foundry, and the gateway picks up the pod's identity through that provider's default credential chain. For a cross-cloud pairing, such as an Amazon Bedrock upstream on GKE, set explicit credentials in the upstream's `auth` block instead. The [`upstreams` reference](/docs/en/claude-apps-gateway-config#upstreams) has per-platform setup details.
-</Note>
+Prefer the platform's workload identity over static keys; the [`upstreams` reference](/docs/en/claude-apps-gateway-config#upstreams) has per-platform setup details. For a cross-cloud pairing, such as an Amazon Bedrock upstream on GKE, set explicit credentials in the upstream's `auth` block instead.
 
 ### Cloud Run
 
@@ -103,9 +102,7 @@ Configure the service as follows:
 * Mount the config as a secret volume
 * Set `min-instances: 1` to avoid a cold OIDC discovery on first request
 
-<Note>
-  For a complete worked example on Google Cloud, covering Cloud Run or GKE, Cloud SQL, and Secret Manager, see [Deploy on Google Cloud](/docs/en/claude-apps-gateway-on-gcp).
-</Note>
+For a complete worked example on Google Cloud, covering Cloud Run or GKE, Cloud SQL, and Secret Manager, see [Deploy on Google Cloud](/docs/en/claude-apps-gateway-on-gcp).
 
 ### Push the gateway URL to developer machines
 
@@ -132,8 +129,6 @@ The gateway writes two streams to stderr, both JSON-friendly:
 The gateway serves `GET /healthz` as a liveness probe and `GET /readyz` as a readiness probe; `/readyz` verifies the store is reachable. Both are exempt from `access_control.allow_cidrs`, so probes keep working on a locked-down listener.
 
 The OAuth discovery document at `/.well-known/oauth-authorization-server` also returns `200` only after config load, OIDC discovery, upstream client construction, and Postgres migration all succeed, so it doubles as an end-to-end boot check.
-
-A running gateway also serves a description of the paths and request shapes it accepts at `<public_url>/protocol`, matched to the version you're running. The contents aren't stable across releases.
 
 ### Outage behavior
 
@@ -186,13 +181,13 @@ This section answers the questions a security review asks: what data flows throu
 
 ### Data flow
 
-| Data                                                                                              | Path                                                         | Sent to Anthropic by the gateway                   |
-| ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ | -------------------------------------------------- |
-| Inference (prompts, completions)                                                                  | CLI → gateway → your upstream                                | Only if the Anthropic API is a configured upstream |
-| Telemetry (OTLP metrics, plus [opt-in logs and traces](/docs/en/claude-apps-gateway-config#telemetry)) | CLI → gateway → your collector                               | Never                                              |
-| Identity (email, groups, sub)                                                                     | IdP → gateway → JWT → CLI; the CLI stamps it on OTLP exports | Never                                              |
-| Managed settings                                                                                  | Your gateway YAML → CLI                                      | Never                                              |
-| Audit log                                                                                         | Gateway stderr → your aggregator                             | Never                                              |
+| Data                                                                                              | Path                                                                                                                                                                                                                                                                        | Sent to Anthropic by the gateway                   |
+| ------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- |
+| Inference (prompts, completions)                                                                  | CLI → gateway → your upstream                                                                                                                                                                                                                                               | Only if the Anthropic API is a configured upstream |
+| Telemetry (OTLP metrics, plus [opt-in logs and traces](/docs/en/claude-apps-gateway-config#telemetry)) | CLI → gateway → your collector                                                                                                                                                                                                                                              | Never                                              |
+| Identity (email, groups, sub)                                                                     | IdP → gateway → JWT → CLI; the CLI stamps it on OTLP exports. If you turn on [`forward_user_identity`](/docs/en/claude-apps-gateway-config#per-user-identity-headers-for-a-proxy-you-run), the gateway also sends the developer's email and IdP subject as headers to your proxy | Never                                              |
+| Managed settings                                                                                  | Your gateway YAML → CLI                                                                                                                                                                                                                                                     | Never                                              |
+| Audit log                                                                                         | Gateway stderr → your aggregator                                                                                                                                                                                                                                            | Never                                              |
 
 ### Threat model summary
 
@@ -261,6 +256,11 @@ The gateway's stderr includes the audit event stream, the audit log records deve
 | Login works locally but fails behind an ALB                                                                                                                                 | `public_url` still names the local or inner `http://` origin, so the IdP gets the wrong `redirect_uri`                                                                                                                                                                                                                         | Set `listen.public_url` to the external `https://` origin and register `<public_url>/oauth/callback` with the IdP                                                                                                                                                                                                                                                                                                                       |
 | Developer sees the trust prompt repeatedly                                                                                                                                  | TLS cert is rotating per replica or per request                                                                                                                                                                                                                                                                                | Use a stable cert at the ingress, or terminate TLS once and run replicas over plain HTTP internally                                                                                                                                                                                                                                                                                                                                     |
 | CLI `/login`: "Could not verify the gateway's TLS certificate" or `SELF_SIGNED_CERT_IN_CHAIN`                                                                               | Gateway's TLS chain is signed by a private CA not in the CLI host's trust store                                                                                                                                                                                                                                                | Claude Code reads the OS trust store by default on the native binary and on Node 22.15 or later; [`CLAUDE_CODE_CERT_STORE`](/docs/en/network-config#ca-certificate-store) controls this behavior. If the CA is installed in the OS trust store, ensure developers are on a current runtime. Otherwise set `NODE_EXTRA_CA_CERTS` to the CA certificate PEM before launching. The first-connect fingerprint prompt still applies.              |
+| CLI `/login` completes the browser sign-in, then the session ends with `Cloud gateway sign-in was not completed` and a TLS certificate mismatch                             | On the first request after sign-in, the gateway presented a certificate that doesn't match the fingerprint Claude Code pinned, so Claude Code kept no gateway credential. The usual causes are replicas behind one address that serve different certificates, or something on the network path that intercepts TLS.            | Serve one certificate for the hostname, for example by terminating TLS once at the ingress, then have the developer run `/login` again. If that certificate differs from the pinned one, Claude Code shows the [trust prompt](/docs/en/claude-apps-gateway#connect-developers) again with a warning that the certificate changed.                                                                                                            |
+
+The mismatch message includes the gateway hostname and the first 16 characters of each fingerprint, the pinned one and the presented one.
+
+If Claude Code reports `couldn't load your organization's managed settings` after a gateway sign-in, Claude Code names the reason, restarts in place, and resumes the conversation. If Claude Code can't restart, for example in a background session, Claude Code ends the session and keeps the sign-in.
 
 ## Related
 

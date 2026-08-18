@@ -79,6 +79,35 @@ SOURCES: dict[str, dict] = {
         "path": "docs",
         "note": "the tool-plane spec every provider above binds to",
     },
+    # --- frontier agent-native apps (probed 2026-08-18; only endpoints that answered
+    # 200 are registered. Guessing a URL would only manufacture dangling entries) ---
+    "kimi-cli": {
+        "index": "https://raw.githubusercontent.com/MoonshotAI/kimi-cli/main/docs/",
+        "index_kind": "github_dir", "repo": "MoonshotAI/kimi-cli", "path": "docs",
+        "note": "Moonshot's agent CLI",
+    },
+    "kimi-k2": {
+        "index": "https://raw.githubusercontent.com/MoonshotAI/Kimi-K2/main/docs/",
+        "index_kind": "github_dir", "repo": "MoonshotAI/Kimi-K2", "path": "docs",
+        "note": "the model side of the same house",
+    },
+    "hermes": {
+        "index": "https://raw.githubusercontent.com/NousResearch/Hermes-Agent/main/docs/",
+        "index_kind": "github_dir", "repo": "NousResearch/Hermes-Agent", "path": "docs",
+        "note": "Nous Hermes agent — the local-first peer we have compared against",
+    },
+    "openai-agents": {
+        "index": "https://raw.githubusercontent.com/openai/openai-agents-python/main/docs/",
+        "index_kind": "github_dir", "repo": "openai/openai-agents-python", "path": "docs",
+        "note": "OpenAI's agent SDK — the loop Codex CLI is built on",
+    },
+    "orca": {
+        "index": "https://docs.orcarouter.ai/llms.txt",
+        "index_kind": "llms_txt", "page_suffix": ".md",
+        "note": "router peer; publishes llms.txt",
+    },
+    # cursor: docs.cursor.com/llms.txt 308s to cursor.com/docs which is HTML, not llms.txt.
+    # Left OUT rather than registered with a URL that does not serve what we claim.
 }
 
 

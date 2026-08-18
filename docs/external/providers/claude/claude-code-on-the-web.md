@@ -49,8 +49,6 @@ Cloud sessions need access to your GitHub repositories to clone code and push br
 
 Either method works. [`/schedule`](/docs/en/routines) checks for either form of access and prompts you to run `/web-setup` if neither is configured. See [Connect from your terminal](/docs/en/web-quickstart#connect-from-your-terminal) for the `/web-setup` walkthrough.
 
-The GitHub App is required for [Auto-fix](#auto-fix-pull-requests), which uses the App to receive PR webhooks. If you connect with `/web-setup` and later want Auto-fix, install the App on those repositories.
-
 Team and Enterprise Owners can disable `/web-setup` with the Quick web setup toggle at [claude.ai/admin-settings/claude-code](https://claude.ai/admin-settings/claude-code).
 
 <Note>
@@ -98,8 +96,6 @@ In plan mode, Claude reads files, runs commands to explore, and proposes a plan 
 ```bash theme={null}
 claude --cloud "Execute the migration plan in docs/migration-plan.md"
 ```
-
-This pattern gives you control over the strategy while letting Claude execute autonomously in the cloud.
 
 **Run tasks in parallel**: each `--cloud` command creates its own cloud session that runs independently. You can start multiple tasks and they'll all run simultaneously in separate sessions:
 
@@ -197,7 +193,7 @@ Teleport checks these requirements before resuming a session. If any requirement
 
 #### `--teleport` is unavailable
 
-Teleport requires claude.ai subscription authentication. If you're authenticated via API key, run `/login` to sign in with your claude.ai account instead. On Amazon Bedrock, Google Cloud's Agent Platform, and Microsoft Foundry, `--teleport` stops with `Cloud sessions aren't available with <provider>` because cloud sessions use the Anthropic API for inference and aren't available through those providers. If you're already signed in via claude.ai and `--teleport` is still unavailable, your organization may have disabled cloud sessions.
+Teleport requires claude.ai subscription authentication. If you're authenticated via API key, run `/login` to sign in with your claude.ai account instead. If the error names your provider instead, cloud sessions aren't available through third-party providers; see the [error table](#output-and-errors). If you're already signed in via claude.ai and `--teleport` is still unavailable, your organization may have disabled cloud sessions.
 
 ## Work with sessions
 
@@ -218,11 +214,11 @@ For context management specifically:
 | `/context` | Yes                     | Shows what's currently in the context window                                                                             |
 | `/clear`   | No                      | Start a new session from the sidebar instead                                                                             |
 
-Auto-compaction runs automatically when the context window approaches capacity. To trigger it earlier, set [`CLAUDE_AUTOCOMPACT_PCT_OVERRIDE`](/docs/en/env-vars) in your [environment variables](/docs/en/cloud-environments#set-environment-variables). For example, `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=70` compacts at 70% capacity instead of waiting until the window is nearly full.
+Auto-compaction runs automatically when the context window approaches capacity. Claude Code on the web sets [`CLAUDE_AUTOCOMPACT_PCT_OVERRIDE`](/docs/en/env-vars) in cloud sessions itself, so compaction triggers partway through the [auto-compact window](/docs/en/model-config#set-the-auto-compact-window) rather than when the window fills. That value overrides one you add in your [environment variables](/docs/en/cloud-environments#set-environment-variables), so adding the variable there doesn't change when compaction triggers.
 
-The percentage moves compaction earlier within the [auto-compact window](/docs/en/model-config#set-the-auto-compact-window). To change the window itself, set [`CLAUDE_CODE_AUTO_COMPACT_WINDOW`](/docs/en/env-vars), or run [`/autocompact`](/docs/en/commands#all-commands) with a token count in a session where the variable isn't set.
+To change the auto-compact window instead, set [`CLAUDE_CODE_AUTO_COMPACT_WINDOW`](/docs/en/env-vars) in your environment variables, or run [`/autocompact`](/docs/en/commands#all-commands) with a token count in a session where the variable isn't set.
 
-[Subagents](/docs/en/sub-agents) work the same way they do locally. Claude can spawn them with the Task tool to offload research or parallel work into a separate context window, keeping the main conversation lighter. Subagents defined in your repo's `.claude/agents/` are picked up automatically.
+[Subagents](/docs/en/sub-agents) work the same way they do locally. Claude can spawn them with the Agent tool to offload research or parallel work into a separate context window, keeping the main conversation lighter. Subagents defined in your repo's `.claude/agents/` are picked up automatically.
 
 [Agent teams](/docs/en/agent-teams) are off by default but can be enabled by adding `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` to your [environment variables](/docs/en/cloud-environments#set-environment-variables).
 
@@ -325,9 +321,7 @@ If a new session fails to start with `Session creation failed` or stalls at prov
 
 `claude --cloud` and `claude --teleport` require sign-in with a claude.ai account. If you authenticate with an API key, or your stored account details are stale, these commands fail with `Unable to get organization UUID` or a message that API key authentication is not sufficient.
 
-Run `/login` to sign in with your claude.ai account, then retry the command.
-
-On Amazon Bedrock, Google Cloud's Agent Platform, and Microsoft Foundry, the commands stop earlier with `Cloud sessions aren't available with <provider>`. Cloud sessions use the Anthropic API for inference and aren't available through those providers.
+Run `/login` to sign in with your claude.ai account, then retry the command. If the error names your provider instead, see the [error table](#output-and-errors): cloud sessions aren't available through third-party providers.
 
 ### Remote Control session expired or access denied
 
