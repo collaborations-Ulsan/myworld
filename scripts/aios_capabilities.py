@@ -91,6 +91,15 @@ CAPABILITIES: dict[str, Capability] = {c.name: c for c in [
                "영수증이 원장에 있고 root 재계산이 일치",
                "L1_local_write"),
     # --- control plane -------------------------------------------------------------
+    # --- experiment controls: independence is a ROUTING property, not a footnote -------
+    Capability("experiment.control_arm", "external",
+               "대조군(arm B) 구현. 처치군 저자가 아닌 자가 최선을 다해 만든다",
+               "구현자가 처치군(arm C) 저자와 다르고, 그 사실이 커밋 author로 확인됨",
+               "L2_process"),
+    Capability("experiment.adversarial_verify", "external",
+               "이종 기질의 독립 검증. 같은 가중치는 유효표 1.07이라 값이 없다",
+               "검증자가 Claude 계열이 아니고, 반증이 결론을 실제로 바꿨음이 diff로 확인됨",
+               "L3_network_read", heterogeneous=True),
     Capability("grounding.external", "myworld",
                "외부 그라운딩. 우리 가중치가 구조적으로 낡은 질문류",
                "답변에 출처 URL과 날짜가 있고 knowledge ledger에 기록됨",

@@ -184,12 +184,24 @@ def tick(dry: bool = False) -> dict:
             key = t["capability"] + (" (all holders refused)" if t.get("refused_by") else "")
             unheld[key] = unheld.get(key, 0) + 1
             continue
-        acted["assigned"].append({"task": t["task_id"], "to": who})
+        card = next((c for c in mesh.directory() if c.name == who), None)
+        rc = bool(card and card.transport == "rc")
+        acted["assigned"].append({"task": t["task_id"], "to": who,
+                                  "transport": "rc" if rc else "fs"})
         if not dry:
             _emit(kind="claim", task_id=t["task_id"], owner=who)
             mesh.send(who, "aios@factory", "work",
                       {"task_id": t["task_id"], "goal": t["goal"], "depth": t["depth"]},
                       ceiling="L1_local_write")
+            if rc:
+                # Only a Claude session can call SendMessage, so the scheduler cannot
+                # deliver this itself. It records the need instead of pretending the task
+                # was handed over — a queued RC task with nobody to carry it would look
+                # exactly like one being worked on.
+                acted.setdefault("rc_outbox", []).append(
+                    {"task": t["task_id"], "rc_name": card.rc_name,
+                     "goal": t["goal"][:160]})
+                _emit(kind="rc_pending", task_id=t["task_id"], rc_name=card.rc_name)
     if unheld:
         acted["unheld_capabilities"] = unheld
         if not dry:
@@ -246,6 +258,8 @@ def run(interval: int, max_ticks: int = 0) -> int:
             except Exception as e:
                 print(f"  charter sweep failed: {type(e).__name__}", flush=True)
         _emit(kind="tick", n=n, **{k: v for k, v in a.items() if k != "resource_why"})
+        for r in (a.get("rc_outbox") or []):
+            print(f"  RC DELIVERY NEEDED -> {r['rc_name']}: {r['goal'][:70]}", flush=True)
         uh = a.get("unheld_capabilities")
         print(f"[{time.strftime('%H:%M:%S')}] tick {n}  ready={a['ready']} "
               f"assigned={len(a['assigned'])} stalled={a['stalled']}"

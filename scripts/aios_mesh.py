@@ -47,6 +47,18 @@ TASK_STATES = ("submitted", "working", "input-required", "completed", "canceled"
 
 @dataclass
 class Card:
+    """transport: how this peer is actually reachable.
+
+      "fs"  a local process that polls its inbox directory (organs, workers)
+      "rc"  a live Claude session reachable by SendMessage — Remote Control delivers to
+            local, remote and cloud sessions alike
+
+    RC already solved cross-session delivery and I spent a day building a filesystem inbox
+    beside it. The correct reading is not that the mesh was wasted: RC is a TRANSPORT with
+    no notion of who holds which capability, what a peer is allowed to be asked for, or
+    whether an answer was consumed. Those are the mesh. So RC becomes a transport the mesh
+    dispatches over, and the card says which one applies.
+    """
     """A2A-shaped agent card. Serve at /.well-known/agent-card.json unchanged if we ever
     want to; today it lives on disk so no provider can take it away."""
     name: str                       # claude@<workspace>/<role> — the protocol we already wrote
@@ -60,6 +72,8 @@ class Card:
     enforcement: str = "advisory"          # ours, not A2A's
     side_effect_ceiling: str = "L1_local_write"
     version: str = "aios.mesh.card.v1"
+    transport: str = "fs"       # "fs" | "rc"
+    rc_name: str = ""           # the ListAgents name, which IS the address
     started_at: float = 0.0
     heartbeat_at: float = 0.0
 
@@ -75,6 +89,10 @@ class Card:
 
         TTL alone would lie the other way — it buries a busy session and keeps a dead one
         until expiry (the arc lease race the model checker found). Hence: OR, not either."""
+        if self.transport == "rc":
+            # An RC peer's liveness is the session registry's business, not a pid we hold.
+            # Claiming otherwise would mark every remote and cloud peer dead.
+            return (time.time() - self.heartbeat_at) < max(stale_s, 86400)
         if self.pid and self.host == socket.gethostname():
             try:
                 os.kill(self.pid, 0)
@@ -99,7 +117,7 @@ def _event(**kw) -> None:
 
 def register(name: str, role: str, workspace: str, skills=(), domains=(),
              ceiling: str = "L1_local_write", substrate: str = "local",
-             pid: int | None = None) -> Card:
+             pid: int | None = None, transport: str = "fs", rc_name: str = "") -> Card:
     """pid must be the SESSION's, not the registering process's. Registering from a CLI
     one-shot recorded the python interpreter's pid, which was already dead by the time
     anything listed the directory — every card read as a corpse. Default to the parent."""
@@ -108,6 +126,7 @@ def register(name: str, role: str, workspace: str, skills=(), domains=(),
     c = Card(name=name, role=role, workspace=workspace, skills=list(skills),
              domains=list(domains), pid=pid or os.getppid(), host=socket.gethostname(),
              substrate=substrate, side_effect_ceiling=ceiling,
+             transport=transport, rc_name=rc_name,
              started_at=time.time(), heartbeat_at=time.time())
     _write(CARDS / f"{name.replace('/', '__')}.json", asdict(c))
     _event(kind="register", name=name, role=role, ceiling=ceiling)
@@ -148,9 +167,16 @@ def send(to: str, frm: str, kind: str, body: dict, *, traceparent: str = "",
     tid = uuid.uuid4().hex[:16]
     if not traceparent:
         traceparent = f"00-{uuid.uuid4().hex}-{uuid.uuid4().hex[:16]}-01"
+    card = next((c for c in directory(alive_only=False) if c.name == to), None)
     msg = {"schema": "aios.mesh.task.v1", "task_id": tid, "traceparent": traceparent,
            "to": to, "from": frm, "kind": kind, "state": "submitted",
-           "requested_ceiling": ceiling, "body": body, "ts": time.time()}
+           "requested_ceiling": ceiling, "body": body, "ts": time.time(),
+           "transport": (card.transport if card else "fs"),
+           "rc_name": (card.rc_name if card else "")}
+    # The envelope is written EITHER WAY. An RC send is delivered by the caller (only a
+    # Claude session can call SendMessage), and the file is the durable record of what was
+    # asked — losing that would make RC traffic invisible to the ledger and the graph,
+    # which is how a transport quietly becomes an unaudited side channel.
     _write(INBOX / to.replace("/", "__") / f"{tid}.json", msg)
     _event(kind="send", task_id=tid, to=to, **{"from": frm}, traceparent=traceparent)
     return msg
