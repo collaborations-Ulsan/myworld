@@ -132,6 +132,19 @@ def route(prompt: str) -> str:
     terms = {t.lower() for t in TERM.findall(prompt)}
     lines: list[str] = []
 
+    # Finished work comes back without being asked for. The goal is one session to
+    # instruct from; having to go and check is the same as not having distributed anything.
+    try:
+        import aios_return
+        fresh = aios_return.sweep(quiet=True)
+        if fresh:
+            ok = sum(1 for f in fresh if f["state"] == "done")
+            lines.append(f"**끝난 일 {len(fresh)}건** (성공 {ok}) — 산출물은 그래프에 편입됨:")
+            lines += [f"- {'OK ' if f['state']=='done' else 'FAIL'} "
+                      f"`{f['capability']}` {f['goal'][:52]}" for f in fresh[:5]]
+    except Exception:
+        pass
+
     holders = _mesh_holders(terms)
     if holders:
         lines.append("**세션 보유자** (SendMessage로 직접 물을 수 있음):")
