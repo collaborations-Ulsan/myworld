@@ -61,6 +61,14 @@
             "command": "python3 \"$CLAUDE_PROJECT_DIR/scripts/aios_education_hook.py\" 2>/dev/null || true"
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/scripts/aios_ambient_route.py\" 2>/dev/null || true"
+          }
+        ]
       }
     ],
     "SubagentStart": [

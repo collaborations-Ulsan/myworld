@@ -88,7 +88,17 @@ def state() -> dict[str, dict]:
 
 
 def enqueue(goal: str, capability: str, deps=(), depth: int = 0,
-            parent: str | None = None) -> str:
+            parent: str | None = None, dedup: bool = True) -> str:
+    """Deduplicated by (goal, capability) while an identical task is still open.
+
+    Without this the ambient router re-enqueues on every repeat of a prompt shape, and the
+    queue fills with redundant work that looks like demand. Measured: three timing runs of
+    the same prompt produced six tasks."""
+    if dedup:
+        for t in state().values():
+            if (t["goal"] == goal[:200] and t["capability"] == capability
+                    and t["state"] in ("queued", "working")):
+                return t["task_id"]
     if depth > MAX_DEPTH:
         raise SystemExit(f"depth {depth} exceeds MAX_DEPTH {MAX_DEPTH} — refusing. "
                          f"Unbounded self-enqueue is a fork bomb with better manners.")
@@ -140,9 +150,13 @@ def tick(dry: bool = False) -> dict:
     if not ok:
         return acted                               # a refusal with a reason beats thrashing
 
+    unheld: dict[str, int] = {}
     for t in rdy[:MAX_NEW_PER_TICK]:
         who = assign(t)
         if who is None:
+            # A capability nobody holds is a finding, not a queue entry to forget. Silence
+            # here would let work sit forever while the board looked merely busy.
+            unheld[t["capability"]] = unheld.get(t["capability"], 0) + 1
             continue
         acted["assigned"].append({"task": t["task_id"], "to": who})
         if not dry:
@@ -150,6 +164,10 @@ def tick(dry: bool = False) -> dict:
             mesh.send(who, "aios@factory", "work",
                       {"task_id": t["task_id"], "goal": t["goal"], "depth": t["depth"]},
                       ceiling="L1_local_write")
+    if unheld:
+        acted["unheld_capabilities"] = unheld
+        if not dry:
+            _emit(kind="unheld", capabilities=unheld)
     return acted
 
 
@@ -179,8 +197,10 @@ def run(interval: int, max_ticks: int = 0) -> int:
     while max_ticks == 0 or n < max_ticks:
         a = tick()
         _emit(kind="tick", n=n, **{k: v for k, v in a.items() if k != "resource_why"})
+        uh = a.get("unheld_capabilities")
         print(f"[{time.strftime('%H:%M:%S')}] tick {n}  ready={a['ready']} "
-              f"assigned={len(a['assigned'])} stalled={a['stalled']} "
+              f"assigned={len(a['assigned'])} stalled={a['stalled']}"
+              f"{'  NOBODY HOLDS: ' + ','.join(uh) if uh else ''}"
               f"{'' if a['resource_ok'] else '  HOLD: ' + a['resource_why'][:60]}", flush=True)
         n += 1
         time.sleep(interval)
