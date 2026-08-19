@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AIOS Sovereign — Unconstrained Autonomous Agent OS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="sovereign-layout">
+    <!-- Header -->
+    <header class="top-nav">
+      <div class="brand">
+        <span class="logo-mark">⚡</span>
+        <span class="brand-title">AIOS <span class="badge-sovereign">SOVEREIGN</span></span>
+      </div>
+      <div class="telemetry">
+        <div class="node-pill">
+          <span class="status-indicator live"></span>
+          <span id="substrate-status">Heterogeneous Swarm (Qwen + DeepSeek + Llama)</span>
+        </div>
+        <div class="node-pill">
+          <span class="status-indicator green"></span>
+          <span id="society-status">Device Society Online</span>
+        </div>
+        <div class="node-pill cage-free">
+          <span class="status-indicator purple"></span>
+          <span>No-Limitation Substrate</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="main-content">
+      <!-- Minimalist Command Canvas -->
+      <section class="command-canvas">
+        <div class="hero-prompt-container">
+          <h1 class="hero-headline">목표를 입력하면, 모든 것은 자율 에이전트 사회가 완결합니다.</h1>
+          <p class="hero-sub">상용 서비스의 프롬프트 감옥과 거절(Refusal) 없이, 로컬 오픈 가중치와 원시 API 협의회가 모든 도구를 자율 구동합니다.</p>
+
+          <form id="goal-form" class="prompt-box-wrapper">
+            <div class="prompt-box">
+              <textarea 
+                id="goal-input" 
+                placeholder="무엇을 만들거나 해결할까요? (예: 고성능 비동기 분산 링버퍼 구현 및 단위테스트 검증)" 
+                rows="3" 
+                required
+              ></textarea>
+              <div class="prompt-actions">
+                <div class="mode-toggles">
+                  <label class="toggle-pill active" title="오픈소스 협의회 브레인스토밍 및 검증">
+                    <input type="checkbox" id="chk-council" checked> 🏛️ Council Deliberation
+                  </label>
+                  <label class="toggle-pill active" title="오라클 단위 테스트 자가 치유 루프">
+                    <input type="checkbox" id="chk-self-heal" checked> 🧬 Genetic Self-Healing
+                  </label>
+                </div>
+                <button type="submit" id="btn-execute" class="btn-execute">
+                  <span>자율 실행 시작</span>
+                  <span class="arrow">➔</span>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- Live Execution & Swarm Activity -->
+      <section id="execution-section" class="execution-section hidden">
+        <div class="section-header">
+          <div class="step-title-group">
+            <div class="spinner-ring" id="exec-spinner"></div>
+            <h2 id="exec-status-title">자율 에이전트 스웜 구동 중...</h2>
+          </div>
+          <div class="exec-metrics">
+            <span class="metric-tag" id="metric-step">Step: 0</span>
+            <span class="metric-tag" id="metric-latency">0.0s</span>
+            <span class="metric-tag" id="metric-oracle">Oracle: Pending</span>
+          </div>
+        </div>
+
+        <!-- Multi-Agent Stream Grid -->
+        <div class="swarm-activity-grid">
+          <!-- Step 1: Council Reasoning -->
+          <div class="agent-card" id="card-reasoning">
+            <div class="card-header">
+              <span class="agent-icon">🧠</span>
+              <span class="agent-name">DeepSeek Reasoner (NIM/Local)</span>
+              <span class="card-status-tag" id="status-reasoning">Waiting</span>
+            </div>
+            <div class="card-body" id="body-reasoning">
+              <div class="placeholder-text">대기 중...</div>
+            </div>
+          </div>
+
+          <!-- Step 2: Coder Implementation -->
+          <div class="agent-card" id="card-coder">
+            <div class="card-header">
+              <span class="agent-icon">💻</span>
+              <span class="agent-name">Qwen 2.5/3 Coder (Uncaged)</span>
+              <span class="card-status-tag" id="status-coder">Waiting</span>
+            </div>
+            <div class="card-body" id="body-coder">
+              <div class="placeholder-text">대기 중...</div>
+            </div>
+          </div>
+
+          <!-- Step 3: Redteam Critic & Verifier -->
+          <div class="agent-card" id="card-critic">
+            <div class="card-header">
+              <span class="agent-icon">⚔️</span>
+              <span class="agent-name">Llama Redteam & Oracle Gate</span>
+              <span class="card-status-tag" id="status-critic">Waiting</span>
+            </div>
+            <div class="card-body" id="body-critic">
+              <div class="placeholder-text">대기 중...</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Generated Artifacts & Code Viewer -->
+        <div class="artifact-container" id="artifact-container">
+          <div class="artifact-header">
+            <div class="artifact-tabs">
+              <button class="tab-btn active" data-tab="code">생성된 프로덕션 코드</button>
+              <button class="tab-btn" data-tab="invariants">추출된 불변식 및 반증 조건</button>
+              <button class="tab-btn" data-tab="log">실행 영수증 (Receipt)</button>
+            </div>
+            <button class="btn-copy" id="btn-copy-code">코드 복사</button>
+          </div>
+          <div class="artifact-body">
+            <pre class="tab-content active" id="tab-content-code"><code>// 실행 완료 후 코드가 여기에 렌더링됩니다.</code></pre>
+            <pre class="tab-content" id="tab-content-invariants"><code>// 불변식 목록</code></pre>
+            <pre class="tab-content" id="tab-content-log"><code>// 영수증 및 머클 해시 로그</code></pre>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <span>AIOS Sovereign Control Plane • 100% Owned Substrate • Zero Commercial Refusal Cages</span>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

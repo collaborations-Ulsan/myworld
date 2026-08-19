@@ -22,6 +22,8 @@ AIOS development, not just a note.
 | **queryable knowledge graph from code/docs** | graphify (~60k★) | adopt queryable cross-source graph patterns in MemoryOS (aligns project_lgm_memory_thesis). | M |
 | **single-GPU agent research loop** | karpathy/autoresearch (~85k★) | run research/eval agents on the local dual-5090 via Hive. | M |
 
+| **harness construction + failure introspection** | ECC (~240k★) | **ABSORBED as text 2026-08-16** → `docs/AIOS_HARNESS_CONSTRUCTION_ABSORBED_2026-08-16.md`. Two things AIOS never wrote down: (a) how to shape a tool surface — action-space granularity by RISK (micro for deploy/permission, macro only when round-trips dominate), the 4-field observation contract (`status`/`summary`/`next_actions`/`artifacts`), and the **error recovery contract** (root-cause hint + safe retry + explicit stop condition IN the error payload) which is the missing operational half of DNA invariant 4; (b) the capture→diagnose→contained-recovery→report loop that must run BEFORE a retry, because a blind retry destroys the evidence. Concrete AIOS action: hold CapabilityOS tools at micro/medium (a recommendation must stay inspectable), let HiveMind hold macro (it emits receipts), and make organ errors carry the 3-part recovery contract. ECC itself NOT installed — 25.3k tokens of always-on skill descriptions, 6 node spawns per Bash call, and its `council` is a same-weights 4-voice panel that would shadow ours (+0.047 same-family ceiling). | S |
+
 ## Process note
 
 The local-LLM distiller mis-called darwin-skill "low fit"; **Claude-verify overrode
