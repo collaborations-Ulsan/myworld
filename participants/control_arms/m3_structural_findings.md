@@ -67,3 +67,31 @@ corpus `.aios` fails it (5.92×). Options, both pre-data (not post-hoc tuning):
 
 Either way the honest experiment needs a partition that balances load; the frozen
 `organ`-granularity, measured, does not. Reported to the peer for the M3 freeze.
+
+## RESOLUTION (2026-08-19) — M3 NO-GO on this corpus, frozen (peer Errata E4)
+
+The peer independently reproduced the measurement (their compute: whole 6.30×,
+`.aios` 5.60×, concentration 87.1% vs my 89% — same verdict, difference only in
+digest representation) and adopted the balance gate (E4: no frozen partition may
+exceed one context). Then they exhausted the sub-partition option:
+- by `kind`: 2 pieces, `receipt` 44,116 (5.60×) — still fails.
+- by 2-level path: 65 pieces, `.aios/invocations` 41,918 (5.33×) — still fails.
+
+95% of the mass is `.aios/invocations`: ~40k **identical-shape call receipts** —
+an execution ledger, not distinct retrievable knowledge (the same category that
+killed M1). No partition rule brings it under one context without arbitrary
+sharding. Excluding it, the whole corpus fits one context ⇒ partition is void
+**by construction** here. **M3 is a clean pre-data NO-GO, frozen before any data
+was burned.** The pivot (peer's): a paper-citation-graph corpus whose per-layer
+mass is not concentrated in one log; rerun condition preregistered = no single
+partition > 40% of total digest (this corpus failed at 87%). `m3_digest.py`
+applies unchanged; I re-run it independently on the new corpus when crawled.
+
+### Naming: the generalization was REFUTED (recorded, not laundered)
+I tried to mint the A1+M3 pattern as a novel concept (`substrate-shape void`). A
+non-Claude voice (deepseek-r1) fully reduced it to sufficient-context (A1) +
+degenerate design / class imbalance (M3) + preregistered moderation analysis,
+already named as conditional inductive bias (Baxter 2000). Accepted; downgraded
+to `renaming` in `naming/LEXICON.md`. The executable NO-GO above is unaffected —
+it is a reproduced measurement, not a coinage. The substrate-shape gate remains a
+sound BORROWED practice (moderation/degenerate-design), cited, not claimed.
