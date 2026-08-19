@@ -30,6 +30,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 import aios_mesh as mesh                                       # noqa: E402
 import aios_resources as res                                   # noqa: E402
+import aios_capabilities as caps                                # noqa: E402
 
 FAC = ROOT / ".aios" / "factory"
 EVENTS = FAC / "events.jsonl"
@@ -99,6 +100,10 @@ def enqueue(goal: str, capability: str, deps=(), depth: int = 0,
             if (t["goal"] == goal[:200] and t["capability"] == capability
                     and t["state"] in ("queued", "working")):
                 return t["task_id"]
+    # Closed vocabulary. An unknown capability fails HERE rather than becoming a task that
+    # waits forever behind a typo — measured: unheld:adversarial sat with no owner while
+    # the board read as busy.
+    caps.validate(capability)
     if depth > MAX_DEPTH:
         raise SystemExit(f"depth {depth} exceeds MAX_DEPTH {MAX_DEPTH} — refusing. "
                          f"Unbounded self-enqueue is a fork bomb with better manners.")
