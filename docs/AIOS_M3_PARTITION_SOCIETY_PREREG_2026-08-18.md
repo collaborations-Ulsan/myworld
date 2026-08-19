@@ -232,3 +232,31 @@ kind 기준          2조각 — receipt 44,116 (5.60×) + contract 3
 
 이 판정은 A1 `observable-competence ceiling`의 M3판이다 — **기제가 나쁜 것이 아니라
 기질이 그 기제가 요구하는 shape을 갖지 않았다.**
+
+**E5 · 2026-08-19 — E4의 마지막 문장은 명명이었지 발견이 아니었다. 내린다.**
+
+E4는 이렇게 끝났다: *"이 판정은 A1 observable-competence ceiling의 M3판이다 — 기제가
+나쁜 것이 아니라 기질이 그 기제가 요구하는 shape을 갖지 않았다."* 그 틀은 **내가 붙였고**,
+독립 구현자가 그 위에 `substrate-shape void`를 민팅하려다 keystone 규율대로 비-Claude
+목소리(deepseek-r1, council)에 반증을 걸었다. **전면 환원됐고 잔차가 없다.**
+
+```
+"real-active yet decision-void"  → sufficient context / degenerate feature
+                                    (Sufficient Context, ICLR 2025, arXiv:2411.06037 — 확인함)
+"한 파티션에 89% 집중"           → degenerate design matrix · class imbalance
+                                    (split-balance 통계가 이미 잡는다)
+"shape-gate"                     → preregistered moderation analysis (Nosek 2018)
+                                    + conditional inductive bias (Baxter 2000)
+```
+
+**죽은 것과 서는 것을 가른다:**
+
+| | |
+|---|---|
+| **선다** — M3 NO-GO | **측정**이다. 두 기질에서 독립 재현됐고(6.30× vs 6.76×, 87.1% vs 89%) executable하다. 이 반증에 흔들리지 않는다 |
+| **선다** — G2-balance 게이트 | **빌려온 건전한 관행**이다. 계속 쓰되 **발명이라 주장하지 않고** 위 선행연구를 인용한다 |
+| **죽는다** — "새 개념" 옷 | `observable-competence ceiling의 M3판`이라는 틀. keystone처럼 부르지 않는다 |
+
+기록해둘 것: 오늘 내 틀이 외부 목소리에 죽은 것이 **두 번째**다(첫째는 엔트로피→support 추론).
+둘 다 내 것이 아니라 **다른 가중치**가 잡았고, 이것이 어제 적은 셋째 축(정확성 = 이종 + 실행
+가능한 검증)이 노동 분배와 다른 축이라는 주장의 실증이다.
