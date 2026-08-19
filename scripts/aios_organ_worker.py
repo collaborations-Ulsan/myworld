@@ -69,6 +69,32 @@ def _capability_outcome(goal: str, tid: str) -> tuple[str, str]:
             f'grep -qE "identifiable|empty ledger" "{out}"')
 
 
+def _grounding_external(goal: str, tid: str) -> tuple[str, str]:
+    """myworld owns grounding.external and had no handler, so every task bounced. Owning a
+    capability without executing it is worse than not owning it: the router keeps choosing
+    you."""
+    out = ART / f"{tid}.grounding.json"
+    hub = Path.home() / "workspaces" / "jaewon" / "council" / "hub.py"
+    q = goal.replace('"', "'")[:300]
+    return (f'python3 "{hub}" ask perplexity-api "{q}" > "{out}" 2>&1',
+            # consumption still demands a link that RESOLVES — this substrate is known not
+            # to provide one, so these will close as produced-but-not-consumed and the
+            # ledger will say so rather than flattering the pipeline
+            f'python3 -c "import json,re,sys,urllib.request;'
+            f'd=json.load(open(\'{out}\'));u=re.findall(r\'https?://[^\\s\\\"]+\',d.get(\'text\') or \'\');'
+            f'sys.exit(0 if any(len(x.rstrip(chr(47)).split(chr(47)))>3 for x in u) else 1)"')
+
+
+def _adversarial_refute(goal: str, tid: str) -> tuple[str, str]:
+    out = ART / f"{tid}.redteam.json"
+    hub = Path.home() / "workspaces" / "jaewon" / "council" / "hub.py"
+    q = goal.replace('"', "'")[:300]
+    return (f'python3 "{hub}" redteam "{q}" > "{out}" 2>&1',
+            # an adversary that produced nothing evidence-backed did not do the job
+            f'python3 -c "import json,sys;d=json.load(open(\'{out}\'));'
+            f'sys.exit(0 if (d.get(\'evidence_backed\') or 0) > 0 else 1)"')
+
+
 def _not_yet(name: str):
     def h(goal: str, tid: str) -> tuple[str, str]:
         raise NotImplementedError(
@@ -85,6 +111,8 @@ HANDLERS = {
     "capability.recommend": _capability_recommend,
     "capability.record_outcome": _capability_outcome,
     "graph.audit": _graph_audit,
+    "grounding.external": _grounding_external,
+    "adversarial.refute": _adversarial_refute,
     "execute.receipt": _not_yet("execute.receipt"),
     "execute.verified": _not_yet("execute.verified"),
     "adversarial.reframe": _not_yet("adversarial.reframe"),
@@ -104,7 +132,7 @@ def work_once(name: str, timeout: int = 600) -> dict | None:
             # RELEASE, not fail. Two holders can claim the same capability and the factory
             # picks the first; if the one that got it cannot execute, failing the task
             # buries work another holder could do. Releasing puts it back in the queue.
-            fac._emit(kind="release", task_id=tid,
+            fac._emit(kind="release", task_id=tid, owner=name,
                       reason=f"{name} holds no handler for {cap} — returning to queue")
             return {"task": tid, "result": f"released ({cap} not mine)"}
         ART.mkdir(parents=True, exist_ok=True)

@@ -37,6 +37,7 @@ EVENTS = FAC / "events.jsonl"
 MAX_DEPTH = 3                 # a worker's worker's worker may not spawn more work
 MAX_NEW_PER_TICK = 8          # bounded recursion, per the docstring
 STALL_S = 1800                # no progress event in this long -> stalled, not "timed out"
+REFUSAL_TTL = 600             # a refusal expires; capabilities get added
 
 
 def _emit(**kw) -> dict:
@@ -84,6 +85,16 @@ def state() -> dict[str, dict]:
             elif k == "fail":
                 t.update(state="failed", result=e.get("reason"), progress_at=e["ts"])
             elif k == "release":
+                # Remember WHO gave it back. Re-offering a task to the holder that just
+                # refused it is an infinite ping-pong: measured one task released four
+                # times in a minute, because owning a capability and having a handler for
+                # it are different things.
+                # timestamped, because a refusal is a fact about a MOMENT. A holder that
+                # refused before it had a handler must not be excluded forever — measured:
+                # adding the missing handler changed nothing because the exclusion was
+                # permanent, so the task stayed unassignable for a reason that no longer
+                # existed.
+                t.setdefault("refused_by", {})[e.get("owner") or t.get("owner")] = e["ts"]
                 t.update(state="queued", owner=None, progress_at=e["ts"])
     return tasks
 
@@ -133,9 +144,16 @@ def stalled(tasks: dict[str, dict]) -> list[dict]:
 
 
 def assign(task: dict) -> str | None:
-    """Capability match against the live mesh. Nobody claiming it IS an answer."""
-    hits = mesh.who_knows(task["capability"])
-    return hits[0].name if hits else None
+    """Capability match against the live mesh, skipping anyone who already handed it back.
+    Nobody claiming it IS an answer; everybody having refused it is a DIFFERENT answer and
+    must not read as the first."""
+    refused = task.get("refused_by") or {}
+    now = time.time()
+    for c in mesh.who_knows(task["capability"]):
+        when = refused.get(c.name)
+        if when is None or (now - when) > REFUSAL_TTL:
+            return c.name
+    return None
 
 
 def tick(dry: bool = False) -> dict:
@@ -149,7 +167,7 @@ def tick(dry: bool = False) -> dict:
     for t in st:                                   # progress-based, never clock-based
         acted["released"].append(t["task_id"])
         if not dry:
-            _emit(kind="release", task_id=t["task_id"],
+            _emit(kind="release", task_id=t["task_id"], owner=t.get("owner"),
                   reason=f"no progress for {int(time.time()-t['progress_at'])}s")
 
     if not ok:
@@ -161,7 +179,9 @@ def tick(dry: bool = False) -> dict:
         if who is None:
             # A capability nobody holds is a finding, not a queue entry to forget. Silence
             # here would let work sit forever while the board looked merely busy.
-            unheld[t["capability"]] = unheld.get(t["capability"], 0) + 1
+            # distinguish "nobody holds it" from "every holder refused it"
+            key = t["capability"] + (" (all holders refused)" if t.get("refused_by") else "")
+            unheld[key] = unheld.get(key, 0) + 1
             continue
         acted["assigned"].append({"task": t["task_id"], "to": who})
         if not dry:
