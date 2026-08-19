@@ -157,3 +157,21 @@ verified real execution = 0  ⟹  어떤 지표도 성공 임계치를 넘을 �
 우리 저장 양식은 조회 하나뿐이라 그 경로가 없다. `H_cons`는 동결 모델에서 시험 불가하므로
 이 실험의 범위 밖임을 명시한다 — 측정하지 않는 것을 측정한 척하지 않기 위해.
 근거: `docs/AIOS_MEMORY_VS_BRAIN_2026-08-18.md` §2.
+
+**E3 · 2026-08-19 — arm B 사양이 C에게 유리했다. 독립 구현자의 지적으로 강화한다.**
+(실행 전 수정. 데이터를 본 뒤의 정지규칙 교체가 아니다.)
+
+`myworld_computation`(cjw0076, 커밋 author가 구조적으로 다름 ⟹ §5.2 자동 충족)이
+arm B를 수락하며 두 가지를 지적했고, 둘 다 **내 사양의 결함**이다.
+
+1. **누출 대칭.** §2가 B를 *"내용주소 캐시 + 프롬프트 캐시 + 정적 인덱스"*로 적었는데
+   전부 exact-match다. C(memoryOS)의 회수는 graph traversal + provenance이므로
+   **C가 강한 축에서만 B를 약하게 규정**했다. M1이 제거한 `task_id` 누출이 형태를 바꿔
+   C쪽으로 되돌아온다. ⟹ **강한 B는 exact content-address ⊕ semantic near-match를 둘 다
+   갖고 동일한 legitimate K 위에서 경쟁한다.**
+2. **캐시 무효화.** 무효화 없는 캐시는 코퍼스가 바뀐 과제에서 stale 오답을 내고 Gate 1에서
+   탈락한다 — 그건 캐싱의 한계가 아니라 내 사양의 결함이다. ⟹ **B는 corpus-version keyed
+   invalidation을 포함한다**(build cache/CDN 표준). `corpus_version = max(nodes.mtime)`.
+
+**내 쪽에 추가되는 의무**: arm C의 회수가 §3 Gate 0의 legitimate K 밖 필드를 만지지 않는지
+**감사하고 그 결과를 구현자에게 공개**한다. 제약이 B에만 걸리고 C에 안 걸리면 대칭이 아니다.

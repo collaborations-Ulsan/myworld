@@ -144,6 +144,43 @@ def stalled(tasks: dict[str, dict]) -> list[dict]:
             if t["state"] == "working" and (now - t["progress_at"]) > STALL_S]
 
 
+def claim_next(worker: str, can_do: list[str]) -> dict | None:
+    """PULL. A worker takes the oldest ready task it can actually execute.
+
+    The factory was push, and most of the machinery around it existed only to patch what
+    push creates: refused_by bookkeeping, a refusal TTL, the unheld-vs-all-refused
+    distinction, and a per-tick assignment cap. Under pull none of those problems exist,
+    because a worker never takes what it cannot do.
+
+    Today's bugs were all push bugs. A holder that OWNED grounding.external but had no
+    handler was assigned it repeatedly and bounced it four times in a minute; the
+    scheduler's model of who-can-do-what came from cards, and cards drift. Here the
+    handler table IS the capability claim, so the mismatch cannot be represented.
+
+    It is also the correct AUTHORITY model. The DNA says CapabilityOS recommends and never
+    binds, and GenesisOS proposes and never selects. A control plane that COMMANDS its
+    organs contradicts that. Taking work preserves the organ's authority over its own
+    domain; being handed work does not.
+
+    Claiming is atomic by the ledger: two workers can both try, the second sees the first's
+    claim event on re-read and moves on. The log is the lock.
+    """
+    tasks = state()
+    done = {t for t, v in tasks.items() if v["state"] == "done"}
+    for t in sorted((t for t in tasks.values() if t["state"] == "queued"),
+                    key=lambda t: t["created"]):
+        if t["capability"] not in can_do:
+            continue
+        if any(d not in done for d in t["deps"]):
+            continue
+        _emit(kind="claim", task_id=t["task_id"], owner=worker, mode="pull")
+        fresh = state().get(t["task_id"]) or {}
+        if fresh.get("owner") != worker:
+            continue                      # someone claimed first; the log settled it
+        return fresh
+    return None
+
+
 def assign(task: dict) -> str | None:
     """Capability match against the live mesh, skipping anyone who already handed it back.
     Nobody claiming it IS an answer; everybody having refused it is a DIFFERENT answer and
@@ -175,8 +212,13 @@ def tick(dry: bool = False) -> dict:
         return acted                               # a refusal with a reason beats thrashing
 
     unheld: dict[str, int] = {}
+    # PUSH survives for one reason only: an RC peer is a conversational session, not a
+    # polling loop, so it cannot come and take work. Everything local pulls.
     for t in rdy[:MAX_NEW_PER_TICK]:
         who = assign(t)
+        card0 = next((c for c in mesh.directory() if c.name == who), None)
+        if who and (card0 is None or card0.transport != "rc"):
+            continue                      # local holders pull; do not push to them
         if who is None:
             # A capability nobody holds is a finding, not a queue entry to forget. Silence
             # here would let work sit forever while the board looked merely busy.
@@ -276,6 +318,7 @@ def main() -> int:
     e = s.add_parser("add"); e.add_argument("goal"); e.add_argument("capability")
     e.add_argument("--deps", nargs="*", default=[]); e.add_argument("--depth", type=int, default=0)
     t = s.add_parser("tick"); t.add_argument("--dry", action="store_true")
+    cn = s.add_parser("claim"); cn.add_argument("worker"); cn.add_argument("caps", nargs="+")
     r = s.add_parser("run"); r.add_argument("--interval", type=int, default=300)
     r.add_argument("--max-ticks", type=int, default=0)
     c = s.add_parser("close"); c.add_argument("task_id"); c.add_argument("check")
@@ -288,6 +331,9 @@ def main() -> int:
         print(json.dumps(tick(dry=a.dry), ensure_ascii=False, indent=1))
     elif a.subcmd == "run":
         return run(a.interval, a.max_ticks)
+    elif a.subcmd == "claim":
+        t = claim_next(a.worker, list(a.caps))
+        print(json.dumps(t, ensure_ascii=False) if t else "nothing I can do is ready")
     elif a.subcmd == "close":
         ok, why = close(a.task_id, a.check)
         print(f"{'CLOSED' if ok else 'REFUSED'}: {why}")

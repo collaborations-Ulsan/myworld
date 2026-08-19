@@ -145,12 +145,13 @@ HANDLERS = {
 
 
 def work_once(name: str, timeout: int = 600) -> dict | None:
-    tasks = fac.state()
-    for msg in mesh.poll(name):
-        tid = (msg.get("body") or {}).get("task_id")
-        t = tasks.get(tid)
-        if not t or t["state"] != "working" or t["owner"] != name:
-            continue
+    """PULL: ask for the oldest ready task this worker can actually execute.
+
+    The handler table is the capability claim, so 'assigned something I cannot do' is not
+    a state that exists any more — which deletes the release/refuse/TTL path entirely."""
+    t = fac.claim_next(name, sorted(HANDLERS))
+    if t is not None:
+        tid = t["task_id"]
         cap = t["capability"]
         h = HANDLERS.get(cap)
         if h is None:

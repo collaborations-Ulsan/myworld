@@ -148,3 +148,31 @@ arm C  1.000
 **실험이 되려면**: 정답이 읽고 판단해야만 나오는 것이어야 하고, 어느 팔도 정답을 정의하는
 집계를 손에 쥐면 안 된다. arm B는 여전히 미구현이며(§5.2 — C와 무관한 구현자),
 `compare`는 B 없이 C-vs-A를 결과로 보고하기를 **거부**한다.
+
+**E3 · 2026-08-19 — 구조적 affinity. estimand를 더 선명한 것으로 교체한다.**
+(실행 전 수정.)
+
+독립 구현자(`myworld_computation`)의 지적: 세 과제유형의 정답은 본질적으로 layer/provenance
+**구조**에 관한 것이므로, E2가 지적한 기계적 항등식을 real agent가 제거해도
+**질문이 layer축이면 layer로 분할한 C가 유리**하다는 편향이 남는다 —
+A1 `observable-competence ceiling`의 거울상.
+
+⟹ **공정한 B는 C의 라우터가 쓰는 것과 동일한 layer 구조를 압축해 context에 상주시킬 수
+있어야 한다.** 산문 요약이 아니라 **graph-structure-preserving digest**:
+target별 inbound-by-layer counts · supersede edges · contradiction pairs.
+
+그러면 실험 질문이 이렇게 선명해진다:
+
+```
+digest가 한 context에 들어가 답한다     ⟹ C 무이득. 정직한 null
+digest 자체가 context를 초과한다        ⟹ partition이 값을 EARN. 정직한 positive
+```
+
+이것은 원래 §1의 대비보다 나은 estimand이므로 **채택한다.** B가 digest를 최대한
+compact-yet-complete하게 지어야 진짜 시험이 되며, 그 책임은 구현자에게 있다.
+
+그리고 구현자가 부차 추천으로 낸 것을 **필수로 올린다**: **정답이 층 자체가 아닌 질문
+(`kind: non_layer`)을 풀에 섞어** E2가 지적한 항등식을 완전히 차단한다.
+
+**미리 적어두는 해석 규약**: B가 이겨도 실패가 아니다. *"구조 인식 압축이 분할을 이긴다"*는
+쓸모 있는 발견이고, 어느 쪽도 C 패배를 재앙으로 취급하지 않는다.
