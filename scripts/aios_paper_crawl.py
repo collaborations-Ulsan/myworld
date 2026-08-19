@@ -66,7 +66,9 @@ def store(con, p: dict, hop: int) -> str | None:
     prev = con.execute("select hop from papers where id = ?", (nid,)).fetchone()
     if prev and prev[0] <= hop:
         return nid                                  # keep the shortest hop distance
-    con.execute("insert or replace into papers values (?,?,?,?,?,?,?,?,?,?,?)",
+    con.execute("insert or replace into papers "
+                "(id,s2_id,arxiv_id,title,abstract,year,venue,authors,citation_count,"
+                "hop,fetched_at) values (?,?,?,?,?,?,?,?,?,?,?)",
                 (nid, sid, arx, (p.get("title") or "")[:500],
                  (p.get("abstract") or "")[:8000], p.get("year"), (p.get("venue") or "")[:200],
                  json.dumps([(a.get("author") or {}).get("display_name")
@@ -78,9 +80,61 @@ def store(con, p: dict, hop: int) -> str | None:
     return nid
 
 
+# The stack the founder named, bottom to top. Each layer seeds by topic search; hops then
+# expand from whatever the search finds, so coverage is not limited to my vocabulary.
+STACK = {
+    "hw.silicon": ["chiplet accelerator architecture", "HBM memory bandwidth",
+                   "systolic array matrix unit", "photonic interconnect computing",
+                   "analog in-memory computing", "wafer-scale engine"],
+    "hw.system": ["GPU interconnect NVLink topology", "RDMA collective communication",
+                  "datacenter power thermal accelerator", "CXL memory pooling",
+                  "energy efficiency deep learning hardware"],
+    "infra.serve": ["LLM inference serving scheduler", "KV cache management attention",
+                    "speculative decoding", "continuous batching throughput",
+                    "model parallelism pipeline sharding", "quantization inference"],
+    "infra.distributed": ["distributed training fault tolerance", "consensus protocol replication",
+                          "cluster scheduler resource allocation", "checkpoint recovery large model"],
+    "model.beyond": ["state space model long context", "mixture of experts routing",
+                     "retrieval augmented generation", "diffusion language model",
+                     "world model latent planning", "test time compute scaling"],
+    "agent.core": ["LLM agent tool use", "agent memory architecture",
+                   "agent planning decomposition", "reflection self-correction agent",
+                   "computer use agent GUI", "code agent repository"],
+    "agent.multi": ["multi-agent LLM collaboration", "agent communication protocol",
+                    "role specialization multi-agent", "debate consensus language model"],
+    "agent.frontier": ["self-improving agent", "agent evaluation benchmark contamination",
+                       "reward hacking specification gaming", "continual learning agent",
+                       "agent safety oversight scalable", "automated research agent"],
+}
+
+
+def seed_by_topic(con, layer: str, query: str, per: int, since: str) -> list[tuple]:
+    """Topic search -> hop-0 seeds. Sorted by citations so the head of each field lands
+    first; hops then reach the rest."""
+    url = (f"{OA}/works?search={urllib.parse.quote(query)}"
+           f"&filter=from_publication_date:{since}&sort=cited_by_count:desc&per-page={per}")
+    d = get(url)
+    if "__error__" in d:
+        con.execute("insert into failures values (?,?,?)",
+                    (f"topic:{layer}:{query}", d["__error__"], int(time.time())))
+        return []
+    out = []
+    for w in d.get("results", []):
+        nid = store(con, w, 0)
+        if nid:
+            con.execute("update papers set layer=? where id=? and (layer is null or layer='')",
+                        (layer, nid))
+            out.append((nid, (w.get("id") or "").rsplit("/", 1)[-1], 0))
+    return out
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--seed", nargs="+", required=True, help="arXiv ids, e.g. 2604.17148")
+    ap.add_argument("--seed", nargs="*", default=[], help="arXiv ids, e.g. 2604.17148")
+    ap.add_argument("--stack", action="store_true", help="seed the whole computation stack")
+    ap.add_argument("--layer", help="one STACK layer only")
+    ap.add_argument("--per-topic", type=int, default=12)
+    ap.add_argument("--since", default="2022-01-01")
     ap.add_argument("--hops", type=int, default=2)
     ap.add_argument("--per-node", type=int, default=40, help="refs/cites pulled per paper")
     ap.add_argument("--budget", type=int, default=400, help="max papers expanded")
@@ -89,7 +143,22 @@ def main() -> int:
 
     con = sqlite3.connect(DB)
     ensure_schema(con)
+    try:
+        con.execute("alter table papers add column layer text")
+    except sqlite3.OperationalError:
+        pass
     frontier, expanded, added = [], 0, 0
+
+    if a.stack or a.layer:
+        layers = {a.layer: STACK[a.layer]} if a.layer else STACK
+        for lname, queries in layers.items():
+            for q in queries:
+                got = seed_by_topic(con, lname, q, a.per_topic, a.since)
+                frontier += got
+                print(f"  seed {lname:<18}{len(got):>3}  {q[:44]}", flush=True)
+                time.sleep(a.delay)
+            con.commit()
+        print(f"topic seeds: {len(frontier)}", flush=True)
 
     for s in a.seed:
         ident = (f"{OA}/works/doi:10.48550/arXiv.{s}" if re.match(r"^\d{4}\.\d{4,5}$", s)
