@@ -86,13 +86,38 @@ def _grounding_external(goal: str, tid: str) -> tuple[str, str]:
 
 
 def _adversarial_refute(goal: str, tid: str) -> tuple[str, str]:
+    """Reads the upstream pack when there is one, so GenesisOS attacks what memoryOS
+    actually returned rather than the task title. That difference is the whole point of a
+    cross-OS chain."""
     out = ART / f"{tid}.redteam.json"
     hub = Path.home() / "workspaces" / "jaewon" / "council" / "hub.py"
     q = goal.replace('"', "'")[:300]
+    ups = [u for u in (os.environ.get("AIOS_UPSTREAM") or "").split(":") if u]
+    if ups:
+        try:
+            d = json.loads(Path(ups[0]).read_text())
+            claims = [str(x.get("text") or x.get("summary") or x)[:140]
+                      for x in (d.get("decisions") or d.get("memories") or [])[:4]]
+            if claims:
+                q = (f"{q} — 상류 memoryOS가 회수한 주장들: "
+                     + " | ".join(claims))[:900].replace('"', "'")
+        except Exception:
+            pass
     return (f'python3 "{hub}" redteam "{q}" > "{out}" 2>&1',
             # an adversary that produced nothing evidence-backed did not do the job
             f'python3 -c "import json,sys;d=json.load(open(\'{out}\'));'
             f'sys.exit(0 if (d.get(\'evidence_backed\') or 0) > 0 else 1)"')
+
+
+ARTIFACT_SUFFIX = {"memory.retrieve": "retrieve.json", "memory.propose": "propose.json",
+                   "graph.audit": "audit.txt", "capability.recommend": "route.txt",
+                   "capability.record_outcome": "outcome.txt",
+                   "grounding.external": "grounding.json",
+                   "adversarial.refute": "redteam.json"}
+
+
+def _artifact_for(cap: str, tid: str) -> Path:
+    return ART / f"{tid}.{ARTIFACT_SUFFIX.get(cap, 'out')}"
 
 
 def _not_yet(name: str):
@@ -137,6 +162,12 @@ def work_once(name: str, timeout: int = 600) -> dict | None:
             return {"task": tid, "result": f"released ({cap} not mine)"}
         ART.mkdir(parents=True, exist_ok=True)
         t0 = time.time()
+        # Upstream artifacts, exported so a handler can read what the previous organ
+        # produced. AIOS_UPSTREAM is empty for a head-of-chain task, and a handler that
+        # requires it must fail rather than pretend — an organ silently ignoring its
+        # input is the pipeline version of counting invocation as use.
+        ups = fac.artifacts_of(t.get("deps") or [])
+        os.environ["AIOS_UPSTREAM"] = ":".join(ups)
         try:
             cmd, check = h(t["goal"], tid)
         except NotImplementedError as e:
@@ -150,7 +181,7 @@ def work_once(name: str, timeout: int = 600) -> dict | None:
         except subprocess.TimeoutExpired:
             fac._emit(kind="fail", task_id=tid, reason=f"exceeded {timeout}s")
             return {"task": tid, "result": "timeout"}
-        ok, why = fac.close(tid, check)
+        ok, why = fac.close(tid, check, artifact=str(_artifact_for(cap, tid)))
         spec = caps.CAPABILITIES.get(cap)
         dl.record(cap, called=True, trigger="factory", context={"task_id": tid},
                   cost_ms=int((time.time() - t0) * 1000),

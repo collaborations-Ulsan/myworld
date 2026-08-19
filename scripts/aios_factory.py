@@ -81,7 +81,8 @@ def state() -> dict[str, dict]:
             elif k == "progress":
                 t["progress_at"] = e["ts"]
             elif k == "done":
-                t.update(state="done", result=e.get("result"), progress_at=e["ts"])
+                t.update(state="done", result=e.get("result"), progress_at=e["ts"],
+                         artifact=e.get("artifact"))
             elif k == "fail":
                 t.update(state="failed", result=e.get("reason"), progress_at=e["ts"])
             elif k == "release":
@@ -196,7 +197,19 @@ def tick(dry: bool = False) -> dict:
     return acted
 
 
-def close(task_id: str, check_cmd: str) -> tuple[bool, str]:
+def artifacts_of(task_ids) -> list[str]:
+    """Where an upstream task left its output. This is what makes a chain a chain rather
+    than a sequence: without it each organ runs beside the others instead of on them."""
+    st = state()
+    out = []
+    for tid in task_ids:
+        t = st.get(tid)
+        if t and t["state"] == "done" and t.get("artifact"):
+            out.append(t["artifact"])
+    return out
+
+
+def close(task_id: str, check_cmd: str, artifact: str | None = None) -> tuple[bool, str]:
     """A worker cannot close its own task by saying so. Completion runs a command and
     reads its exit code — the anti-reward-hacking clause, as code rather than as a rule."""
     try:
@@ -207,7 +220,7 @@ def close(task_id: str, check_cmd: str) -> tuple[bool, str]:
         return False, f"check crashed: {type(e).__name__}"
     if p.returncode == 0:
         _emit(kind="done", task_id=task_id, result=(p.stdout or "")[:400],
-              check=check_cmd[:200])
+              check=check_cmd[:200], artifact=artifact)
         return True, "closed by check"
     _emit(kind="fail", task_id=task_id, reason=f"check rc={p.returncode}: "
                                                f"{(p.stderr or p.stdout)[:200]}")
