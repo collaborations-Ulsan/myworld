@@ -221,6 +221,17 @@ def run(interval: int, max_ticks: int = 0) -> int:
     _emit(kind="factory_start", interval=interval, pid=os.getpid())
     while max_ticks == 0 or n < max_ticks:
         a = tick()
+        # Every Nth tick, the charter turns the tick's own refusals into work. A gate that
+        # only reports is half a gate; the other half is the obligation it creates.
+        if n % 5 == 0:
+            try:
+                import aios_charter
+                c = aios_charter.sweep(apply=True)
+                if c["obligations"]:
+                    print(f"  charter: {len(c['obligations'])} obligation(s) enqueued "
+                          f"from {c['findings']} finding(s)", flush=True)
+            except Exception as e:
+                print(f"  charter sweep failed: {type(e).__name__}", flush=True)
         _emit(kind="tick", n=n, **{k: v for k, v in a.items() if k != "resource_why"})
         uh = a.get("unheld_capabilities")
         print(f"[{time.strftime('%H:%M:%S')}] tick {n}  ready={a['ready']} "
