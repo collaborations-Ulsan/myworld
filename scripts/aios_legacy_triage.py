@@ -98,6 +98,22 @@ def main() -> int:
         own = owning_repo(rel)
         if own is not None and is_vendored(str(own)):
             continue                              # third-party clone: their code, not our legacy
+        # A fifth signal, added after this tool broke memoryOS. Its four graph/git/harness/
+        # test signals all agreed that memoryos/local_workers.py was legacy, because a
+        # Python import is not a path-shaped reference and the graph could not see it.
+        # Archiving it stopped memoryOS's CLI from importing. Grep is the cheap backstop:
+        # never archive a module some source still imports by name.
+        if rel.endswith(".py"):
+            stem = Path(rel).stem
+            try:
+                hit = subprocess.run(
+                    ["grep", "-rlE", rf"(from|import)\s+\.*[\w\.]*\b{stem}\b",
+                     "--include=*.py", str(own or WS)],
+                    capture_output=True, text=True, timeout=60).stdout.strip().splitlines()
+            except Exception:
+                hit = ["<grep failed — refusing to archive on an unchecked import>"]
+            if [h for h in hit if h and not h.endswith(rel)]:
+                continue
         name = Path(rel).name
         stem = Path(rel).stem
         sig = {

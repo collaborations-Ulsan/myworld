@@ -45,6 +45,11 @@ TEXT_EXT = {".md": "doc", ".py": "code", ".sh": "code", ".json": "data",
 PATH_RE = re.compile(r"(?<![A-Za-z0-9_.\-])[./]?[A-Za-z0-9_][A-Za-z0-9_./\-]{2,120}\.(?:md|py|sh|jsonl|json|toml|ya?ml)\b")
 URL_RE = re.compile(r"^[A-Za-z0-9\-]+\.(?:com|org|io|net|dev|ai|co|gov|edu|sh)/")
 SUPERSEDE_RE = re.compile(r"(?i)\b(supersede[sd]?|deprecat\w+|철회|폐기|무효|대체)\b")
+# A Python import IS a dependency, and the path regex never saw one — `from .local_workers
+# import ...` contains no ".py". That blind spot made memoryOS/memoryos/local_workers.py
+# read as a graph orphan, the legacy triage archived it on four agreeing signals, and
+# memoryOS's CLI stopped importing. Measured the hard way on 2026-08-19.
+IMPORT_RE = re.compile(r"(?m)^\s*(?:from\s+(\.*[\w\.]+)\s+import|import\s+([\w\.]+))")
 ERRATA_RE = re.compile(r"(?im)^#{1,4}\s*errata|^\*\*E\d+\s*[·.]")
 STOP = set("""the a an and or of to in for on with is are was were be been by as at from that this it
 its not no if then than so such can may will would should could we our us you your i me my they them
@@ -187,6 +192,25 @@ def build(args) -> int:
                 kind = "supersedes" if SUPERSEDE_RE.search(
                     text[max(0, m.start() - 160):m.start()]) else "cites"
                 edges.add((rel, dst, kind))
+        # --- python imports as edges -------------------------------------------
+        if meta["kind"] in ("code", "test"):
+            pkg_dir = str(Path(rel).parent)
+            for m in IMPORT_RE.finditer(text):
+                mod = (m.group(1) or m.group(2) or "").strip()
+                if not mod:
+                    continue
+                leaf = mod.lstrip(".").split(".")[-1]
+                if not leaf:
+                    continue
+                for cand in (f"{pkg_dir}/{leaf}.py", f"{pkg_dir}/{leaf}/__init__.py"):
+                    if cand in index and cand != rel:
+                        edges.add((rel, cand, "imports"))
+                        break
+                else:
+                    hit = index.get("::base::" + leaf + ".py")
+                    if hit and hit != rel:
+                        edges.add((rel, hit, "imports"))
+
         # --- concepts ----------------------------------------------------------
         if rel in texts:
             # phrases, not tokens. Single tokens rank generic vocabulary ("run", "status",
