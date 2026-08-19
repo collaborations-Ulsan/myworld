@@ -90,6 +90,34 @@ def _graph_prior(terms: set[str]) -> list[tuple[str, int]]:
         return []
 
 
+# A deliberate holdout is the only source of counterfactuals we will ever get.
+#
+# Recording only the calls makes every call look necessary and the induced policy is
+# "always call" by construction — selection bias wearing a lookup table. So a fixed
+# fraction of matched triggers is SKIPPED on purpose and logged as skipped, which is the
+# randomised-access design the panel prescribed as the cheapest identifying experiment
+# (docs/AIOS_RESIDUAL_DECISION_VALUE_2026-08-16 section 5, Gate 2).
+#
+# The draw is a hash of the prompt, not a random number: the same prompt always gets the
+# same treatment, so a surprising result is reproducible instead of a coin we cannot re-flip.
+HOLDOUT = 0.2
+
+
+def _holdout(prompt: str, capability: str) -> bool:
+    import hashlib
+    h = hashlib.sha256(f"{capability}|{prompt}".encode()).digest()
+    return (h[0] / 255.0) < HOLDOUT
+
+
+def _ledger(capability: str, called: bool, trigger: str, prompt: str) -> None:
+    try:
+        import aios_decision_ledger as dl
+        dl.record(capability, called=called, trigger=trigger,
+                  context={"prompt_head": prompt[:120], "holdout": HOLDOUT})
+    except Exception:
+        pass
+
+
 def _enqueue(goal: str, capability: str) -> str | None:
     try:
         import aios_factory as fac
@@ -114,21 +142,30 @@ def route(prompt: str) -> str:
         lines.append("**이미 쓴 것** (인용수 순 — 재발명 전에 확인):")
         lines += [f"- `{d}` (피인용 {n})" for d, n in prior]
 
-    queued = []
-    if FRESHNESS.search(prompt):
-        tid = _enqueue(f"grounding: {prompt[:120]}", "external")
-        queued.append(f"외부 그라운딩 (freshness gate) → factory `{tid}`" if tid
-                      else "외부 그라운딩 필요 (enqueue 실패)")
-    if DECISION.search(prompt):
-        tid = _enqueue(f"adversarial review: {prompt[:120]}", "adversarial")
-        queued.append(f"이종 적대 검토 → factory `{tid}`" if tid
-                      else "적대 검토 필요 (enqueue 실패)")
+    queued, held = [], []
+    for pat, cap, goal_pfx, label in (
+            (FRESHNESS, "grounding.external", "grounding", "외부 그라운딩 (freshness gate)"),
+            (DECISION, "adversarial.refute", "adversarial review", "이종 적대 검토")):
+        if not pat.search(prompt):
+            continue
+        if _holdout(prompt, cap):
+            _ledger(cap, False, pat is FRESHNESS and "freshness" or "decision", prompt)
+            held.append(f"{label} — **의도적 홀드아웃**(20%). "
+                        f"이 프롬프트는 부르지 않고 기록만 한다")
+            continue
+        tid = _enqueue(f"{goal_pfx}: {prompt[:120]}", cap)
+        _ledger(cap, True, pat is FRESHNESS and "freshness" or "decision", prompt)
+        queued.append(f"{label} → factory `{tid}`" if tid else f"{label} 필요 (enqueue 실패)")
     if SUBSCRIPTION_ONLY.search(prompt):
         queued.append("구독 UI 전용 능력 — `hub ask <substrate>-web`이 유일한 경로 "
                       "(API 재생 없음)")
     if queued:
         lines.append("**비동기로 걸어둔 것** (이 턴을 막지 않음):")
         lines += [f"- {q}" for q in queued]
+    if held:
+        lines.append("**부르지 않은 것** (반사실 확보용 — 이게 없으면 정책이 "
+                     "'항상 호출'로만 유도된다):")
+        lines += [f"- {h}" for h in held]
 
     return "\n".join(lines)
 

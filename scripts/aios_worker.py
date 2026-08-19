@@ -21,6 +21,51 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 import aios_mesh as mesh                                       # noqa: E402
 import aios_factory as fac                                     # noqa: E402
+import aios_capabilities as caps                                # noqa: E402
+
+
+def _consumed(cap: str, tid: str) -> bool:
+    """Did the OUTPUT get used, not merely produced?
+
+    Deliberately strict and deliberately incomplete. For grounding, consumption means the
+    answer carried a source URL — an ungrounded grounding is production, not consumption.
+    For an adversary, it means the refutation actually named something to change. Where we
+    cannot yet observe consumption we return False rather than True, because a default of
+    True would quietly restore the very accounting this field exists to prevent."""
+    import re
+    if cap == "grounding.external":
+        # Not "does it contain a URL" — does the URL RESOLVE.
+        #
+        # Measured 2026-08-19: perplexity-api returns citation markers ("arxiv +1") and no
+        # links at all, so its answers cannot be followed. deepseek-api returns URLs from
+        # weights instead: of three, two were bare domains that happen to exist and one did
+        # not resolve. A hallucinated link is WORSE than no link, because it looks
+        # checkable. So consumption requires a fetch that succeeds.
+        f = ART / f"{tid}.grounding.json"
+        if not f.exists():
+            return False
+        try:
+            d = json.loads(f.read_text())
+        except Exception:
+            return False
+        urls = re.findall(r"https?://[^\s\)\]\"<>,]+", d.get("text") or "")
+        if not urls:
+            return False
+        import urllib.request
+        for u in urls[:4]:
+            if len(u.rstrip("/").split("/")) <= 3:
+                continue          # bare domain is not a source, it is a brand name
+            try:
+                req = urllib.request.Request(u, headers={"User-Agent": "aios/1.0"})
+                if urllib.request.urlopen(req, timeout=12).status == 200:
+                    return True
+            except Exception:
+                continue
+        return False
+    if cap == "adversarial.refute":
+        f = ART / f"{tid}.redteam.json"
+        return f.exists() and f.stat().st_size > 2000
+    return False
 
 HUB = Path.home() / "workspaces" / "jaewon" / "council" / "hub.py"
 ART = ROOT / ".aios" / "worker_artifacts"
@@ -54,8 +99,8 @@ def _graph(goal: str, tid: str) -> tuple[str, str]:
             f'grep -q "ORPHANS" "{out}"')
 
 
-HANDLERS = {"external": _grounding, "grounding": _grounding, "adversarial": _adversarial,
-            "docs": _docs, "graph": _graph}
+HANDLERS = {"grounding.external": _grounding, "adversarial.refute": _adversarial,
+            "docs.harvest": _docs, "graph.audit": _graph}
 
 
 def work_once(name: str, timeout: int = 900) -> dict | None:
@@ -75,6 +120,7 @@ def work_once(name: str, timeout: int = 900) -> dict | None:
         ART.mkdir(parents=True, exist_ok=True)
         cmd, check = h(t["goal"], tid)
         fac._emit(kind="progress", task_id=tid, note=f"executing {cap}")
+        t0 = time.time()
         try:
             subprocess.run(cmd, shell=True, cwd=ROOT, timeout=timeout,
                            capture_output=True)
@@ -82,6 +128,24 @@ def work_once(name: str, timeout: int = 900) -> dict | None:
             fac._emit(kind="fail", task_id=tid, reason=f"exceeded {timeout}s")
             return {"task": tid, "result": "timeout"}
         ok, why = fac.close(tid, check)          # closure is a check, not a claim
+        # Close the ledger loop. `consumed` is NOT "the command succeeded" — that is
+        # production. It is the capability's own consumed_by evidence, which is why the
+        # vocabulary carries that field at all. Recording success as consumption is exactly
+        # how invocation gets counted as use.
+        try:
+            import aios_decision_ledger as dl
+            spec = caps.CAPABILITIES.get(cap)
+            art = ART / f"{tid}." + ("grounding.json" if cap == "grounding.external"
+                                     else "redteam.json" if cap == "adversarial.refute"
+                                     else "out")
+            consumed = bool(ok and _consumed(cap, tid))
+            dl.record(cap, called=True, trigger="factory",
+                      context={"task_id": tid},
+                      cost_ms=int((time.time() - t0) * 1000),
+                      outcome="closed" if ok else "refused", consumed=consumed,
+                      note=(spec.consumed_by[:120] if spec else ""))
+        except Exception:
+            pass
         return {"task": tid, "capability": cap, "closed": ok, "why": why}
     return None
 
